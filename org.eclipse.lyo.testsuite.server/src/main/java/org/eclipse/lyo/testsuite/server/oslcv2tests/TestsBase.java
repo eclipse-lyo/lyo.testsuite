@@ -176,6 +176,7 @@ public class TestsBase {
 
 		// Get all ServiceProvider urls from the base document in order to
 		// recursively add all the capability urls from them as well.
+		//   Inlined using oslc:ServiceProvider/@rdf:about
 		NodeList sps = (NodeList) OSLCUtils.getXPath().evaluate(
 				"//oslc_v2:ServiceProvider/@rdf:about", baseDoc,
 				XPathConstants.NODESET);
@@ -186,7 +187,21 @@ public class TestsBase {
 					return data;
 			}
 		}
-
+		
+		// Get all ServiceProvider urls from the base document in order to
+		// recursively add all the capability urls from them as well.
+		//   Referenced using oslc:serviceProvider/@rdf:resource
+		sps = (NodeList) OSLCUtils.getXPath().evaluate(
+				"//oslc_v2:serviceProvider/@rdf:resource", baseDoc,
+				XPathConstants.NODESET);
+		for (int i = 0; i < sps.getLength(); i++) {
+			if (!sps.item(i).getNodeValue().equals(base) || sps.getLength() == 1) {
+				data.add(sps.item(i).getNodeValue());
+				if (dontGoDeep)
+					return data;
+			}
+		}
+		
 		// Get all ServiceProviderCatalog urls from the base document in order
 		// to recursively add all the capability from ServiceProviders within them as well.
 		NodeList spcs = (NodeList) OSLCUtils.getXPath().evaluate(
