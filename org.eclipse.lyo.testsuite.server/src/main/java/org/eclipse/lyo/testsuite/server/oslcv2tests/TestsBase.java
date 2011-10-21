@@ -204,8 +204,26 @@ public class TestsBase {
 		
 		// Get all ServiceProviderCatalog urls from the base document in order
 		// to recursively add all the capability from ServiceProviders within them as well.
+		//   Inlined using oslc:ServiceProviderCatalog/@rdf:about		
 		NodeList spcs = (NodeList) OSLCUtils.getXPath().evaluate(
 				"//oslc_v2:ServiceProviderCatalog/@rdf:about", baseDoc,
+				XPathConstants.NODESET);
+		for (int i = 0; i < spcs.getLength(); i++) {
+			if (!spcs.item(i).getNodeValue().equals(base)) {
+				ArrayList<String> subCollection = getServiceProviderURLsUsingXML(spcs
+						.item(i).getNodeValue(), dontGoDeep);
+				for (String subUri : subCollection) {
+					data.add(subUri);
+					if (dontGoDeep)
+						return data;
+				}
+			}
+		}
+		// Get all ServiceProviderCatalog urls from the base document in order
+		// to recursively add all the capability from ServiceProviders within them as well.
+		//   Referenced using oslc:serviceProviderCatalog/@rdf:resource		
+		spcs = (NodeList) OSLCUtils.getXPath().evaluate(
+				"//oslc_v2:serviceProviderCatalog/@rdf:resource", baseDoc,
 				XPathConstants.NODESET);
 		for (int i = 0; i < spcs.getLength(); i++) {
 			if (!spcs.item(i).getNodeValue().equals(base)) {
