@@ -56,17 +56,19 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 	}
 
 	@Test
-	public void invalidContentTypeGivesNotSupported() throws IOException {
+	public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl,
-				basicCreds, "application/svg+xml", headers);
+				basicCreds, "invalid/content-type", headers);
 		if (resp.getEntity() != null) {
 			String respType = "";
 			if (resp.getEntity().getContentType() != null) {
 				respType = resp.getEntity().getContentType().getValue();
 			}
 			resp.getEntity().consumeContent();
-			assertTrue(resp.getStatusLine().getStatusCode() == 406
-					|| respType.contains("application/svg+xml"));
+			assertTrue("Expected 406 but received " + resp.getStatusLine()
+					+ " or Content-type='invalid/content-type' but received "
+					+ respType, resp.getStatusLine().getStatusCode() == 406
+					|| respType.contains("invalid/content-type"));
 		}
 	}
 

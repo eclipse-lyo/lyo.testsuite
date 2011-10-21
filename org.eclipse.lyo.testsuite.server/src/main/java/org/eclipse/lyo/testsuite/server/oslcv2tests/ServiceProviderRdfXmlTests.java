@@ -146,7 +146,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 				headers);
 		String respType =  (resp.getEntity().getContentType() == null) ? "" : resp.getEntity().getContentType().getValue();
 		resp.getEntity().consumeContent();
-		assertTrue("Expected 406 but received "+resp.getStatusLine()+",Content-type='invalid/content-type' but received "+respType, resp.getStatusLine().getStatusCode() == 406 || respType.contains("application/svg+xml"));
+		assertTrue("Expected 406 but received "+resp.getStatusLine()+",Content-type='invalid/content-type' but received "+respType, resp.getStatusLine().getStatusCode() == 406 || respType.contains("invalid/content-type"));
 	}
 	
 	
