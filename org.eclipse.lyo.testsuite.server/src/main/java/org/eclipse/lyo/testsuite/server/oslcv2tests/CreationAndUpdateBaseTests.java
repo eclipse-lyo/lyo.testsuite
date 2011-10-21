@@ -204,16 +204,33 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
 				.getStatusCode());
 		Header location = resp.getFirstHeader("Location");
+		Header eTag = resp.getFirstHeader("ETag");
+		Header lastModified = resp.getFirstHeader("Last-Modified");
+		
 		// Assert that we were given a Location header pointing to the resource
 		assertNotNull(
 				"Expected 201-Created to return non-null Location header",
 				location);
 		
 		// Ignore ETag and Last-Modified for these tests
+		int size = headers.length;
+		if( eTag != null ) size++;
+		if( lastModified != null ) size++;
+		Header[] putHeaders = new Header[size];
+		int i=0;
+		for(;i<headers.length;i++){
+			putHeaders[i] = headers[i];
+		}
+		if( eTag != null ) {
+			putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue());
+		}
+		if( lastModified != null ) {
+			putHeaders[i++] = new BasicHeader("If-Unmodified-Since", lastModified.getValue());
+		}		
 
 		// Now, go to the url of the new change request and update it.
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, accept,
-				contentType, invalidContent, headers);
+				contentType, invalidContent, putHeaders);
 		if (resp.getEntity() != null) {
 			resp.getEntity().consumeContent();
 		}
@@ -240,18 +257,34 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
 				.getStatusCode());
 		Header location = resp.getFirstHeader("Location");
+		Header eTag = resp.getFirstHeader("ETag");
+		Header lastModified = resp.getFirstHeader("Last-Modified");
 
 		// Assert that we were given a Location header pointing to the resource
 		assertFalse("Expected Location header on 201-Created", location == null);
 
 		// Ignore eTag and Last-Modified for this test
+		int size = headers.length;
+		if( eTag != null ) size++;
+		if( lastModified != null ) size++;
+		Header[] putHeaders = new Header[size];
+		int i=0;
+		for(;i<headers.length;i++){
+			putHeaders[i] = headers[i];
+		}
+		if( eTag != null ) {
+			putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue());
+		}
+		if( lastModified != null ) {
+			putHeaders[i++] = new BasicHeader("If-Unmodified-Since", lastModified.getValue());
+		}
 
 		// Now, go to the url of the new change request and update it.
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "*/*",
-				badType, updateContent, headers);
+				badType, updateContent, putHeaders);
 		if (resp != null && resp.getEntity() != null)
 			resp.getEntity().consumeContent();
-		// TODO: SHould this be 400 or 415 or both?
+
 		assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, resp.getStatusLine()
 				.getStatusCode());
 
