@@ -86,9 +86,15 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 			ParserConfigurationException, SAXException {
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
 				currentUrl + query, basicCreds, OSLCConstants.CT_XML, headers);
-		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (HttpStatus.SC_OK != statusCode)
+		{
+			EntityUtils.consume(response.getEntity());
+			throw new IOException("Response code: " + statusCode + " for " + currentUrl + query);
+		}
+
 		String responseBody = EntityUtils.toString(response.getEntity());
-		response.getEntity().consumeContent();
+
 		Document doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
 		Node results = (Node) OSLCUtils.getXPath().evaluate(
 				"//oslc:ResponseInfo/@rdf:about", doc, XPathConstants.NODE);
