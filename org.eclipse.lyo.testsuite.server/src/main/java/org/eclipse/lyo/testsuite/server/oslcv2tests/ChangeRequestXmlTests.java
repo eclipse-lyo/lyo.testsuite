@@ -117,7 +117,7 @@ public class ChangeRequestXmlTests extends TestsBase {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryBase + query, basicCreds, 
 					OSLCConstants.CT_XML, headers);
 			String respBody = EntityUtils.toString(resp.getEntity());
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 			assertTrue("Received " +resp.getStatusLine(), (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK));
 			//Get XML Doc from response
 			Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);

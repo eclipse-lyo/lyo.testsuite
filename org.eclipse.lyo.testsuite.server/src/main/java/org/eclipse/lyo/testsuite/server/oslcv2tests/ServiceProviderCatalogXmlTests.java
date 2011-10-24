@@ -462,7 +462,7 @@ public class ServiceProviderCatalogXmlTests extends
 			assertFalse(url.isEmpty());
 			HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl, url,
 					basicCreds, "*/*");
-			response.getEntity().consumeContent();
+			EntityUtils.consume(response.getEntity());
 			assertFalse(response.getStatusLine().getStatusCode() == 404);
 		}
 	}
@@ -486,7 +486,7 @@ public class ServiceProviderCatalogXmlTests extends
 			assertNotNull(url);
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, url,
 					basicCreds, "*/*");
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 			assertFalse(resp.getStatusLine().getStatusCode() == 404);
 		}
 	}

@@ -145,7 +145,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, "invalid/content-type", 
 				headers);
 		String respType =  (resp.getEntity().getContentType() == null) ? "" : resp.getEntity().getContentType().getValue();
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected 406 but received "+resp.getStatusLine()+",Content-type='invalid/content-type' but received "+respType, resp.getStatusLine().getStatusCode() == 406 || respType.contains("invalid/content-type"));
 	}
 	
@@ -156,7 +156,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
 				OSLCConstants.CT_XML, headers);
 		//Make sure the response to this URL was of valid type
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		String contentType = resp.getEntity().getContentType().getValue();
 		String contentTypeSplit[] = contentType.split(";");
 		contentType = contentTypeSplit[0];

@@ -51,6 +51,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -126,7 +127,7 @@ public class OSLCUtils {
 		httpget.setHeader("Accept", acceptTypes);
 		httpget.setHeader("OSLC-Core-Version", "2.0");
 		HttpResponse response = httpclient.execute(httpget);
-		response.getEntity().consumeContent();
+		EntityUtils.consume(response.getEntity());
 		
 		if (response.containsHeader("OSLC-Core-Version") && 
 				response.getFirstHeader("OSLC-Core-Version").getValue().equals("2.0"))
@@ -296,6 +297,6 @@ public class OSLCUtils {
 		httppost.addHeader("OSLC-Core-Version", "2.0");
 		//Get the response and return it
 		HttpResponse response = httpclient.execute(httppost);
-		response.getEntity().consumeContent();
+		EntityUtils.consume(response.getEntity());
 	}
 }

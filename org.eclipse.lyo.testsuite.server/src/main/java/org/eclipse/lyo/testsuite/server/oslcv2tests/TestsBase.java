@@ -332,7 +332,7 @@ public class TestsBase {
 	    // Used to hold RDF from doing service discovery
 		Model spModel = ModelFactory.createDefaultModel(); 
 		spModel.read(resp.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		
 		// Get all the "inlined" definitions for Service Providers, namely
 		// all subjects whose rdf:type = oslc:ServiceProvider
@@ -441,7 +441,7 @@ public class TestsBase {
 		try {
 			resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, setupBaseUrl, null, "*/*");
 			if (resp.getEntity() != null) {
-				resp.getEntity().consumeContent();
+				EntityUtils.consume(resp.getEntity());
 			}
 			// Post info to forms auth page
 			OSLCUtils.setupFormsAuth(formUri, userId, pw);

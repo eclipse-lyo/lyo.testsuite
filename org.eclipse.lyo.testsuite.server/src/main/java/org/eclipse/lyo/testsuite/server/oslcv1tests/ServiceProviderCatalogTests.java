@@ -112,7 +112,7 @@ public class ServiceProviderCatalogTests {
 			System.out.println("The content-type of a ServiceProviderCatalog should be " 
 					+ OSLCConstants.CT_DISC_CAT_XML);
 			System.out.println("The content-type returned was " + resp.getEntity().getContentType());
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 			return new ArrayList<Object[]>();
 		}
 		Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(EntityUtils.toString(resp.getEntity()));
@@ -157,7 +157,7 @@ public class ServiceProviderCatalogTests {
 	{
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, "application/svg+xml");
 		String respType =  resp.getEntity().getContentType().getValue();
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue(resp.getStatusLine().getStatusCode() == 406 || respType.contains("application/svg+xml"));
 	}
 	
@@ -165,7 +165,7 @@ public class ServiceProviderCatalogTests {
 	public void contentTypeIsServiceProviderCatalog() throws IOException
 	{
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_CAT_XML);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		//Make sure the response to this URL was of valid type
 		assertTrue(resp.getEntity().getContentType().getValue().contains(OSLCConstants.CT_DISC_CAT_XML));
 	}
@@ -283,7 +283,7 @@ public class ServiceProviderCatalogTests {
         	assertFalse(url.isEmpty());
         	HttpResponse response = OSLCUtils.getResponseFromUrl(baseUrl, url, basicCreds, "*/*");
         	assertFalse(response.getStatusLine().getStatusCode() == 404);
-        	response.getEntity().consumeContent();
+        	EntityUtils.consume(response.getEntity());
         }
 	}
 	
@@ -358,7 +358,7 @@ public class ServiceProviderCatalogTests {
 			assertNotNull(url);
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(baseUrl, url, basicCreds, "*/*");
         	assertFalse(resp.getStatusLine().getStatusCode() == 404);
-        	resp.getEntity().consumeContent();
+        	EntityUtils.consume(resp.getEntity());
 		}
 	}
 	

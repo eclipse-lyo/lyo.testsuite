@@ -111,7 +111,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, "invalid/content-type", 
 				headers);
 		String respType =  (resp.getEntity().getContentType() == null) ? "" : resp.getEntity().getContentType().getValue();
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected 406 but received "+resp.getStatusLine()+",Content-type='invalid/content-type' but received "+respType, resp.getStatusLine().getStatusCode() == 406 || respType.contains("application/svg+xml"));
 	}
 	
@@ -122,7 +122,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
 				OSLCConstants.CT_XML, headers);
 		//Make sure the response to this URL was of valid type
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		String contentType = resp.getEntity().getContentType().getValue();
 		String contentTypeSplit[] = contentType.split(";");
 		contentType = contentTypeSplit[0];
@@ -136,12 +136,12 @@ public class ServiceProviderXmlTests extends TestsBase {
 		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
 				OSLCConstants.CT_XML, headers);
 		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
-		baseResp.getEntity().consumeContent();
+		EntityUtils.consume(baseResp.getEntity());
 		
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl + "?oslc_cm:query", basicCreds,
 				OSLCConstants.CT_XML, headers);
 		String parameterRespValue = EntityUtils.toString(parameterResp.getEntity());
-		parameterResp.getEntity().consumeContent();
+		EntityUtils.consume(parameterResp.getEntity());
 		
 		assertTrue("Query response with and without did not return same response", baseRespValue.equals(parameterRespValue));
 	}

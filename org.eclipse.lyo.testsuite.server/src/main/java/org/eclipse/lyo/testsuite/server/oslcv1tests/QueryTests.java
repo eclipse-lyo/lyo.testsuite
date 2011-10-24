@@ -328,7 +328,7 @@ public class QueryTests {
 		query = query + "oslc_cm.query=notrealthing" + URLEncoder.encode("=\"defect\"", "UTF-8");
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds,
 				"application/xml");
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		//Make sure we get a 400 (BAD REQUEST) for an invalid field
 		assertTrue(resp.getStatusLine().getStatusCode() == 400);
 	}

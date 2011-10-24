@@ -113,7 +113,7 @@ public class ServiceDescriptionTests {
 		{
 			Collection<Object[]> data = new ArrayList<Object[]>();
 			data.add(new Object[] { base });
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 			return data;
 		}
 		
@@ -168,7 +168,7 @@ public class ServiceDescriptionTests {
 	{
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, "application/svg+xml");
 		String respType =  resp.getEntity().getContentType().getValue();
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue(resp.getStatusLine().getStatusCode() == 406 || respType.contains("application/svg+xml"));
 	}
 	
@@ -179,7 +179,7 @@ public class ServiceDescriptionTests {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds,
 				OSLCConstants.CT_DISC_DESC_XML);
 		//Make sure the response to this URL was of valid type
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue(resp.getEntity().getContentType().getValue().contains(OSLCConstants.CT_DISC_DESC_XML));
 	}
 	
@@ -330,7 +330,7 @@ public class ServiceDescriptionTests {
 			
 			//Perform HTTP GET request on the URL and verify it exists in some form
 			HttpResponse urlResponse = OSLCUtils.getResponseFromUrl(baseUrl, url, basicCreds, "*/*");
-			urlResponse.getEntity().consumeContent();
+			EntityUtils.consume(urlResponse.getEntity());
 			assertFalse(urlResponse.getStatusLine().getStatusCode() == 404);
 		}
 	}

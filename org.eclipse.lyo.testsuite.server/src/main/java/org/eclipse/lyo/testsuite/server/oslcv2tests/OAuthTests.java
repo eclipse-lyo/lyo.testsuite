@@ -43,6 +43,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.SSLProtocolSocketFactory;
@@ -179,12 +180,12 @@ public class OAuthTests extends TestsBase {
 		// Get a response from the base URL to setup cookies (to prevent form redirection)
 		HttpResponse resp = OSLCUtils.getResponseFromUrl("", setupBaseUrl, basicCreds,
 				OSLCConstants.CT_XML);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		// Post authorization using user credentials provided.
 		resp = OSLCUtils.postDataToUrl(provider.userAuthorizationURL + "?oauth_token=" + accessor.requestToken, 
 				basicCreds, "", "application/x-www-form-urlencoded", postParameters+ 
 				"&oauth_token=" + accessor.requestToken, headers);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		int statusCode = resp.getStatusLine().getStatusCode();
 		assertTrue("Request failed with status code: " + statusCode, statusCode < 400);
 	}
@@ -198,12 +199,12 @@ public class OAuthTests extends TestsBase {
 		
 		HttpResponse resp = OSLCUtils.getResponseFromUrl("", setupBaseUrl, basicCreds,
 				OSLCConstants.CT_XML);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		
 		resp = OSLCUtils.postDataToUrl(provider.userAuthorizationURL + "?oauth_token=" + accessor.requestToken, 
 				basicCreds, "", "application/x-www-form-urlencoded", postParameters+ 
 				"&oauth_token=" + accessor.requestToken, headers);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		int sc = resp.getStatusLine().getStatusCode();
 		assertTrue(sc == HttpStatus.SC_OK || sc == HttpStatus.SC_CREATED);
 		try

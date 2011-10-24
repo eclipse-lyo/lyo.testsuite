@@ -171,7 +171,7 @@ public class CreationAndUpdateTests {
 				OSLCConstants.CT_CR_XML, templatedDocument);
 
 		//Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
 		Header location = resp.getFirstHeader("Location");
 		//Assert that we were given a Location header pointing to the resource
@@ -181,7 +181,7 @@ public class CreationAndUpdateTests {
 		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
 		if (resp.getEntity() != null)
 		{
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 	}
 	
@@ -194,7 +194,7 @@ public class CreationAndUpdateTests {
 				OSLCConstants.CT_CR_JSON, jsonDocument);
 
 		//Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
 		Header location = resp.getFirstHeader("Location");
 		
@@ -205,7 +205,7 @@ public class CreationAndUpdateTests {
 		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "/*");
 		if (resp.getEntity() != null)
 		{
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 	}
 	
@@ -215,7 +215,7 @@ public class CreationAndUpdateTests {
 		//Issue post request using the provided template and an invalid contentType
 		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds, OSLCConstants.CT_CR_XML, 
 				"weird/type", templatedDocument);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, resp.getStatusLine().getStatusCode());
 	}
 	
@@ -225,7 +225,7 @@ public class CreationAndUpdateTests {
 		//Issue post request using the provided template and an invalid contentType
 		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds, OSLCConstants.CT_CR_XML, 
 				OSLCConstants.CT_CR_XML, "notvalidxmldefect");
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_BAD_REQUEST, resp.getStatusLine().getStatusCode());
 	}
 	
@@ -238,7 +238,7 @@ public class CreationAndUpdateTests {
 				OSLCConstants.CT_CR_XML, templatedDocument);
 
 		//Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
 		Header location = resp.getFirstHeader("Location");
 		//Assert that we were given a Location header pointing to the resource
@@ -248,7 +248,7 @@ public class CreationAndUpdateTests {
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, updateDocument);
 		if (resp.getEntity() != null)
 		{
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 		//Assert that a proper PUT resulted in a 200 OK
 		assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
@@ -256,7 +256,7 @@ public class CreationAndUpdateTests {
 		//Clean up after the test by attempting to delete the created resource
 		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
 		if (resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 	}
 	
 	@Test
@@ -268,7 +268,7 @@ public class CreationAndUpdateTests {
 				OSLCConstants.CT_CR_JSON, jsonDocument);
 
 		//Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue(resp.getStatusLine().getStatusCode() == 201);
 		Header location = resp.getFirstHeader("Location");
 		
@@ -279,7 +279,7 @@ public class CreationAndUpdateTests {
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, OSLCConstants.CT_CR_JSON, OSLCConstants.CT_CR_JSON, jsonUpdate);
 		if (resp.getEntity() != null)
 		{
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 		//Assert that a proper PUT resulted in a 200 OK
 		assertTrue(resp.getStatusLine().getStatusCode() == 200);
@@ -287,7 +287,7 @@ public class CreationAndUpdateTests {
 		//Clean up after the test by attempting to delete the created resource
 		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
 		if (resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 	}
 	
 	@Test
@@ -299,7 +299,7 @@ public class CreationAndUpdateTests {
 				OSLCConstants.CT_CR_XML, templatedDocument);
 
 		//Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue(resp.getStatusLine().getStatusCode() == 201);
 		Header location = resp.getFirstHeader("Location");
 		//Assert that we were given a Location header pointing to the resource
@@ -309,7 +309,7 @@ public class CreationAndUpdateTests {
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "*/*", OSLCConstants.CT_CR_XML, "NOTVALIDXML");
 		if (resp.getEntity() != null)
 		{
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 		//Assert that an invalid PUT resulted in a 400 BAD REQUEST
 		assertTrue(resp.getStatusLine().getStatusCode() == 400);
@@ -317,7 +317,7 @@ public class CreationAndUpdateTests {
 		//Clean up after the test by attempting to delete the created resource
 		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
 		if (resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 	}
 	
 	@Test
@@ -329,7 +329,7 @@ public class CreationAndUpdateTests {
 				OSLCConstants.CT_CR_XML, templatedDocument);
 
 		//Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue(resp.getStatusLine().getStatusCode() == 201);
 		Header location = resp.getFirstHeader("Location");
 		
@@ -340,7 +340,7 @@ public class CreationAndUpdateTests {
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "*/*", "text/html", updateDocument);
 		if (resp.getEntity() != null)
 		{
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 		//Assert that an invalid PUT resulted in a 400 BAD REQUEST
 		assertTrue(resp.getStatusLine().getStatusCode() == 415);
@@ -348,6 +348,6 @@ public class CreationAndUpdateTests {
 		//Clean up after the test by attempting to delete the created resource
 		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
 		if (resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 	}
 }

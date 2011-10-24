@@ -64,7 +64,7 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 			if (resp.getEntity().getContentType() != null) {
 				respType = resp.getEntity().getContentType().getValue();
 			}
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 			assertTrue("Expected 406 but received " + resp.getStatusLine()
 					+ " or Content-type='invalid/content-type' but received "
 					+ respType, resp.getStatusLine().getStatusCode() == 406
@@ -80,7 +80,7 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 	public void contentTypeIsSuggestedType() throws IOException {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl,
 				basicCreds, fContentType, headers);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		// Make sure the response to this URL was of valid type
 		String ct = resp.getEntity().getContentType().getValue();
 		assertTrue("Expected content-type \"" + fContentType + "\" received : "

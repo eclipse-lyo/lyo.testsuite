@@ -43,6 +43,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
@@ -125,12 +126,12 @@ public class OAuthTests {
 		//Get a response from the base URL to setup cookies (to prevent form redirection)
 		HttpResponse resp = OSLCUtils.getResponseFromUrl("", baseUrl, basicCreds,
 				OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		//Post authorization using user credentials provided.
 		resp = OSLCUtils.postDataToUrl(provider.userAuthorizationURL + "?oauth_token=" + accessor.requestToken, 
 				basicCreds, "", "application/x-www-form-urlencoded", postParameters + 
 				"&oauth_token=" + accessor.requestToken);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		//Make sure the authorization did not return an error.
 		assertTrue(resp.getStatusLine().getStatusCode() < 400);
 	}
@@ -145,12 +146,12 @@ public class OAuthTests {
 		
 		HttpResponse resp = OSLCUtils.getResponseFromUrl("", baseUrl, basicCreds,
 				OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		
 		resp = OSLCUtils.postDataToUrl(provider.userAuthorizationURL + "?oauth_token=" + accessor.requestToken, 
 				basicCreds, "", "application/x-www-form-urlencoded", postParameters + 
 				"&oauth_token=" + accessor.requestToken);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		//Provide authorization by the user
 		assertTrue(resp.getStatusLine().getStatusCode() < 400);
 		

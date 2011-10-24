@@ -96,7 +96,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		// contentType
 		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
 				"*/*", "weird/type", xmlCreateTemplate, headers);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertTrue(resp.getStatusLine().getStatusCode() == 415);
 	}
 
@@ -108,7 +108,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 
 		// Assert the response gave a 201 Created
 		String responseBody = EntityUtils.toString(resp.getEntity());
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(responseBody, HttpStatus.SC_CREATED, resp.getStatusLine()
 				.getStatusCode());
 		Header location = resp.getFirstHeader("Location");
@@ -122,7 +122,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		// which is not a MUST according to the oslc cm spec
 		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
 		if (resp.getEntity() != null) {
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 	}
 
@@ -131,7 +131,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		// Issue post request using valid content type but invalid content
 		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
 				accept, accept, content, headers);
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		// TODO: What is right sc forbidden?
 		assertFalse("Expecting error but received OK", HttpStatus.SC_OK == resp
 				.getStatusLine().getStatusCode());
@@ -143,7 +143,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
 				accept, contentType, newContent, headers);
 
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
 				.getStatusCode());
 		Header location = resp.getFirstHeader("Location");
@@ -178,7 +178,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 				contentType, updateContent, putHeaders);
 		String responseBody = EntityUtils.toString(resp.getEntity());
 		if (resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		// Assert that a proper PUT resulted in a 200 OK
 		assertEquals("HTTP Response body: \n " + responseBody,
 				HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
@@ -188,7 +188,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 			resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds,
 					"*/*");
 			if (resp != null && resp.getEntity() != null)
-				resp.getEntity().consumeContent();
+				EntityUtils.consume(resp.getEntity());
 		}
 	}
 
@@ -200,7 +200,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 				accept, contentType, content, headers);
 
 		// Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
 				.getStatusCode());
 		Header location = resp.getFirstHeader("Location");
@@ -232,7 +232,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, accept,
 				contentType, invalidContent, putHeaders);
 		if (resp.getEntity() != null) {
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 		}
 		// Assert that an invalid PUT resulted in a 400 BAD REQUEST
 		assertEquals(HttpStatus.SC_BAD_REQUEST, resp.getStatusLine()
@@ -243,7 +243,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 			resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
 
 		if (resp != null && resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 	}
 
 	protected void updateCreatedResourceWithBadType(String contentType,
@@ -253,7 +253,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 				accept, contentType, createContent, headers);
 
 		// Assert the response gave a 201 Created
-		resp.getEntity().consumeContent();
+		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
 				.getStatusCode());
 		Header location = resp.getFirstHeader("Location");
@@ -283,7 +283,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "*/*",
 				badType, updateContent, putHeaders);
 		if (resp != null && resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 
 		assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, resp.getStatusLine()
 				.getStatusCode());
@@ -293,7 +293,7 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 			resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
 
 		if (resp != null && resp.getEntity() != null)
-			resp.getEntity().consumeContent();
+			EntityUtils.consume(resp.getEntity());
 	}
 
 }
