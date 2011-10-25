@@ -113,7 +113,8 @@ public class OSLCUtils {
 		{
 			httpclient = new DefaultHttpClient();
 			setupLazySSLSupport(httpclient);
-			httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+			if (creds != null)
+			   httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
 		}
 		return httpclient;
 	}
