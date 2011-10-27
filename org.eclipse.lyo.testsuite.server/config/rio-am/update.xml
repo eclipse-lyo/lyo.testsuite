@@ -15,10 +15,10 @@
  -->
 
 <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:oslc="http://open-services.net/ns/core#"
-	xmlns:oslc_rm="http://open-services.net/ns/rm#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	xmlns:oslc_am="http://open-services.net/ns/am#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description>
 	<dcterms:title>updatedResource</dcterms:title>
-	<dcterms:description>updateedResource</dcterms:description>
-    <rdf:type rdf:resource="http://open-services.net/ns/rm#Requirement"/>
+	<dcterms:description>updatedResource</dcterms:description>
+    <rdf:type rdf:resource="http://open-services.net/ns/am#Resource"/>
   </rdf:Description>
 </rdf:RDF>
