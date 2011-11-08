@@ -49,7 +49,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Selector;
 import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 
 /**
@@ -82,8 +81,6 @@ public class ChangeRequestRdfXmlTests extends TestsBase {
 		fRdfModel.read(response.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
-		
-		
 		fResource = (Resource) fRdfModel.getResource(currentUrl);
 		assumeTrue(fRdfModel.contains(fResource, RDF.type,
 				        				fRdfModel.createResource(OSLCConstants.CM_CHANGE_REQUEST_TYPE)));

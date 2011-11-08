@@ -76,9 +76,7 @@ public class ServiceProviderCatalogRdfXmlTests extends
 				OSLCConstants.JENA_RDF_XML);
 		catalog = (Resource) rdfModel.getResource(currentUrl);
 
-		assertTrue("Failed to read Catalog resource at URI: "+currentUrl,
-				rdfModel.contains(catalog, RDF.type,
-				rdfModel.createResource(OSLCConstants.SERVICE_PROVIDER_CATALOG_TYPE)));
+		assertNotNull("Failed to read Catalog resource at URI: "+currentUrl, catalog);
 	}
 	
 	@Parameters
