@@ -331,7 +331,9 @@ public class TestsBase {
 
 	    // Used to hold RDF from doing service discovery
 		Model spModel = ModelFactory.createDefaultModel(); 
-		spModel.read(resp.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
+		spModel.read(resp.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, inBaseURL),
+				OSLCConstants.JENA_RDF_XML);
 		EntityUtils.consume(resp.getEntity());
 		
 		// Get all the "inlined" definitions for Service Providers, namely
@@ -387,7 +389,7 @@ public class TestsBase {
 					basicCreds, OSLCConstants.CT_RDF, headers);
 			
 			Model spModel = ModelFactory.createDefaultModel();
-			spModel.read(resp.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
+			spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
 
 			Property capProp = spModel.createProperty(propertyUri);
 			Property usageProp = spModel.createProperty(OSLCConstants.USAGE_PROP);

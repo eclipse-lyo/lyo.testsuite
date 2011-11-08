@@ -78,7 +78,9 @@ public class ChangeRequestRdfXmlTests extends TestsBase {
         // Make sure the request succeeded before continuing.
         assertEquals(HttpStatus.SC_OK, sc);
 
-        fRdfModel.read(response.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
+		fRdfModel.read(response.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
+				OSLCConstants.JENA_RDF_XML);
 		fResource = (Resource) fRdfModel.getResource(currentUrl);
 		assumeNotNull(fResource);
 	}
@@ -113,7 +115,7 @@ public class ChangeRequestRdfXmlTests extends TestsBase {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryBaseUri + query, basicCreds, 
 					OSLCConstants.CT_RDF, headers);
 			Model queryModel = ModelFactory.createDefaultModel();
-			queryModel.read(resp.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
+			queryModel.read(resp.getEntity().getContent(), queryBaseUri, OSLCConstants.JENA_RDF_XML);
 
 			Property member = queryModel.createProperty(OSLCConstants.RDFS_MEMBER);
 			Resource queryBase = queryModel.getResource(queryBaseUri);
