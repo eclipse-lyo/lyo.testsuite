@@ -71,7 +71,9 @@ public class ServiceProviderCatalogRdfXmlTests extends
 		assertEquals("Did not successfully retrieve catalog at: " 
 				+ currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-		rdfModel.read(response.getEntity().getContent(), currentUrl);
+		rdfModel.read(response.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
+				OSLCConstants.JENA_RDF_XML);
 		catalog = (Resource) rdfModel.getResource(currentUrl);
 
 		assertNotNull("Failed to read Catalog resource at URI: "+currentUrl, catalog);
@@ -100,7 +102,7 @@ public class ServiceProviderCatalogRdfXmlTests extends
     	data.add(new Object[] { base });
 
 		Model rdfModel = ModelFactory.createDefaultModel();
-		rdfModel.read(resp.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
+		rdfModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
 
 		Property catPredicate = rdfModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
 		Selector select = new SimpleSelector(null, catPredicate, (RDFNode)null); 

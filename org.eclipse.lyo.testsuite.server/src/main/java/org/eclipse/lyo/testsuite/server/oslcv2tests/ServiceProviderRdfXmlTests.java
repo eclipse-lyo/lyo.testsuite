@@ -76,7 +76,9 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
         		headers);
 		assertEquals("Did not successfully retrieve ServiceProvider at: "+currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-		fRdfModel.read(response.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
+		fRdfModel.read(response.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
+				OSLCConstants.JENA_RDF_XML);
 		fServiceProvider = (Resource) fRdfModel.getResource(currentUrl);
 
 		assertNotNull("Failed to read ServiceProvider resource at URI: "+currentUrl, fServiceProvider);

@@ -90,7 +90,9 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
 		Model queryModel = ModelFactory.createDefaultModel();
-		queryModel.read(response.getEntity().getContent(), OSLCConstants.JENA_RDF_XML);
+		queryModel.read(response.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
+				OSLCConstants.JENA_RDF_XML);
 		EntityUtils.consume(response.getEntity());
 		Resource responseInfoRes = (Resource) queryModel.getResource(currentUrl + query);
 		assumeNotNull("Expended ResponseInfo/@rdf:about to equal request URL", responseInfoRes);
