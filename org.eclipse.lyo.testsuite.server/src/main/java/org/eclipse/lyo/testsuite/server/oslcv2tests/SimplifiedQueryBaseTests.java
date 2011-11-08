@@ -69,9 +69,9 @@ public class SimplifiedQueryBaseTests extends TestsBase {
 
 	protected String getQueryUrlForalidEqualsQueryContainsExpectedResources()
 			throws UnsupportedEncodingException {
-		String query = getQueryBase() + "oslc.where=" + queryProperty
-				+ URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
-				+ "&oslc.select=" + queryProperty;
+		String query = getQueryBase() + "oslc.where="
+				+ URLEncoder.encode(queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8")
+				+ "&oslc.select=" + URLEncoder.encode(queryProperty, "UTF-8");
 		return query;
 	}
 
@@ -79,40 +79,36 @@ public class SimplifiedQueryBaseTests extends TestsBase {
 			throws UnsupportedEncodingException {
 		return getQueryBase()
 				+ "oslc.where="
-				+ queryProperty
 				+ URLEncoder
-						.encode("!=\"" + queryPropertyValue + "\"", "UTF-8")
-				+ "&oslc.select=" + queryProperty;
+						.encode(queryProperty + "!=\"" + queryPropertyValue + "\"", "UTF-8")
+				+ "&oslc.select=" + URLEncoder.encode(queryProperty, "UTF-8");
 	}
 
 	protected String getQueryUrlForValidLessThanQueryContainsExpectedResources()
 			throws UnsupportedEncodingException {
 		return getQueryBase()
 				+ "oslc.where="
-				+ queryComparisonProperty
-				+ URLEncoder.encode("<\"" + queryComparisonValue + "\"",
-						"UTF-8") + "&oslc.select=" + queryComparisonProperty;
+				+ URLEncoder.encode(queryComparisonProperty + "<\"" + queryComparisonValue + "\"",
+						"UTF-8") + "&oslc.select=" + URLEncoder.encode(queryComparisonProperty, "UTF-8");
 	}
 
 	protected String getQueryUrlForValidGreaterThanQueryContainsExpectedResources()
 			throws UnsupportedEncodingException {
 		return getQueryBase()
 				+ "oslc.where="
-				+ queryComparisonProperty
-				+ URLEncoder.encode(">=\"" + queryComparisonValue + "\"",
-						"UTF-8") + "&oslc.select=" + queryComparisonProperty;
+				+ URLEncoder.encode(queryComparisonProperty + ">=\"" + queryComparisonValue + "\"",
+						"UTF-8") + "&oslc.select=" + URLEncoder.encode(queryComparisonProperty, "UTF-8");
 	}
 
 	protected String getQueryUrlForValidCompoundQueryContainsExpectedResources()
 			throws UnsupportedEncodingException {
 		return getQueryBase()
 				+ "oslc.where="
-				+ queryProperty
-				+ URLEncoder.encode("=\"" + queryPropertyValue + "\" and "
+				+ URLEncoder.encode(queryProperty + "=\"" + queryPropertyValue + "\" and "
 						+ queryComparisonProperty + ">=\""
 						+ queryComparisonValue + "\"", "UTF-8")
-				+ "&oslc.select=" + queryProperty + ","
-				+ queryComparisonProperty;
+				+ "&oslc.select=" + URLEncoder.encode(queryProperty + ","
+				+ queryComparisonProperty, "UTF-8");
 	}
 
 	protected String getQueryUrlForFullTextSearchContainsExpectedResults()
@@ -120,5 +116,4 @@ public class SimplifiedQueryBaseTests extends TestsBase {
 		return getQueryBase() + "oslc.searchTerms="
 				+ URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
 	}
-
 }
