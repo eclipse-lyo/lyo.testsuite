@@ -138,7 +138,8 @@ public class ServiceProviderXmlTests extends TestsBase {
 		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
 		EntityUtils.consume(baseResp.getEntity());
 		
-		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl + "?oslc_cm:query", basicCreds,
+		String modifiedUrl = OSLCUtils.addParameterToURL(currentUrl, "oslc.where", "dcterms:identifier=\"1\"");
+		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, modifiedUrl, basicCreds,
 				OSLCConstants.CT_XML, headers);
 		String parameterRespValue = EntityUtils.toString(parameterResp.getEntity());
 		EntityUtils.consume(parameterResp.getEntity());

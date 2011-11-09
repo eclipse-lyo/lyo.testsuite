@@ -85,8 +85,9 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
 	protected void validateNonEmptyResponse(String query)
 			throws IOException {
+		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				currentUrl + query, basicCreds, OSLCConstants.CT_RDF, headers);
+				queryUrl, basicCreds, OSLCConstants.CT_RDF, headers);
 		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
 		Model queryModel = ModelFactory.createDefaultModel();
@@ -94,7 +95,7 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
 		EntityUtils.consume(response.getEntity());
-		Resource responseInfoRes = (Resource) queryModel.getResource(currentUrl + query);
+		Resource responseInfoRes = (Resource) queryModel.getResource(queryUrl);
 		assumeNotNull("Expended ResponseInfo/@rdf:about to equal request URL", responseInfoRes);
 		Resource resultsRes = (Resource) queryModel.getResource(currentUrl);
 		assumeNotNull(resultsRes);
