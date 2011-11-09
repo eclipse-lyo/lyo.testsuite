@@ -114,7 +114,8 @@ public class ChangeRequestXmlTests extends TestsBase {
 	
 		ArrayList<String> results = new ArrayList<String>();
 		for (String queryBase : capabilityURLsUsingXML) {
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryBase + query, basicCreds, 
+			String queryUrl = OSLCUtils.addQueryStringToURL(queryBase, query);
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, basicCreds, 
 					OSLCConstants.CT_XML, headers);
 			String respBody = EntityUtils.toString(resp.getEntity());
 			EntityUtils.consume(resp.getEntity());
