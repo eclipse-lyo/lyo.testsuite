@@ -112,7 +112,8 @@ public class ChangeRequestRdfXmlTests extends TestsBase {
 
 		ArrayList<String> results = new ArrayList<String>();
 		for (String queryBaseUri : capabilityURLsUsingRdfXml) {
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryBaseUri + query, basicCreds, 
+			String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, basicCreds, 
 					OSLCConstants.CT_RDF, headers);
 			Model queryModel = ModelFactory.createDefaultModel();
 			queryModel.read(resp.getEntity().getContent(), queryBaseUri, OSLCConstants.JENA_RDF_XML);
