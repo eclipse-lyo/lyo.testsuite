@@ -112,11 +112,13 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 			Property countMember = queryModel.getProperty(OSLCConstants.TOTAL_COUNT_PROP);
 			stmts = queryModel.listStatements(responseInfoRes, countMember, (RDFNode)null);
 			stmtsList = stmts.toList();
-			Statement stmt = (Statement) stmtsList.get(0);
-			assertTrue("Expected oslc:totalCount property", stmtsList.size() == 1);
-			int totalCount = Integer.parseInt(stmt.getObject().toString());
-			assertTrue("Expected oslc:totalCount > 0",
+			if (!stmtsList.isEmpty()) {
+				assertEquals("More than one oslc:totalCount property", 1, stmtsList.size());
+				Statement stmt = (Statement) stmtsList.get(0);
+				int totalCount = Integer.parseInt(stmt.getObject().toString());
+				assertTrue("Expected oslc:totalCount > 0",
 					totalCount > 0);
+			}
 
 			Property rdfsMember = queryModel.getProperty(OSLCConstants.RDFS_MEMBER);
 			stmts = queryModel.listStatements(resultsRes, rdfsMember, (RDFNode)null);
