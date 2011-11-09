@@ -84,13 +84,14 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 	protected void validateNonEmptyResponse(String query)
 			throws XPathExpressionException, IOException,
 			ParserConfigurationException, SAXException {
+		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				currentUrl + query, basicCreds, OSLCConstants.CT_XML, headers);
+				queryUrl, basicCreds, OSLCConstants.CT_XML, headers);
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (HttpStatus.SC_OK != statusCode)
 		{
 			EntityUtils.consume(response.getEntity());
-			throw new IOException("Response code: " + statusCode + " for " + currentUrl + query);
+			throw new IOException("Response code: " + statusCode + " for " + queryUrl);
 		}
 
 		String responseBody = EntityUtils.toString(response.getEntity());
@@ -102,13 +103,13 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 		// Only test oslc:ResponseInfo if found
 		if (results != null) {
 			assertEquals("Expended ResponseInfo/@rdf:about to equal request URL",
-					currentUrl + query, results.getNodeValue());
+					queryUrl, results.getNodeValue());
 			results = (Node) OSLCUtils.getXPath().evaluate("//oslc:totalCount",
 					doc, XPathConstants.NODE);
-			assertNotNull("Expected oslc:totalCount", results);
-			int totalCount = Integer.parseInt(results.getTextContent());
-			assertTrue("Expected oslc:totalCount > 0",
-					totalCount > 0);
+			if (results != null) {
+				int totalCount = Integer.parseInt(results.getTextContent());
+				assertTrue("Expected oslc:totalCount > 0", totalCount > 0);
+			}
 
 			NodeList resultList = (NodeList) OSLCUtils.getXPath().evaluate(
 					"//rdf:Description/rdfs:member", doc, XPathConstants.NODESET);
