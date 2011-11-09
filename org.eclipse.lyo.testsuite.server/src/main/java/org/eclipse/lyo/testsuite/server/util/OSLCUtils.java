@@ -19,10 +19,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.net.ssl.SSLContext;
@@ -52,6 +56,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
+import org.junit.Assert;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -299,5 +304,92 @@ public class OSLCUtils {
 		//Get the response and return it
 		HttpResponse response = httpclient.execute(httppost);
 		EntityUtils.consume(response.getEntity());
+	}
+
+	/**
+	 * Adds a query string to the end of a URL, handling the case where the URL
+	 * already has query parameters.
+	 * 
+	 * @param url
+	 *            the URL to modify. It may or may not already have query
+	 *            parameters.
+	 * @param queryString
+	 *            the query string, starting with a '?'. For instance,
+	 *            "?oslc.properties=dcterms%3Aidentifier". Parameter values must
+	 *            already be encoded.
+	 * @return the new URL
+	 */
+	public static String addQueryStringToURL(String url, String queryString) {
+		Assert.assertTrue("queryString must begin with a '?'",
+				queryString.startsWith("?"));
+		if (url.indexOf('?') == -1) {
+			return url + queryString;
+		}
+
+		return url + '&' + queryString.substring(1);
+	}
+
+	/**
+	 * Adds query parameter values to a URL.
+	 * 
+	 * @param url
+	 *            the URL to modify
+	 * @param params
+	 *            a map of query parameters as name/value pairs
+	 * @return the new URL
+	 * @throws UnsupportedEncodingException
+	 *             on errors encoding the values
+	 */
+	public static String addParametersToURL(String url,
+			Map<String, String> queryParameters)
+			throws UnsupportedEncodingException {
+		StringBuffer updatedUrl = new StringBuffer(url);
+		if (url.indexOf('?') == -1) {
+			updatedUrl.append('?');
+		} else {
+			updatedUrl.append('&');
+		}
+
+		boolean first = true;
+		for (Entry<String, String> next : queryParameters.entrySet()) {
+			if (!first) {
+				updatedUrl.append("&");
+			}
+			updatedUrl.append(URLEncoder.encode(next.getKey(), "UTF-8"));
+			updatedUrl.append("=");
+			updatedUrl.append(URLEncoder.encode(next.getValue(), "UTF-8"));
+			first = false;
+		}
+
+		return updatedUrl.toString();
+	}
+
+	/**
+	 * Adds a single query parameter to a URL.
+	 * 
+	 * @param url
+	 *            the URL to modify
+	 * @param name
+	 *            the parameter name
+	 * @param value
+	 *            the parameter value
+	 * @return the new URL
+	 * @throws UnsupportedEncodingException
+	 *             on errors encoding the values
+	 */
+	public static String addParameterToURL(String url, String name, String value)
+			throws UnsupportedEncodingException {
+		StringBuffer updatedUrl = new StringBuffer(url);
+		if (url.indexOf('?') == -1) {
+			updatedUrl.append('?');
+		} else {
+			updatedUrl.append('&');
+		}
+
+		updatedUrl.append(URLEncoder.encode(name, "UTF-8"));
+		updatedUrl.append("=");
+		updatedUrl.append(URLEncoder.encode(value, "UTF-8"));
+		
+		return updatedUrl.toString();
 	}
 }
