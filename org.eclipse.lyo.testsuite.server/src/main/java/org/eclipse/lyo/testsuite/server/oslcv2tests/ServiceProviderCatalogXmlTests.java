@@ -96,9 +96,14 @@ public class ServiceProviderCatalogXmlTests extends
 		staticSetup();
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 				basicCreds, OSLCConstants.CT_XML, headers);
+		
+		int statusCode = resp.getStatusLine().getStatusCode();
+		if (HttpStatus.SC_OK != statusCode)
+		{
+			EntityUtils.consume(resp.getEntity());
+			throw new IOException("Response code: " + statusCode + " for " + base);
+		}
 
-		assertEquals("Did not successfully retrieve catalog at: " + base,
-				HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 		String respBody = EntityUtils.toString(resp.getEntity());
 		Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
