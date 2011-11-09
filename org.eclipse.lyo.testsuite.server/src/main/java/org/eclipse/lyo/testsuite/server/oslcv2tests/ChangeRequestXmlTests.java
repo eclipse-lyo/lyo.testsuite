@@ -121,8 +121,14 @@ public class ChangeRequestXmlTests extends TestsBase {
 			assertTrue("Received " +resp.getStatusLine(), (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK));
 			//Get XML Doc from response
 			Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
+			//Check for results by reference (rdf:resource)
 			Node result = (Node) OSLCUtils.getXPath().evaluate("//rdfs:member/@rdf:resource", 
 					doc, XPathConstants.NODE);
+			if (result == null)
+				//No results by reference. Check for inline results (rdf:about)
+				result = (Node) OSLCUtils.getXPath().evaluate(
+						"//rdfs:member/oslc_cm_v2:ChangeRequest/@rdf:about", doc,
+						XPathConstants.NODE);
 			if (result != null)
 				results.add(result.getNodeValue());
 			if (onlyOnce)
