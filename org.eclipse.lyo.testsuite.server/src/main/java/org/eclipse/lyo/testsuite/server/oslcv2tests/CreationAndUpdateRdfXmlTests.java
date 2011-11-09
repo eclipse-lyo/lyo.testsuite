@@ -102,6 +102,12 @@ public class CreationAndUpdateRdfXmlTests extends CreationAndUpdateBaseTests {
 				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
 				rdfXmlUpdateTemplate, "invalid/type");
 	}
-	
-	// TODO: Add GET and PUT tests for ETag and/or Last-Modified
+
+	@Test
+	public void updateCreatedResourceWithFailedPrecondition()
+			throws IOException {
+		updateCreatedResourceWithFailedPrecondition(OSLCConstants.CT_RDF,
+				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
+				rdfXmlUpdateTemplate);
+	}
 }

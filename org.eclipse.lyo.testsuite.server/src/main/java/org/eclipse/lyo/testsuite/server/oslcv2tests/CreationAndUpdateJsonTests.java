@@ -100,4 +100,11 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
 				"invalid/type");
 	}
 
+	@Test
+	public void updateCreatedResourceWithFailedPrecondition()
+			throws IOException {
+		updateCreatedResourceWithFailedPrecondition(OSLCConstants.CT_JSON,
+				OSLCConstants.CT_JSON, jsonCreateTemplate,
+				jsonUpdateTemplate);
+	}
 }

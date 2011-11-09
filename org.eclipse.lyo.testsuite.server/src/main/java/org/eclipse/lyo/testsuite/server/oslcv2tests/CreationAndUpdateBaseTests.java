@@ -139,15 +139,8 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 
 	protected void createResourceAndUpdateIt(String contentType, String accept,
 			String newContent, String updateContent) throws IOException {
-		// Issue post request using the provided template
-		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
-				accept, contentType, newContent, headers);
-
-		EntityUtils.consume(resp.getEntity());
-		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
-				.getStatusCode());
-		Header location = resp.getFirstHeader("Location");
-		assertFalse(location == null);
+		HttpResponse resp = createResource(contentType, accept, newContent);
+		Header location = getRequiredLocationHeader(resp);
 		
 		Header eTag = resp.getFirstHeader("ETag");
 		Header lastModified = resp.getFirstHeader("Last-Modified");
@@ -195,22 +188,10 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 	protected void updateCreatedResourceWithInvalidContent(String contentType,
 			String accept, String content, String invalidContent)
 			throws IOException {
-		// Issue post request using the provided template
-		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
-				accept, contentType, content, headers);
-
-		// Assert the response gave a 201 Created
-		EntityUtils.consume(resp.getEntity());
-		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
-				.getStatusCode());
-		Header location = resp.getFirstHeader("Location");
+		HttpResponse resp = createResource(contentType, accept, content);
+		Header location = getRequiredLocationHeader(resp);
 		Header eTag = resp.getFirstHeader("ETag");
 		Header lastModified = resp.getFirstHeader("Last-Modified");
-		
-		// Assert that we were given a Location header pointing to the resource
-		assertNotNull(
-				"Expected 201-Created to return non-null Location header",
-				location);
 		
 		// Ignore ETag and Last-Modified for these tests
 		int size = headers.length;
@@ -249,19 +230,10 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 	protected void updateCreatedResourceWithBadType(String contentType,
 			String accept, String createContent, String updateContent,
 			String badType) throws IOException {
-		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
-				accept, contentType, createContent, headers);
-
-		// Assert the response gave a 201 Created
-		EntityUtils.consume(resp.getEntity());
-		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
-				.getStatusCode());
-		Header location = resp.getFirstHeader("Location");
+		HttpResponse resp = createResource(contentType, accept, createContent);
+		Header location = getRequiredLocationHeader(resp);
 		Header eTag = resp.getFirstHeader("ETag");
 		Header lastModified = resp.getFirstHeader("Last-Modified");
-
-		// Assert that we were given a Location header pointing to the resource
-		assertFalse("Expected Location header on 201-Created", location == null);
 
 		// Ignore eTag and Last-Modified for this test
 		int size = headers.length;
@@ -296,4 +268,63 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 			EntityUtils.consume(resp.getEntity());
 	}
 
+	private HttpResponse createResource(String contentType, String accept,
+			String createContent) throws IOException {
+		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
+				accept, contentType, createContent, headers);
+
+		// Assert the response gave a 201 Created
+		EntityUtils.consume(resp.getEntity());
+		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
+				.getStatusCode());
+		return resp;
+	}
+
+	private Header getRequiredLocationHeader(HttpResponse resp) {
+		Header location = resp.getFirstHeader("Location");
+		
+		// Assert that we were given a Location header pointing to the resource
+		assertNotNull(
+				"Expected 201-Created to return non-null Location header",
+				location);
+		
+		return location;
+	}
+	
+	protected void updateCreatedResourceWithFailedPrecondition(String contentType,
+			String accept, String createContent, String updateContent) throws IOException {
+		HttpResponse resp = createResource(contentType, accept, createContent);
+		Header location = getRequiredLocationHeader(resp);
+		Header eTag = resp.getFirstHeader("ETag");
+		Header lastModified = resp.getFirstHeader("Last-Modified");
+
+		assertTrue("Either ETag("+eTag+") or Last-Modified("+lastModified+") must not be null", eTag != null || lastModified != null ) ;
+
+		int size = headers.length + 1;
+		Header[] putHeaders = new Header[size];
+		int i=0;
+		for(;i<headers.length;i++){
+			putHeaders[i] = headers[i];
+		}
+		if( eTag != null ) {
+			putHeaders[i++] = new BasicHeader("If-Match", "Bogus");
+		} else if( lastModified != null ) {
+			putHeaders[i++] = new BasicHeader("If-Unmodified-Since", "Tue, 15 Nov 1994 12:45:26 GMT");
+		}
+
+		// Now, go to the url of the new change request and update it.
+		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, accept,
+				contentType, updateContent, putHeaders);
+		if (resp != null && resp.getEntity() != null)
+			EntityUtils.consume(resp.getEntity());
+
+		assertEquals(HttpStatus.SC_PRECONDITION_FAILED, resp.getStatusLine()
+				.getStatusCode());
+
+		// Clean up after the test by attempting to delete the created resource
+		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
+
+		if (resp != null && resp.getEntity() != null)
+			EntityUtils.consume(resp.getEntity());
+	}
 }
