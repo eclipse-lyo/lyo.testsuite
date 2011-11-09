@@ -28,7 +28,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
@@ -48,6 +47,7 @@ import com.hp.hpl.jena.rdf.model.Selector;
 import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ServiceProviderCatalogRdfXmlTests extends
 		ServiceProviderCatalogBaseTests {
@@ -76,7 +76,9 @@ public class ServiceProviderCatalogRdfXmlTests extends
 				OSLCConstants.JENA_RDF_XML);
 		catalog = (Resource) rdfModel.getResource(currentUrl);
 
-		assertNotNull("Failed to read Catalog resource at URI: "+currentUrl, catalog);
+		assertTrue("Failed to read Catalog resource at URI: "+currentUrl,
+				rdfModel.contains(catalog, RDF.type,
+				rdfModel.createResource(OSLCConstants.SERVICE_PROVIDER_CATALOG_TYPE)));
 	}
 	
 	@Parameters

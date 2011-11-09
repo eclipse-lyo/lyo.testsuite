@@ -28,7 +28,6 @@ import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -48,6 +47,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 
 /**
@@ -81,8 +81,9 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 				OSLCConstants.JENA_RDF_XML);
 		fServiceProvider = (Resource) fRdfModel.getResource(currentUrl);
 
-		assertNotNull("Failed to read ServiceProvider resource at URI: "+currentUrl, fServiceProvider);
-
+		assertTrue("Failed to read ServiceProvider resource at URI: "
+				+ currentUrl, fRdfModel.contains(fServiceProvider, RDF.type,
+				fRdfModel.createResource(OSLCConstants.SERVICE_PROVIDER_TYPE)));
 	}
 	
 	@Parameters
