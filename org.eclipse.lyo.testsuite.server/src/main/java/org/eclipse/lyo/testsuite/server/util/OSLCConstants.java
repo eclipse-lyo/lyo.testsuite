@@ -77,6 +77,7 @@ public interface OSLCConstants {
 	
 	
 	// OSLC CM 2.0
+	public static final String CM_CHANGE_REQUEST_TYPE = OSLC_CM_V2 + "ChangeRequest";
 	public static final String CM_CLOSE_DATE_PROP 	= OSLC_CM_V2 + "closeDate";
 	public static final String CM_STATUS_PROP 		= OSLC_CM_V2 + "status";
 	public static final String CM_CLOSED_PROP 		= OSLC_CM_V2 + "closed";

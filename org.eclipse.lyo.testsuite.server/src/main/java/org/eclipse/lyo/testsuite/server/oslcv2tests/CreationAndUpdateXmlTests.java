@@ -96,4 +96,12 @@ public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
 				OSLCConstants.CT_XML, xmlCreateTemplate, xmlUpdateTemplate,
 				"invalid/type");
 	}
+
+	@Test
+	public void updateCreatedResourceWithFailedPrecondition()
+			throws IOException {
+		updateCreatedResourceWithFailedPrecondition(OSLCConstants.CT_XML,
+				OSLCConstants.CT_XML, xmlCreateTemplate,
+				xmlUpdateTemplate);
+	}
 }
