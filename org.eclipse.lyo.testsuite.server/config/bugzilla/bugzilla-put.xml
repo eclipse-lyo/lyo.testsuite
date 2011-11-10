@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF 
+     xmlns:dcterms="http://purl.org/dc/terms/" 
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:oslc_cm="http://open-services.net/ns/cm#">
+
+    <oslc_cm:ChangeRequest rdf:about="">
+         <oslc_cm:relatedChangeRequest rdf:ID="link1"
+             rdf:resource="http://example.com/bugs/123" />
+    </oslc_cm:ChangeRequest>
+
+    <rdf:Description rdf:about="#link1">
+        <dcterms:title>Defect 123: Problems during install</dcterms:title>
+   </rdf:Description>
+</rdf:RDF>

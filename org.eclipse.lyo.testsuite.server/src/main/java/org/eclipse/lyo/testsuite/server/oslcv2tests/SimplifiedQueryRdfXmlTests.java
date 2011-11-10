@@ -86,8 +86,9 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
 	protected void validateNonEmptyResponse(String query)
 			throws IOException {
+		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				currentUrl + query, basicCreds, OSLCConstants.CT_RDF, headers);
+				queryUrl, basicCreds, OSLCConstants.CT_RDF, headers);
 		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
 		Model queryModel = ModelFactory.createDefaultModel();
@@ -106,16 +107,19 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 			Resource responseInfoRes = resIter.nextResource();
 			assertEquals(
 					"Response info URI should match the request URI (with query parameters)",
-					currentUrl + query, responseInfoRes.getURI());
+					queryUrl, responseInfoRes.getURI());
 
-			Property countMember = queryModel.getProperty(OSLCConstants.TOTAL_COUNT_PROP);
+			Property countMember = queryModel
+					.getProperty(OSLCConstants.TOTAL_COUNT_PROP);
 			StmtIterator stmts = responseInfoRes.listProperties(countMember);
 			List<?> stmtsList = stmts.toList();
-			Statement stmt = (Statement) stmtsList.get(0);
-			assertTrue("Expected oslc:totalCount property", stmtsList.size() == 1);
-			int totalCount = Integer.parseInt(stmt.getObject().toString());
-			assertTrue("Expected oslc:totalCount > 0",
-					totalCount > 0);
+			if (!stmtsList.isEmpty()) {
+				Statement stmt = (Statement) stmtsList.get(0);
+				assertTrue("Expected oslc:totalCount property",
+						stmtsList.size() == 1);
+				int totalCount = Integer.parseInt(stmt.getObject().toString());
+				assertTrue("Expected oslc:totalCount > 0", totalCount > 0);
+			}
 
 			stmts = queryModel.listStatements(resultsRes, RDFS.member, (RDFNode)null);
 			stmtsList = stmts.toList();
