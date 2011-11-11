@@ -45,9 +45,12 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * This class provides JUnit tests for the basic validation of query factories
@@ -83,8 +86,9 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
 	protected void validateNonEmptyResponse(String query)
 			throws IOException {
+		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				currentUrl + query, basicCreds, OSLCConstants.CT_RDF, headers);
+				queryUrl, basicCreds, OSLCConstants.CT_RDF, headers);
 		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
 		Model queryModel = ModelFactory.createDefaultModel();
