@@ -69,8 +69,8 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 	public static String[] getCreateTemplateTypes() throws FileNotFoundException {
 		Model m = ModelFactory.createDefaultModel();
 		m.read(new StringReader(rdfXmlUpdateTemplate), "http://base.url", OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(m);
 		Property rdfType = m.getProperty(OSLCConstants.RDF_TYPE_PROP);
-		RDFUtils.printModel(m);
 		Selector select = new SimpleSelector(null, rdfType, (RDFNode)null); 
 		List l = m.listStatements(select).toList();
 		String[] types = new String[l.size()];

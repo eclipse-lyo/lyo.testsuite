@@ -37,6 +37,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -335,6 +336,7 @@ public class TestsBase {
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, inBaseURL),
 				OSLCConstants.JENA_RDF_XML);
 		EntityUtils.consume(resp.getEntity());
+		RDFUtils.validateModel(spModel);
 		
 		// Get all the "inlined" definitions for Service Providers, namely
 		// all subjects whose rdf:type = oslc:ServiceProvider
@@ -390,7 +392,8 @@ public class TestsBase {
 			
 			Model spModel = ModelFactory.createDefaultModel();
 			spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
-
+			RDFUtils.validateModel(spModel);
+			
 			Property capProp = spModel.createProperty(propertyUri);
 			Property usageProp = spModel.createProperty(OSLCConstants.USAGE_PROP);
 			Selector select = new SimpleSelector(null, capProp, (RDFNode)null);

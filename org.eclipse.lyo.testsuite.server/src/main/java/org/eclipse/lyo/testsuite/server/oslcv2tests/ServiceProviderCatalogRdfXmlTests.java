@@ -32,6 +32,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,10 +71,12 @@ public class ServiceProviderCatalogRdfXmlTests extends
 
 		assertEquals("Did not successfully retrieve catalog at: " 
 				+ currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-
+	
 		rdfModel.read(response.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(rdfModel);
+		
 		catalog = (Resource) rdfModel.getResource(currentUrl);
 
 		assertNotNull("Failed to read Catalog resource at URI: "+currentUrl, catalog);
@@ -103,7 +106,8 @@ public class ServiceProviderCatalogRdfXmlTests extends
 
 		Model rdfModel = ModelFactory.createDefaultModel();
 		rdfModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
-
+        RDFUtils.validateModel(rdfModel);
+        
 		Property catPredicate = rdfModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
 		Selector select = new SimpleSelector(null, catPredicate, (RDFNode)null); 
 		StmtIterator listStatements = rdfModel.listStatements(select);
