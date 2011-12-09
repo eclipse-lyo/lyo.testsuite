@@ -160,7 +160,18 @@ public class TestsBase {
 	public static ArrayList<String> getServiceProviderURLsUsingXML(String inBaseURL, boolean dontGoDeep)
 		throws IOException, XPathException, ParserConfigurationException,
 		SAXException {
+
 		staticSetup();
+		
+		// ArrayList to contain the urls from all SPCs
+	    ArrayList<String> data = new ArrayList<String>();
+	    
+	    // If we are given a shortcut, then use it and skip the rest
+	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
+	    	data.add(useThisServiceProvider);
+	    	return data;
+	    }
+		
 		String base=null;
 		if (inBaseURL == null) 
 			base = setupBaseUrl;
@@ -172,8 +183,6 @@ public class TestsBase {
 		Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(EntityUtils
 				.toString(resp.getEntity()));
 
-		// ArrayList to contain the urls from all SPCs
-		ArrayList<String> data = new ArrayList<String>();
 
 		// Get all ServiceProvider urls from the base document in order to
 		// recursively add all the capability urls from them as well.
