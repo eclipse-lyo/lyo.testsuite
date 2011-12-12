@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    Copyright (c) 2011 IBM Corporation.
+   
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+   
+    The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+    and the Eclipse Distribution License is available at 
+    http://www.eclipse.org/org/documents/edl-v10.php.
+   
+    Contributors:
+   
+       Steve Speicher - initial API and implementation
+ -->
+
+<rdf:RDF
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:rqm_qm="http://jazz.net/xmlns/prod/jazz/rqm/qm/1.0/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:oslc_qm="http://open-services.net/ns/qm#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/" > 
+ <rdf:Description rdf:about="https://quagmire.rtp.raleigh.ibm.com:9443/qm/oslc_qm/stubby">
+  <rdf:type rdf:resource="http://open-services.net/ns/qm#TestScript"/>
+  <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Steve's test-</dcterms:description>
+  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:9443/jts/users/unassigned"/>
+  <dcterms:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Steves other Test Script</dcterms:title>
+ </rdf:Description>
+</rdf:RDF>
