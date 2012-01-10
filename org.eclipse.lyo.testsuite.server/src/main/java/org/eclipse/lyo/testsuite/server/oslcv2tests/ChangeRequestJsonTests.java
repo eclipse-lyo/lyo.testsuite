@@ -17,7 +17,6 @@ package org.eclipse.lyo.testsuite.server.oslcv2tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
@@ -26,12 +25,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
@@ -48,20 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-
 
 /**
  * This class provides JUnit tests for the validation of a change request returned by accessing the change
