@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    Copyright (c) 2011 IBM Corporation.
+   
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+   
+    The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+    and the Eclipse Distribution License is available at 
+    http://www.eclipse.org/org/documents/edl-v10.php.
+   
+    Contributors:
+   
+       Steve Speicher - initial API and implementation
+ -->
+
+<rdf:RDF xmlns:cq="http://www.ibm.com/xmlns/prod/rational/clearquest/1.0/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:oslc="http://open-services.net/ns/core#" xmlns:oslc_cm="http://open-services.net/ns/cm#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<oslc_cm:ChangeRequest>
+		<dcterms:description>Updated from OSLC Test Suite</dcterms:description>
+	</oslc_cm:ChangeRequest>
+</rdf:RDF>

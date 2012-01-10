@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+
+<project basedir="." default="build" name="org.eclipse.lyo.testsuite.server">
+	
+    <echo message="basedir = ${basedir}"/>    
+    <property name="compliance.props" value="${basedir}/compliance.props"/>
+	<property file="${compliance.props}"/>
+	<echo message="top = ${top}"/>
+	<echo message="eclipse_home = ${eclipse_home}"/>
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <property environment="env"/>
+	<property name="ECLIPSE_HOME" value="${eclipse_home}"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="Maven Dependencies.libraryclasspath">
+        <pathelement location="${top}/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar"/>
+        <pathelement location="${top}/.m2/repository/com/hp/hpl/jena/jena/2.5.7/jena-2.5.7.jar"/>
+        <pathelement location="${top}/.m2/repository/com/hp/hpl/jena/arq/2.6.0/arq-2.6.0.jar"/>
+        <pathelement location="${top}/.m2/repository/org/apache/lucene/lucene-core/2.3.1/lucene-core-2.3.1.jar"/>
+        <pathelement location="${top}/.m2/repository/stax/stax-api/1.0/stax-api-1.0.jar"/>
+        <pathelement location="${top}/.m2/repository/woodstox/wstx-asl/3.0.0/wstx-asl-3.0.0.jar"/>
+        <pathelement location="${top}/.m2/repository/com/hp/hpl/jena/json-jena/1.0/json-jena-1.0.jar"/>
+        <pathelement location="${top}/.m2/repository/com/hp/hpl/jena/iri/0.5/iri-0.5.jar"/>
+        <pathelement location="${top}/.m2/repository/antlr/antlr/2.7.5/antlr-2.7.5.jar"/>
+        <pathelement location="${top}/.m2/repository/com/hp/hpl/jena/concurrent-jena/1.3.2/concurrent-jena-1.3.2.jar"/>
+        <pathelement location="${top}/.m2/repository/com/ibm/icu/icu4j/3.4.4/icu4j-3.4.4.jar"/>
+        <pathelement location="${top}/.m2/repository/xerces/xercesImpl/2.7.1/xercesImpl-2.7.1.jar"/>
+        <pathelement location="${top}/.m2/repository/xerces/xmlParserAPIs/2.0.2/xmlParserAPIs-2.0.2.jar"/>
+        <pathelement location="${top}/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+        <pathelement location="${top}/.m2/repository/org/apache/httpcomponents/httpclient/4.1.2/httpclient-4.1.2.jar"/>
+        <pathelement location="${top}/.m2/repository/org/apache/httpcomponents/httpcore/4.1.2/httpcore-4.1.2.jar"/>
+        <pathelement location="${top}/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar"/>
+        <pathelement location="${top}/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
+        <pathelement location="${top}/.m2/repository/net/oauth/core/oauth/20090617/oauth-20090617.jar"/>
+        <pathelement location="${top}/.m2/repository/net/oauth/core/oauth-consumer/20090617/oauth-consumer-20090617.jar"/>
+        <pathelement location="${top}/.m2/repository/net/oauth/core/oauth-httpclient3/20090617/oauth-httpclient3-20090617.jar"/>
+        <pathelement location="${top}/.m2/repository/org/apache/wink/wink-json4j/1.1.2-incubating/wink-json4j-1.1.2-incubating.jar"/>
+        <pathelement location="${top}/.m2/repository/org/slf4j/slf4j-simple/1.5.10/slf4j-simple-1.5.10.jar"/>
+        <pathelement location="${top}/.m2/repository/org/slf4j/slf4j-api/1.5.10/slf4j-api-1.5.10.jar"/>
+    </path>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	  <classpath>
+	    <pathelement location="${top}/.m2/repository/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"/>
+	  </classpath>
+	</taskdef>
+    <path id="org.eclipse.lyo.testsuite.server.classpath">
+        <pathelement location="../../target/classes"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+    <path id="run.org.eclipse.lyo.testsuite.server.classpath">
+        <path refid="org.eclipse.lyo.testsuite.server.classpath"/>
+        <path refid="Maven Dependencies.libraryclasspath"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="../../target/classes"/>
+        <copy includeemptydirs="false" todir="../../target/classes">
+            <fileset dir="../../src/main/java">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    
+	<target name="clean">
+        <delete dir="../../target/classes"/>
+    </target>
+    
+	<target depends="clean" name="cleanall"/>
+    
+	<target depends="build-subprojects,build-project" name="build"/>
+    
+	<target name="build-subprojects"/>
+    
+	<target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="../../target/classes" source="${source}" target="${target}">
+            <src path="../../src/main/java"/>
+            <classpath refid="org.eclipse.lyo.testsuite.server.classpath"/>
+        </javac>
+    </target>
+    
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    
+	<target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+	
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    
+	<target name="provider-test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="no" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>        
+            <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestRdfXmlTests" todir="${junit.output.dir}"/>        
+            <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
+            <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
+        	<!-- <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.OAuthTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.QueryTests" todir="${junit.output.dir}"/> -->
+            
+            <jvmarg line="-Dprops=../../config/rtc/rtc-setupv2.properties"/>
+            <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>
+        </junit>
+    </target>
+	
+	<target name="merge-results">
+		<echo message="Detecting Previous TESTS-TestSuites.xml Result File ..."/>
+	    <if>
+	        <available file="${junit.output.dir}/TESTS-TestSuites.xml"/>
+	        <then>
+	        	<echo message="A Previous TESTS-TestSuites.xml Result File Detected ..."/>
+	        	<echo message="Deleting TESTS-TestSuites.xml Result File ..."/>
+	    		<delete file="${junit.output.dir}/TESTS-TestSuites.xml" failonerror="true"/>
+	        </then>
+	    	<else>
+	    		<echo message="NO TESTS-TestSuites.xml Result File Detected ..."/>
+	    	</else>
+	    </if>
+		<echo message="Merging Results of Individual JUnit xml into TESTS-TestSuites.xml"/>
+		<xslt in="./oslc-spec-mapping/oslc-cm-v2.xml" out="${junit.output.dir}/TESTS-TestSuites.xml"	style="./reportstyle/merge-results.xsl"/>
+	</target>
+	
+	<target name="append-oslc-spec-info" depends="merge-results">
+		<echo message="Detecting A Previous TESTS-TestSuitesOSLC.xml Result File ..."/>
+			    <if>
+			        <available file="${junit.output.dir}/TESTS-TestSuitesOSLC.xml"/>
+			        <then>
+			        	<echo message="A Previous TESTS-TestSuitesOSLC.xml Result File Detected ..."/>
+			        	<echo message="Deleting TESTS-TestSuitesOSLC.xml Result File ..."/>
+			    		<delete file="${junit.output.dir}/TESTS-TestSuitesOSLC.xml" failonerror="true"/>
+			        </then>
+			    	<else>
+			    		<echo message="NO TESTS-TestSuitesOSLC.xml Result File Detected ..."/>
+			    	</else>
+			    </if>
+				<echo message="Converting TESTS-TestSuites.xml into TESTS-TestSuitesOSLC.xml to include OSLC specification data"/>
+		<xslt in="${junit.output.dir}/TESTS-TestSuites.xml" out="${junit.output.dir}/TESTS-TestSuitesOSLC.xml"	style="./reportstyle/append-oslc-spec-info.xsl"/>
+	</target>
+	
+    <target name="junitreport" depends="append-oslc-spec-info">
+    	<echo message="Detecting A Previous OSLCComplianceReport.html file within the report directory ..."/>
+    		    <if>
+    		        <available file="./report/OSLCComplianceReport.html"/>
+    		        <then>
+    		        	<echo message="A Previous OSLCComplianceReport.html file within the report directory was detected ..."/>
+    		        	<echo message="Deleting the OSLCComplianceReport.html file within the report directory ..."/>
+    		    		<delete file="./report/OSLCComplianceReport.html" failonerror="true"/>
+    		    		<delete file="./report/barchartSVG.svg" failonerror="true"/>
+    		        </then>
+    		    	<else>
+    		    		<echo message="NO OSLCComplianceReport.html file within the report directory was detected ..."/>
+    		    	</else>
+    		    </if>
+    			<echo message="Converting TESTS-TestSuitesOSLC.xml into a HTML report"/>
+    	<xslt in="${junit.output.dir}/TESTS-TestSuitesOSLC.xml" out="./report/barchartSVG.svg"	style="./reportstyle/barchartSVG.xsl"/>
+    	<xslt in="${junit.output.dir}/TESTS-TestSuitesOSLC.xml" out="./report/OSLCComplianceReport.html"	style="./reportstyle/junit-noframes.xsl"/>
+
+    </target>
+</project>

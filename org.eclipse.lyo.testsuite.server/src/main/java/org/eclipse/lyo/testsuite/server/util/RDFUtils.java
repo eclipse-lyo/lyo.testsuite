@@ -15,8 +15,15 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server.util;
 
+import java.util.Iterator;
+
+import org.junit.Assert;
+
+import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.reasoner.ValidityReport;
 
 public class RDFUtils {
 
@@ -27,4 +34,26 @@ public class RDFUtils {
 			System.out.println(listProperties.nextStatement().toString());
 		}
 	}
+	
+	public static void validateModel(Model model) {
+
+        InfModel infmodel = ModelFactory.createRDFSModel(model);
+        ValidityReport validityReport = infmodel.validate();
+
+        if (!validityReport.isClean()) {
+
+            StringBuffer errorMessage = new StringBuffer();
+            errorMessage.append("Invalid model:"); //$NON-NLS-1$
+
+            Iterator<ValidityReport.Report> reports = validityReport.getReports();
+
+            while(reports.hasNext()){
+
+                errorMessage.append('\n');
+                errorMessage.append(reports.next().toString());
+            }
+
+            Assert.fail(errorMessage.toString());
+        }
+    }
 }
