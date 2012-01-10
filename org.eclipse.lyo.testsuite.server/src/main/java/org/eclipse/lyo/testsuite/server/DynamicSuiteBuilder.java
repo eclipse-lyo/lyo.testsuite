@@ -77,6 +77,7 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestJsonTests.class);
 				}
 			}
 			testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests.class);
@@ -93,6 +94,7 @@ public class DynamicSuiteBuilder
 			testsToRun.add(QueryTests.class);
 			testsToRun.add(OAuthTests.class);
 		}
+				
 		//Return array of test classes
 		return testsToRun.toArray(new Class<?>[0]);
 	}

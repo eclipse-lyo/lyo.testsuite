@@ -35,6 +35,12 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.apache.wink.json4j.JSON;
+import org.apache.wink.json4j.JSONArray;
+import org.apache.wink.json4j.JSONArtifact;
+import org.apache.wink.json4j.JSONException;
+import org.apache.wink.json4j.JSONObject;
+//import org.apache.wink.json4j.compat.JSONArray;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
@@ -463,4 +469,98 @@ public class TestsBase {
 		}
 	}
 
+	public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL)
+	throws IOException, XPathException, ParserConfigurationException,
+	SAXException {
+		return getServiceProviderURLsUsingXML(inBaseURL, onlyOnce);
+	}
+	
+	public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL, boolean dontGoDeep)
+		throws IOException, XPathException, ParserConfigurationException,
+		SAXException, NullPointerException, JSONException {
+		
+		staticSetup();
+		
+	    // ArrayList to contain the urls from all SPCs
+	    ArrayList<String> data = new ArrayList<String>();
+
+		String base=null;
+		if (inBaseURL == null) 
+			base = setupBaseUrl;
+		else
+			base = inBaseURL;
+		
+		// If we are given a shortcut, then use it and skip the rest
+	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
+	    	data.add(useThisServiceProvider);
+	    	return data;
+	    }
+	    
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
+				basicCreds, OSLCConstants.CT_JSON, headers);		
+		assertEquals("Failed to retrieve ServiceProviders at: "+inBaseURL, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
+		
+		String respBody = EntityUtils.toString(resp.getEntity());
+		
+		// Create mapping of JSON variables
+		JSONArtifact userData = JSON.parse(respBody);
+		JSONObject resultJson = null;
+		if (userData instanceof JSONArtifact) {
+			resultJson = (JSONObject)userData;
+		}
+
+		JSONArray results = (JSONArray)resultJson.get("oslc:serviceProvider");
+		
+		// Now walk through the array to get a list of service providers
+		for (int i = 0; i < results.length(); i++) {
+			JSONObject serviceProviderJSON = (JSONObject) results.get(i);
+			String serviceProvider = (String)serviceProviderJSON.get("rdf:about");
+			data.add(serviceProvider);
+        } 
+		
+		return data;
+	}
+	
+	public static ArrayList<String> getCapabilityURLsUsingJson(String xpathStmt,
+			ArrayList<String> serviceUrls, boolean useDefaultUsage) throws IOException,
+			ParserConfigurationException, SAXException,
+			XPathExpressionException, NullPointerException, JSONException {
+		
+		// Collection to contain the creationFactory urls from all SPs
+		ArrayList<String> data = new ArrayList<String>();
+		
+		for (String base : serviceUrls) {
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
+					basicCreds, OSLCConstants.CT_JSON, headers);
+			assertEquals("Failed to retrieve ServiceProviders at: " +base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
+			
+			String respBody = EntityUtils.toString(resp.getEntity());
+			
+			// Create mapping of JSON variables
+			JSONArtifact userData = JSON.parse(respBody);
+			JSONObject resultJson = null;
+			if (userData instanceof JSONArtifact) {
+				resultJson = (JSONObject)userData;
+			}
+			JSONArray s = (JSONArray)resultJson.get("oslc:service");
+			
+			for (int i = 0; i < s.length(); i++) {
+				JSONObject serviceProviderJson = (JSONObject) s.get(i);
+				try {
+					JSONArray u = (JSONArray)serviceProviderJson.get("oslc:queryCapability");				
+					JSONObject u1 = (JSONObject) u.get(0);
+					
+					JSONObject q = (JSONObject) u1.get("oslc:queryBase");				
+					String queryBase = q.getString("rdf:resource");
+					
+					data.add(queryBase);
+				}
+				catch (JSONException e) {
+					//ignore
+				}
+			}
+		}
+		
+		return data;
+	}	
 }
