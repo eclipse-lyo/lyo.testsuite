@@ -1,0 +1,4 @@
+{
+	"dcterms:title": "OSLC JUnit Change Request",
+	"jira:issueType": { "rdf:resource": "http://jira.ibm.com:8080/rest/oslc/latest/issueTypes/1" }
+}
