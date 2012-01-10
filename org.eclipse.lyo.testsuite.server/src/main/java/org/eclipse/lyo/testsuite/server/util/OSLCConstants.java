@@ -20,6 +20,7 @@ public interface OSLCConstants {
 	static String RFC_DATE_FORMAT = "yyyy-MM-dd'T'h:m:ss.S'Z'";
 
 	static String DC = "http://purl.org/dc/terms/";
+	static String DCTERMS ="dcterms:";
 	static String RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	static String RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 	static String ATOM = "http://www.w3.org/2005/Atom";
@@ -91,7 +92,7 @@ public interface OSLCConstants {
 	public static final String RDF_TYPE_PROP		= RDF + "type";
 	public static final String RDFS_MEMBER 			= RDFS + "member";
 	
-	// DCTERMS
+	// DCTERMS URIs
 	public static final String DC_TITLE_PROP 		= DC + "title";
 	public static final String DC_DESC_PROP 		= DC + "description";
 	public static final String DC_TYPE_PROP 		= DC + "type";
@@ -101,4 +102,14 @@ public interface OSLCConstants {
 	public static final String DC_CREATED_PROP		= DC + "created";
 	public static final String DC_MODIFIED_PROP		= DC + "modified";
 
+	// DCTERMSs
+	public static final String DCTERMS_TITLE 		= DCTERMS + "title";
+	public static final String DCTERMS_DESC 		= DCTERMS + "description";
+	public static final String DCTERMS_TYPE 		= DCTERMS + "type";
+	public static final String DCTERMS_PUBLISHER 	= DCTERMS + "publisher";
+	public static final String DCTERMS_ID 			= DCTERMS + "identifier";
+	public static final String DCTERMS_NAME 		= DCTERMS + "name";
+	public static final String DCTERMS_CREATED		= DCTERMS + "created";
+	public static final String DCTERMS_MODIFIED		= DCTERMS + "modified";
+	
 }

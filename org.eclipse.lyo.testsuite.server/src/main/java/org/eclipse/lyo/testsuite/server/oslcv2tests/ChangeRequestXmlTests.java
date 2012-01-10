@@ -139,7 +139,7 @@ public class ChangeRequestXmlTests extends TestsBase {
 	}	
 	
 	@Test
-	public void changeRequestHasOneDcTitle() throws XPathExpressionException
+	public void changeRequestHasOneTitle() throws XPathExpressionException
 	{
 		// All change requests have exactly one title.
 		NodeList titles = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_cm_v2:ChangeRequest/dc:title",
