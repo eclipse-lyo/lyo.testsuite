@@ -1,0 +1,6 @@
+{
+	"oslc_cm:relatedChangeRequest": [{
+		"rdf:resource": "http://example.com/bugs/123",
+		"dcterms:title": "Defect 123: Problems during install"
+	}]
+}
