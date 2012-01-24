@@ -33,6 +33,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,6 +97,8 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
 		EntityUtils.consume(response.getEntity());
+		RDFUtils.validateModel(queryModel);
+		
 		Resource resultsRes = queryModel.getResource(currentUrl);
 		assertTrue("Expected a results resource with URI: " + currentUrl,
 				queryModel.contains(resultsRes, null));

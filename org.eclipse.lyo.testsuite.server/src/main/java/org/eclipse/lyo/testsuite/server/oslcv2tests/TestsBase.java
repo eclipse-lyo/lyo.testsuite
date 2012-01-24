@@ -43,6 +43,7 @@ import org.apache.wink.json4j.JSONObject;
 //import org.apache.wink.json4j.compat.JSONArray;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -165,7 +166,18 @@ public class TestsBase {
 	public static ArrayList<String> getServiceProviderURLsUsingXML(String inBaseURL, boolean dontGoDeep)
 		throws IOException, XPathException, ParserConfigurationException,
 		SAXException {
+
 		staticSetup();
+		
+		// ArrayList to contain the urls from all SPCs
+	    ArrayList<String> data = new ArrayList<String>();
+	    
+	    // If we are given a shortcut, then use it and skip the rest
+	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
+	    	data.add(useThisServiceProvider);
+	    	return data;
+	    }
+		
 		String base=null;
 		if (inBaseURL == null) 
 			base = setupBaseUrl;
@@ -177,8 +189,6 @@ public class TestsBase {
 		Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(EntityUtils
 				.toString(resp.getEntity()));
 
-		// ArrayList to contain the urls from all SPCs
-		ArrayList<String> data = new ArrayList<String>();
 
 		// Get all ServiceProvider urls from the base document in order to
 		// recursively add all the capability urls from them as well.
@@ -344,6 +354,7 @@ public class TestsBase {
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, inBaseURL),
 				OSLCConstants.JENA_RDF_XML);
 		EntityUtils.consume(resp.getEntity());
+		RDFUtils.validateModel(spModel);
 		
 		// Get all the "inlined" definitions for Service Providers, namely
 		// all subjects whose rdf:type = oslc:ServiceProvider
@@ -399,7 +410,8 @@ public class TestsBase {
 			
 			Model spModel = ModelFactory.createDefaultModel();
 			spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
-
+			RDFUtils.validateModel(spModel);
+			
 			Property capProp = spModel.createProperty(propertyUri);
 			Property usageProp = spModel.createProperty(OSLCConstants.USAGE_PROP);
 			Selector select = new SimpleSelector(null, capProp, (RDFNode)null);

@@ -33,6 +33,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,6 +80,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 		fRdfModel.read(response.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(fRdfModel);
 		fServiceProvider = (Resource) fRdfModel.getResource(currentUrl);
 
 		assertTrue("Failed to read ServiceProvider resource at URI: "

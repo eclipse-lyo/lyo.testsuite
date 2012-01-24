@@ -34,6 +34,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,7 +83,7 @@ public class ChangeRequestRdfXmlTests extends TestsBase {
 		fRdfModel.read(response.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
-		
+		RDFUtils.validateModel(fRdfModel);
 		
 		fResource = (Resource) fRdfModel.getResource(currentUrl);
 		assumeTrue(fRdfModel.contains(fResource, RDF.type,
@@ -121,7 +122,8 @@ public class ChangeRequestRdfXmlTests extends TestsBase {
 					OSLCConstants.CT_RDF, headers);
 			Model queryModel = ModelFactory.createDefaultModel();
 			queryModel.read(resp.getEntity().getContent(), queryBaseUri, OSLCConstants.JENA_RDF_XML);
-
+            RDFUtils.validateModel(queryModel);
+            
 			Property member = queryModel.createProperty(OSLCConstants.RDFS_MEMBER);
 			Resource queryBase = queryModel.getResource(queryBaseUri);
 			Selector select = new SimpleSelector(queryBase, member, (RDFNode)null); 
