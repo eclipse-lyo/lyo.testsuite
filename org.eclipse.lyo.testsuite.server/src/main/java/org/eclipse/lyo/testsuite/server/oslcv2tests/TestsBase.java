@@ -189,6 +189,9 @@ public class TestsBase {
 		for (int i = 0; i < sps.getLength(); i++) {
 			if (!sps.item(i).getNodeValue().equals(base) || sps.getLength() == 1) {
 				data.add(sps.item(i).getNodeValue());
+				if (onlyOnce)
+					return data;
+				
 				if (dontGoDeep)
 					return data;
 			}

@@ -106,7 +106,10 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	    
 	    for (String serviceURL : serviceURLs) {
 			data.add(new Object[] {serviceURL});
+			if (onlyOnce)
+				return data;
 		}
+	    
 	    return data;
 	}
 	
