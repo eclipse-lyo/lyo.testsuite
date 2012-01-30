@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<provider-test>
+	<spec domain="OSLC-CM">
+		<error type="AppBehavior" regexp="Expected 406 but received(.*?)Content-type(.*?)invalid/content-type(.*?)but received text/xml(.*?)">
+			<rootcause>Response Code 406 Failures of this type occur when ...</rootcause>
+			<action>Create Response Code 406...</action>
+			<action>Adjust Response Code 406...</action>
+			<action>Verify Response Code 406...</action>
+			<action>Investigate Response Code 406...</action>
+		</error>
+		<error type="TestConfiguration" regexp="Expected oslc:totalCount > 0">
+			<rootcause>OSLC Total Count Failures of this type occur when ...</rootcause>
+			<action>Create Total Count ...</action>
+			<action>Adjust Total Count ...</action>
+			<action>Verify Total Count ...</action>
+			<action>Investigate Total Count ...</action>
+		</error>
+		<error type="TestConfiguration" regexp="invalid_consumer_key">
+			<rootcause>OAuth Failures of this type occur when ...</rootcause>
+			<action>Create OAuth ...</action>
+			<action>Adjust OAuth...</action>
+			<action>Verify OAuth ...</action>
+			<action>Investigate OAuth ...</action>
+		</error>
+		<error type="TestDesign" regexp="No public static parameters method on class(.*?)">
+			<rootcause>Failures/Errors of this type occur when ...</rootcause>
+			<action>Create a public static parameter ...</action>
+			<action>Adjust a public static parameter...</action>
+			<action>Verify a public static parameter ...</action>
+			<action>Investigate a public static parameter ...</action>
+		</error>
+		<error type="Network" regexp="java.net.UnknownHostException:(.*?)">
+			<rootcause>Unknown Host Exception Failures of this type occur when ...</rootcause>
+			<action>Check connectivity ...</action>
+			<action>Adjust network settings...</action>
+			<action>Verify baseUri is valid and accessible ...</action>
+			<action>Investigate network adapter ...</action>
+		</error>
+		<error type="Network" regexp="Connection to(.*?)refused">
+			<rootcause>Network Connection Failures of this type occur when ...</rootcause>
+			<action>Check connectivity ...</action>
+			<action>Adjust network settings...</action>
+			<action>Verify baseUri hostname and port is valid and accessible ...</action>
+			<action>Investigate network adapter ...</action>
+		</error>
+		<error type="AppBehavior" regexp="Received HTTP/1.1 500 Unresolved compilation problems:(.*?)cannot be resolved(.*?)">
+			<rootcause>Compilation Failures of this type occur when ...</rootcause>
+			<action>Check compilation ...</action>
+			<action>Adjust compilation...</action>
+			<action>Verify compilation ...</action>
+			<action>Investigate compilation ...</action>
+		</error>
+		<error type="TestDesign" regexp="Source string may not be null(.*?)">
+			<rootcause>Source string failures of this type occur when ...</rootcause>
+			<action>Check arguments for source string ...</action>
+			<action>Adjust source string ...</action>
+			<action>Verify source string ...</action>
+			<action>Investigate source string ...</action>
+		</error>
+		<error type="TestConfiguration" regexp="Invalid use of SingleClientConnManager(.*?)">
+			<rootcause>Single Client Connection Failures of this type occur when ...</rootcause>
+			<action>Check connectivity ...</action>
+			<action>Adjust network settings...</action>
+			<action>Verify baseUri is valid and accessible ...</action>
+			<action>Investigate network adapter ...</action>
+		</error>
+		<error type="AppBehavior" regexp="expected:(.*?)but was:(.*?)">
+			<rootcause>Single Client Connection Failures of this type occur when ...</rootcause>
+			<action>Check connectivity ...</action>
+			<action>Adjust network settings...</action>
+			<action>Verify baseUri is valid and accessible ...</action>
+			<action>Investigate network adapter ...</action>
+		</error>
+		<error type="AppBehavior" regexp="Expected content-type(.*?)received :(.*?)">
+			<rootcause>Content-type Failures of this type occur when ...</rootcause>
+			<action>Check content-type ...</action>
+			<action>Adjust content-type...</action>
+			<action>Verify content-type ...</action>
+			<action>Investigate content-type ...</action>
+		</error>
+		<error type="AppBehavior" regexp="Response code:(.*?)for(.*?)">
+			<rootcause>Response Code Failures of this type occur when ...</rootcause>
+			<action>Check Response Code ...</action>
+			<action>Adjust Response Code...</action>
+			<action>Verify Response Code ...</action>
+			<action>Investigate Response Code ...</action>
+		</error>	
+	</spec>
+</provider-test>
