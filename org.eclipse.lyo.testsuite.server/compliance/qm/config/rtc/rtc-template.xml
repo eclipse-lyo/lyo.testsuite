@@ -1,0 +1,25 @@
+<!--
+    Copyright (c) 2011 IBM Corporation.
+   
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+   
+    The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+    and the Eclipse Distribution License is available at 
+    http://www.eclipse.org/org/documents/edl-v10.php.
+   
+    Contributors:
+   
+       Steve Speicher - initial API and implementation
+ -->
+<oslc_cm:ChangeRequest
+  xmlns:dc="http://purl.org/dc/terms/" 
+  xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/">
+  <dc:title>templatedDefect</dc:title>
+  <dc:description>templatedDefect</dc:description>
+  <dc:type rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14444/ccm/oslc/types/_RQHaoPtbEeC-iIvPBDtJAA/com.ibm.team.apt.workItemType.story"/>
+  <rtc_cm:filedAgainst rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14444/ccm/resource/itemOid/com.ibm.team.workitem.Category/_SSWTsPtbEeC-iIvPBDtJAA"/>
+</oslc_cm:ChangeRequest>

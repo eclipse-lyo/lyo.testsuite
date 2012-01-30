@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="5" hostname="Richard-Bones-MacBook-Pro-2.local" name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" tests="7" time="0.763" timestamp="2012-01-26T21:40:08">
+  <properties>
+    <property name="java.vendor" value="Apple Inc." />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="eclipse.pdebuild.templates" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/templates//" />
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers" />
+    <property name="os.name" value="Mac OS X" />
+    <property name="sun.boot.class.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsfd.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/Resources/Java/JavaRuntimeSupport.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/ui.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/laf.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/sunrsasign.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsse.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar" />
+    <property name="env.TMPDIR" value="/var/folders/7t/7tr2vlh2FvqcNIGefrA10U+++TI/-Tmp-/" />
+    <property name="env.APP_ICON_466" value="../Resources/RTC_512.icns" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="ant.home" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145" />
+    <property name="java.runtime.version" value="1.6.0_29-b11-402-10M3527" />
+    <property name="env.Apple_PubSub_Socket_Render" value="/tmp/launch-xK8xiA/Render" />
+    <property name="env.DISPLAY" value="/tmp/launch-ogX6wn/org.x:0" />
+    <property name="user.name" value="rabone" />
+    <property name="env.USER" value="rabone" />
+    <property name="env.SHELL" value="/bin/bash" />
+    <property name="env.__CF_USER_TEXT_ENCODING" value="0x1F5:0:0" />
+    <property name="awt.nativeDoubleBuffering" value="true" />
+    <property name="eclipse_home" value="/Users/rabone/Downloads/jazz/client/eclipse" />
+    <property name="env.PATH" value="/usr/bin:/bin:/usr/sbin:/sbin" />
+    <property name="user.language" value="en" />
+    <property name="sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries" />
+    <property name="todir" value="junit/RQM" />
+    <property name="ant.project.name" value="org.eclipse.lyo.testsuite.server" />
+    <property name="java.version" value="1.6.0_29" />
+    <property name="user.timezone" value="" />
+    <property name="sun.arch.data.model" value="64" />
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16" />
+    <property name="java.endorsed.dirs" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/endorsed" />
+    <property name="sun.cpu.isalist" value="" />
+    <property name="sun.jnu.encoding" value="MacRoman" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="ECLIPSE_HOME" value="/Users/rabone/Downloads/jazz/client/eclipse" />
+    <property name="file.separator" value="/" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="java.class.version" value="50.0" />
+    <property name="compliance.props" value="/Users/rabone/git/lyo.testsuite/org.eclipse.lyo.testsuite.server/compliance/qm/compliance.props" />
+    <property name="user.country" value="US" />
+    <property name="java.home" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="env.LOGNAME" value="rabone" />
+    <property name="ant.file" value="/Users/rabone/git/lyo.testsuite/org.eclipse.lyo.testsuite.server/compliance/qm/rqm-compliance-test.xml" />
+    <property name="os.version" value="10.6.8" />
+    <property name="path.separator" value=":" />
+    <property name="java.vm.version" value="20.4-b02-402" />
+    <property name="ant.library.dir" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib" />
+    <property name="junit.output.dir" value="junit" />
+    <property name="java.awt.printerjob" value="apple.awt.CPrinterJob" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="awt.toolkit" value="apple.awt.CToolkit" />
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16" />
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16" />
+    <property name="eclipse.pdebuild.scripts" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/scripts//" />
+    <property name="user.home" value="/Users/rabone" />
+    <property name="target" value="1.6" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="env.JAVA_STARTED_ON_FIRST_THREAD_39252" value="1" />
+    <property name="env.JAVA_STARTED_ON_FIRST_THREAD_466" value="1" />
+    <property name="props" value="config/rqm/rqm-setupv2.properties" />
+    <property name="java.library.path" value=".:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:/Users/rabone/Downloads/jazz/client/eclipse/configuration/org.eclipse.osgi/bundles/488/1/.cp" />
+    <property name="java.vendor.url" value="http://www.apple.com/" />
+    <property name="provider" value="RQM" />
+    <property name="java.vm.vendor" value="Apple Inc." />
+    <property name="gopherProxySet" value="false" />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="sun.java.command" value="org.eclipse.ant.internal.ui.antsupport.InternalAntRunner -Dorg.eclipse.ant.core.ANT_PROCESS_ID=1327613989288 -Declipse.connect.port=59888 -Declipse.pdebuild.home=/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/.// -Declipse.pdebuild.scripts=/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/scripts// -Declipse.pdebuild.templates=/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/templates// -Dant.home=/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145 -logger org.eclipse.ant.internal.ui.antsupport.logger.RemoteAntBuildLogger -inputhandler org.eclipse.ant.internal.ui.antsupport.inputhandler.ProxyInputHandler -buildfile /Users/rabone/git/lyo.testsuite/org.eclipse.lyo.testsuite.server/compliance/qm/rqm-compliance-test.xml build provider-test junitreport" />
+    <property name="java.class.path" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-antlr.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-apache-bcel.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-apache-bsf.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-apache-log4j.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-apache-oro.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-apache-regexp.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-apache-resolver.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-commons-logging.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-commons-net.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-jai.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-javamail.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-jdepend.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-jmf.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-jsch.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-junit.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-launcher.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-netrexx.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-nodeps.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-starteam.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-stylebook.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-swing.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-trax.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-weblogic.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant-contrib-1.0b3.jar:/Users/rabone/Downloads/jazz/client/eclipse/configuration/org.eclipse.osgi/bundles/342/1/.cp/lib/remoteAnt.jar:/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.eclipse.swt.cocoa.macosx_3.5.2.v3557f.jar" />
+    <property name="ant.version" value="Apache Ant version 1.7.1 compiled on June 27 2008" />
+    <property name="env.com.apple.java.jvmMode" value="client" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.os.patch.level" value="unknown" />
+    <property name="debuglevel" value="source,lines,vars" />
+    <property name="env.HOME" value="/Users/rabone" />
+    <property name="env.ANT_HOME" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145" />
+    <property name="java.io.tmpdir" value="/var/folders/7t/7tr2vlh2FvqcNIGefrA10U+++TI/-Tmp-/" />
+    <property name="eclipse.pdebuild.home" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.eclipse.pde.build_3.5.2.R35x_20100114/.//" />
+    <property name="top" value="/Users/rabone" />
+    <property name="java.vendor.url.bug" value="http://bugreport.apple.com/" />
+    <property name="env.SSH_AUTH_SOCK" value="/tmp/launch-x99zs0/Listeners" />
+    <property name="env.JAVA_MAIN_CLASS_39252" value="org.eclipse.ant.internal.ui.antsupport.InternalAntRunner" />
+    <property name="env.COMMAND_MODE" value="unix2003" />
+    <property name="mrj.build" value="10M3527" />
+    <property name="java.awt.graphicsenv" value="apple.awt.CGraphicsEnvironment" />
+    <property name="os.arch" value="x86_64" />
+    <property name="ant.file.org.eclipse.lyo.testsuite.server" value="/Users/rabone/git/lyo.testsuite/org.eclipse.lyo.testsuite.server/compliance/qm/rqm-compliance-test.xml" />
+    <property name="java.ext.dirs" value="/Library/Java/Extensions:/System/Library/Java/Extensions:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext" />
+    <property name="user.dir" value="/Users/rabone/git/lyo.testsuite/org.eclipse.lyo.testsuite.server/compliance/qm" />
+    <property name="env.com.apple.java.jvmTask" value="JNI.java" />
+    <property name="mrj.version" value="1060.1.6.0_29-402" />
+    <property name="line.separator" value="
+" />
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM" />
+    <property name="basedir" value="/Users/rabone/git/lyo.testsuite/org.eclipse.lyo.testsuite.server/compliance/qm" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="ant.core.lib" value="/Users/rabone/Downloads/jazz/client/eclipse/plugins/org.apache.ant_1.7.1.v20090120-1145/lib/ant.jar" />
+    <property name="source" value="1.6" />
+    <property name="file.encoding" value="UTF-8" />
+    <property name="java.specification.version" value="1.6" />
+  </properties>
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" name="createValidResourceUsingTemplate[0]" time="0.115">
+    <failure message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;https://jbslnxvh02.ottawa.ibm.com:9443/qm/web/com.ibm.rqm.oslc.web/ui/internal/style/ErrorStyle.xsl&quot;?&gt;
+&lt;rdf:RDF xmlns:oslc_qm=&quot;http://open-services.net/xmlns/qm/1.0/&quot; xmlns:jproc=&quot;http://jazz.net/xmlns/prod/jazz/process/1.0/&quot; xmlns:ns8=&quot;http://open-services.net/ns/qm#&quot; xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot; xmlns:dcterms=&quot;http://purl.org/dc/terms/&quot; xmlns:oslc_disc=&quot;http://open-services.net/xmlns/discovery/1.0/&quot; xmlns:jpres=&quot;http://jazz.net/xmlns/prod/jazz/presentation/1.0/&quot; xmlns:oslc=&quot;http://open-services.net/ns/core#&quot; xmlns:rqm_qm=&quot;http://jazz.net/xmlns/prod/jazz/rqm/qm/1.0/&quot; xmlns:calm=&quot;http://jazz.net/xmlns/prod/jazz/calm/1.0/&quot; xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;
+    &lt;oslc:Error ns12:type=&quot;oslc:Error&quot; xmlns:ns12=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+        &lt;oslc:statusCode&gt;415&lt;/oslc:statusCode&gt;
+        &lt;oslc:message&gt;AQXCM5010E Client error executing https://jbslnxvh02.ottawa.ibm.com:9443/qm/oslc_qm/contexts/_uxvyYEhQEeG4vuOH6PdB2g/resources/com.ibm.rqm.planning.VersionedTestCase.&lt;/oslc:message&gt;
+        &lt;rqm_qm:clientLocale&gt;en-us&lt;/rqm_qm:clientLocale&gt;
+        &lt;rqm_qm:extendedErrorInfo&gt;&lt;/rqm_qm:extendedErrorInfo&gt;
+    &lt;/oslc:Error&gt;
+&lt;/rdf:RDF&gt; expected:&lt;201&gt; but was:&lt;415&gt;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;https://jbslnxvh02.ottawa.ibm.com:9443/qm/web/com.ibm.rqm.oslc.web/ui/internal/style/ErrorStyle.xsl&quot;?&gt;
+&lt;rdf:RDF xmlns:oslc_qm=&quot;http://open-services.net/xmlns/qm/1.0/&quot; xmlns:jproc=&quot;http://jazz.net/xmlns/prod/jazz/process/1.0/&quot; xmlns:ns8=&quot;http://open-services.net/ns/qm#&quot; xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot; xmlns:dcterms=&quot;http://purl.org/dc/terms/&quot; xmlns:oslc_disc=&quot;http://open-services.net/xmlns/discovery/1.0/&quot; xmlns:jpres=&quot;http://jazz.net/xmlns/prod/jazz/presentation/1.0/&quot; xmlns:oslc=&quot;http://open-services.net/ns/core#&quot; xmlns:rqm_qm=&quot;http://jazz.net/xmlns/prod/jazz/rqm/qm/1.0/&quot; xmlns:calm=&quot;http://jazz.net/xmlns/prod/jazz/calm/1.0/&quot; xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;
+    &lt;oslc:Error ns12:type=&quot;oslc:Error&quot; xmlns:ns12=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+        &lt;oslc:statusCode&gt;415&lt;/oslc:statusCode&gt;
+        &lt;oslc:message&gt;AQXCM5010E Client error executing https://jbslnxvh02.ottawa.ibm.com:9443/qm/oslc_qm/contexts/_uxvyYEhQEeG4vuOH6PdB2g/resources/com.ibm.rqm.planning.VersionedTestCase.&lt;/oslc:message&gt;
+        &lt;rqm_qm:clientLocale&gt;en-us&lt;/rqm_qm:clientLocale&gt;
+        &lt;rqm_qm:extendedErrorInfo&gt;&lt;/rqm_qm:extendedErrorInfo&gt;
+    &lt;/oslc:Error&gt;
+&lt;/rdf:RDF&gt; expected:&lt;201&gt; but was:&lt;415&gt;
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;https://jbslnxvh02.ottawa.ibm.com:9443/qm/web/com.ibm.rqm.oslc.web/ui/internal/style/ErrorStyle.xsl&quot;?&gt;
+&lt;rdf:RDF xmlns:oslc_qm=&quot;http://open-services.net/xmlns/qm/1.0/&quot; xmlns:jproc=&quot;http://jazz.net/xmlns/prod/jazz/process/1.0/&quot; xmlns:ns8=&quot;http://open-services.net/ns/qm#&quot; xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot; xmlns:dcterms=&quot;http://purl.org/dc/terms/&quot; xmlns:oslc_disc=&quot;http://open-services.net/xmlns/discovery/1.0/&quot; xmlns:jpres=&quot;http://jazz.net/xmlns/prod/jazz/presentation/1.0/&quot; xmlns:oslc=&quot;http://open-services.net/ns/core#&quot; xmlns:rqm_qm=&quot;http://jazz.net/xmlns/prod/jazz/rqm/qm/1.0/&quot; xmlns:calm=&quot;http://jazz.net/xmlns/prod/jazz/calm/1.0/&quot; xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;
+    &lt;oslc:Error ns12:type=&quot;oslc:Error&quot; xmlns:ns12=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+        &lt;oslc:statusCode&gt;415&lt;/oslc:statusCode&gt;
+        &lt;oslc:message&gt;AQXCM5010E Client error executing https://jbslnxvh02.ottawa.ibm.com:9443/qm/oslc_qm/contexts/_uxvyYEhQEeG4vuOH6PdB2g/resources/com.ibm.rqm.planning.VersionedTestCase.&lt;/oslc:message&gt;
+        &lt;rqm_qm:clientLocale&gt;en-us&lt;/rqm_qm:clientLocale&gt;
+        &lt;rqm_qm:extendedErrorInfo&gt;&lt;/rqm_qm:extendedErrorInfo&gt;
+    &lt;/oslc:Error&gt;
+&lt;/rdf:RDF&gt; expected:&lt;201&gt; but was:&lt;415&gt;
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createValidResourceUsingTemplate(CreationAndUpdateBaseTests.java:112)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests.createValidResourceUsingTemplate(CreationAndUpdateXmlTests.java:71)
+</failure>
+  </testcase>
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" name="createResourceWithInvalidContent[0]" time="0.105" />
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" name="createResourceAndUpdateIt[0]" time="0.113">
+    <failure message="expected:&lt;201&gt; but was:&lt;415&gt;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: expected:&lt;201&gt; but was:&lt;415&gt;
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:278)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResourceAndUpdateIt(CreationAndUpdateBaseTests.java:142)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests.createResourceAndUpdateIt(CreationAndUpdateXmlTests.java:83)
+</failure>
+  </testcase>
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" name="updateCreatedResourceWithInvalidContent[0]" time="0.107">
+    <failure message="expected:&lt;201&gt; but was:&lt;415&gt;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: expected:&lt;201&gt; but was:&lt;415&gt;
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:278)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithInvalidContent(CreationAndUpdateBaseTests.java:191)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests.updateCreatedResourceWithInvalidContent(CreationAndUpdateXmlTests.java:89)
+</failure>
+  </testcase>
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" name="updateCreatedResourceWithInvalidContentType[0]" time="0.106">
+    <failure message="expected:&lt;201&gt; but was:&lt;415&gt;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: expected:&lt;201&gt; but was:&lt;415&gt;
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:278)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithBadType(CreationAndUpdateBaseTests.java:233)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests.updateCreatedResourceWithInvalidContentType(CreationAndUpdateXmlTests.java:95)
+</failure>
+  </testcase>
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" name="updateCreatedResourceWithFailedPrecondition[0]" time="0.106">
+    <failure message="expected:&lt;201&gt; but was:&lt;415&gt;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: expected:&lt;201&gt; but was:&lt;415&gt;
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:278)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithFailedPrecondition(CreationAndUpdateBaseTests.java:296)
+	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests.updateCreatedResourceWithFailedPrecondition(CreationAndUpdateXmlTests.java:103)
+</failure>
+  </testcase>
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" name="createResourceWithInvalidContentType[0]" time="0.105" />
+  <system-out><![CDATA[<?xml-stylesheet type="text/xsl" href="https://jbslnxvh02.ottawa.ibm.com:9443/qm/web/com.ibm.rqm.oslc.web/ui/internal/style/ErrorStyle.xsl"?>
+<rdf:RDF xmlns:oslc_qm="http://open-services.net/xmlns/qm/1.0/" xmlns:jproc="http://jazz.net/xmlns/prod/jazz/process/1.0/" xmlns:ns8="http://open-services.net/ns/qm#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:oslc_disc="http://open-services.net/xmlns/discovery/1.0/" xmlns:jpres="http://jazz.net/xmlns/prod/jazz/presentation/1.0/" xmlns:oslc="http://open-services.net/ns/core#" xmlns:rqm_qm="http://jazz.net/xmlns/prod/jazz/rqm/qm/1.0/" xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <oslc:Error ns12:type="oslc:Error" xmlns:ns12="http://www.w3.org/2001/XMLSchema-instance">
+        <oslc:statusCode>415</oslc:statusCode>
+        <oslc:message>AQXCM5010E Client error executing https://jbslnxvh02.ottawa.ibm.com:9443/qm/oslc_qm/contexts/_uxvyYEhQEeG4vuOH6PdB2g/resources/com.ibm.rqm.planning.VersionedTestCase.</oslc:message>
+        <rqm_qm:clientLocale>en-us</rqm_qm:clientLocale>
+        <rqm_qm:extendedErrorInfo></rqm_qm:extendedErrorInfo>
+    </oslc:Error>
+</rdf:RDF> expected:<201> but was:<415>)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,6 @@
+{
+	"dcterms:title":"templatedDefect",
+	"dcterms:description":"templatedDefect",
+	"dcterms:type":{"rdf:resource":"https:\/\/quagmire.rtp.raleigh.ibm.com:14444\/ccm\/oslc\/types\/_RQHaoPtbEeC-iIvPBDtJAA\/com.ibm.team.apt.workItemType.story"},
+	"rtc_cm:filedAgainst":{"rdf:resource":"https:\/\/quagmire.rtp.raleigh.ibm.com:14444\/ccm\/resource\/itemOid\/com.ibm.team.workitem.Category\/_SSWTsPtbEeC-iIvPBDtJAA"}
+}
