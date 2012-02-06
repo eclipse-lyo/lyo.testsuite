@@ -129,7 +129,7 @@
 		<testcase level="MUST">currentUrlIsValid</testcase>
 		<testcase level="MUST">rootAboutElementPointsToSelf</testcase>
 		<testcase level="MUST">typeIsServiceProvider</testcase>
-		<testcase level="MUST">contentTypeIsCMServiceDescription</testcase>
+		<testcase level="MUST">responseContentTypeIsXML</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasService</testcase>
 	</testclass>
@@ -137,7 +137,7 @@
 	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="ServiceProviderXmlTests">
 		<testcase level="MUST">baseUrlIsValid</testcase>
 		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
-		<testcase level="MUST">contentTypeIsCMServiceDescription</testcase>
+		<testcase level="MUST">responseContentTypeIsXML</testcase>
 		<testcase level="MUST">misplacedParametersDoNotEffectResponse</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOnePublisher</testcase>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
 <stringAttribute key="bad_container_name" value="\org.eclipse.lyo.testsuite.server\launches"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/org.eclipse.lyo.testsuite.server/src/main/java/org/eclipse/lyo/testsuite/server/DynamicSuiteBuilder.java"/>

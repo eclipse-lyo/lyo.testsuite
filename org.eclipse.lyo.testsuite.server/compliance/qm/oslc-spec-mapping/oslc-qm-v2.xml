@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <provider-test version="2.0" domain="OSLC-QM">
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="CreationAndUpdateXmlTests">
-		<testcase level="MUST">createValidResourceUsingTemplate</testcase>
+	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="CreationAndUpdateRdfXmlTests">
 		<testcase level="MUST">createResourceWithInvalidContent</testcase>
 		<testcase level="MUST">createResourceAndUpdateIt</testcase>
+		<testcase level="MUST">createValidResourceUsingRdfXmlTemplate</testcase>
+		<testcase level="MUST">createResourceWithInvalidContentType</testcase>		
 		<testcase level="MUST">updateCreatedResourceWithInvalidContent</testcase>
-		<testcase level="MUST">updateCreatedResourceWithInvalidContentType</testcase>
-		<testcase level="MUST">createResourceWithInvalidContentType</testcase>
+		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
+		<testcase level="MUST">updateCreatedResourceWithBadType</testcase>
 	</testclass>
+	
 	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="SimplifiedQueryRdfXmlTests">
 		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
@@ -16,6 +18,7 @@
 		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
 	</testclass>
+	
 	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="SimplifiedQueryXmlTests">
 		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
@@ -63,14 +66,14 @@
 		<testcase level="MUST">currentUrlIsValid</testcase>
 		<testcase level="MUST">rootAboutElementPointsToSelf</testcase>
 		<testcase level="MUST">typeIsServiceProvider</testcase>
-		<testcase level="MUST">contentTypeIsCMServiceDescription</testcase>
+		<testcase level="MUST">responseContentTypeIsXML</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasService</testcase>
 	</testclass>
 	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="ServiceProviderXmlTests">
 		<testcase level="MUST">baseUrlIsValid</testcase>
 		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
-		<testcase level="MUST">contentTypeIsCMServiceDescription</testcase>
+		<testcase level="MUST">responseContentTypeIsXML</testcase>
 		<testcase level="MUST">misplacedParametersDoNotEffectResponse</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOnePublisher</testcase>

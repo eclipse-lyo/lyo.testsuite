@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="yyin2" name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" tests="7" time="1.688" timestamp="2012-01-23T19:57:39">
+<testsuite errors="0" failures="0" hostname="yyin2" name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" tests="7" time="1.643" timestamp="2012-02-06T18:47:48">
   <properties>
     <property name="java.vendor" value="IBM Corporation" />
     <property name="env.MOZ_PLUGIN_PATH" value="C:\Program Files\Virtools\3D Life Player\" />
@@ -17,7 +17,7 @@
     <property name="ant.home" value="C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145" />
     <property name="java.runtime.version" value="jvmwi3260sr8-20100401_55940" />
     <property name="env.HOMEPATH" value="\Documents and Settings\yyin" />
-    <property name="env.IBM_JAVA_COMMAND_LINE" value="C:\WINDOWS\system32\javaw.exe -Dosgi.requiredJavaVersion=1.5 -Xms40m -Xmx512m -jar C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar -os win32 -ws win32 -arch x86 -showsplash -launcher C:\Eclipse36\eclipse\eclipse.exe -name Eclipse --launcher.library C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher.win32.win32.x86_1.1.2.R36x_v20101222\eclipse_1312.dll -startup C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar -exitdata 18c4_44 -product org.eclipse.epp.package.jee.product -vm C:\WINDOWS\system32\javaw.exe -vmargs -Dosgi.requiredJavaVersion=1.5 -Xms40m -Xmx512m -jar C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar" />
+    <property name="env.IBM_JAVA_COMMAND_LINE" value="C:\WINDOWS\system32\javaw.exe -Dosgi.requiredJavaVersion=1.5 -Xms40m -Xmx512m -jar C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar -os win32 -ws win32 -arch x86 -showsplash -launcher C:\Eclipse36\eclipse\eclipse.exe -name Eclipse --launcher.library C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher.win32.win32.x86_1.1.2.R36x_v20101222\eclipse_1312.dll -startup C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar -exitdata acc_44 -product org.eclipse.epp.package.jee.product -vm C:\WINDOWS\system32\javaw.exe -vmargs -Dosgi.requiredJavaVersion=1.5 -Xms40m -Xmx512m -jar C:\Eclipse36\eclipse\\plugins/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar" />
     <property name="user.name" value="yyin" />
     <property name="java.compiler" value="j9jit24" />
     <property name="os.encoding" value="UTF8" />
@@ -99,11 +99,11 @@ JIT  - r9_20100401_15339
 GC   - 20100308_AA" />
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
     <property name="ant.version" value="Apache Ant version 1.7.1 compiled on June 27 2008" />
-    <property name="sun.java.command" value="org.eclipse.ant.internal.launching.remote.InternalAntRunner -Dorg.eclipse.ant.core.ANT_PROCESS_ID=1327348635085 -Declipse.connect.port=3864 -Declipse.pdebuild.home=/C:/Eclipse36/eclipse/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/./ -Declipse.pdebuild.scripts=/C:/Eclipse36/eclipse/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/scripts/ -Declipse.pdebuild.templates=/C:/Eclipse36/eclipse/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/templates/ -Dant.home=C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145 -logger org.eclipse.ant.internal.launching.remote.logger.RemoteAntBuildLogger -inputhandler org.eclipse.ant.internal.ui.antsupport.inputhandler.ProxyInputHandler -buildfile C:\Documents and Settings\yyin\lyo.testsuite\org.eclipse.lyo.testsuite.server\compliance\cm\rtc-compliance-test.xml provider-test" />
+    <property name="sun.java.command" value="org.eclipse.ant.internal.launching.remote.InternalAntRunner -Dorg.eclipse.ant.core.ANT_PROCESS_ID=1328554028151 -Declipse.connect.port=1438 -Declipse.pdebuild.home=/C:/Eclipse36/eclipse/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/./ -Declipse.pdebuild.scripts=/C:/Eclipse36/eclipse/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/scripts/ -Declipse.pdebuild.templates=/C:/Eclipse36/eclipse/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/templates/ -Dant.home=C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145 -logger org.eclipse.ant.internal.launching.remote.logger.RemoteAntBuildLogger -inputhandler org.eclipse.ant.internal.ui.antsupport.inputhandler.ProxyInputHandler -buildfile C:\Documents and Settings\yyin\lyo.testsuite\org.eclipse.lyo.testsuite.server\compliance\cm\rtc-compliance-test.xml provider-test" />
     <property name="java.class.path" value="C:\ant\lib\ant-contrib-1.0b3.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-antlr.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-apache-bcel.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-apache-bsf.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-apache-log4j.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-apache-oro.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-apache-regexp.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-apache-resolver.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-commons-logging.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-commons-net.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-jai.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-javamail.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-jdepend.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-jmf.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-jsch.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-junit.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-launcher.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-netrexx.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-nodeps.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-starteam.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-stylebook.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-swing.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-trax.jar;C:\Eclipse36\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-weblogic.jar;C:\Eclipse36\eclipse\configuration\org.eclipse.osgi\bundles\46\1\.cp\lib\antdebug.jar;C:\Eclipse36\eclipse\configuration\org.eclipse.osgi\bundles\46\1\.cp\lib\remote.jar;C:\Eclipse36\eclipse\configuration\org.eclipse.osgi\bundles\47\1\.cp\lib\remoteAnt.jar;C:\Program Files\IBM\Java60\lib\tools.jar;C:\Eclipse36\eclipse\plugins\org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar" />
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
     <property name="env.windir" value="C:\WINDOWS" />
-    <property name="env.LOGONSERVER" value="\\SMADEVDC03" />
+    <property name="env.LOGONSERVER" value="\\SMADEVDC02" />
     <property name="env.PROCESSOR_ARCHITECTURE" value="x86" />
     <property name="java.vm.specification.version" value="1.0" />
     <property name="env.tvlogsessioncount" value="5000" />
@@ -147,16 +147,13 @@ GC   - 20100308_AA" />
     <property name="com.ibm.oti.jcl.build" value="20100326_1904" />
     <property name="env.PROCESSOR_LEVEL" value="6" />
   </properties>
-  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="createValidResourceUsingRdfXmlTemplate[0]" time="0.25" />
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="createValidResourceUsingRdfXmlTemplate[0]" time="0.219" />
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="createResourceWithInvalidContent[0]" time="0.047" />
-  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="createResourceAndUpdateIt[0]" time="0.422" />
-  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="updateCreatedResourceWithInvalidContent[0]" time="0.39" />
-  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="updateCreatedResourceWithBadType[0]" time="0.266" />
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="createResourceAndUpdateIt[0]" time="0.407" />
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="updateCreatedResourceWithInvalidContent[0]" time="0.406" />
+  <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="updateCreatedResourceWithBadType[0]" time="0.251" />
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="updateCreatedResourceWithFailedPrecondition[0]" time="0.25" />
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" name="createResourceWithInvalidContentType[0]" time="0.047" />
-  <system-out><![CDATA[Dumping triples....
-[7ee5159e:1350c24e454:-7f06, http://purl.org/dc/terms/description, "Updated via OSLC Test Suite (XML)"]
-[7ee5159e:1350c24e454:-7f06, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://open-services.net/ns/cm#ChangeRequest]
-]]></system-out>
+  <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
