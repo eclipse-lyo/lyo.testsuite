@@ -203,19 +203,6 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 		assertTrue(lst.size() >= 1);
 	}
 
-	@Test
-	public void invalidOslcPropertiesGivesConflict() throws IOException
-	{		
-		String paramterUrl = OSLCUtils.addParameterToURL(currentUrl, "oslc.properties", "dcterms:identifier=\"non-exist\"");
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, paramterUrl, basicCreds,
-				fContentType, headers);
-	
-		String respType =  (resp.getEntity().getContentType() == null) ? "" : resp.getEntity().getContentType().getValue();
-		EntityUtils.consume(resp.getEntity());
-		assertTrue("Expected 409 but received "+resp.getStatusLine()+",Content-type='invalid/content-type' but received "+respType, resp.getStatusLine().getStatusCode() == 409);
-
-	}
-
 	/* TODO: Complete ServiceProvider RDF/XML test validation
 
 	@Test
