@@ -116,10 +116,10 @@
         	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	        	        	
         	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>        	
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>        
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>      
+        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>
             <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
             <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
             

@@ -18,7 +18,7 @@
 	xmlns:oslc_cm="http://open-services.net/ns/cm#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description>
 	<dcterms:title>updatedResource</dcterms:title>
-	<dcterms:description>updateedResource</dcterms:description>
+	<dcterms:description>updatedResource</dcterms:description>
     <rdf:type rdf:resource="http://open-services.net/ns/cm#Resource"/>
   </rdf:Description>
 </rdf:RDF>

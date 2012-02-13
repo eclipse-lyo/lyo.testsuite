@@ -10,9 +10,10 @@
 	<property file="${compliance.props}"/>
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
+	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 	<property environment="env"/>
-    <property name="ECLIPSE_HOME" value="C:/RTC301/client/eclipse"/>
+	<property name="ECLIPSE_HOME" value="${eclipse_home}"/>
     <property name="junit.output.dir" value="junit"/>
 	<echo message="junit output dir = ${junit.output.dir}"/>
     <property name="debuglevel" value="source,lines,vars"/>
@@ -111,9 +112,12 @@
             <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderXmlTests" todir="${junit.output.dir}"/>
             <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
             <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>
-            <classpath refid="run.provider-test.classpath"/>
+        	
+        	<jvmarg line="-Dprops=../../config/jira/jira.properties"/>
+        	<classpath refid="provider-test.classpath"/>
         </junit>
     </target>
+	
 	<target name="merge-results">
 		<echo message="Detecting Previous TESTS-TestSuites.xml Result File ..."/>
 	    <if>
@@ -130,6 +134,7 @@
 		<echo message="Merging Results of Individual JUnit xml into TESTS-TestSuites.xml"/>
 		<xslt in="./oslc-spec-mapping/oslc-cm-v2.xml" out="${junit.output.dir}/TESTS-TestSuites.xml"	style="./reportstyle/merge-results.xsl"/>
 	</target>
+	
 	<target name="append-oslc-spec-info" depends="merge-results">
 		<echo message="Detecting A Previous TESTS-TestSuitesOSLC.xml Result File ..."/>
 			    <if>
@@ -145,23 +150,33 @@
 			    </if>
 				<echo message="Converting TESTS-TestSuites.xml into TESTS-TestSuitesOSLC.xml to include OSLC specification data"/>
 		<xslt in="${junit.output.dir}/TESTS-TestSuites.xml" out="${junit.output.dir}/TESTS-TestSuitesOSLC.xml"	style="./reportstyle/append-oslc-spec-info.xsl"/>
+		<copy todir="${todir}">
+		      <fileset dir="${junit.output.dir}" includes="*.xml"/>
+		</copy>
 	</target>
+	
     <target name="junitreport" depends="append-oslc-spec-info">
+    	<property name="reportdir" value="./report/${provider}"/>
     	<echo message="Detecting A Previous OSLCComplianceReport.html file within the report directory ..."/>
     		    <if>
-    		        <available file="./report/OSLCComplianceReport.html"/>
+    		        <available file="${reportdir}/OSLCComplianceReport.html"/>
     		        <then>
     		        	<echo message="A Previous OSLCComplianceReport.html file within the report directory was detected ..."/>
     		        	<echo message="Deleting the OSLCComplianceReport.html file within the report directory ..."/>
-    		    		<delete file="./report/OSLCComplianceReport.html" failonerror="true"/>
+    		    		<delete file="${reportdir}/OSLCComplianceReport.html" failonerror="true"/>
+    		    		<delete file="${reportdir}/barchartSVG.svg" failonerror="true"/>
     		        </then>
     		    	<else>
     		    		<echo message="NO OSLCComplianceReport.html file within the report directory was detected ..."/>
     		    	</else>
     		    </if>
     			<echo message="Converting TESTS-TestSuitesOSLC.xml into a HTML report"/>
-    	<xslt in="${junit.output.dir}/TESTS-TestSuitesOSLC.xml" out="./report/barchartSVG.svg"	style="./reportstyle/barchartSVG.xsl"/>
-    	<xslt in="${junit.output.dir}/TESTS-TestSuitesOSLC.xml" out="./report/OSLCComplianceReport.html"	style="./reportstyle/junit-noframes.xsl"/>
+    	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/barchartSVG.svg"	style="./reportstyle/barchartSVG.xsl"/>
+    	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/OSLCComplianceReport.html"	style="./reportstyle/junit-noframes.xsl"/>
+		
+    	<copy todir="${reportdir}">
+    		<fileset dir="./reportstyle" includes="*.png, *.gif"/>
+    	</copy>
     </target>
 
 </project>

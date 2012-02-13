@@ -394,9 +394,9 @@
 		
         <h2>OSLC compliance</h2>
 
-		<xsl:variable name="mustCount" select="'131'"/>
-		<xsl:variable name="junitMustCount" select="'102'"/>
-		<xsl:variable name="junitImplementedMustCount" select="'22'"/>
+		<xsl:variable name="mustCount" select="'155'"/>
+		<xsl:variable name="junitMustCount" select="'116'"/>
+		<xsl:variable name="junitImplementedMustCount" select="'45'"/>
 		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />    
         <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMust'])"/>
         <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMust'])"/>
@@ -643,27 +643,30 @@
 <xsl:template match="testcase" mode="print.test">
 	<xsl:variable name="length" select="string-length(@name)"/>
 	<xsl:variable name="thiscase" select="substring(@name, 0, $length - 2)"/>
+	<xsl:variable name="thisPackage" select="@classname"/>
+	<xsl:variable name="level" select="$spec//testclass[contains($thisPackage,./@name)]/testcase[normalize-space(.)=$thiscase]/@level"/>
+	
     <tr valign="top">
         <xsl:attribute name="class">
             <xsl:choose>
                 <xsl:when test="failure | error">Error</xsl:when>
             </xsl:choose>
         </xsl:attribute>
-        <td><xsl:value-of select="@name"/></td>
+        <td><xsl:value-of select="$thiscase"/></td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>
-                <td><xsl:value-of select="$spec//testcase[.=$thiscase]/@level"/></td>
+                <td><xsl:value-of select="$level"/></td>                
                 <td><xsl:apply-templates select="failure"/></td>
             </xsl:when>
             <xsl:when test="error">
                 <td>Error</td>
-                <td><xsl:value-of select="$spec//testcase[.=$thiscase]/@level"/></td>
+                <td><xsl:value-of select="$level"/></td>                
                 <td><xsl:apply-templates select="error"/></td>
             </xsl:when>
             <xsl:otherwise>
                 <td>Success</td>
-                <td><xsl:value-of select="$spec//testcase[.=$thiscase]/@level"/></td>
+                <td><xsl:value-of select="$level"/></td>
                 <td></td>
             </xsl:otherwise>
         </xsl:choose>

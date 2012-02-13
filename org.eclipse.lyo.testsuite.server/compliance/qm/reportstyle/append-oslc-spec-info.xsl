@@ -54,7 +54,7 @@
 		<xsl:variable name="thiscase" select="substring(@name, 0, $length - 2)"/>
 		<xsl:variable name="thiscaseFull" select="@name"/>
 		<xsl:variable name="thisPackage" select="@classname"/>
-		<xsl:variable name="level" select="$spec//testclass[contains($thisPackage,./@name)]/testcase[.=$thiscase]/@level"/>
+		<xsl:variable name="level" select="$spec//testclass[contains($thisPackage,./@name)]/testcase[normalize-space(.)=$thiscase]/@level"/>
 				
 		<xsl:attribute name="classname"><xsl:value-of select="@classname"/></xsl:attribute>
 		<xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
