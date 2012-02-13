@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server.oslcv2tests;
 
@@ -132,8 +133,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 
 	@Test
 	public void typeIsServiceProvider() throws XPathException 
-	{
-		// RDFUtils.printModel(fRdfModel);
+	{		
 		Property rdfType = fRdfModel.createProperty(OSLCConstants.RDF_TYPE_PROP);
 		StmtIterator iter = fServiceProvider.listProperties(rdfType);
 		boolean matches = false;
@@ -159,29 +159,30 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	
 	
 	@Test
-	public void contentTypeIsCMServiceDescription() throws IOException
+	public void responseContentTypeIsXML() throws IOException
 	{
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
-				OSLCConstants.CT_XML, headers);
+				fContentType, headers);
 		//Make sure the response to this URL was of valid type
 		EntityUtils.consume(resp.getEntity());
 		String contentType = resp.getEntity().getContentType().getValue();
 		String contentTypeSplit[] = contentType.split(";");
 		contentType = contentTypeSplit[0];
-		// TODO: Should we make sure that this is an exact match?
-		assertTrue(contentType.endsWith("xml"));
+		assertTrue(contentType.equalsIgnoreCase("application/xml") ||
+				   contentType.equalsIgnoreCase("application/rdf+xml") || 
+				   contentType.equalsIgnoreCase("text/xml"));
 	}
 	
 	@Test
 	public void misplacedParametersDoNotEffectResponse() throws IOException
 	{
 		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
-				OSLCConstants.CT_XML, headers);
+				fContentType, headers);
 		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
 
 		String modifiedUrl = OSLCUtils.addParameterToURL(currentUrl, "oslc.where", "dcterms:identifier=\"1\"");
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, modifiedUrl, basicCreds,
-				OSLCConstants.CT_XML, headers);
+				fContentType, headers);
 		String parameterRespValue = EntityUtils.toString(parameterResp.getEntity());
 		
 		assertTrue("Query response with and without did not return same response", baseRespValue.equals(parameterRespValue));
@@ -201,7 +202,20 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 		List<?> lst = fServiceProvider.listProperties(service).toList();
 		assertTrue(lst.size() >= 1);
 	}
+
+	@Test
+	public void invalidOslcPropertiesGivesConflict() throws IOException
+	{		
+		String paramterUrl = OSLCUtils.addParameterToURL(currentUrl, "oslc.properties", "dcterms:identifier=\"non-exist\"");
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, paramterUrl, basicCreds,
+				fContentType, headers);
 	
+		String respType =  (resp.getEntity().getContentType() == null) ? "" : resp.getEntity().getContentType().getValue();
+		EntityUtils.consume(resp.getEntity());
+		assertTrue("Expected 409 but received "+resp.getStatusLine()+",Content-type='invalid/content-type' but received "+respType, resp.getStatusLine().getStatusCode() == 409);
+
+	}
+
 	/* TODO: Complete ServiceProvider RDF/XML test validation
 
 	@Test
