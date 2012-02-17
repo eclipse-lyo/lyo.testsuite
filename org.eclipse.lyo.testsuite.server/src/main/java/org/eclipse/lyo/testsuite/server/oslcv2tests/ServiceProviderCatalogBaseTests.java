@@ -26,11 +26,15 @@ import javax.xml.xpath.XPathException;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
  * This class provides JUnit tests for the validation of OSLC Service Provider
@@ -92,13 +96,20 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
 				currentUrl, basicCreds, fContentType, headers);
 		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
+		Model baseRespModel = ModelFactory.createDefaultModel();
+		baseRespModel.read(baseRespValue);
+		RDFUtils.validateModel(baseRespModel);
 
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
 				currentUrl + "?oslc_cm:query", basicCreds, fContentType,
 				headers);
 		String parameterRespValue = EntityUtils.toString(parameterResp
 				.getEntity());
+		Model parameterRespModel = ModelFactory.createDefaultModel();
+		baseRespModel.read(parameterRespValue);
+		RDFUtils.validateModel(parameterRespModel);
 
-		assertTrue(baseRespValue.equals(parameterRespValue));
+		assertTrue(baseRespModel.isIsomorphicWith(parameterRespModel));
+
 	}
 }
