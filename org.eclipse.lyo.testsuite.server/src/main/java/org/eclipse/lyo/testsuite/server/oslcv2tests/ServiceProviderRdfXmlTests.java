@@ -176,16 +176,22 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	@Test
 	public void misplacedParametersDoNotEffectResponse() throws IOException
 	{
-		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
-				fContentType, headers);
-		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
-
-		String modifiedUrl = OSLCUtils.addParameterToURL(currentUrl, "oslc.where", "dcterms:identifier=\"1\"");
-		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, modifiedUrl, basicCreds,
-				fContentType, headers);
-		String parameterRespValue = EntityUtils.toString(parameterResp.getEntity());
-		
-		assertTrue("Query response with and without did not return same response", baseRespValue.equals(parameterRespValue));
+		Model baseRespModel = this.fRdfModel;
+        String badParmUrl = currentUrl+"?oslc_cm:query";
+        
+		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
+				badParmUrl, basicCreds, fContentType,
+				headers);
+		assertEquals("Did not successfully retrieve catalog at: " 
+				+ badParmUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+	
+		Model badParmModel = ModelFactory.createDefaultModel();
+		badParmModel.read(parameterResp.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
+				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(fRdfModel);
+	
+		assertTrue(baseRespModel.isIsomorphicWith(badParmModel));
 	}
 	
 	@Test

@@ -513,4 +513,19 @@ public class ServiceProviderCatalogXmlTests extends
 			assertNotNull(url);
 		}
 	}
+
+	@Test
+	public void misplacedParametersDoNotEffectResponse() throws IOException {
+		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
+				currentUrl, basicCreds, fContentType, headers);
+		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
+	
+		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
+				currentUrl + "?oslc_cm:query", basicCreds, fContentType,
+				headers);
+		String parameterRespValue = EntityUtils.toString(parameterResp
+				.getEntity());
+	
+		assertTrue(baseRespValue.equals(parameterRespValue));
+	}
 }

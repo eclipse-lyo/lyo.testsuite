@@ -224,6 +224,27 @@ public class ServiceProviderCatalogRdfXmlTests extends
 			rdfModel.listObjectsOfProperty(pub, dcTitle);
 		}
 	}
+
+	@Test
+	public void misplacedParametersDoNotEffectResponse() throws IOException {
+        Model baseRespModel = this.rdfModel;
+        
+        String badParmUrl = currentUrl+"?oslc_cm:query";
+        
+		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
+				badParmUrl, basicCreds, fContentType,
+				headers);
+		assertEquals("Did not successfully retrieve catalog at: " 
+				+ badParmUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+	
+		Model badParmModel = ModelFactory.createDefaultModel();
+		badParmModel.read(parameterResp.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
+				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(rdfModel);
+	
+		assertTrue(baseRespModel.isIsomorphicWith(badParmModel));
+	}
 	
 	/* TODO: Complete ServiceProviderCatalog validation tests for RDF/XML
 
