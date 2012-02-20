@@ -37,6 +37,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
  * This class provides JUnit tests for the validation of OSLC Service Provider
@@ -165,11 +169,8 @@ public class ServiceProviderCatalogXmlTests extends
 				"/*/oslc_v2:ServiceProviderCatalog/@rdf:about", doc,
 				XPathConstants.NODE);
 		assertNotNull(aboutRoot);
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, aboutRoot
-				.getNodeValue(), basicCreds, OSLCConstants.CT_XML, headers);
-		// Verify the catalogs we get are identical (ie: the same resource)
-		assertTrue(resp.getStatusLine().getStatusCode() == 200
-				&& responseBody.equals(EntityUtils.toString(resp.getEntity())));
+		assertTrue(currentUrl.equals(aboutRoot.getNodeValue()));
+
 	}
 
 	@Test
