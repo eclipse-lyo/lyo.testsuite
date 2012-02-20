@@ -241,7 +241,7 @@ public class ServiceProviderCatalogRdfXmlTests extends
 		badParmModel.read(parameterResp.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
 				OSLCConstants.JENA_RDF_XML);
-		RDFUtils.validateModel(rdfModel);
+		RDFUtils.validateModel(badParmModel);
 	
 		assertTrue(baseRespModel.isIsomorphicWith(badParmModel));
 	}

@@ -519,14 +519,25 @@ public class ServiceProviderCatalogXmlTests extends
 	public void misplacedParametersDoNotEffectResponse() throws IOException {
 		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
 				currentUrl, basicCreds, fContentType, headers);
-		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
+
+		Model baseRespModel = ModelFactory.createDefaultModel();
+		baseRespModel.read(baseResp.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
+				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(baseRespModel);
 	
+		String badParmUrl = currentUrl+"?oslc_cm:query";
+		
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				currentUrl + "?oslc_cm:query", basicCreds, fContentType,
+				badParmUrl, basicCreds, fContentType,
 				headers);
-		String parameterRespValue = EntityUtils.toString(parameterResp
-				.getEntity());
 	
-		assertTrue(baseRespValue.equals(parameterRespValue));
+		Model badParmModel = ModelFactory.createDefaultModel();
+		badParmModel.read(parameterResp.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
+				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(badParmModel);
+	
+		assertTrue(baseRespModel.isIsomorphicWith(badParmModel));
 	}
 }

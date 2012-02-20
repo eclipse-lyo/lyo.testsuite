@@ -36,6 +36,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 
 /**
@@ -139,16 +143,26 @@ public class ServiceProviderXmlTests extends TestsBase {
 	{
 		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
 				fContentType, headers);
-		String baseRespValue = EntityUtils.toString(baseResp.getEntity());
-		EntityUtils.consume(baseResp.getEntity());
+
+		Model baseRespModel = ModelFactory.createDefaultModel();
+		baseRespModel.read(baseResp.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
+				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(baseRespModel);
+	
+		String badParmUrl = currentUrl+"?oslc_cm:query";
 		
-		String modifiedUrl = OSLCUtils.addParameterToURL(currentUrl, "oslc.where", "dcterms:identifier=\"1\"");
-		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, modifiedUrl, basicCreds,
-				fContentType, headers);
-		String parameterRespValue = EntityUtils.toString(parameterResp.getEntity());
-		EntityUtils.consume(parameterResp.getEntity());
-		
-		assertTrue("Query response with and without did not return same response", baseRespValue.equals(parameterRespValue));
+		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
+				badParmUrl, basicCreds, fContentType,
+				headers);
+	
+		Model badParmModel = ModelFactory.createDefaultModel();
+		badParmModel.read(parameterResp.getEntity().getContent(),
+				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
+				OSLCConstants.JENA_RDF_XML);
+		RDFUtils.validateModel(badParmModel);
+	
+		assertTrue(baseRespModel.isIsomorphicWith(badParmModel));
 	}
 	
 	@Test
