@@ -1,0 +1,33 @@
+{
+   "dcterms:description": "updatedResource",
+   "dcterms:title": "updatedResource",
+   "dcterms:type": [
+      "Defect"
+   ],
+   "oslc:shortTitle": "updatedResource",
+   "oslc_cm:approved": false,
+   "oslc_cm:closed": false,
+   "oslc_cm:fixed": false,
+   "oslc_cm:inprogress": false,
+   "oslc_cm:reviewed": false,
+   "oslc_cm:severity": "Minor",
+   "oslc_cm:status": "Submitted",
+   "oslc_cm:verified": false,
+   "prefixes": {
+      "dcterms": "http:\/\/purl.org\/dc\/terms\/",
+      "foaf": "http:\/\/xmlns.com\/foaf\/0.1\/",
+      "oslc": "http:\/\/open-services.net\/ns\/core#",
+      "oslc_cm": "http:\/\/ibm.com\/ns\/cm#",
+      "oslc_data": "http:\/\/open-services.net\/ns\/servicemanagement\/1.0\/",
+      "oslc_qm": "http:\/\/open-services.net\/ns\/qm#",
+      "oslc_rm": "http:\/\/open-services.net\/ns\/rm#",
+      "oslc_scm": "http:\/\/open-services.net\/ns\/scm#",
+      "rdf": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#",
+      "rdfs": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#"
+   },
+   "rdf:type": [
+      {
+         "rdf:resource": "http:\/\/ibm.com\/ns\/cm#ChangeRequest"
+      }
+   ]
+}
