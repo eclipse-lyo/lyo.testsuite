@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *******************************************************************************/
-package org.eclipse.lyo.testsuite.server.oslcv2tests;
+package org.eclipse.lyo.testsuite.oslcv2;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 
-
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.Before;

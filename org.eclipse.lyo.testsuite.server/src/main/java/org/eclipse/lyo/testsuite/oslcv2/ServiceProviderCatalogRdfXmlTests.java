@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *******************************************************************************/
-package org.eclipse.lyo.testsuite.server.oslcv2tests;
+package org.eclipse.lyo.testsuite.oslcv2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -48,7 +48,6 @@ import com.hp.hpl.jena.rdf.model.Selector;
 import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ServiceProviderCatalogRdfXmlTests extends
 		ServiceProviderCatalogBaseTests {

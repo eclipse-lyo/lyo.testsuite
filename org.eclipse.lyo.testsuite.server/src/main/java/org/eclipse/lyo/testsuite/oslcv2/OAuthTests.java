@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *******************************************************************************/
-package org.eclipse.lyo.testsuite.server.oslcv2tests;
+package org.eclipse.lyo.testsuite.oslcv2;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -44,6 +44,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.SSLProtocolSocketFactory;

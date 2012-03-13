@@ -113,15 +113,15 @@
 	<target name="provider-test">		
         <junit fork="no" printsummary="withOutAndErr">
             <formatter type="xml"/>
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>        	
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>        	
-        	<test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>                
-            <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
-            <test name="org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>                
+            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
+            <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
         	
             <jvmarg line="-Dprops=../../config/rio-cm/rio-cm-setup.properties"/>
             <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>

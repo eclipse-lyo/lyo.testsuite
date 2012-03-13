@@ -12,7 +12,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *******************************************************************************/
-package org.eclipse.lyo.testsuite.server.oslcv2tests;
+package org.eclipse.lyo.testsuite.oslcv2;
 
 import static org.junit.Assert.assertEquals;
 

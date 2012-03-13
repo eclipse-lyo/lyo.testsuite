@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <provider-test version="2.0" domain="OSLC-QM">
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="CreationAndUpdateRdfXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateRdfXmlTests">
 		<testcase level="MUST">createResourceWithInvalidContent</testcase>
 		<testcase level="MUST">createResourceAndUpdateIt</testcase>
 		<testcase level="MUST">createValidResourceUsingRdfXmlTemplate</testcase>
@@ -10,7 +10,7 @@
 		<testcase level="MUST">updateCreatedResourceWithBadType</testcase>
 	</testclass>
 	
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="CreationAndUpdateXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateXmlTests">
 		<testcase level="MAY">createValidResourceUsingTemplate</testcase>
 		<testcase level="MAY">createResourceWithInvalidContent</testcase>
 		<testcase level="MAY">createResourceAndUpdateIt</testcase>
@@ -20,7 +20,7 @@
 		<testcase level="MAY">updateCreatedResourceWithInvalidContentType</testcase>
 	</testclass>
 	
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="SimplifiedQueryRdfXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryRdfXmlTests">
 		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
@@ -29,7 +29,7 @@
 		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
 	</testclass>
 	
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="SimplifiedQueryXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryXmlTests">
 		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
@@ -37,7 +37,7 @@
 		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
 	</testclass>
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="ServiceProviderCatalogRdfXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderCatalogRdfXmlTests">
 		<testcase level="MUST">baseUrlIsValid</testcase>
 		<testcase level="MAY">catalogRootIsRdfNamespaceDeclaration</testcase>
 		<testcase level="MAY">catalogRootAboutElementPointsToSelf</testcase>
@@ -51,7 +51,7 @@
 		<testcase level="MAY">contentTypeIsSuggestedType</testcase>
 		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
 	</testclass>
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="ServiceProviderCatalogXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderCatalogXmlTests">
 		<testcase level="MUST">baseUrlIsValid</testcase>
 		<testcase level="MAY">catalogRootIsRdfNamespaceDeclaration</testcase>
 		<testcase level="MAY">catalogRootAboutElementPointsToSelf</testcase>
@@ -70,7 +70,7 @@
 		<testcase level="MAY">contentTypeIsSuggestedType</testcase>
 		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
 	</testclass>
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="ServiceProviderRdfXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderRdfXmlTests">
 		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
 		<testcase level="MUST">misplacedParametersDoNotEffectResponse</testcase>
 		<testcase level="MUST">currentUrlIsValid</testcase>
@@ -80,7 +80,7 @@
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasService</testcase>
 	</testclass>
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="ServiceProviderXmlTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderXmlTests">
 		<testcase level="MUST">baseUrlIsValid</testcase>
 		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
 		<testcase level="MUST">responseContentTypeIsXML</testcase>
@@ -98,7 +98,7 @@
 		<testcase level="MUST">queryCapabilityBlocksAreValid</testcase>
 		<testcase level="MUST">dialogsAreValid</testcase>
 	</testclass>
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="QueryTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="QueryTests">
 		<testcase level="SHOULD">validEqualsQueryContainsExpectedDefect</testcase>
 		<testcase level="SHOULD">validNotEqualQueryContainsExpectedDefect</testcase>
 		<testcase level="SHOULD">validLessThanQueryContainsExpectedDefects</testcase>
@@ -108,7 +108,7 @@
 		<testcase level="SHOULD">fullTextSearchContainsExpectedResults</testcase>
 	</testclass>
 	
-	<testclass package="org.eclipse.lyo.testsuite.server.oslcv2tests" name="OAuthTests">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="OAuthTests">
 		<testcase level="MAY">oAuthRequestTokenProperlyRecieved</testcase>
 		<testcase level="MAY">oAuthAuthorizationHandled</testcase>
 		<testcase level="MAY">oAuthAccessTokenReceived</testcase>

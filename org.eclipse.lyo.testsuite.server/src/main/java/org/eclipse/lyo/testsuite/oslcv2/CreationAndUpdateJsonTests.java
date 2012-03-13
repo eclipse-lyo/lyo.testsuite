@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *******************************************************************************/
-package org.eclipse.lyo.testsuite.server.oslcv2tests;
+package org.eclipse.lyo.testsuite.oslcv2;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 
-
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,9 +43,9 @@ import org.xml.sax.SAXException;
  * providers.
  */
 @RunWith(Parameterized.class)
-public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
+public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
 
-	public CreationAndUpdateXmlTests(String url) {
+	public CreationAndUpdateJsonTests(String url) {
 		super(url);
 	}
 
@@ -59,6 +59,7 @@ public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException, ParserConfigurationException, SAXException,
 			XPathException {
+		// TODO: Since we don't have JSON version of this implemented, use XML
 		String v = "//oslc_v2:CreationFactory/oslc_v2:creation/@rdf:resource";
 		ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
 		Collection<Object[]> data = toCollection(TestsBase
@@ -68,40 +69,42 @@ public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
 
 	@Test
 	public void createValidResourceUsingTemplate() throws IOException {
-		createValidResourceUsingTemplate(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate);
+		createValidResourceUsingTemplate(OSLCConstants.CT_JSON,
+				OSLCConstants.CT_JSON, jsonCreateTemplate);
 	}
 
 	@Test
 	public void createResourceWithInvalidContent() throws IOException {
-		createResourceWithInvalidContent(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, "notvalidxmldefect");
+		createResourceWithInvalidContent(OSLCConstants.CT_JSON,
+				OSLCConstants.CT_JSON, "notvalidJSONcontent");
 	}
 
 	@Test
 	public void createResourceAndUpdateIt() throws IOException {
-		createResourceAndUpdateIt(OSLCConstants.CT_XML, OSLCConstants.CT_XML,
-				xmlCreateTemplate, xmlUpdateTemplate);
+		createResourceAndUpdateIt(OSLCConstants.CT_JSON, OSLCConstants.CT_JSON,
+				jsonCreateTemplate, jsonUpdateTemplate);
 	}
 
 	@Test
 	public void updateCreatedResourceWithInvalidContent() throws IOException {
-		updateCreatedResourceWithInvalidContent(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate, "NOTVALIDXML");
+		updateCreatedResourceWithInvalidContent(OSLCConstants.CT_JSON,
+				OSLCConstants.CT_JSON, jsonCreateTemplate,
+				"notvalidJSONcontent");
 	}
 
 	@Test
-	public void updateCreatedResourceWithInvalidContentType() throws IOException {
-		updateCreatedResourceWithBadType(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate, xmlUpdateTemplate,
+	public void updateCreatedResourceWithInvalidContentType()
+			throws IOException {
+		updateCreatedResourceWithBadType(OSLCConstants.CT_JSON,
+				OSLCConstants.CT_JSON, jsonCreateTemplate, jsonUpdateTemplate,
 				"invalid/type");
 	}
 
 	@Test
 	public void updateCreatedResourceWithFailedPrecondition()
 			throws IOException {
-		updateCreatedResourceWithFailedPrecondition(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate,
-				xmlUpdateTemplate);
+		updateCreatedResourceWithFailedPrecondition(OSLCConstants.CT_JSON,
+				OSLCConstants.CT_JSON, jsonCreateTemplate,
+				jsonUpdateTemplate);
 	}
 }

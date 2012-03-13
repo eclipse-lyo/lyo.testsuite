@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.CreationAndUpdateTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.OAuthTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.QueryTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.ServiceDescriptionTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.ServiceProviderCatalogTests;
-import org.eclipse.lyo.testsuite.server.oslcv2tests.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.runner.RunWith;
@@ -64,24 +64,24 @@ public class DynamicSuiteBuilder
 				|| OSLCConstants.OSLC_AM_V2.equals(testVersions))
 		{
 			log.info("Setting up to test Core v2 features");
-			testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogRdfXmlTests.class);
-			testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderRdfXmlTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
 			
 			if (OSLCConstants.OSLC_CM_V2.equals(testVersions) || 
 				OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
-				testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderCatalogXmlTests.class);
-				testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ServiceProviderXmlTests.class);
-				testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateXmlTests.class);
-				testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryXmlTests.class);
+				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests.class);
+				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests.class);
+				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests.class);
+				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests.class);
 				if (OSLCConstants.OSLC_CM_V2.equals(testVersions)) {
-					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestRdfXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.ChangeRequestJsonTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);
 				}
 			}
-			testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateRdfXmlTests.class);
-			testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.SimplifiedQueryRdfXmlTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests.class);
 			//testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.QueryTests.class);
 			//TODO: need to enable OAuth tests: testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.OAuthTests.class);
 		}
