@@ -61,14 +61,16 @@ public class DynamicSuiteBuilder
 				|| OSLCConstants.OSLC_RM_V2.equals(testVersions) 
 				|| OSLCConstants.OSLC_QM_V2.equals(testVersions) 
 				|| testVersions.equals("both") 
-				|| OSLCConstants.OSLC_AM_V2.equals(testVersions))
+				|| OSLCConstants.OSLC_AM_V2.equals(testVersions)
+				|| OSLCConstants.OSLC_ASSET_V2.equals(testVersions))
 		{
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
 			
 			if (OSLCConstants.OSLC_CM_V2.equals(testVersions) || 
-				OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
+				OSLCConstants.OSLC_QM_V2.equals(testVersions) || 
+				OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests.class);

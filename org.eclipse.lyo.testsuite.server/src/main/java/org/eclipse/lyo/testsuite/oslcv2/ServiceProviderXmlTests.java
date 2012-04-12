@@ -262,10 +262,10 @@ public class ServiceProviderXmlTests extends TestsBase {
 	@Test
 	public void serviceProviderHasValidDetails() throws XPathException, DOMException, IOException
 	{
-		//Verify the ServiceProvider has a valid rdf:details attribute		
+		//Verify the ServiceProvider has a valid oslc:details attribute		
 		Node details = (Node) OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider/oslc_v2:details", doc, 
 				XPathConstants.NODE);
-		assertNotNull(details);
+		assertNotNull("oslc:details element is required for oslc:ServiceProfile", details);
 		Node node = details.getAttributes().getNamedItemNS(OSLCConstants.RDF, "resource");
 		assertNotNull(node.getNodeValue());
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, node.getNodeValue(), basicCreds, "");

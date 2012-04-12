@@ -27,6 +27,7 @@ public interface OSLCConstants {
 	static String OSLC_V2    = "http://open-services.net/ns/core#";
 	static String OSLC_CM_V2 = "http://open-services.net/ns/cm#";
 	static String OSLC_AM_V2 = "http://open-services.net/ns/am#";
+	static String OSLC_ASSET_V2 = "http://open-services.net/ns/asset#";
 	static String OSLC_QM_V2 = "http://open-services.net/ns/qm#";
 	static String OSLC_RM_V2 = "http://open-services.net/ns/rm#";
 	// Version 1.0 namespace definitions
