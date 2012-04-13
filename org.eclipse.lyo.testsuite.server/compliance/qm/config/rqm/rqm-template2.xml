@@ -1,16 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><rdf:RDF
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:rqm_qm="http://jazz.net/xmlns/prod/jazz/rqm/qm/1.0/"
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:oslc_qm="http://open-services.net/ns/qm#"
-    xmlns:foaf="http://xmlns.com/foaf/0.1/"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/" > 
- <rdf:Description rdf:about="https://jbslnxvh02.ottawa.ibm.com:9443/qm/oslc_qm/stubby">
-  <rdf:type rdf:resource="http://open-services.net/ns/qm#TestScript"/>
-  <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">RQM test</dcterms:description>
-  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14444/jts/users/unassigned"/>
-  <dcterms:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">RQM Test Script</dcterms:title>
- </rdf:Description>
-</rdf:RDF>
