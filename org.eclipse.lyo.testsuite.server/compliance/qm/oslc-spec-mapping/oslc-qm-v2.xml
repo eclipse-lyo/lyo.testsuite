@@ -37,6 +37,16 @@
 		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
 	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryAtomTests">
+		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
+		<testcase level="MUST">validGreaterThanQueryContainsExpectedDefects</testcase>
+		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
+	</testclass>
+	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderCatalogRdfXmlTests">
 		<testcase level="MUST">baseUrlIsValid</testcase>
 		<testcase level="MAY">catalogRootIsRdfNamespaceDeclaration</testcase>
