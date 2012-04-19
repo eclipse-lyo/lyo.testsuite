@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin
  *******************************************************************************/
 
 package org.eclipse.lyo.testsuite.server.util;
@@ -45,6 +46,8 @@ public interface OSLCConstants {
 	static String CT_XML = "application/xml";
 	static String CT_RDF = "application/rdf+xml";
 	static String CT_JSON = "application/json";
+	static String CT_ATOM = "application/atom+xml";
+	
 	// Version 1 headers:
 	static String CT_CR_XML = "application/x-oslc-cm-change-request+xml";
 	static String CT_CR_JSON = "application/x-oslc-cm-change-request+json";

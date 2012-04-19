@@ -26,7 +26,7 @@
  <rdf:Description rdf:about="">
   <rdf:type rdf:resource="http://open-services.net/ns/qm#TestScript"/>
   <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Updated test script</dcterms:description>
-  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:9443/jts/users/unassigned"/>
+  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14444/jts/users/unassigned"/>
   <dcterms:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Updated test script</dcterms:title>
  </rdf:Description>
 </rdf:RDF>

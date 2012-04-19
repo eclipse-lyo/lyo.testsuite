@@ -46,6 +46,9 @@
         <pathelement location="${top}/.m2/repository/org/apache/wink/wink-json4j/1.1.2-incubating/wink-json4j-1.1.2-incubating.jar"/>
         <pathelement location="${top}/.m2/repository/org/slf4j/slf4j-simple/1.5.10/slf4j-simple-1.5.10.jar"/>
         <pathelement location="${top}/.m2/repository/org/slf4j/slf4j-api/1.5.10/slf4j-api-1.5.10.jar"/>
+    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-parser/1.1/abdera-parser-1.1.jar"/>
+    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-bundle/1.1.2/abdera-bundle-1.1.2.jar"/>
+
     </path>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 	  <classpath>
@@ -124,6 +127,7 @@
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests" todir="${junit.output.dir}"/>        
             <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
             <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
         	
             <jvmarg line="-Dprops=../../config/rio-cm/rio-cm-setup.properties"/>
             <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>
