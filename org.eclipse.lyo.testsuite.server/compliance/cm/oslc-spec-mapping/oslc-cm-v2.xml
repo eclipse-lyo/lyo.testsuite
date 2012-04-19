@@ -76,8 +76,7 @@
 		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
 		<testcase level="MUST">updateCreatedResourceWithBadType</testcase>
 	</testclass>
-	
-	
+		
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateXmlTests">
 		<testcase level="MUST">createValidResourceUsingTemplate</testcase>
 		<testcase level="MUST">createResourceWithInvalidContent</testcase>
@@ -163,6 +162,15 @@
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryXmlTests">
+		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
+		<testcase level="MUST">validGreaterThanQueryContainsExpectedDefects</testcase>
+		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryAtomTests">
 		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>

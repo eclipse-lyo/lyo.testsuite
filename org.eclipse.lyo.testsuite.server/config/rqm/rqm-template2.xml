@@ -23,10 +23,10 @@
     xmlns:oslc="http://open-services.net/ns/core#"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/" > 
- <rdf:Description rdf:about="https://quagmire.rtp.raleigh.ibm.com:9443/qm/oslc_qm/stubby">
+ <rdf:Description rdf:about="https://quagmire.rtp.raleigh.ibm.com:14444/qm/oslc_qm/stubby">
   <rdf:type rdf:resource="http://open-services.net/ns/qm#TestScript"/>
   <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Steve's test-</dcterms:description>
-  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:9443/jts/users/unassigned"/>
+  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14444/jts/users/unassigned"/>
   <dcterms:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Steves other Test Script</dcterms:title>
  </rdf:Description>
 </rdf:RDF>
