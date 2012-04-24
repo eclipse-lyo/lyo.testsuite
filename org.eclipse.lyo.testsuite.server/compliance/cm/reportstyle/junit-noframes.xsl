@@ -394,9 +394,9 @@
 		
         <h2>OSLC compliance</h2>
 
-		<xsl:variable name="mustCount" select="'179'"/>
-		<xsl:variable name="junitMustCount" select="'131'"/>
-		<xsl:variable name="junitUniqueReqMustCount" select="'118'"/>
+		<xsl:variable name="mustCount" select="'185'"/>
+		<xsl:variable name="junitMustCount" select="'137'"/>
+		<xsl:variable name="junitUniqueReqMustCount" select="'124'"/>
 		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />    
         <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMust'])"/>
         <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMust'])"/>

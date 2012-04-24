@@ -128,6 +128,7 @@
             <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
             <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests" todir="${junit.output.dir}"/>
         	
             <jvmarg line="-Dprops=../../config/rio-cm/rio-cm-setup.properties"/>
             <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>
