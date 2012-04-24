@@ -129,6 +129,7 @@
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests" todir="${junit.output.dir}"/>        
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests" todir="${junit.output.dir}"/>
         	
             <jvmarg line="-Dprops=../../config/oslc4j-cm/oslc4j-cm-setup.properties"/>
             <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>

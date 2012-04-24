@@ -125,7 +125,8 @@
         	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
-        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests" todir="${junit.output.dir}"/>
+	
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests" todir="${junit.output.dir}"/>        
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests" todir="${junit.output.dir}"/>

@@ -178,5 +178,14 @@
 		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
 	</testclass>
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryJsonTests">
+		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
+		<testcase level="MUST">validGreaterThanQueryContainsExpectedDefects</testcase>
+		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
+	</testclass>
 	
 </provider-test>
