@@ -254,7 +254,7 @@
             <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
 			
-			<!-- Compliance part -->
+			<!-- Assessmen part -->
             <xsl:call-template name="compliancepart"/>
             <hr size="1" width="95%" align="left"/>
 
@@ -392,18 +392,18 @@
 							<a href="#" onclick="SVGscale(0.65);">1024x768</a>&#160;&#160;<a href="#" onclick="SVGscale(0.8);">1280x1024</a>&#160;&#160;
         					<a href="#" onclick="SVGscale(1);">1600x1200</a>&#160;&#160;<a href="#" onclick="SVGscale(1.5);">x-large</a> -->
 		
-        <h2>OSLC compliance</h2>
+        <h2>OSLC Assessment</h2>
 
 		<xsl:variable name="mustCount" select="'185'"/>
 		<xsl:variable name="junitMustCount" select="'137'"/>
-		<xsl:variable name="junitUniqueReqMustCount" select="'124'"/>
+		<xsl:variable name="junitUniqueReqMustCount" select="'122'"/>
 		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />    
-        <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMust'])"/>
-        <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMust'])"/>
+        <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMust'])"/>
+        <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMust'])"/>
         <xsl:variable name="errorMustCount">
         	<xsl:choose>
-        		<xsl:when test="/testsuites/testsuite/testcase[@compliance='passedMust' or @compliance='failedMust']//error">
-        			<xsl:value-of select="count(/testsuites/testsuite/testcase[@compliance='passedMust' or @compliance='failedMust']//error)"/>
+        		<xsl:when test="/testsuites/testsuite/testcase[@assessment='passedMust' or @assessment='failedMust']//error">
+        			<xsl:value-of select="count(/testsuites/testsuite/testcase[@assessment='passedMust' or @assessment='failedMust']//error)"/>
         		</xsl:when>
         		<xsl:otherwise>
         			<xsl:value-of select="$testsuiteMustCount - ($passedMustCount + $failedMustCount)"/>
@@ -411,11 +411,11 @@
         	</xsl:choose>
         </xsl:variable>
         <xsl:variable name="shouldCount" select="count($spec//testcase[@level='SHOULD'])"/>
-        <xsl:variable name="passedShouldCount" select="count(/testsuites/testsuite/testcase[@compliance='passedShould'])"/>
-        <xsl:variable name="failedShouldCount" select="count(/testsuites/testsuite/testcase[@compliance='failedShould'])"/>
+        <xsl:variable name="passedShouldCount" select="count(/testsuites/testsuite/testcase[@assessment='passedShould'])"/>
+        <xsl:variable name="failedShouldCount" select="count(/testsuites/testsuite/testcase[@assessment='failedShould'])"/>
         <xsl:variable name="mayCount" select="count($spec//testcase[@level='MAY'])"/>
-        <xsl:variable name="passedMayCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMay'])"/>
-        <xsl:variable name="failedMayCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMay'])"/>
+        <xsl:variable name="passedMayCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMay'])"/>
+        <xsl:variable name="failedMayCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMay'])"/>
 
         <xsl:variable name="domain" select="$spec/provider-test/@domain"/>
         <xsl:variable name="version" select="$spec/provider-test/@version"/>
@@ -426,7 +426,7 @@
         	<th>OSLC Domain</th>
         	<th>Version</th>
 			<th>OSLC Service Provider</th>
-			<th>Compliance Level</th>
+			<th>Assessment Level</th>
         	<th>Test Coverage Statement</th>
         	<th>Test Development Statement</th>
         </tr>
@@ -438,16 +438,16 @@
 
         	<xsl:choose>
                 <xsl:when test="($mustCount=$passedMustCount) and ($shouldCount=$passedShouldCount) and ($mayCount=$passedMayCount)">
-					<td bgcolor="#0000ff" style="color:#ffff00;" title="All Must, Should and May Test(s) Passing">Level 3 Compliance</td>
+					<td bgcolor="#0000ff" style="color:#ffff00;" title="All Must, Should and May Test(s) Passing">Level 3</td>
 				</xsl:when>
                 <xsl:when test="($mustCount=$passedMustCount) and ($shouldCount=$passedShouldCount)">
-                	<td bgcolor="#00ff00" title="All Must and Should Test(s) Passing">Level 2 Compliance</td>
+                	<td bgcolor="#00ff00" title="All Must and Should Test(s) Passing">Level 2</td>
                 </xsl:when>
                 <xsl:when test="($testsuiteMustCount=$passedMustCount)">
-                	<td bgcolor="#ffff00" title="All Must Test(s) Passing">Level 1 Compliance</td>
+                	<td bgcolor="#ffff00" title="All Must Test(s) Passing">Level 1</td>
                 </xsl:when>
                 <xsl:otherwise>
-                	<td bgcolor="#ff0000">Non-Compliant</td>
+                	<td bgcolor="#ff0000">Level 0</td>
                 </xsl:otherwise>
             </xsl:choose>
             <td><div style="color:blue;"><b><xsl:value-of select="format-number($junitMustCount div $mustCount,'#.#%')"/></b> (<xsl:value-of select="$junitMustCount"/>/<xsl:value-of select="$mustCount"/>)</div><xsl:value-of select="$junitMustCount"/> of the <xsl:value-of select="$mustCount"/><xsl:text> </xsl:text><xsl:value-of select="$domain"/><xsl:text> </xsl:text><xsl:value-of select="$version"/> MUST requirements are currently testable via the Lyo OSLC testsuite.</td>
@@ -457,10 +457,10 @@
         <table border="0" width="95%">
         <tr>
         <td style="text-align: justify;">
-        <span style="background-color:#ff0000;">Non-Compliant</span>: One or more attempted tests covering a MUST requirement has encountered a failure or error<br/>
-        <span style="background-color:#ffff00;">Level 1 Compliance</span>: All Attempted Tests covering a MUST requirement are Passing and free of failure or error<br/>
-        <span style="background-color:#00ff00;">Level 2 Compliance</span>: All Attempted Tests covering a MUST and SHOULD requirement are Passing and free of failure or error<br/>
-        <span style="background-color:#0000ff;color:#ffff00;">Level 3 Compliance</span>: All Attempted Tests covering a MUST, SHOULD and MAY requirement are Passing and free of failure or error<br/>
+        <span style="background-color:#ff0000;">Level 0</span>: One or more attempted tests covering a MUST requirement has encountered a failure or error<br/>
+        <span style="background-color:#ffff00;">Level 1</span>: All Attempted Tests covering a MUST requirement are Passing and free of failure or error<br/>
+        <span style="background-color:#00ff00;">Level 2</span>: All Attempted Tests covering a MUST and SHOULD requirement are Passing and free of failure or error<br/>
+        <span style="background-color:#0000ff;color:#ffff00;">Level 3</span>: All Attempted Tests covering a MUST, SHOULD and MAY requirement are Passing and free of failure or error<br/>
         Note: This testsuite will continue to evolve and expand.  Requirements may have one or more associated test(s) for coverage to address positive and negative input behaviors.
         </td>
         </tr>

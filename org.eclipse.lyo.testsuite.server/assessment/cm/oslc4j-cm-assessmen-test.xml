@@ -8,8 +8,8 @@
 <project basedir="." default="build" name="org.eclipse.lyo.testsuite.server">
 	
     <echo message="basedir = ${basedir}"/>    
-    <property name="compliance.props" value="${basedir}/compliance.props"/>
-	<property file="${compliance.props}"/>
+    <property name="assessment.props" value="${basedir}/assessment.props"/>
+	<property file="${assessment.props}"/>
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
 	<echo message="provider = ${provider}"/>

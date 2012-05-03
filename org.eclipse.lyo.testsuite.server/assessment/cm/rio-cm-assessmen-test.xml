@@ -4,25 +4,27 @@
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
-<project basedir="." default="build" name="OSLC Provider Test">
-	<echo message="basedir = ${basedir}"/>    
-	<property name="compliance.props" value="${basedir}/compliance.props"/>
-	<property file="${compliance.props}"/>
+
+<project basedir="." default="build" name="org.eclipse.lyo.testsuite.server">
+	
+    <echo message="basedir = ${basedir}"/>    
+    <property name="assessment.props" value="${basedir}/assessment.props"/>
+	<property file="${assessment.props}"/>
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
-	
+	<echo message="provider = ${provider}"/>
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-	<property environment="env"/>
+    <property environment="env"/>
 	<property name="ECLIPSE_HOME" value="${eclipse_home}"/>
     <property name="junit.output.dir" value="junit"/>
-	<echo message="junit output dir = ${junit.output.dir}"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
     <path id="Maven Dependencies.libraryclasspath">
         <pathelement location="${top}/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar"/>
         <pathelement location="${top}/.m2/repository/com/hp/hpl/jena/jena/2.5.7/jena-2.5.7.jar"/>
-        <pathelement location="{$top}/.m2/repository/com/hp/hpl/jena/arq/2.6.0/arq-2.6.0.jar"/>
+        <pathelement location="${top}/.m2/repository/com/hp/hpl/jena/arq/2.6.0/arq-2.6.0.jar"/>
         <pathelement location="${top}/.m2/repository/org/apache/lucene/lucene-core/2.3.1/lucene-core-2.3.1.jar"/>
         <pathelement location="${top}/.m2/repository/stax/stax-api/1.0/stax-api-1.0.jar"/>
         <pathelement location="${top}/.m2/repository/woodstox/wstx-asl/3.0.0/wstx-asl-3.0.0.jar"/>
@@ -37,6 +39,7 @@
         <pathelement location="${top}/.m2/repository/org/apache/httpcomponents/httpclient/4.1.2/httpclient-4.1.2.jar"/>
         <pathelement location="${top}/.m2/repository/org/apache/httpcomponents/httpcore/4.1.2/httpcore-4.1.2.jar"/>
         <pathelement location="${top}/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar"/>
+        <pathelement location="${top}/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
         <pathelement location="${top}/.m2/repository/net/oauth/core/oauth/20090617/oauth-20090617.jar"/>
         <pathelement location="${top}/.m2/repository/net/oauth/core/oauth-consumer/20090617/oauth-consumer-20090617.jar"/>
         <pathelement location="${top}/.m2/repository/net/oauth/core/oauth-httpclient3/20090617/oauth-httpclient3-20090617.jar"/>
@@ -48,20 +51,19 @@
 
     </path>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-		<classpath>
-			<pathelement location="${top}/.m2/repository/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"/>
-		</classpath>
+	  <classpath>
+	    <pathelement location="${top}/.m2/repository/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"/>
+	  </classpath>
 	</taskdef>
-    <path id="provider-test.classpath">
+    <path id="org.eclipse.lyo.testsuite.server.classpath">
         <pathelement location="../../target/classes"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
-	
-    <path id="run.provider-test.classpath">
-        <path refid="provider-test.classpath"/>
+    <path id="run.org.eclipse.lyo.testsuite.server.classpath">
+        <path refid="org.eclipse.lyo.testsuite.server.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
-
+	
     <target name="init">
         <mkdir dir="../../target/classes"/>
         <copy includeemptydirs="false" todir="../../target/classes">
@@ -71,22 +73,28 @@
             </fileset>
         </copy>
     </target>
-	
-    <target name="clean">
+    
+	<target name="clean">
         <delete dir="../../target/classes"/>
     </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-    <target depends="init" name="build-project">
+    
+	<target depends="clean" name="cleanall"/>
+    
+	<target depends="build-subprojects,build-project" name="build"/>
+    
+	<target name="build-subprojects"/>
+    
+	<target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="../../target/classes" source="${source}" target="${target}">
             <src path="../../src/main/java"/>
-            <classpath refid="provider-test.classpath"/>
+            <classpath refid="org.eclipse.lyo.testsuite.server.classpath"/>
         </javac>
     </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+    
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    
+	<target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
         <copy todir="${ant.library.dir}">
             <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
         </copy>
@@ -95,31 +103,35 @@
             <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
         </unzip>
     </target>
+	
     <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+    
+	<property name="todir" value="${junit.output.dir}/${provider}"/>
+    <mkdir dir="${junit.output.dir}"/>
+	<mkdir dir="${junit.output.dir}/${provider}"/>		
 
-    <target name="provider-test">
-        <mkdir dir="${junit.output.dir}"/>
+	<target name="provider-test">		
         <junit fork="no" printsummary="withOutAndErr">
             <formatter type="xml"/>
-        	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>        
+            <test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests" todir="${junit.output.dir}"/>        
+            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
             <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests" todir="${junit.output.dir}"/>
         	
-        	<jvmarg line="-Dprops=../../config/jira/jira.properties"/>
-        	<classpath refid="provider-test.classpath"/>
+            <jvmarg line="-Dprops=../../config/rio-cm/rio-cm-setup.properties"/>
+            <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>
         </junit>
     </target>
 	
@@ -183,5 +195,4 @@
     		<fileset dir="./reportstyle" includes="*.png, *.gif"/>
     	</copy>
     </target>
-
 </project>

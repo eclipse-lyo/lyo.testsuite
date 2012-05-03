@@ -8,11 +8,10 @@
 <project basedir="." default="build" name="org.eclipse.lyo.testsuite.server">
 	
     <echo message="basedir = ${basedir}"/>    
-    <property name="compliance.props" value="${basedir}/compliance.props"/>
-	<property file="${compliance.props}"/>
+    <property name="assessment.props" value="${basedir}/assessment.props"/>
+	<property file="${assessment.props}"/>
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
-	<echo message="provider = ${provider}"/>
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <property environment="env"/>
@@ -48,7 +47,6 @@
         <pathelement location="${top}/.m2/repository/org/slf4j/slf4j-api/1.5.10/slf4j-api-1.5.10.jar"/>
     	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-parser/1.1/abdera-parser-1.1.jar"/>
     	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-bundle/1.1.2/abdera-bundle-1.1.2.jar"/>
-
     </path>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 	  <classpath>
@@ -113,21 +111,22 @@
     <mkdir dir="${junit.output.dir}"/>
 	<mkdir dir="${junit.output.dir}/${provider}"/>		
 
-	<target name="provider-test">		
+	<target name="provider-test">
+        <mkdir dir="${junit.output.dir}"/>
         <junit fork="no" printsummary="withOutAndErr">
             <formatter type="xml"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	
-        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>        	
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" todir="${junit.output.dir}"/>        	        	        	
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>        	
-        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>                
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>      
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>
             <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>            
             <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
-        	
-            <jvmarg line="-Dprops=../../config/rio-cm/rio-cm-setup.properties"/>
+            
+            <jvmarg line="-Dprops=../../config/rqm/rqm-setupv2.properties"/>
             <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>
         </junit>
     </target>
@@ -146,7 +145,7 @@
 	    	</else>
 	    </if>
 		<echo message="Merging Results of Individual JUnit xml into TESTS-TestSuites.xml"/>
-		<xslt in="./oslc-spec-mapping/oslc-cm-v2.xml" out="${junit.output.dir}/TESTS-TestSuites.xml"	style="./reportstyle/merge-results.xsl"/>
+		<xslt in="./oslc-spec-mapping/oslc-qm-v2.xml" out="${junit.output.dir}/TESTS-TestSuites.xml"	style="./reportstyle/merge-results.xsl"/>
 	</target>
 	
 	<target name="append-oslc-spec-info" depends="merge-results">

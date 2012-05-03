@@ -8,8 +8,8 @@
 <project basedir="." default="build" name="org.eclipse.lyo.testsuite.server">
 	
     <echo message="basedir = ${basedir}"/>    
-    <property name="compliance.props" value="${basedir}/compliance.props"/>
-	<property file="${compliance.props}"/>
+    <property name="assessment.props" value="${basedir}/assessment.props"/>
+	<property file="${assessment.props}"/>
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
 
@@ -175,22 +175,22 @@
 	
     <target name="junitreport" depends="append-oslc-spec-info">
     	<property name="reportdir" value="./report/${provider}"/>
-    	<echo message="Detecting A Previous OSLCComplianceReport.html file within the report directory ..."/>
+    	<echo message="Detecting A Previous OSLCAssessmentReport.html file within the report directory ..."/>
     		    <if>
-    		        <available file="${reportdir}/OSLCComplianceReport.html"/>
+    		        <available file="${reportdir}/OSLCAssessmentReport.html"/>
     		        <then>
-    		        	<echo message="A Previous OSLCComplianceReport.html file within the report directory was detected ..."/>
-    		        	<echo message="Deleting the OSLCComplianceReport.html file within the report directory ..."/>
-    		    		<delete file="${reportdir}/OSLCComplianceReport.html" failonerror="true"/>
+    		        	<echo message="A Previous OSLCAssessmentReport.html file within the report directory was detected ..."/>
+    		        	<echo message="Deleting the OSLCAssessmentReport.html file within the report directory ..."/>
+    		    		<delete file="${reportdir}/OSLCAssessmentReport.html" failonerror="true"/>
     		    		<delete file="${reportdir}/barchartSVG.svg" failonerror="true"/>
     		        </then>
     		    	<else>
-    		    		<echo message="NO OSLCComplianceReport.html file within the report directory was detected ..."/>
+    		    		<echo message="NO OSLCAssessmentReport.html file within the report directory was detected ..."/>
     		    	</else>
     		    </if>
     			<echo message="Converting TESTS-TestSuitesOSLC.xml into a HTML report"/>
     	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/barchartSVG.svg"	style="./reportstyle/barchartSVG.xsl"/>
-    	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/OSLCComplianceReport.html"	style="./reportstyle/junit-noframes.xsl"/>
+    	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/OSLCAssessmentReport.html"	style="./reportstyle/junit-noframes.xsl"/>
 		
     	<copy todir="${reportdir}">
     		<fileset dir="./reportstyle" includes="*.png, *.gif"/>

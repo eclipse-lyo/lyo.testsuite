@@ -64,26 +64,26 @@
 			<xsl:when test="error">
 		    	<xsl:choose>
 				    <xsl:when test="$level='MUST'">
-						<xsl:attribute name="compliance">failedMust</xsl:attribute>
+						<xsl:attribute name="assessment">errorMust</xsl:attribute>
 					</xsl:when>
 				    <xsl:when test="$level='SHOULD'">
-				    	<xsl:attribute name="compliance">failedShould</xsl:attribute>
+				    	<xsl:attribute name="assessment">errorShould</xsl:attribute>
 				    </xsl:when>
 				    <xsl:otherwise>
-						<xsl:attribute name="compliance">failedMay</xsl:attribute>
+						<xsl:attribute name="assessment">errorMay</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 		    <xsl:when test="failure">
 		    	<xsl:choose>
 				    <xsl:when test="$level='MUST'">
-						<xsl:attribute name="compliance">failedMust</xsl:attribute>
+						<xsl:attribute name="assessment">failedMust</xsl:attribute>
 					</xsl:when>
 				    <xsl:when test="$level='SHOULD'">
-				    	<xsl:attribute name="compliance">failedShould</xsl:attribute>
+				    	<xsl:attribute name="assessment">failedShould</xsl:attribute>
 				    </xsl:when>
 				    <xsl:otherwise>
-						<xsl:attribute name="compliance">failedMay</xsl:attribute>
+						<xsl:attribute name="assessment">failedMay</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>		    
 		    </xsl:when>
@@ -91,14 +91,14 @@
 		    	<xsl:choose>
 				    <xsl:when test="$level='MUST'">
 					    <xsl:if test = "contains($thiscaseFull,'[0]')">
-							<xsl:attribute name="compliance">passedMust</xsl:attribute>
+							<xsl:attribute name="assessment">passedMust</xsl:attribute>
 						</xsl:if>
 					</xsl:when>
 				    <xsl:when test="$level='SHOULD'">
-				    	<xsl:attribute name="compliance">passedShould</xsl:attribute>
+				    	<xsl:attribute name="assessment">passedShould</xsl:attribute>
 				    </xsl:when>
 				    <xsl:otherwise>
-						<xsl:attribute name="compliance">passedMay</xsl:attribute>
+						<xsl:attribute name="assessment">passedMay</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
 		    </xsl:otherwise>
