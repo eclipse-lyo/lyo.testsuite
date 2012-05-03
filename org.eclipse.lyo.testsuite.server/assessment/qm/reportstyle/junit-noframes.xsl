@@ -254,8 +254,8 @@
             <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
 			
-			<!-- Compliance part -->
-            <xsl:call-template name="compliancepart"/>
+			<!-- Assessment part -->
+            <xsl:call-template name="assessmentpart"/>
             <hr size="1" width="95%" align="left"/>
 
             <!-- Summary part -->
@@ -426,7 +426,7 @@
         	<th>OSLC Domain</th>
         	<th>Version</th>
 			<th>OSLC Service Provider</th>
-			<th>Compliance Level</th>
+			<th>Assessment Level</th>
         	<th>Test Coverage Statement</th>
         	<th>Test Development Statement</th>
         </tr>
@@ -438,16 +438,16 @@
 
         	<xsl:choose>
                 <xsl:when test="($mustCount=$passedMustCount) and ($shouldCount=$passedShouldCount) and ($mayCount=$passedMayCount)">
-					<td bgcolor="#0000ff" style="color:#ffff00;" title="All Must, Should and May Test(s) Passing">Level 3 Compliance</td>
+					<td bgcolor="#0000ff" style="color:#ffff00;" title="All Must, Should and May Test(s) Passing">Level 3</td>
 				</xsl:when>
                 <xsl:when test="($mustCount=$passedMustCount) and ($shouldCount=$passedShouldCount)">
-                	<td bgcolor="#00ff00" title="All Must and Should Test(s) Passing">Level 2 Compliance</td>
+                	<td bgcolor="#00ff00" title="All Must and Should Test(s) Passing">Level 2</td>
                 </xsl:when>
                 <xsl:when test="($testsuiteMustCount=$passedMustCount)">
-                	<td bgcolor="#ffff00" title="All Must Test(s) Passing">Level 1 Compliance</td>
+                	<td bgcolor="#ffff00" title="All Must Test(s) Passing">Level 1</td>
                 </xsl:when>
                 <xsl:otherwise>
-                	<td bgcolor="#ff0000">Non-Compliant</td>
+                	<td bgcolor="#ff0000">Level 0</td>
                 </xsl:otherwise>
             </xsl:choose>
             <td><div style="color:blue;"><b><xsl:value-of select="format-number($junitMustCount div $mustCount,'#.#%')"/></b> (<xsl:value-of select="$junitMustCount"/>/<xsl:value-of select="$mustCount"/>)</div><xsl:value-of select="$junitMustCount"/> of the <xsl:value-of select="$mustCount"/><xsl:text> </xsl:text><xsl:value-of select="$domain"/><xsl:text> </xsl:text><xsl:value-of select="$version"/> MUST requirements are currently testable via the Lyo OSLC testsuite.</td>
@@ -457,10 +457,10 @@
         <table border="0" width="95%">
         <tr>
         <td style="text-align: justify;">
-        <span style="background-color:#ff0000;">Non-Compliant</span>: One or more attempted tests covering a MUST requirement has encountered a failure or error<br/>
-        <span style="background-color:#ffff00;">Level 1 Compliance</span>: All Attempted Tests covering a MUST requirement are Passing and free of failure or error<br/>
-        <span style="background-color:#00ff00;">Level 2 Compliance</span>: All Attempted Tests covering a MUST and SHOULD requirement are Passing and free of failure or error<br/>
-        <span style="background-color:#0000ff;color:#ffff00;">Level 3 Compliance</span>: All Attempted Tests covering a MUST, SHOULD and MAY requirement are Passing and free of failure or error<br/>
+        <span style="background-color:#ff0000;">Level 0</span>: One or more attempted tests covering a MUST requirement has encountered a failure or error<br/>
+        <span style="background-color:#ffff00;">Level 1</span>: All Attempted Tests covering a MUST requirement are Passing and free of failure or error<br/>
+        <span style="background-color:#00ff00;">Level 2</span>: All Attempted Tests covering a MUST and SHOULD requirement are Passing and free of failure or error<br/>
+        <span style="background-color:#0000ff;color:#ffff00;">Level 3</span>: All Attempted Tests covering a MUST, SHOULD and MAY requirement are Passing and free of failure or error<br/>
         Note: This testsuite will continue to evolve and expand.  Requirements may have one or more associated test(s) for coverage to address positive and negative input behaviors.
         </td>
         </tr>

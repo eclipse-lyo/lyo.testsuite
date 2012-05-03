@@ -121,15 +121,17 @@ public class SimplifiedQueryAtomTests extends SimplifiedQueryBaseTests {
 		for(Entry entry : entries){
 			String content = entry.getContent();
 			
-			//Get XML Doc from Atom Description
-			Document description  = OSLCUtils.createXMLDocFromResponseBody(content);
-			Node result = (Node) OSLCUtils.getXPath().evaluate("//rdf:Description/@rdf:about", 
-					description, XPathConstants.NODE);
-			
-			if (result != null) {
-				String node = result.getNodeValue();
-				assertNotNull(node);
-				break;		        		
+			if ( content != null ) {
+				//Get XML Doc from Atom Description
+				Document description  = OSLCUtils.createXMLDocFromResponseBody(content);
+				Node result = (Node) OSLCUtils.getXPath().evaluate("//rdf:Description/@rdf:about", 
+						description, XPathConstants.NODE);
+				
+				if (result != null) {
+					String node = result.getNodeValue();
+					assertNotNull(node);
+					break;		        		
+				}
 			}
 		}
 	}

@@ -28,12 +28,12 @@
 		<xsl:variable name="mustCount" select="'107'"/>
 		<xsl:variable name="junitMustCount" select="'58'"/>
 		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />       
-        <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMust'])"/>
-        <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMust'])"/>
+        <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMust'])"/>
+        <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMust'])"/>
         <xsl:variable name="errorMustCount">
         	<xsl:choose>
-        		<xsl:when test="/testsuites/testsuite/testcase[@compliance='passedMust' or @compliance='failedMust']//error">
-        			<xsl:value-of select="count(/testsuites/testsuite/testcase[@compliance='passedMust' or @compliance='failedMust']//error)"/>
+        		<xsl:when test="/testsuites/testsuite/testcase[@assessment='passedMust' or @assessment='failedMust']//error">
+        			<xsl:value-of select="count(/testsuites/testsuite/testcase[@assessment='passedMust' or @assessment='failedMust']//error)"/>
         		</xsl:when>
         		<xsl:otherwise>
         			<xsl:value-of select="$testsuiteMustCount - ($passedMustCount + $failedMustCount)"/>
@@ -41,11 +41,11 @@
         	</xsl:choose>
         </xsl:variable>
         <xsl:variable name="shouldCount" select="count($spec//testcase[@level='SHOULD'])"/>
-        <xsl:variable name="passedShouldCount" select="count(/testsuites/testsuite/testcase[@compliance='passedShould'])"/>
-        <xsl:variable name="failedShouldCount" select="count(/testsuites/testsuite/testcase[@compliance='failedShould'])"/>
+        <xsl:variable name="passedShouldCount" select="count(/testsuites/testsuite/testcase[@assessment='passedShould'])"/>
+        <xsl:variable name="failedShouldCount" select="count(/testsuites/testsuite/testcase[@assessment='failedShould'])"/>
         <xsl:variable name="mayCount" select="count($spec//testcase[@level='MAY'])"/>
-        <xsl:variable name="passedMayCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMay'])"/>
-        <xsl:variable name="failedMayCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMay'])"/>
+        <xsl:variable name="passedMayCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMay'])"/>
+        <xsl:variable name="failedMayCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMay'])"/>
         
         <xsl:variable name="eval" select="($passedMustCount*5) + ($passedShouldCount*3) + ($passedMayCount*1)"/>
         <xsl:variable name="domain" select="$spec/provider-test/@domain"/>
@@ -54,7 +54,7 @@
 
         
         
-<svg:svg version="1.1" xmlns:svg="http://www.w3.org/2000/svg" width="1100" height="350px" name="svgBOX" id="svgBOX" title="OSLC Compliance Chart" x="0.0000000" y="0.0000000" onload="RunScript(evt)">
+<svg:svg version="1.1" xmlns:svg="http://www.w3.org/2000/svg" width="1100" height="350px" name="svgBOX" id="svgBOX" title="OSLC Assessment Chart" x="0.0000000" y="0.0000000" onload="RunScript(evt)">
 <script type="text/ecmascript">
 	<![CDATA[
 		var SVGDoc;
