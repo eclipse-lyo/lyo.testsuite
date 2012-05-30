@@ -15,10 +15,7 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.cm;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -29,7 +26,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.apache.wink.json4j.JSON;
@@ -37,10 +33,9 @@ import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
-import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
+import org.eclipse.lyo.testsuite.oslcv2.CoreResourceJsonTests;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -53,48 +48,15 @@ import org.xml.sax.SAXException;
  * to test against, checking the relationship of elements in the JSON representation of the change request.
  */
 @RunWith(Parameterized.class)
-public class ChangeRequestJsonTests extends TestsBase {
-	private HttpResponse response;
-	private String responseBody;
-	private JSONObject doc;
+public class ChangeRequestJsonTests extends CoreResourceJsonTests {
 	
-	public ChangeRequestJsonTests(String thisUrl) 
-		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, NullPointerException, JSONException
-	{
-		super(thisUrl);
-
-		// If currentUrl is null, it means that the query didn't match any
-		// records. This isn't exactly a failure, but there's nothing more we
-		// can test.
-		assumeNotNull(currentUrl);
-        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, 
-        		                                OSLCConstants.CT_JSON, headers);
-        responseBody = EntityUtils.toString(response.getEntity());
-        int sc = response.getStatusLine().getStatusCode();
-
-		// Some records in the system might not be accessible to this user. This
-		// isn't a failure, but there's nothing more we can test.
-        assumeTrue(sc != HttpStatus.SC_FORBIDDEN && sc != HttpStatus.SC_UNAUTHORIZED);
-        
-        // Make sure the request succeeded before continuing.
-        assertEquals(HttpStatus.SC_OK, sc);
-        
-        //Get JSON doc from response
-		JSONArtifact userData = JSON.parse(responseBody);
+	public ChangeRequestJsonTests(String thisUrl) throws IOException,
+			ParserConfigurationException, SAXException,
+			XPathExpressionException, NullPointerException, JSONException {
 		
-		if (userData instanceof JSONArtifact) {
-			doc = (JSONObject)userData;
-		}
-	    
+		super(thisUrl);		
 	}
-	
-	@Before
-	public void setup() 
-		throws IOException, ParserConfigurationException, SAXException, XPathException
-	{
-		super.setup();
-	}
-	
+
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() 
 	    throws IOException, NullPointerException, XPathException, ParserConfigurationException, SAXException, JSONException
@@ -169,72 +131,6 @@ public class ChangeRequestJsonTests extends TestsBase {
 
 		return toCollection(results);
 	}	
-
-	@Test
-	//  
-	// Verify that the Change Request has one and only one dcterms:title
-	//
-	public void changeRequestHasOneTitle() throws JSONException
-	{
-		assertTrue(doc.get(OSLCConstants.DCTERMS_TITLE) instanceof String);		
-	}
-	
-	@Test
-	public void changeRequestHasAtMostOneDescription() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_DESC) ) { 
-			assertTrue(doc.get(OSLCConstants.DCTERMS_DESC) instanceof String);
-		}
-	}
-	
-	@Test
-	public void changeRequestHasAtMostOneIdentifier() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_ID) ) { 
-			assertTrue( (doc.get(OSLCConstants.DCTERMS_ID) instanceof String) ||
-					(doc.get(OSLCConstants.DCTERMS_ID) instanceof Integer));
-		}
-	}
-	
-	@Test
-	public void changeRequestHasAtMostOneName() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_NAME) ) { 
-			assertTrue(doc.get(OSLCConstants.DCTERMS_NAME) instanceof String);
-		}
-	}
-	
-	@Test
-	public void changeRequestHasAtMostOneCreatedDate() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_CREATED) ) { 
-			assertTrue(doc.get(OSLCConstants.DCTERMS_CREATED) instanceof String);
-		}
-	}
-	
-	@Test
-	public void changeRequestHasAtMostOneModifiedDate() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_MODIFIED) ) { 
-			assertTrue(doc.get(OSLCConstants.DCTERMS_MODIFIED) instanceof String);
-		}		
-	}
-	
-	@Test
-	public void changeRequestHasAtMostOneDiscussion() throws JSONException
-	{
-		if ( doc.containsKey("oslc:discussion") ) { 
-			assertTrue(doc.get("oslc:discussion") instanceof JSONObject);
-		}		
-	}
-	
-	@Test
-	public void changeRequestHasAtMostOneInstanceShape() throws JSONException
-	{
-		if ( doc.containsKey("oslc:instanceShape") ) { 
-			assertTrue(doc.get("oslc:instanceShape") instanceof JSONObject);
-		}		
-	}
 	
 	@Test
 	public void changeRequestHasAtMostOneCloseDate() throws JSONException

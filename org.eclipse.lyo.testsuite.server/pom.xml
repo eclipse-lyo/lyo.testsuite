@@ -24,6 +24,10 @@
 	<groupId>org.eclipse.lyo</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 
+	<properties>
+    	<skipTests>true</skipTests>
+  	</properties>
+  
 	<repositories>
 		<repository>
 			<id>oauth</id>
@@ -130,7 +134,7 @@
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
+				<artifactId>maven-surefire-report-plugin</artifactId>				
 			</plugin> 
 
 		</plugins>

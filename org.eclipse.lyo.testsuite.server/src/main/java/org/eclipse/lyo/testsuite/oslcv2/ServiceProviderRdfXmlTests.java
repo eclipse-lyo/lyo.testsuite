@@ -106,7 +106,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	    //ArrayList to contain the urls from all SPCs
 	    Collection<Object[]> data = new ArrayList<Object[]>();
 	    
-	    ArrayList<String> serviceURLs = TestsBase.getServiceProviderURLsUsingRdfXml(base, false);
+	    ArrayList<String> serviceURLs = TestsBase.getServiceProviderURLsUsingRdfXml(base, true);
 	    
 	    for (String serviceURL : serviceURLs) {
 			data.add(new Object[] {serviceURL});

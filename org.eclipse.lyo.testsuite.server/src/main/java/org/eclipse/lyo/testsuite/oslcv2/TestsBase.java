@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,8 +10,8 @@
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
- *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -162,7 +163,7 @@ public class TestsBase {
 		}
 		return data;	
 	}
-	
+		
 	public static ArrayList<String> getServiceProviderURLsUsingXML(String inBaseURL, boolean dontGoDeep)
 		throws IOException, XPathException, ParserConfigurationException,
 		SAXException {
@@ -284,11 +285,28 @@ public class TestsBase {
 		}
 		return data;
 	}
+
+	public static ArrayList<String> getCapabilityURLsUsingXML(
+			String xpathStmt,
+			ArrayList<String> serviceUrls, 
+			boolean useDefaultUsage) 
+		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+		
+		return getCapabilityURLsUsingXML(xpathStmt,
+										 "//oslc_v2:usage/@rdf:resource",
+										 OSLCConstants.USAGE_DEFAULT_URI,
+				                         serviceUrls,
+				                         useDefaultUsage);
+	}
 	
-	public static ArrayList<String> getCapabilityURLsUsingXML(String xpathStmt,
-			ArrayList<String> serviceUrls, boolean useDefaultUsage) throws IOException,
-			ParserConfigurationException, SAXException,
-			XPathExpressionException {
+	public static ArrayList<String> getCapabilityURLsUsingXML(
+			String xpathStmt,
+			String xpathSubStmt,
+			String rT,
+			ArrayList<String> serviceUrls, 
+			boolean useDefaultUsage) 
+		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+		
 		// Collection to contain the creationFactory urls from all SPs
 		ArrayList<String> data = new ArrayList<String>();
 		String firstUrl = null;
@@ -299,21 +317,24 @@ public class TestsBase {
 
 			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(EntityUtils
 					.toString(resp.getEntity()));
-
+			                             
 			NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(
 					xpathStmt,
 					baseDoc, XPathConstants.NODESET);
-			String xpathSubStmt = "../../oslc_v2:usage/@rdf:resource";
+									
 			for (int i = 0; i < sDescs.getLength(); i++) {
 				if (firstUrl == null)
 					firstUrl = sDescs.item(i).getNodeValue();
+					
 				if (useDefaultUsage) {
 					NodeList usages = (NodeList) OSLCUtils.getXPath().evaluate(
 							xpathSubStmt,
 							sDescs.item(i), XPathConstants.NODESET);
+					
 					for (int u=0; u < usages.getLength(); u++) {
 						String usageValue = usages.item(u).getNodeValue();
-						if (OSLCConstants.USAGE_DEFAULT_URI.equals(usageValue)) {
+						//if (OSLCConstants.USAGE_DEFAULT_URI.equals(usageValue)) {
+						if (rT.equals(usageValue) && (u ==i)) {
 							data.add(sDescs.item(i).getNodeValue());
 							return data;
 						}
@@ -396,11 +417,35 @@ public class TestsBase {
 
 	public static ArrayList<String> getCapabilityURLsUsingRdfXml(String propertyUri,
 			ArrayList<String> serviceUrls, boolean useDefaultUsage) throws IOException {
-		return getCapabilityURLsUsingRdfXml(propertyUri, serviceUrls, useDefaultUsage, null);
+		return getCapabilityURLsUsingRdfXml(
+				propertyUri, 
+				serviceUrls, 
+				useDefaultUsage, 
+				null,
+				OSLCConstants.USAGE_PROP,
+				OSLCConstants.USAGE_DEFAULT_URI
+				);
 	}
-	
+
 	public static ArrayList<String> getCapabilityURLsUsingRdfXml(String propertyUri,
 			ArrayList<String> serviceUrls, boolean useDefaultUsage, String[] types) throws IOException {
+		return getCapabilityURLsUsingRdfXml(
+				propertyUri, 
+				serviceUrls, 
+				useDefaultUsage, 
+				types,
+				OSLCConstants.USAGE_PROP,
+				OSLCConstants.USAGE_DEFAULT_URI
+				);
+	}
+
+	public static ArrayList<String> getCapabilityURLsUsingRdfXml(
+			String propertyUri,
+			ArrayList<String> serviceUrls, 
+			boolean useDefaultUsage, 
+			String[] types, 
+			String prop,
+			String eval) throws IOException {
 		// Collection to contain the creationFactory urls from all SPs
 		ArrayList<String> data = new ArrayList<String>();
 		String firstUrl = null;
@@ -411,20 +456,25 @@ public class TestsBase {
 			Model spModel = ModelFactory.createDefaultModel();
 			spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
 			RDFUtils.validateModel(spModel);
-			
+						
 			Property capProp = spModel.createProperty(propertyUri);
-			Property usageProp = spModel.createProperty(OSLCConstants.USAGE_PROP);
+			Property usageProp = spModel.createProperty(prop);
 			Selector select = new SimpleSelector(null, capProp, (RDFNode)null);
 			StmtIterator statements = spModel.listStatements(select);
+			
 			while (statements.hasNext()) {
 				Statement stmt = statements.nextStatement();
+				
 				if (firstUrl == null)
 					firstUrl = stmt.getObject().toString();
 				if (useDefaultUsage) {
 					StmtIterator usages = stmt.getSubject().listProperties(usageProp);
+					
 					while (usages.hasNext()) {
+						
 						Statement usageStmt = usages.nextStatement();
-						if (OSLCConstants.USAGE_DEFAULT_URI.equals(usageStmt.getObject().toString())) {
+						
+						if (eval.equals(usageStmt.getObject().toString())){
 							data.add(stmt.getObject().toString());
 							return data;
 						}
