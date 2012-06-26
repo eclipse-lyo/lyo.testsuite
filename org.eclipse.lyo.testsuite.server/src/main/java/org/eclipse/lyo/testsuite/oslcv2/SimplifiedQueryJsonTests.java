@@ -107,7 +107,7 @@ public class SimplifiedQueryJsonTests extends SimplifiedQueryBaseTests {
 	public void validEqualsQueryContainsExpectedResource() throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException, JSONException {
-		String query = getQueryUrlForalidEqualsQueryContainsExpectedResources();
+		String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
 		validateNonEmptyResponse(query);
 	}
 

@@ -68,7 +68,7 @@ public class SimplifiedQueryBaseTests extends TestsBase {
 		return query;
 	}
 
-	protected String getQueryUrlForalidEqualsQueryContainsExpectedResources()
+	protected String getQueryUrlForValidEqualsQueryContainsExpectedResources()
 			throws UnsupportedEncodingException {
 		String query = getQueryBase() + "oslc.where="
 				+ URLEncoder.encode(queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8")

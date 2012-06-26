@@ -133,7 +133,7 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
 	@Test
 	public void validEqualsQueryContainsExpectedResource() throws IOException {
-		String query = getQueryUrlForalidEqualsQueryContainsExpectedResources();
+		String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
 		validateNonEmptyResponse(query);
 	}
 
