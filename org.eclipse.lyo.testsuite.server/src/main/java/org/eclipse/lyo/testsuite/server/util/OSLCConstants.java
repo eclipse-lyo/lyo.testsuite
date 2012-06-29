@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin
  *******************************************************************************/
 
 package org.eclipse.lyo.testsuite.server.util;
@@ -25,11 +26,13 @@ public interface OSLCConstants {
 	static String RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 	static String ATOM = "http://www.w3.org/2005/Atom";
 	static String OSLC_V2    = "http://open-services.net/ns/core#";
+	static String CORE_DEFAULT = "http://open-services.net/ns/core#default";
 	static String OSLC_CM_V2 = "http://open-services.net/ns/cm#";
 	static String OSLC_AM_V2 = "http://open-services.net/ns/am#";
 	static String OSLC_ASSET_V2 = "http://open-services.net/ns/asset#";
 	static String OSLC_QM_V2 = "http://open-services.net/ns/qm#";
 	static String OSLC_RM_V2 = "http://open-services.net/ns/rm#";
+	
 	// Version 1.0 namespace definitions
 	static String OSLC_DISC = "http://open-services.net/xmlns/discovery/1.0/";
 	static String OSLC_CM   = "http://open-services.net/xmlns/cm/1.0/";
@@ -46,6 +49,7 @@ public interface OSLCConstants {
 	static String CT_RDF = "application/rdf+xml";
 	static String CT_JSON = "application/json";
 	static String CT_COMPACT = "application/x-oslc-compact+xml";
+	static String CT_ATOM = "application/atom+xml";
 	
 	// Version 1 headers:
 	static String CT_CR_XML = "application/x-oslc-cm-change-request+xml";
@@ -68,6 +72,7 @@ public interface OSLCConstants {
 	public static final String SERVICE_PROVIDER_CATALOG_PROP = OSLC_V2 + "serviceProviderCatalog";
 	public static final String SERVICE_PROVIDER_CATALOG_TYPE = OSLC_V2 + "ServiceProviderCatalog";
 	public static final String CREATION_PROP 		= OSLC_V2 + "creation";
+	public static final String QUERY_CAPABILITY_PROP = OSLC_V2 + "QueryCapability";
 	public static final String QUERY_BASE_PROP 		= OSLC_V2 + "queryBase";
 	public static final String RESP_INFO_TYPE 		= OSLC_V2 + "ResponseInfo";
 	public static final String SERVICE_PROP 		= OSLC_V2 + "service";
@@ -78,8 +83,7 @@ public interface OSLCConstants {
 	public static final String TOTAL_COUNT_PROP	 	= OSLC_V2 + "totalCount";
 	public static final String RESOURCE_TYPE_PROP   = OSLC_V2 + "resourceType";
 	public static final String RESOURCE_SHAPE_PROP  = OSLC_V2 + "resourceShape";
-	
-	
+	public static final String DESCRIPTION_PROP 	= OSLC_V2 + "Description";
 	// OSLC CM 2.0
 	public static final String CM_CHANGE_REQUEST_TYPE = OSLC_CM_V2 + "ChangeRequest";
 	public static final String CM_CLOSE_DATE_PROP 	= OSLC_CM_V2 + "closeDate";
@@ -91,6 +95,19 @@ public interface OSLCConstants {
 	public static final String CM_REVIEWED_PROP 	= OSLC_CM_V2 + "reviewed";
 	public static final String CM_VERIFIED_PROP 	= OSLC_CM_V2 + "verified";
 
+	// OSLC QM 2.0
+	public static final String QM_TEST_PLAN = OSLC_QM_V2 + "testPlan";
+	public static final String QM_TEST_CASE = OSLC_QM_V2 + "testCase";
+	public static final String QM_TEST_SCRIPT = OSLC_QM_V2 + "testScript";
+	public static final String QM_TEST_RESULT = OSLC_QM_V2 + "testResult";
+	public static final String QM_TEST_EXECUTION_RECORD = OSLC_QM_V2 + "testExecutionRecord";
+	
+	public static final String QM_TEST_PLAN_QUERY = OSLC_QM_V2 + "TestPlanQuery";
+	public static final String QM_TEST_CASE_QUERY = OSLC_QM_V2 + "TestCaseQuery";
+	public static final String QM_TEST_SCRIPT_QUERY = OSLC_QM_V2 + "TestScriptQuery";
+	public static final String QM_TEST_RESULT_QUERY = OSLC_QM_V2 + "TestResultQuery";
+	public static final String QM_TEST_EXECUTION_RECORD_QUERY = OSLC_QM_V2 + "TestExecutionRecordQuery";
+	
 	// RDF
 	public static final String RDF_TYPE_PROP		= RDF + "type";
 	public static final String RDFS_MEMBER 			= RDFS + "member";

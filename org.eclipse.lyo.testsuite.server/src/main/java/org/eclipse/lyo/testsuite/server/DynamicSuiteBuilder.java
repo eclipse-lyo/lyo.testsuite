@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,13 +12,13 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
-
 
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.CreationAndUpdateTests;
@@ -76,12 +76,29 @@ public class DynamicSuiteBuilder
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests.class);
+				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests.class);				
+				
 				if (OSLCConstants.OSLC_CM_V2.equals(testVersions)) {
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);
-				} 
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests.class);
+				}
+				
+				if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestPlanXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestCaseXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestScriptXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestExecutionRecordXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestResultXmlTests.class);
+					
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestPlanRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestCaseRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestScriptRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestExecutionRecordRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestResultRdfXmlTests.class);
+				}
 			}
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests.class);
