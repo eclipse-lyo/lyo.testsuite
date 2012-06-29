@@ -45,6 +45,8 @@ public interface OSLCConstants {
 	static String CT_XML = "application/xml";
 	static String CT_RDF = "application/rdf+xml";
 	static String CT_JSON = "application/json";
+	static String CT_COMPACT = "application/x-oslc-compact+xml";
+	
 	// Version 1 headers:
 	static String CT_CR_XML = "application/x-oslc-cm-change-request+xml";
 	static String CT_CR_JSON = "application/x-oslc-cm-change-request+json";
