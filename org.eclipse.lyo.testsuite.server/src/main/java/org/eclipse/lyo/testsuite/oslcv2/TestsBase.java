@@ -11,6 +11,7 @@
  *
  * Contributors:
  *    Steve Speicher - initial API and implementation
+ *    Tim Eck II     - asset management test cases
  *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
@@ -27,7 +28,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -41,7 +41,6 @@ import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
-//import org.apache.wink.json4j.compat.JSONArray;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
@@ -96,6 +95,8 @@ public class TestsBase {
 			basicCreds = new UsernamePasswordCredentials(userId, pw);
 			Header h = new BasicHeader("OSLC-Core-Version", "2.0");
 			Header h2 = new BasicHeader("DoorsRP-Request-Type", "private"); // TODO: RRC special sauce
+			
+			
 			headers = new Header[] { h, h2 };
 			String onlyOnceStr = setupProps.getProperty("runOnlyOnce");
 			if (onlyOnceStr != null && onlyOnceStr.equals("false")) {
@@ -147,7 +148,7 @@ public class TestsBase {
 
 	public void setup() throws IOException, ParserConfigurationException,
 			SAXException, XPathException {
-		staticSetup();
+		 staticSetup();
 	}
 
 	public static ArrayList<String> getServiceProviderURLsUsingXML(String inBaseURL)
@@ -271,8 +272,8 @@ public class TestsBase {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					basicCreds, OSLCConstants.CT_XML, headers);
 
-			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(EntityUtils
-					.toString(resp.getEntity()));
+			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(
+					EntityUtils.toString(resp.getEntity()));
 
 			NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(
 					xpathStmt,
@@ -315,9 +316,9 @@ public class TestsBase {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					basicCreds, OSLCConstants.CT_XML, headers);
 
-			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(EntityUtils
-					.toString(resp.getEntity()));
-			                             
+			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(
+					EntityUtils.toString(resp.getEntity()));
+			
 			NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(
 					xpathStmt,
 					baseDoc, XPathConstants.NODESET);
@@ -367,7 +368,8 @@ public class TestsBase {
 	    }
 
 	    HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, inBaseURL, basicCreds, OSLCConstants.CT_RDF, headers);
-		assertEquals("Did not successfully retrieve ServiceProviders at: "+inBaseURL, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
+		assertEquals("Did not successfully retrieve ServiceProviders at: "+inBaseURL,
+				HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 
 	    // Used to hold RDF from doing service discovery
 		Model spModel = ModelFactory.createDefaultModel(); 

@@ -13,6 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Yuhong Yin
+ *    Tim Eck II     - asset management test cases
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server;
 
@@ -22,14 +23,12 @@ import java.util.Properties;
 
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.CreationAndUpdateTests;
-import org.eclipse.lyo.testsuite.server.oslcv1tests.OAuthTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.QueryTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.ServiceDescriptionTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.ServiceProviderCatalogTests;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.runner.RunWith;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,17 +52,16 @@ public class DynamicSuiteBuilder
 		//If we also want to run v1 tests (assuming this is a v2 provider)
 		String testVersions = setupProps.getProperty("testVersions");
 
-		//Determine if this is a v1 or v2 provider
-		ArrayList<Class<?>> testsToRun = new ArrayList<Class<?>>();
 		
-		if (       OSLCConstants.OSLC_CM_V2.equals(testVersions) 
-				|| OSLCConstants.OSLC_V2.equals(testVersions) 
-				|| OSLCConstants.OSLC_RM_V2.equals(testVersions) 
-				|| OSLCConstants.OSLC_QM_V2.equals(testVersions) 
-				|| testVersions.equals("both") 
-				|| OSLCConstants.OSLC_AM_V2.equals(testVersions)
-				|| OSLCConstants.OSLC_ASSET_V2.equals(testVersions))
-		{
+		ArrayList<Class<?>> testsToRun = new ArrayList<Class<?>>();
+		//Determine if this is a v1 or v2 provider
+		if (   OSLCConstants.OSLC_CM_V2.equals(testVersions) 
+			|| OSLCConstants.OSLC_V2.equals(testVersions) 
+			|| OSLCConstants.OSLC_RM_V2.equals(testVersions) 
+			|| OSLCConstants.OSLC_QM_V2.equals(testVersions) 
+			|| testVersions.equals("both") 
+			|| OSLCConstants.OSLC_AM_V2.equals(testVersions)
+			|| OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
@@ -75,14 +73,29 @@ public class DynamicSuiteBuilder
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests.class);
-				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests.class);				
+				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests.class);		
 				
 				if (OSLCConstants.OSLC_CM_V2.equals(testVersions)) {
+					log.info("Setting up to test CM v2 features");
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests.class);
+				} else if(OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
+					log.info("Setting up to test Asset v2 features");
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetJsonTest.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetRdfXmlTest.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetXmlTest.class);
+					
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateJsonTests.class);
+					
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseJsonTests.class);
+					
 				}
 				
 				if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
@@ -101,19 +114,17 @@ public class DynamicSuiteBuilder
 			}
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests.class);
-			//testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.QueryTests.class);
-			//TODO: need to enable OAuth tests: testsToRun.add(org.eclipse.lyo.testsuite.server.oslcv2tests.OAuthTests.class);
+			//testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.OAuthTests.class);
 		}
-		if (OSLCConstants.OSLC_CM.equals(testVersions) || testVersions.equals("both"))
-		{
+		if (OSLCConstants.OSLC_CM.equals(testVersions) || testVersions.equals("both")) {
 			log.info("Setting up to test CM v2 features");
 			testsToRun.add(ServiceProviderCatalogTests.class);
 			testsToRun.add(ServiceDescriptionTests.class);
 			testsToRun.add(CreationAndUpdateTests.class);
 			testsToRun.add(QueryTests.class);
-			testsToRun.add(OAuthTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.OAuthTests.class);
 		}
-				
+		
 		//Return array of test classes
 		return testsToRun.toArray(new Class<?>[0]);
 	}
