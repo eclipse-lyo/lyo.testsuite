@@ -122,7 +122,7 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 	public void validEqualsQueryContainsExpectedResource() throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException {
-		String query = getQueryUrlForalidEqualsQueryContainsExpectedResources();
+		String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
 		validateNonEmptyResponse(query);
 	}
 

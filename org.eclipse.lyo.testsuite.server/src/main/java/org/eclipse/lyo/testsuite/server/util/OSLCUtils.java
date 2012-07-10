@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Tim Eck II     - asset management test cases
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server.util;
 
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,6 +37,12 @@ import javax.net.ssl.X509TrustManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
@@ -66,7 +74,8 @@ public class OSLCUtils {
 	//HttpClient used for all requests
 	public static DefaultHttpClient httpclient = null;
 	
-	public static Document createXMLDocFromResponseBody(String respBody) throws ParserConfigurationException, IOException, SAXException
+	public static Document createXMLDocFromResponseBody(String respBody)
+			throws ParserConfigurationException, IOException, SAXException
 	{
 	    //Create XML Doc out of response
 	    DocumentBuilderFactory dbf =
@@ -81,13 +90,22 @@ public class OSLCUtils {
 	    return db.parse(is);
 	}
 	
-	public static HttpResponse getResponseFromUrl(String baseUrl, String url, Credentials creds, String acceptTypes) throws IOException
+	public static String createStringFromXMLDoc(Document document) throws TransformerException {
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		StringWriter writer = new StringWriter();
+		transformer.transform(new DOMSource(document), new StreamResult(writer));
+		return writer.getBuffer().toString();
+	}
+	
+	public static HttpResponse getResponseFromUrl(String baseUrl, String url, Credentials creds, String acceptTypes)
+			throws IOException
 	{
 		return getResponseFromUrl(baseUrl, url, creds, acceptTypes, null);
 	}
 	
-	public static String absoluteUrlFromRelative(String baseUrl, String url) throws MalformedURLException
-	{
+	public static String absoluteUrlFromRelative(String baseUrl, String url) throws MalformedURLException {
 		URL base = new URL(baseUrl);
 		URL result = new URL(base, url);
 		return result.toString();
@@ -114,12 +132,12 @@ public class OSLCUtils {
 
 	private static HttpClient getHttpClient(Credentials creds) {
 		//If this is our first request, initialized our httpclient
-		if (httpclient == null)
-		{
+		if (httpclient == null) {
 			httpclient = new DefaultHttpClient();
 			setupLazySSLSupport(httpclient);
-			if (creds != null)
-			   httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+			if (creds != null) {
+				httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+			}
 		}
 		return httpclient;
 	}
@@ -214,6 +232,32 @@ public class OSLCUtils {
 		return resp;
 	}
 	
+	public static HttpResponse getDataFromUrl(String url, Credentials creds, String acceptTypes, String contentType) throws ClientProtocolException, IOException
+	{
+		return getDataFromUrl(url, creds, acceptTypes, contentType, null);
+	}
+	
+	public static HttpResponse getDataFromUrl(String url, Credentials creds, String acceptTypes,
+			String contentType, Header[] headers) throws ClientProtocolException, IOException
+	{
+		getHttpClient(creds);
+		
+		//Create the post and add headers
+		HttpGet httpget = new HttpGet(url);
+		
+		if (headers != null) {
+			httpget.setHeaders(headers);
+		}
+		if (contentType != null && !contentType.isEmpty())
+			httpget.addHeader("Content-Type", contentType);
+		if (acceptTypes != null && !acceptTypes.isEmpty())
+			httpget.addHeader("Accept", acceptTypes);
+		
+		//Send the request and return the response
+		HttpResponse resp = httpclient.execute(httpget, new BasicHttpContext());
+		return resp;
+	}
+	
 	public static XPath getXPath()
 	{
 		XPathFactory factory = XPathFactory.newInstance();
@@ -260,13 +304,11 @@ public class OSLCUtils {
 		schemeRegistry.register(https);
 	}
 
-	public static String readFileByNameAsString(String fileName) 
-	{
+	public static String readFileByNameAsString(String fileName) {
 		return OSLCUtils.readFileAsString(new File(fileName));
 	}
 	
-	public static String readFileAsString(File f)
-	{
+	public static String readFileAsString(File f) {
 		
 		StringBuilder stringBuilder = new StringBuilder();
 	    Scanner scanner = null;
@@ -289,8 +331,7 @@ public class OSLCUtils {
 	public static void setupFormsAuth(String url, String username, String password) throws ClientProtocolException, IOException
 	{
 		//If this is our first request, initialized our httpclient
-		if (httpclient == null)
-		{
+		if (httpclient == null) {
 			httpclient = new DefaultHttpClient();
 			setupLazySSLSupport(httpclient);
 		}
