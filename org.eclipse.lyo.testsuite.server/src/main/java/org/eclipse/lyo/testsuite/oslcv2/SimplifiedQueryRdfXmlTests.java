@@ -43,6 +43,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -121,7 +122,12 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 				Statement stmt = (Statement) stmtsList.get(0);
 				assertTrue("Expected oslc:totalCount property",
 						stmtsList.size() == 1);
-				int totalCount = Integer.parseInt(stmt.getObject().toString());
+				
+				Literal nodeLiteral = stmt.getObject().asLiteral();
+				//If the following coercion fails, a DatatypeFormatException runtime 
+				//is thrown. Let it propagate
+				int totalCount = nodeLiteral.getInt();
+
 				assertTrue("Expected oslc:totalCount > 0", totalCount > 0);
 			}
 
@@ -133,7 +139,7 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
 	@Test
 	public void validEqualsQueryContainsExpectedResource() throws IOException {
-		String query = getQueryUrlForalidEqualsQueryContainsExpectedResources();
+		String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
 		validateNonEmptyResponse(query);
 	}
 

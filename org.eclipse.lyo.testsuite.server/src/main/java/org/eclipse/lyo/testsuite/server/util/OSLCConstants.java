@@ -13,6 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Yuhong Yin
+ *    Tim Eck II     - asset management test cases
  *******************************************************************************/
 
 package org.eclipse.lyo.testsuite.server.util;
@@ -82,6 +83,7 @@ public interface OSLCConstants {
 	public static final String TOTAL_COUNT_PROP	 	= OSLC_V2 + "totalCount";
 	public static final String RESOURCE_TYPE_PROP   = OSLC_V2 + "resourceType";
 	public static final String RESOURCE_SHAPE_PROP  = OSLC_V2 + "resourceShape";
+	public static final String LABEL_PROP			= OSLC_V2 + "label";
 	public static final String DESCRIPTION_PROP 	= OSLC_V2 + "Description";
 	// OSLC CM 2.0
 	public static final String CM_CHANGE_REQUEST_TYPE = OSLC_CM_V2 + "ChangeRequest";
@@ -93,6 +95,14 @@ public interface OSLCConstants {
 	public static final String CM_APPROVED_PROP 	= OSLC_CM_V2 + "approved";
 	public static final String CM_REVIEWED_PROP 	= OSLC_CM_V2 + "reviewed";
 	public static final String CM_VERIFIED_PROP 	= OSLC_CM_V2 + "verified";
+
+	
+	// OSLC Asset 2.0
+	public static final String ASSET_GUID_PROP		= OSLC_ASSET_V2 + "guid";
+	public static final String ASSET_VERSION_PROP	= OSLC_ASSET_V2 + "version";
+	public static final String ASSET_ARTIFACT_PROP	= OSLC_ASSET_V2 + "artifact";
+	public static final String ASSET_ARTIFACT_FACTORY_PROP = OSLC_ASSET_V2 + "artifactFactory";
+	public static final String ASSET_CATEGORIZATION_PROP = OSLC_ASSET_V2 + "categorization";
 
 	// OSLC QM 2.0
 	public static final String QM_TEST_PLAN = OSLC_QM_V2 + "testPlan";
@@ -106,9 +116,11 @@ public interface OSLCConstants {
 	public static final String QM_TEST_SCRIPT_QUERY = OSLC_QM_V2 + "TestScriptQuery";
 	public static final String QM_TEST_RESULT_QUERY = OSLC_QM_V2 + "TestResultQuery";
 	public static final String QM_TEST_EXECUTION_RECORD_QUERY = OSLC_QM_V2 + "TestExecutionRecordQuery";
+
 	
 	// RDF
 	public static final String RDF_TYPE_PROP		= RDF + "type";
+	public static final String RDF_DESCRIPTION_PROP	= RDF + "Description";
 	public static final String RDFS_MEMBER 			= RDFS + "member";
 	
 	// DCTERMS URIs
@@ -120,6 +132,7 @@ public interface OSLCConstants {
 	public static final String DC_NAME_PROP 		= DC + "name";
 	public static final String DC_CREATED_PROP		= DC + "created";
 	public static final String DC_MODIFIED_PROP		= DC + "modified";
+	public static final String DC_RELATION_PROP		= DC + "relation";
 
 	// DCTERMSs
 	public static final String DCTERMS_TITLE 		= DCTERMS + "title";
@@ -130,5 +143,6 @@ public interface OSLCConstants {
 	public static final String DCTERMS_NAME 		= DCTERMS + "name";
 	public static final String DCTERMS_CREATED		= DCTERMS + "created";
 	public static final String DCTERMS_MODIFIED		= DCTERMS + "modified";
+	public static final String DCTERMS_RELATION		= DCTERMS + "relation";
 	
 }
