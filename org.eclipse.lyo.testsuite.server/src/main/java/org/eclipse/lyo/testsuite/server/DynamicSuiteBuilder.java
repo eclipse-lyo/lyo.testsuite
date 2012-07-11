@@ -65,6 +65,7 @@ public class DynamicSuiteBuilder
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.FetchResourceTests.class);
 			
 			if (OSLCConstants.OSLC_CM_V2.equals(testVersions) || 
 				OSLCConstants.OSLC_QM_V2.equals(testVersions) || 
@@ -96,6 +97,7 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseJsonTests.class);
 					
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests.class);
 				}
 				
 				if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
