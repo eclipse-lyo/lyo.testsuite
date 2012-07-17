@@ -47,7 +47,9 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.http.Header;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.ClientProtocolException;
@@ -62,6 +64,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
@@ -138,6 +141,25 @@ public class OSLCUtils {
 			if (creds != null) {
 				httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
 			}
+
+			httpclient.setRedirectStrategy(new DefaultRedirectStrategy() {                
+		        @Override
+				public boolean isRedirected(HttpRequest request, HttpResponse response, org.apache.http.protocol.HttpContext context)  {
+		            boolean isRedirect=false;
+		            try {
+		                isRedirect = super.isRedirected(request, response, context);
+		            } catch (ProtocolException e) {
+		                e.printStackTrace();
+		            }
+		            if (!isRedirect) {
+		                int responseCode = response.getStatusLine().getStatusCode();
+		                if (responseCode == 301 || responseCode == 302) {
+		                    return true;
+		                }
+		            }
+		            return isRedirect;
+		        }
+		    });
 		}
 		return httpclient;
 	}

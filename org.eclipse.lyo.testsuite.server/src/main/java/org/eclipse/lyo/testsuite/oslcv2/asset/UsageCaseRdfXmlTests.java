@@ -120,7 +120,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
 		resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
-					OSLCConstants.CT_RDF, OSLCConstants.CT_RDF, artifact, header);
+					OSLCConstants.CT_RDF, null, artifact, header);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
@@ -135,15 +135,14 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		// TODO make this so that if the label is not there it is added
 		Property artifactProp = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
 		String labelValue = "this subject has been changed";
+		
 		Selector selectArtifact = new SimpleSelector(null, artifactProp, (RDFNode)null);
 		StmtIterator artifactStatements = model.listStatements(selectArtifact);
 		List<Statement> statementList = artifactStatements.toList();
 		for(int i = 0; i < statementList.size(); i++) {
-			Statement statement = statementList.get(i);
-			Selector selectChildren = new SimpleSelector(statement.getObject().asResource() , null, (RDFNode)null);
-			StmtIterator childrenStatements = model.listStatements(selectChildren);
+			Statement artifactStatement = statementList.get(i);
 			Property prop = model.createProperty(OSLCConstants.LABEL_PROP);
-			setPropertyValue(childrenStatements.nextStatement(), prop, labelValue);
+			setPropertyValue(artifactStatement.getResource(), prop, labelValue);
 		}
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -161,16 +160,14 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		artifactStatements = model.listStatements(selectArtifact);
 		statementList = artifactStatements.toList();
 		for(int i = 0; i < statementList.size(); i++) {
-			Statement statement = statementList.get(i);
-			Selector selectChildren = new SimpleSelector(statement.getObject().asResource() , null, (RDFNode)null);
-			StmtIterator childrenStatements = model.listStatements(selectChildren);
-			Statement childStatement = childrenStatements.nextStatement();
+			Statement artifactStatement = statementList.get(i);
 			Property prop = model.createProperty(OSLCConstants.LABEL_PROP);
-			StmtIterator statements = childStatement.getResource().listProperties(prop);
-			assertTrue("No label was found", statements.hasNext());
-			Statement label = statements.nextStatement();
-			assertEquals("Label was not set", labelValue, label.getObject().toString());
+			setPropertyValue(artifactStatement.getResource(), prop, labelValue);
+			StmtIterator statements = artifactStatement.getResource().listProperties(prop);
+			assertTrue("No label property was found", statements.hasNext());
+			assertEquals(labelValue, statements.next().getObject().toString());
 		}
+
 	}
 	
 	private Model runQuery() throws IOException, ParserConfigurationException, SAXException {
@@ -242,17 +239,22 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		return null;
 	}
 	
-	private void setPropertyValue(Statement statement, Property property, String newValue) {
-		StmtIterator statements = statement.getResource().listProperties(property);
+	private void setPropertyValue(Resource resource, Property property, String newValue) {
+		StmtIterator statements = resource.listProperties(property);
 		ArrayList<Statement> statementList = new ArrayList<Statement>();
 		// Converts the iterator into an array list so that the statement(s) can be modified
+		
+		boolean propFound = statements.hasNext();
 		while(statements.hasNext()) {
 			statementList.add(statements.nextStatement());
 		}
-		
 		for(int i = 0; i < statementList.size(); i++) {
-			statement = statementList.get(i);
+			Statement statement = statementList.get(i);
 			statement.changeObject(newValue);
+		}
+		
+		if(!propFound) {
+			resource.addProperty(property, newValue);
 		}
 	}
 }
