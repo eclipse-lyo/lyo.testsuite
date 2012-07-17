@@ -1,0 +1,16 @@
+{
+	"prefixes" : {
+		"oslc": "http://open-services.net/ns/core#",
+		"rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"dcterms" : "http://purl.org/dc/terms/"
+	},
+	"dcterms:title" : "Build help documentation",
+	"oslc:label" : "documentation",
+	"oslc_asset:content" : {
+		"rdf:resource" : "http://help.example.com"
+	},
+	"dcterms:format" : "text/html",
+	"rdf:type" : {
+	 	"rdf:resource" : "http://open-services.net/ns/asset#Artifact"
+	 }
+}
