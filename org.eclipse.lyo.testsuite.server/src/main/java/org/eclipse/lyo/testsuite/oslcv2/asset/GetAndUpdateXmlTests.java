@@ -103,7 +103,9 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
 		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
 					OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
-		EntityUtils.consume(response.getEntity());
+		try {
+			EntityUtils.consume(response.getEntity());
+		} catch (IOException e) { }
 		assertTrue("Expected "+HttpStatus.SC_CREATED + ", received " + response.getStatusLine().getStatusCode(),
 				response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
 	}
@@ -137,7 +139,9 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 		// Adds the artifact to the asset
 		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
 				OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
-		EntityUtils.consume(response.getEntity());
+		try {
+			EntityUtils.consume(response.getEntity());
+		} catch (IOException e) { }
 		
 		// Gets the asset with the artifact added to it
 		String resp = getAssetAsString();
