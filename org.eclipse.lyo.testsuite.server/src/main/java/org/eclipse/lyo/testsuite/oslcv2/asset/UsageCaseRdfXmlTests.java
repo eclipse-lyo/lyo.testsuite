@@ -121,9 +121,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 
 		resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
 					OSLCConstants.CT_RDF, null, artifact, header);
-		try {
-			EntityUtils.consume(resp.getEntity());
-		} catch (IOException e) { }
+		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
 		

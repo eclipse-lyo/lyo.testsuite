@@ -67,14 +67,12 @@ public class GetAndUpdateBase extends AssetTestBase {
 		HttpResponse resp = OSLCUtils.postDataToUrl(
 				artifactFactory, basicCreds, acceptType, setupProps.getProperty("artifactContentType"),
 				readFileFromProperty("artifactFile"), addHeader(h));
-		try {
-			EntityUtils.consume(resp.getEntity());
-		} catch (IOException e) { };
+		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
 		
 		assertTrue("No Location header", resp.getFirstHeader("Location") != null);
-		assertTrue("No content length header", resp.getFirstHeader("Content-Length") != null);
+		//assertTrue("No content length header", resp.getFirstHeader("Content-Length") != null);
 		return resp.getFirstHeader("Location").getValue();
 	}
 	

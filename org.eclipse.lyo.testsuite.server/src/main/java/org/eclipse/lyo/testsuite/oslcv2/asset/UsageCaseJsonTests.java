@@ -102,7 +102,6 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 				response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
 		
 		assertTrue("No Location header", response.getFirstHeader("Location") != null);
-		assertTrue("No content length header", response.getFirstHeader("Content-Length") != null);
 		
 		// Updates the artifacts subject
 		resp = getAssetAsString();

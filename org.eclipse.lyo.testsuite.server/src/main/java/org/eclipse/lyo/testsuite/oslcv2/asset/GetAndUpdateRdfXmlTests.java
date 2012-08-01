@@ -104,9 +104,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
 		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
 					OSLCConstants.CT_RDF, null, artifact, header);
-		try {
-			EntityUtils.consume(resp.getEntity());
-		} catch (IOException e) { }
+		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
 	}
@@ -141,9 +139,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		// Adds the artifact to the asset
 		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
 				OSLCConstants.CT_RDF, "text/xml", artifact, header);
-		try {
-			EntityUtils.consume(resp.getEntity());
-		} catch (IOException e) { }
+		EntityUtils.consume(resp.getEntity());
 		
 		// Gets the asset with the artifact added to it
 		resp = getAssetResponse();

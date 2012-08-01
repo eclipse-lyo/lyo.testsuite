@@ -101,9 +101,7 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 
 		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
 					OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
-		try {
-			EntityUtils.consume(response.getEntity());
-		} catch (IOException e) { }
+		EntityUtils.consume(response.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + response.getStatusLine().getStatusCode(),
 				response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
 		
