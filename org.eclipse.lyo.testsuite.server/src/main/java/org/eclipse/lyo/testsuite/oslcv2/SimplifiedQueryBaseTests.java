@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin - revised
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -41,6 +42,7 @@ public class SimplifiedQueryBaseTests extends TestsBase {
 	protected String queryComparisonValue;
 	protected String fullTextSearchTerm;
 	protected String additionalParameters;
+	protected boolean fullTextSearch = true;
 
 	public SimplifiedQueryBaseTests(String thisUri) {
 		super(thisUri);
@@ -60,6 +62,10 @@ public class SimplifiedQueryBaseTests extends TestsBase {
 				.getProperty("queryAdditionalParameters");
 		if (additionalParameters == null)
 			additionalParameters = "";
+		
+		if (setupProps.getProperty("fullTextSearch") != null ) {
+			fullTextSearch = setupProps.getProperty("fullTextSearch").equalsIgnoreCase("true");
+		}
 	}
 
 	protected String getQueryBase() {
@@ -116,5 +122,9 @@ public class SimplifiedQueryBaseTests extends TestsBase {
 			throws UnsupportedEncodingException {
 		return getQueryBase() + "oslc.searchTerms="
 				+ URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
+	}
+	
+	protected boolean getFullTextSearch() {
+		return fullTextSearch;
 	}
 }
