@@ -147,6 +147,8 @@ public class SimplifiedQueryJsonTests extends SimplifiedQueryBaseTests {
 	public void fullTextSearchContainsExpectedResults() throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException, JSONException {
+		if ( !getFullTextSearch() ) return;
+		
 		String query = getQueryUrlForFullTextSearchContainsExpectedResults();
 		validateNonEmptyResponse(query);
 	}

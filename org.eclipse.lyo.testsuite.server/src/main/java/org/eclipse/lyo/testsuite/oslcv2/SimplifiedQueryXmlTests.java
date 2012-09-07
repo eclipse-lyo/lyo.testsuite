@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,10 +12,10 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin - revised
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -69,15 +69,27 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException, ParserConfigurationException, SAXException,
 			XPathException {
-		// Checks the ServiceProviderCatalog at the specified baseUrl of the
-		// REST service in order to grab all urls
-		// to other ServiceProvidersCatalogs contained within it, recursively,
-		// in order to find the URLs of all
-		// query factories of the REST service.
-		String v = "//oslc_v2:QueryCapability/oslc_v2:queryBase/@rdf:resource";
-		ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
-		ArrayList<String> capabilityURLsUsingXML = TestsBase
-				.getCapabilityURLsUsingXML(v, serviceUrls, true);
+		
+		ArrayList<String> capabilityURLsUsingXML = new ArrayList<String>();
+		
+		String useThisQuery = setupProps.getProperty("useThisQuery");
+		
+		if ( useThisQuery != null ) {
+			capabilityURLsUsingXML.add(useThisQuery);
+		}
+		else {
+			// Checks the ServiceProviderCatalog at the specified baseUrl of the
+			// REST service in order to grab all urls
+			// to other ServiceProvidersCatalogs contained within it, recursively,
+			// in order to find the URLs of all
+			// query factories of the REST service.
+			String v = "//oslc_v2:QueryCapability/oslc_v2:queryBase/@rdf:resource";
+			ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
+
+			capabilityURLsUsingXML = TestsBase.
+					getCapabilityURLsUsingXML(v, serviceUrls, true);
+		}
+
 		return toCollection(capabilityURLsUsingXML);
 	}
 
@@ -102,8 +114,8 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 
 		// Only test oslc:ResponseInfo if found
 		if (results != null) {
-			assertEquals("Expended ResponseInfo/@rdf:about to equal request URL",
-					queryUrl, results.getNodeValue());
+			//assertEquals("Expended ResponseInfo/@rdf:about to equal request URL",
+			//		queryUrl, results.getNodeValue());
 			results = (Node) OSLCUtils.getXPath().evaluate("//oslc:totalCount",
 					doc, XPathConstants.NODE);
 			if (results != null) {
@@ -162,6 +174,8 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 	public void fullTextSearchContainsExpectedResults() throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException {
+		if ( !getFullTextSearch() ) return;
+		
 		String query = getQueryUrlForFullTextSearchContainsExpectedResults();
 		validateNonEmptyResponse(query);
 	}

@@ -22,15 +22,12 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.abdera.Abdera;
-import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
@@ -44,8 +41,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -101,7 +96,6 @@ public class SimplifiedQueryAtomTests extends SimplifiedQueryBaseTests {
 		}
 
 		String responseBody = EntityUtils.toString(response.getEntity());
-
 		//
 		// Validate ATOM feed response
 		//
@@ -110,29 +104,15 @@ public class SimplifiedQueryAtomTests extends SimplifiedQueryBaseTests {
 		// Create mapping of ATOM variables
 		Abdera abdera = new Abdera();		
 		org.apache.abdera.model.Document<Feed> model = abdera.getParser().parse(bais);
+		
+		assertNotNull(model);
 		Feed feed = model.getRoot();
 
-		List<Entry> entries = feed.getEntries();
-				
-		// We expect at least one change request in query ATOM response
-//		assertTrue( entries.size()>=1 );
+		// Validate the ATOS feeds
+		assertNotNull("Atom feeds must have a title", feed.getTitle());
+		assertNotNull("Atom feeds must have an ID", feed.getId());
+		assertNotNull("Atom feeds must have an updated element", feed.getUpdated());
 		
-		for(Entry entry : entries){
-			String content = entry.getContent();
-			
-			if ( content != null ) {
-				//Get XML Doc from Atom Description
-				Document description  = OSLCUtils.createXMLDocFromResponseBody(content);
-				Node result = (Node) OSLCUtils.getXPath().evaluate("//rdf:Description/@rdf:about", 
-						description, XPathConstants.NODE);
-				
-				if (result != null) {
-					String node = result.getNodeValue();
-					assertNotNull(node);
-					break;		        		
-				}
-			}
-		}
 	}
 
 	@Test
@@ -179,6 +159,8 @@ public class SimplifiedQueryAtomTests extends SimplifiedQueryBaseTests {
 	public void fullTextSearchContainsExpectedResults() throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException {
+		if ( !getFullTextSearch() ) return;
+		
 		String query = getQueryUrlForFullTextSearchContainsExpectedResults();
 		validateNonEmptyResponse(query);
 	}
