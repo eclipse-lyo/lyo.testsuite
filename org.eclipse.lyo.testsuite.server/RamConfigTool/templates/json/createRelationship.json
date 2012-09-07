@@ -1,0 +1,26 @@
+{
+	"prefixes" : {
+		"oslc": "http://open-services.net/ns/core#",
+		"rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"dcterms" : "http://purl.org/dc/terms/",
+		"oslc_asset" : "http://open-services.net/ns/asset#",
+		"ram_asset" : "http://jazz.net/xmlns/prod/ram/2.0/"
+	},
+    "oslc_asset:version" : "1.0",
+    "rdf:type": {
+        "rdf:resource" : "*ramUrl*.ws/internal/types/classif/assetTypesSchema.xmi#*assetType*"
+    },
+    "dcterms:relation" : {
+    	"rdf:ID" : "relationship1",
+    	"rdf:resource" : "%s",
+    	"oslc_asset:relationshipType" : {
+    		"rdf:resource" : "*ramUrl*.ws/internal/relationshipTypes/*assetRelationship*"
+    	}
+    },
+    "community":
+    {
+        "resource":"*ramUrl*.ws/internal/communities/*assetCommunity*"
+    },
+    "dcterms:abstract" : "OSLCv2 Creation test case",
+    "dcterms:title" : "OSLCv2 asset testing"
+}
