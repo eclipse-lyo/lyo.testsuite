@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,10 +12,10 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin - revised
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -92,7 +92,11 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
 				queryUrl, basicCreds, OSLCConstants.CT_RDF, headers);
-		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+		
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (HttpStatus.SC_OK != statusCode) {
+			throw new IOException("Response code: " + statusCode + " for " + queryUrl);
+		}
 
 		Model queryModel = ModelFactory.createDefaultModel();
 		queryModel.read(response.getEntity().getContent(),
@@ -110,9 +114,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 		ResIterator resIter = queryModel.listSubjectsWithProperty(RDF.type, respInfoType);
 		while (resIter.hasNext()) {
 			Resource responseInfoRes = resIter.nextResource();
-			assertEquals(
-					"Response info URI should match the request URI (with query parameters)",
-					queryUrl, responseInfoRes.getURI());
 
 			Property countMember = queryModel
 					.getProperty(OSLCConstants.TOTAL_COUNT_PROP);
@@ -173,6 +174,9 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
 	@Test
 	public void fullTextSearchContainsExpectedResults() throws IOException {
+		
+		if ( !getFullTextSearch() ) return;
+		
 		String query = getQueryUrlForFullTextSearchContainsExpectedResults();
 		validateNonEmptyResponse(query);
 	}
