@@ -61,6 +61,14 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
 	public static Collection<Object[]> getAllDescriptionUrls() 
 	    throws IOException, NullPointerException, XPathException, ParserConfigurationException, SAXException, JSONException
 	{
+		ArrayList<String> results = new ArrayList<String>();
+		
+		String useThisCR = setupProps.getProperty("useThisChangeRequest");
+		if ( useThisCR != null ) {
+			results.add(useThisCR);
+			return toCollection(results);
+		}
+
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
 		//query factories of the REST service.
@@ -79,8 +87,7 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
 		String additionalParameters = setupProps.getProperty("queryAdditionalParameters");
 		String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&"; 
 		query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
-		
-		ArrayList<String> results = new ArrayList<String>();
+				
 		for (String queryBaseUri : capabilityURLsUsingJson) {
 			
 			String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
