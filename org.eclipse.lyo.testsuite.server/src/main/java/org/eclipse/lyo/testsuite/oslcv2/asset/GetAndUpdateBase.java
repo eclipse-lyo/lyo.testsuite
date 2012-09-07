@@ -25,6 +25,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.junit.Test;
@@ -33,7 +34,8 @@ public class GetAndUpdateBase extends AssetTestBase {
 	
 	
 	public GetAndUpdateBase(String url, String acceptType, String contentType) {
-		super(url, acceptType, contentType);		
+		super(url, acceptType, contentType);
+	    HttpConnectionParams.setConnectionTimeout(OSLCUtils.httpclient.getParams(), 30000);
 	}
 	
 	@Test
@@ -70,7 +72,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
 		
 		assertTrue("No Location header", resp.getFirstHeader("Location") != null);
-		assertTrue("No content length header", resp.getFirstHeader("Content-Length") != null);
+		//assertTrue("No content length header", resp.getFirstHeader("Content-Length") != null);
 		return resp.getFirstHeader("Location").getValue();
 	}
 	
