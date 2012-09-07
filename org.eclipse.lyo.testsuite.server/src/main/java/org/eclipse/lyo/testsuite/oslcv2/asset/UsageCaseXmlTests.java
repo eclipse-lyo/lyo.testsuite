@@ -126,7 +126,7 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 		String labelValue = "this value was changed";
 		if(label == null) {
 			label = document.createElement("oslc:label");
-			label.setNodeValue(labelValue);
+			label.setTextContent(labelValue);
 			artifactNode.appendChild(label);
 		} else {
 			label.setTextContent(labelValue);
