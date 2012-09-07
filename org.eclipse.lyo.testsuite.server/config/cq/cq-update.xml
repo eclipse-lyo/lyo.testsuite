@@ -14,6 +14,6 @@
        Steve Speicher - initial API and implementation
  -->
 
-<oslc_cm:ChangeRequest xmlns:cq="http://www.ibm.com/xmlns/prod/rational/clearquest/1.0/" xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/terms/" rdf:about="http://quagmire.rtp.raleigh.ibm.com/cqweb/oslc/repo/7.0.0/db/SAMPL/record/16777224-33554439">
+<oslc_cm:ChangeRequest xmlns:cq="http://www.ibm.com/xmlns/prod/rational/clearquest/1.0/" xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/terms/" rdf:about="https://quagmire.rtp.raleigh.ibm.com/cqweb/oslc/repo/7.0.0/db/SAMPL/record/16777224-33554439">
 	<dc:title>updatedHeadline</dc:title>
 </oslc_cm:ChangeRequest>
