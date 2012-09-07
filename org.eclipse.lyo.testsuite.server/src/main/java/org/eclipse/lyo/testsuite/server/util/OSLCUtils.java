@@ -433,4 +433,10 @@ public class OSLCUtils {
 		
 		return updatedUrl.toString();
 	}
+
+	public static String getContentType(HttpResponse resp) {
+		String contentType = resp.getEntity().getContentType().getValue();
+		String contentTypeSplit[] = contentType.split(";");
+		return contentTypeSplit[0];
+	}
 }

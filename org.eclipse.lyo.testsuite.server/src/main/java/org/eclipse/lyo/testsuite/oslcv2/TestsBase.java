@@ -603,6 +603,10 @@ public class TestsBase {
 			
 			String respBody = EntityUtils.toString(resp.getEntity());
 			
+			String contentType = OSLCUtils.getContentType(resp);	
+
+			assertEquals("Expected content-type "+OSLCConstants.CT_JSON+" but received "+contentType, OSLCConstants.CT_JSON, contentType);
+			
 			// Create mapping of JSON variables
 			JSONArtifact userData = JSON.parse(respBody);
 			JSONObject resultJson = null;
