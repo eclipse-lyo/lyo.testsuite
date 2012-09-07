@@ -119,12 +119,6 @@ public class FetchResourceTests extends TestsBase {
 		return toCollection(results);
 	}
 	
-	protected static String getContentType(HttpResponse resp) {
-		String contentType = resp.getEntity().getContentType().getValue();
-		String contentTypeSplit[] = contentType.split(";");
-		return contentTypeSplit[0];
-	}
-	
 	protected String getValidResourceUsingContentType(String requestType) throws IOException {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(currentUrl, currentUrl, basicCreds,
 				requestType, headers);
@@ -134,7 +128,7 @@ public class FetchResourceTests extends TestsBase {
 		assertEquals("Expected response code 200 but received " + resp.getStatusLine(), HttpStatus.SC_OK, resp.getStatusLine()
 				.getStatusCode());
 		
-		String contentType = getContentType(resp);
+		String contentType = OSLCUtils.getContentType(resp);
 
 		assertEquals("Expected content-type "+requestType+" but received "+contentType, requestType, contentType);
 		
@@ -255,7 +249,7 @@ public class FetchResourceTests extends TestsBase {
 	public void getResourceUsingInvalidContentType() throws IOException {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, "invalid/content-type", 
 				headers);
-		String respType =  getContentType(resp);
+		String respType =  OSLCUtils.getContentType(resp);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected 406 but received "+resp.getStatusLine()+", requested Content-type='invalid/content-type' but received "+respType, resp.getStatusLine().getStatusCode() == 406 || respType.contains("invalid/content-type"));
 	}
