@@ -140,28 +140,50 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 	protected void createResourceAndUpdateIt(String contentType, String accept,
 			String newContent, String updateContent) throws IOException {
 		HttpResponse resp = createResource(contentType, accept, newContent);
-		Header location = getRequiredLocationHeader(resp);
 		
+		Header location = getRequiredLocationHeader(resp);
+		assertTrue("Location("+location+")"+" must not be null", location != null);
+		
+		// check whether a POST response body is empty (which is allowed)
+		Header contentLength = resp.getFirstHeader("Content-Length");
+		boolean hasPayLoad = true;
+		if ( contentLength != null ) {
+			String len = contentLength.getValue().toString();
+			if ( len.equalsIgnoreCase("0") ) {
+				hasPayLoad = false;
+			}
+		}
+	
 		Header eTag = resp.getFirstHeader("ETag");
 		Header lastModified = resp.getFirstHeader("Last-Modified");
-		
-		// then fail, because we expect at least one, if not both
-		assertTrue("ETag("+eTag+") and Last-Modified("+lastModified+") must not be null", eTag != null || lastModified != null ) ;
 		int size = headers.length;
-		if( eTag != null ) size++;
-		if( lastModified != null ) size++;
-		Header[] putHeaders = new Header[size];
+		Header[] putHeaders = new Header[size+2];
+		
 		int i=0;
-		for(;i<headers.length;i++){
+		for( ; i<size; i++){
 			putHeaders[i] = headers[i];
 		}
+
+		if ( hasPayLoad ) {
+			// then fail, because we expect at least one, if not both
+			assertTrue("ETag("+eTag+") or Last-Modified("+lastModified+") must not be null", eTag != null || lastModified != null ) ;
+		}
+		
 		if( eTag != null ) {
 			putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue());
 		}
+		else {
+			putHeaders[i++] = new BasicHeader("bogus1", "bogus1");
+		}
+		
 		if( lastModified != null ) {
 			putHeaders[i++] = new BasicHeader("If-Unmodified-Since", lastModified.getValue());
 		}
-
+		else {
+			putHeaders[i++] = new BasicHeader("bogus1", "bogus1");
+		}
+		
+		
 		// Now, go to the url of the new change request and update it.
 		// We may need to add something to update URL to match the template
 		String updateUrl = location.getValue();
@@ -252,7 +274,8 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		}
 
 		// Now, go to the url of the new change request and update it.
-		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "*/*",
+		//resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "*/*",
+		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "application/xml",
 				badType, updateContent, putHeaders);
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
@@ -293,20 +316,38 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 	
 	protected void updateCreatedResourceWithFailedPrecondition(String contentType,
 			String accept, String createContent, String updateContent) throws IOException {
+		
 		HttpResponse resp = createResource(contentType, accept, createContent);
+		
 		Header location = getRequiredLocationHeader(resp);
+		assertTrue("Location("+location+")"+" must not be null", location != null);
+		
+		// check whether a POST response body is empty (which is allowed)
+		Header contentLength = resp.getFirstHeader("Content-Length");
+		boolean hasPayLoad = true;
+		if ( contentLength != null ) {
+			String len = contentLength.getValue().toString();
+			if ( len.equalsIgnoreCase("0") ) {
+				hasPayLoad = false;
+			}
+		}
+
 		Header eTag = resp.getFirstHeader("ETag");
 		Header lastModified = resp.getFirstHeader("Last-Modified");
 
-		assertTrue("Either ETag("+eTag+") or Last-Modified("+lastModified+") must not be null", eTag != null || lastModified != null ) ;
+		if ( hasPayLoad ) {
+			assertTrue("Either ETag("+eTag+") or Last-Modified("+lastModified+") must not be null", eTag != null || lastModified != null ) ;
+		}
 
-		int size = headers.length + 1;
+		int size = headers.length + 1;		
+		
 		Header[] putHeaders = new Header[size];
 		int i=0;
 		for(;i<headers.length;i++){
 			putHeaders[i] = headers[i];
 		}
-		if( eTag != null ) {
+		
+		if ( !hasPayLoad || eTag != null ) {
 			putHeaders[i++] = new BasicHeader("If-Match", "Bogus");
 		} else if( lastModified != null ) {
 			putHeaders[i++] = new BasicHeader("If-Unmodified-Since", "Tue, 15 Nov 1994 12:45:26 GMT");

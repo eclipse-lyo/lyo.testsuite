@@ -95,6 +95,12 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 	{
 		ArrayList<String> results = new ArrayList<String>();
 			
+		String useThisCR = setupProps.getProperty("useThisChangeRequest");
+		if ( useThisCR != null ) {
+			results.add(useThisCR);
+			return toCollection(results);
+		}
+
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
 		//query factories of the REST service.
