@@ -93,11 +93,9 @@ public class TestsBase {
 			String userId = setupProps.getProperty("userId");
 			String pw = setupProps.getProperty("pw");
 			basicCreds = new UsernamePasswordCredentials(userId, pw);
-			Header h = new BasicHeader("OSLC-Core-Version", "2.0");
-			Header h2 = new BasicHeader("DoorsRP-Request-Type", "private"); // TODO: RRC special sauce
+			Header h = new BasicHeader("OSLC-Core-Version", "2.0");			
 			
-			
-			headers = new Header[] { h, h2 };
+			headers = new Header[] { h};
 			String onlyOnceStr = setupProps.getProperty("runOnlyOnce");
 			if (onlyOnceStr != null && onlyOnceStr.equals("false")) {
 				onlyOnce = false;
