@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:oslc="http://open-services.net/ns/core#" xmlns:oslc_cm="http://open-services.net/ns/cm#" xmlns:oslc_cmx="http://open-services.net/ns/cm-x#" xmlns:jira="http://com.ibm/cm/adaptor/jira#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:oslc_cm_1="http://open-services.net/xmlns/cm/1.0/" xmlns:jfs="http://jazz.net/xmlns/prod/jazz/jfs/1.0/" xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:ns12="http://jazz.net/xmlns/prod/jazz/discovery/1.0/">
-    <oslc_cm:ChangeRequest>
-        <dcterms:title>OSLC JUnit Change Request</dcterms:title>
-        <jira:issueType rdf:resource="http://jira.ibm.com:8080/rest/oslc/latest/issueTypes/1" />
-        <jira:priority rdf:resource="http://jira.ibm.com:8080/rest/oslc/latest/priorities/3" />
-    </oslc_cm:ChangeRequest>
-</rdf:RDF>
