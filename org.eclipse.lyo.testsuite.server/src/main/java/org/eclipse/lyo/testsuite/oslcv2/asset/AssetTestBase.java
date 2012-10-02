@@ -20,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
@@ -29,11 +28,11 @@ import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
 import org.junit.After;
 import org.junit.runners.Parameterized.Parameters;
 
 public class AssetTestBase  extends TestsBase {
+	protected static String baseUrl;
 	protected String assetUrl;
 	protected static String acceptType;
 	protected static String contentType;
@@ -48,9 +47,13 @@ public class AssetTestBase  extends TestsBase {
 	
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
-		Properties setupProps = SetupProperties.setup(null);
+		
+		staticSetup();
+		
+		baseUrl = setupProps.getProperty("baseUri");
+		
 		ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(
-				setupProps.getProperty("baseUri"), onlyOnce);
+				baseUrl, onlyOnce);
 		String [] types = null;
 		ArrayList<String> capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(
 				OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, types);

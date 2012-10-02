@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -23,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
@@ -36,8 +36,6 @@ import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -62,18 +60,17 @@ public class ServiceProviderCatalogXmlTests extends
 	// Base URL of the OSLC Service Provider Catalog to be tested
 	protected String responseBody;
 	protected Document doc;
+	protected HttpResponse response = null;
 
-	public ServiceProviderCatalogXmlTests(String url) {
+	public ServiceProviderCatalogXmlTests(String url) 
+		throws IOException, ParserConfigurationException, SAXException 
+	{
 		super(url);
+		
 		fContentType = OSLCConstants.CT_XML;
-	}
-
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
+		
 		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl,
-				basicCreds, OSLCConstants.CT_XML, headers);
+				basicCreds, fContentType, headers);
 		responseBody = EntityUtils.toString(response.getEntity());
 		// Get XML Doc from response
 		doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
@@ -86,7 +83,9 @@ public class ServiceProviderCatalogXmlTests extends
 		// Checks the ServiceProviderCatalog at the specified baseUrl of the
 		// REST service in order to grab all urls
 		// to other ServiceProviders contained within it, recursively.
-		Properties setupProps = SetupProperties.setup(null);
+		
+		staticSetup();
+		
 		Collection<Object[]> coll = getReferencedCatalogUrlsUsingXML(setupProps
 				.getProperty("baseUri"));
 		return coll;
@@ -95,7 +94,9 @@ public class ServiceProviderCatalogXmlTests extends
 	public static Collection<Object[]> getReferencedCatalogUrlsUsingXML(
 			String base) throws IOException, ParserConfigurationException,
 			SAXException, XPathException {
+		
 		staticSetup();
+		
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 				basicCreds, OSLCConstants.CT_XML, headers);
 		

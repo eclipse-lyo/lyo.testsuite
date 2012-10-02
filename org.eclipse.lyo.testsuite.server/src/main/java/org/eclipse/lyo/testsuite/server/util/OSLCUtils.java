@@ -107,7 +107,10 @@ public class OSLCUtils {
 	
 	public static String absoluteUrlFromRelative(String baseUrl, String url) throws MalformedURLException {
 		URL base = new URL(baseUrl);
-		URL result = new URL(base, url);
+		URL result = base;
+		if ( url != null )
+			result = new URL(base, url);
+		
 		return result.toString();
 	}
 	

@@ -24,7 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,24 +34,26 @@ import org.xml.sax.SAXException;
  * shapes implemented it is difficult to represent the needed various templates
  * of different change request types and to query for the templates.
  */
-public class SimplifiedQueryBaseTests extends TestsBase {
+public abstract class SimplifiedQueryBaseTests extends TestsBase {
 
-	protected String queryProperty;
-	protected String queryPropertyValue;
-	protected String queryComparisonProperty;
-	protected String queryComparisonValue;
-	protected String fullTextSearchTerm;
-	protected String additionalParameters;
-	protected boolean fullTextSearch = true;
+	protected static String queryProperty;
+	protected static String queryPropertyValue;
+	protected static String queryComparisonProperty;
+	protected static String queryComparisonValue;
+	protected static String fullTextSearchTerm;
+	protected static String additionalParameters;
+	protected static boolean fullTextSearch = true;
 
 	public SimplifiedQueryBaseTests(String thisUri) {
 		super(thisUri);
 	}
 
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
+	@BeforeClass
+	public static void mysetup() throws IOException, ParserConfigurationException,
 			SAXException, XPathException {
-		super.setup();
+		
+		staticSetup();
+		
 		queryProperty = setupProps.getProperty("queryEqualityProperty");
 		queryPropertyValue = setupProps.getProperty("queryEqualityValue");
 		queryComparisonProperty = setupProps

@@ -22,14 +22,12 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -44,12 +42,6 @@ public class CreateAssetXmlTest extends CreateAssetBase {
 
 	public CreateAssetXmlTest(String url) {
 		super(url, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
-	}
-		
-	@Before
-	public void setup()
-		throws IOException, ParserConfigurationException, SAXException, XPathException 	{
-		super.setup();
 	}
 	
 	@Test

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.bind.DatatypeConverter;
@@ -29,11 +30,10 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.lyo.testsuite.oslcv2.CoreResourceXmlTests;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * request's URL directly. It runs the equality query from the properties file and grabs the first result
  * to test against, checking the relationship of elements in the XML representation of the change request.
  */
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class ChangeRequestXmlTests extends CoreResourceXmlTests {
 	 
 	public ChangeRequestXmlTests(String thisUrl) throws IOException,
@@ -53,11 +53,20 @@ public class ChangeRequestXmlTests extends CoreResourceXmlTests {
 		super(thisUrl);		
 		setNode(ns, resource);
 	}
-
+	
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() 
 		throws IOException, ParserConfigurationException, SAXException, XPathException {
-
+		
+		TestsBase.staticSetup();
+		
+		String useThisCR = setupProps.getProperty("useThisChangeRequest");
+		if ( useThisCR != null ) {
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThisCR);
+			return toCollection(results);
+		}
+		
 		setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
 		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
 		return getAllDescriptionUrls(eval);

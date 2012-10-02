@@ -114,7 +114,8 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		// Creates the artifact
 		String fileName = setupProps.getProperty("createTemplateArtifactRdfXmlFile");
 		if (fileName == null) // Fall back to the xml if the rdf is not defined
-			fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+			//fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+			fileName = setupProps.getProperty("createTemplateXmlFile");
 		
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);

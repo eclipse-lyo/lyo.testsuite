@@ -16,6 +16,7 @@
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,9 +38,19 @@ public class TestPlanRdfXmlTests extends CoreResourceRdfXmlTests {
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 		
+		staticSetup();
+
+		// If a particular TestPlan asset is specified, use it 
+		String useThis = setupProps.getProperty("useThisTestPlan");
+		if ( (useThis != null) && (useThis != "") ) {			
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThis);
+			return toCollection(results);
+		}
+		
+		// Otherwise, run a query and pick up one
 		setResourceTypeQuery(OSLCConstants.RESOURCE_TYPE_PROP);
 		setxpathSubStmt(OSLCConstants.QM_TEST_PLAN_QUERY);
-
 		return getAllDescriptionUrls(eval);
 	}
 	

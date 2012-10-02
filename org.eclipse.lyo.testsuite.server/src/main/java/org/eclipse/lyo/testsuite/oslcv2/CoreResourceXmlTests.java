@@ -37,7 +37,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -81,25 +80,11 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 	    doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
 	}
 	
-	@Before
-	public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException
-	{
-		super.setup();
-		
-		
-	}
-
 	@Parameters
 	protected static Collection<Object[]> getAllDescriptionUrls(String eval) 
 		throws IOException, ParserConfigurationException, SAXException, XPathException
-	{
-		ArrayList<String> results = new ArrayList<String>();
-			
-		String useThisCR = setupProps.getProperty("useThisChangeRequest");
-		if ( useThisCR != null ) {
-			results.add(useThisCR);
-			return toCollection(results);
-		}
+	{		
+		ArrayList<String> results = new ArrayList<String>();			
 
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
@@ -149,6 +134,7 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 			if (onlyOnce)
 				break;
 		}
+		
 		return toCollection(results);
 	}	
 	
@@ -160,7 +146,7 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 		NodeList titles = (NodeList) OSLCUtils.getXPath().evaluate(eval,
 	    		doc, XPathConstants.NODESET);		
 		
-		assertEquals(getFailureMessage(), 1, titles.getLength());
+		assertEquals("dc:title"+getFailureMessage(), 1, titles.getLength());
 	}
 	
 	@Test
@@ -171,7 +157,7 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 		NodeList descriptions = (NodeList) OSLCUtils.getXPath().evaluate(eval,
 	    		doc, XPathConstants.NODESET);
 		
-		assertTrue(getFailureMessage(), descriptions.getLength() <= 1);
+		assertTrue("dc:description"+getFailureMessage(), descriptions.getLength() <= 1);
 	}
 	
 	@Test
@@ -261,7 +247,7 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 	}
 	
 	protected String getFailureMessage() {
-		return "Problems with XML representation of OSLC ChangeRequest <" + currentUrl + ">";
+		return " failed for  <" + currentUrl + ">";
 	}
 	
 	protected void setNode (String namespace, String resource) {

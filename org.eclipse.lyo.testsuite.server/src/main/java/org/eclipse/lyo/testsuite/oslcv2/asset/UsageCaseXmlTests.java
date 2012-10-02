@@ -95,7 +95,8 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 		
 		Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
 		
-		String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+		//String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+		String fileName = setupProps.getProperty("createTemplateXmlFile");
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 

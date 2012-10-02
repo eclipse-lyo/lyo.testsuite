@@ -16,6 +16,7 @@
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,6 +42,17 @@ public class TestScriptXmlTests extends CoreResourceXmlTests {
 	public static Collection<Object[]> getAllDescriptionUrls() 
 		throws IOException, ParserConfigurationException, SAXException, XPathException {
 		
+		staticSetup();
+		
+		// If a particular TestScript asset is specified, use it 
+		String useThis = setupProps.getProperty("useThisTestScript");
+		if ( (useThis != null) && (useThis != "") ) {			
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThis);
+			return toCollection(results);
+		}
+
+		// Otherwise, run a query and pick up one
 		setResourceTypeQuery(OSLCConstants.QM_TEST_SCRIPT_QUERY);
 		setxpathSubStmt("//oslc_v2:QueryCapability/oslc:resourceType/@rdf:resource");
 		return getAllDescriptionUrls(eval);
@@ -49,7 +61,7 @@ public class TestScriptXmlTests extends CoreResourceXmlTests {
 	@Test
 	public void TestScriptRelatedChangeRequest() throws XPathExpressionException
 	{
-		// TestCase specific test
+		// TestScript specific test
 	}
 
 	public static String ns = "oslc_qm_v2";

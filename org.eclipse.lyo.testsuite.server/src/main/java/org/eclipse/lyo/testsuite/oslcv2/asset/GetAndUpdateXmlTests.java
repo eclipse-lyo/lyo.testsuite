@@ -24,7 +24,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
@@ -35,7 +34,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -48,19 +46,13 @@ import org.xml.sax.SAXException;
 @RunWith(Parameterized.class)
 public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
-	public GetAndUpdateXmlTests(String thisUrl) {
+	public GetAndUpdateXmlTests(String thisUrl) throws IOException {
 		super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
-	}
-	
-	@Before
-	public void setup() 
-		throws IOException, ParserConfigurationException, SAXException, XPathException {
-		super.setup();
 		
 		assetUrl = createAsset(xmlCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 	}
-	
+		
 	@Test
 	public void updateAnAssetProperty() 
 			throws IOException, ParseException, ParserConfigurationException, SAXException,

@@ -54,7 +54,7 @@
 		<xsl:variable name="thiscase" select="substring(@name, 0, $length - 2)"/>
 		<xsl:variable name="thiscaseFull" select="@name"/>
 		<xsl:variable name="thisPackage" select="@classname"/>
-		<xsl:variable name="level" select="$spec//testclass[contains($thisPackage,./@name)]/testcase[normalize-space(.)=$thiscase]/@level"/>
+		<xsl:variable name="level" select="$spec//testclass[contains($thisPackage,./@name)]/testcase[.=$thiscase]/@level"/>
 				
 		<xsl:attribute name="classname"><xsl:value-of select="@classname"/></xsl:attribute>
 		<xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
@@ -89,10 +89,8 @@
 		    </xsl:when>
 		    <xsl:otherwise>
 		    	<xsl:choose>
-				    <xsl:when test="$level='MUST'">
-					    <xsl:if test = "contains($thiscaseFull,'[0]')">
-							<xsl:attribute name="assessment">passedMust</xsl:attribute>
-						</xsl:if>
+				    <xsl:when test="$level='MUST'">					    
+						<xsl:attribute name="assessment">passedMust</xsl:attribute>
 					</xsl:when>
 				    <xsl:when test="$level='SHOULD'">
 				    	<xsl:attribute name="assessment">passedShould</xsl:attribute>

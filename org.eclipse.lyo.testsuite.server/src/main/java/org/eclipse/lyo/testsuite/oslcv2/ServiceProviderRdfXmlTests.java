@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
@@ -36,8 +36,6 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -50,8 +48,6 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.vocabulary.RDF;
-
 
 /**
  * This class provides JUnit tests for the validation of OSLCv2 ServiceProvider documents
@@ -61,21 +57,17 @@ import com.hp.hpl.jena.vocabulary.RDF;
 public class ServiceProviderRdfXmlTests extends TestsBase {
 	
 	protected HttpResponse response;
-	protected String fContentType = OSLCConstants.CT_RDF;
+	protected static String fContentType = OSLCConstants.CT_RDF;
 	private Model fRdfModel = ModelFactory.createDefaultModel();
 	private Resource fServiceProvider = null;
 	
 
 	public ServiceProviderRdfXmlTests(String url)
+		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException
 	{
 		super(url);
-	}
-	
-	@Before
-	public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException
-	{
-		super.setup();
-        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, fContentType,
+		
+		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, fContentType,
         		headers);
 		assertEquals("Did not successfully retrieve ServiceProvider at: "+currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
@@ -85,19 +77,23 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 		RDFUtils.validateModel(fRdfModel);
 		fServiceProvider = (Resource) fRdfModel.getResource(currentUrl);
 
-		assertTrue("Failed to read ServiceProvider resource at URI: "
-				+ currentUrl, fRdfModel.contains(fServiceProvider, RDF.type,
-				fRdfModel.createResource(OSLCConstants.SERVICE_PROVIDER_TYPE)));
+		assertNotNull(fServiceProvider);
+
 	}
-	
+		
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException
 	{
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
 		//service description documents of the REST service.
-		Properties setupProps = SetupProperties.setup(null);
+		
+		//Properties setupProps = SetupProperties.setup(null);
+		
+		staticSetup();
+		
 		Collection<Object[]> coll = getReferencedUrls(setupProps.getProperty("baseUri"));
+				
 		return coll;
 	}
 	

@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
@@ -37,8 +36,6 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -52,7 +49,6 @@ import org.xml.sax.SAXException;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-
 /**
  * This class provides JUnit tests for the validation of OSLCv2 ServiceProvider documents
  * 
@@ -61,25 +57,22 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public class ServiceProviderXmlTests extends TestsBase {
 	
 	private HttpResponse response;
-	private String fContentType = OSLCConstants.CT_XML;
+	private static String fContentType = OSLCConstants.CT_XML;
 	private String responseBody;
 	private Document doc;
 
-	public ServiceProviderXmlTests(String url)
+	public ServiceProviderXmlTests(String url) 
+		throws IOException, ParserConfigurationException, SAXException
 	{
 		super(url);
-	}
-	
-	@Before
-	public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException
-	{
-		super.setup();
-        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, 
+		
+		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, 
         		fContentType, headers);
         responseBody = EntityUtils.toString(response.getEntity());
         //Get XML Doc from response
 	    doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
 	}
+	
 	
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException, ParserConfigurationException, SAXException, XPathException
@@ -87,7 +80,9 @@ public class ServiceProviderXmlTests extends TestsBase {
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
 		//service description documents of the REST service.
-		Properties setupProps = SetupProperties.setup(null);
+		
+		staticSetup();
+		
 		Collection<Object[]> coll = getReferencedUrls(setupProps.getProperty("baseUri"));
 		return coll;
 	}

@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  */
 @RunWith(Parameterized.class)
 public class ChangeRequestJsonTests extends CoreResourceJsonTests {
-	
+		
 	public ChangeRequestJsonTests(String thisUrl) throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException, NullPointerException, JSONException {
@@ -63,8 +63,11 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
 	{
 		ArrayList<String> results = new ArrayList<String>();
 		
+		staticSetup();
+		
 		String useThisCR = setupProps.getProperty("useThisChangeRequest");
 		if ( useThisCR != null ) {
+			results = new ArrayList<String>();
 			results.add(useThisCR);
 			return toCollection(results);
 		}

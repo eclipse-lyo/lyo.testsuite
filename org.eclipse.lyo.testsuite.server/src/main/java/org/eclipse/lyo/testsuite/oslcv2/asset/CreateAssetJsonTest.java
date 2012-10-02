@@ -19,20 +19,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.xml.sax.SAXException;
 
 @RunWith(Parameterized.class)
 public class CreateAssetJsonTest extends CreateAssetBase {
@@ -40,13 +35,7 @@ public class CreateAssetJsonTest extends CreateAssetBase {
 	public CreateAssetJsonTest(String url) {
 		super(url, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
 	}
-	
-	@Before
-	public void setup()
-		throws IOException, ParserConfigurationException, SAXException, XPathException 	{
-		super.setup();
-	}
-	
+		
 	@Test
 	public void createSimpleAsset() throws IOException {
 		assetUrl = createAsset(jsonCreateTemplate);

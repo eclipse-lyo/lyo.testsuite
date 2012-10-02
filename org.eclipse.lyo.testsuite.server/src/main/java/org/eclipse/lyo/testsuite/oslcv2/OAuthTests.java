@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,7 +11,8 @@
  *
  * Contributors:
  *
- *    Steve Speicher - initial API and implementation
+ *    Steve Speicher
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -49,7 +50,7 @@ import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.SSLProtocolSocketFactory;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -89,10 +90,9 @@ public class OAuthTests extends TestsBase {
 		this.accessUrl = accessUrl;
 	}
 	
-	@Before
-	public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException
+	@BeforeClass
+	public void mysetup() throws IOException, ParserConfigurationException, SAXException, XPathException
 	{
-		super.setup();
 		postParameters = setupProps.getProperty("OAuthAuthorizationParameters");
 		//Setup the OAuth provider
 		provider = new OAuthServiceProvider(requestUrl, authorizeUrl, accessUrl);

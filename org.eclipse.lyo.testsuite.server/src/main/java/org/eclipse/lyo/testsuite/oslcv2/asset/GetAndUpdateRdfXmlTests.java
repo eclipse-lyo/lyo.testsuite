@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -33,11 +30,9 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -52,14 +47,8 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 	private String baseUrl;
 	
-	public GetAndUpdateRdfXmlTests(String thisUrl) {
+	public GetAndUpdateRdfXmlTests(String thisUrl) throws IOException {
 		super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
-	}
-		
-	@Before
-	public void setup() 
-		throws IOException, ParserConfigurationException, SAXException, XPathException {
-		super.setup();
 		
 		assetUrl = createAsset(rdfXmlCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);

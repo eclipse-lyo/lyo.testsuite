@@ -23,25 +23,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -69,21 +61,25 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 		super(thisUri);
 	}
 
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
-	}
-
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException {
-		Properties setupProps = SetupProperties.setup(null);
-		ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"),
+				
+		staticSetup();
+		
+		ArrayList<String> capabilityURLsUsingRdfXml = new ArrayList<String>();
+		
+		String useThisQuery = setupProps.getProperty("useThisQuery");
+		
+		if ( useThisQuery != null ) {
+			capabilityURLsUsingRdfXml.add(useThisQuery);
+		}
+		else {
+			ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"),
 				onlyOnce);
-		ArrayList<String> capabilityURLsUsingRdfXml = TestsBase
-				.getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP,
-						serviceUrls, true);
+			capabilityURLsUsingRdfXml = getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
+		}	
+		
 		return toCollection(capabilityURLsUsingRdfXml);		
 	}
 
@@ -106,8 +102,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 		RDFUtils.validateModel(queryModel);
 		
 		Resource resultsRes = queryModel.getResource(currentUrl);
-		assertTrue("Expected a results resource with URI: " + currentUrl,
-				queryModel.contains(resultsRes, null));
 
 		// oslc:ResponseInfo if optional, validate it if one exists
 		Resource respInfoType = queryModel.createResource(OSLCConstants.RESP_INFO_TYPE);

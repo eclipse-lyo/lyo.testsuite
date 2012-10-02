@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <provider-test version="2.0" domain="OSLC-CM">
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2.cm" name="ChangeRequestJsonTests">
-		<testcase level="MUST">changeRequestHasOneTitle</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneDescription</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneIdentifier</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneName</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneCreatedDate</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneModifiedDate</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneDiscussion</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneInstanceShape</testcase>
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneCloseDate</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneStatus</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneClosedElement</testcase>
@@ -20,14 +20,14 @@
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2.cm" name="ChangeRequestRdfXmlTests">
-		<testcase level="MUST">changeRequestHasOneTitle</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneDescription</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneIdentifier</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneName</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneCreatedDate</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneModifiedDate</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneDiscussion</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneInstanceShape</testcase>
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneCloseDate</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneStatus</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneClosedElement</testcase>
@@ -39,14 +39,14 @@
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2.cm" name="ChangeRequestXmlTests">
-		<testcase level="MUST">changeRequestHasOneTitle</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneDescription</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneIdentifier</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneName</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneCreatedDate</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneModifiedDate</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneDiscussion</testcase>
-		<testcase level="MUST">changeRequestHasAtMostOneInstanceShape</testcase>
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneCloseDate</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneStatus</testcase>
 		<testcase level="MUST">changeRequestHasAtMostOneClosedElement</testcase>
