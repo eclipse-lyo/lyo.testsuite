@@ -47,7 +47,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.http.Header;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.ClientProtocolException;
@@ -62,6 +65,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
@@ -73,6 +77,8 @@ import org.xml.sax.SAXException;
 public class OSLCUtils {
 	//HttpClient used for all requests
 	public static DefaultHttpClient httpclient = null;
+	private static final String JAZZ_AUTH_MESSAGE_HEADER = "X-com-ibm-team-repository-web-auth-msg";
+	private static final String JAZZ_AUTH_FAILED = "authfailed";
 	
 	public static Document createXMLDocFromResponseBody(String respBody)
 			throws ParserConfigurationException, IOException, SAXException
@@ -141,6 +147,25 @@ public class OSLCUtils {
 			if (creds != null) {
 				httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
 			}
+
+			httpclient.setRedirectStrategy(new DefaultRedirectStrategy() {                
+		        @Override
+				public boolean isRedirected(HttpRequest request, HttpResponse response, org.apache.http.protocol.HttpContext context)  {
+		            boolean isRedirect=false;
+		            try {
+		                isRedirect = super.isRedirected(request, response, context);
+		            } catch (ProtocolException e) {
+		                e.printStackTrace();
+		            }
+		            if (!isRedirect) {
+		                int responseCode = response.getStatusLine().getStatusCode();
+		                if (responseCode == 301 || responseCode == 302) {
+		                    return true;
+		                }
+		            }
+		            return isRedirect;
+		        }
+		    });
 		}
 		return httpclient;
 	}
@@ -338,17 +363,100 @@ public class OSLCUtils {
 			httpclient = new DefaultHttpClient();
 			setupLazySSLSupport(httpclient);
 		}
-		HttpPost httppost = new HttpPost(url);
-		StringEntity entity = new StringEntity("j_username=" + username + "&j_password=" + password);
-		//Set headers, accept only the types passed in
-		httppost.setHeader("Accept", "*/*");
-		httppost.setEntity(entity);
-		httppost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-		httppost.addHeader("OSLC-Core-Version", "2.0");
-		//Get the response and return it
-		HttpResponse response = httpclient.execute(httppost);
-		EntityUtils.consume(response.getEntity());
-	}
+		//parse the old style of properties file baseUrl so users don't have to modify properties files 
+				String [] tmpUrls = url.split("/authenticated");
+				if (tmpUrls != null && tmpUrls.length > 0) {
+					url = tmpUrls[0];
+				} //else assume (!) it is the style of URL we want - just scheme://hostname:port/context
+				
+				HttpResponse resp;
+				int statusCode = -1;
+				String location = null;
+				HttpGet get1 = new HttpGet(url + "/auth/authrequired");
+				resp = httpclient.execute(get1);
+				statusCode = resp.getStatusLine().getStatusCode();
+				location = getHeader(resp,"Location");
+				EntityUtils.consume(resp.getEntity());
+				followRedirects(statusCode,location,httpclient);
+				
+				HttpGet get2= new HttpGet(url + "/authenticated/identity");
+				
+				resp = httpclient.execute(get2);
+				statusCode = resp.getStatusLine().getStatusCode();
+				location = getHeader(resp,"Location");
+				EntityUtils.consume(resp.getEntity());
+				followRedirects(statusCode,location,httpclient);
+				
+				HttpPost httppost = new HttpPost(url + "/j_security_check");
+				StringEntity entity = new StringEntity("j_username=" + username + "&j_password=" + password);
+				//Set headers, accept only the types passed in
+				httppost.setHeader("Accept", "*/*");
+				httppost.setHeader("X-Requested-With", "XMLHttpRequest");
+				httppost.setEntity(entity);
+				httppost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+				httppost.addHeader("OSLC-Core-Version", "2.0");
+				//Get the response and return it
+				resp = httpclient.execute(httppost);
+				statusCode = resp.getStatusLine().getStatusCode();
+				
+				String jazzAuthMessage = null;
+			    Header jazzAuthMessageHeader = resp.getLastHeader(JAZZ_AUTH_MESSAGE_HEADER);
+			    if (jazzAuthMessageHeader != null) {
+			    	jazzAuthMessage = jazzAuthMessageHeader.getValue();
+			    }
+			    
+			    if (jazzAuthMessage != null && jazzAuthMessage.equalsIgnoreCase(JAZZ_AUTH_FAILED))
+			    {
+			    	EntityUtils.consume(resp.getEntity());
+			    	Assert.fail("Could not login to Jazz server.  URL: " + url + " user: " + username + "password: " + password);
+			    }
+			    else if ( statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_MOVED_TEMPORARILY )
+			    {
+			    	EntityUtils.consume(resp.getEntity());
+			    	Assert.fail("Unknown error logging in to Jazz Server.  Status code: " + statusCode);
+			    }
+			    else //success
+			    {
+			    	location = getHeader(resp,"Location");
+			    	EntityUtils.consume(resp.getEntity());
+			    	followRedirects(statusCode,location,httpclient);
+			    	HttpGet get3 = new HttpGet(url + "/service/com.ibm.team.repository.service.internal.webuiInitializer.IWebUIInitializerRestService/initializationData");
+			    	resp = httpclient.execute(get3);
+			    	statusCode = resp.getStatusLine().getStatusCode();
+			    	location = getHeader(resp,"Location");
+			    	EntityUtils.consume(resp.getEntity());
+			    	followRedirects(statusCode,location,httpclient);
+			    	
+			    }
+				EntityUtils.consume(resp.getEntity());
+			}
+			
+			private static void followRedirects(int statusCode, String location, HttpClient httpClient)
+			{
+				
+				while ((statusCode == HttpStatus.SC_MOVED_TEMPORARILY) && (location != null))
+				{
+					HttpGet get = new HttpGet(location);
+					try {
+						HttpResponse newResp = httpClient.execute(get);
+						statusCode = newResp.getStatusLine().getStatusCode();
+						location = getHeader(newResp,"Location");
+						EntityUtils.consume(newResp.getEntity());
+					} catch (Exception e) {
+						Assert.fail(e.getMessage());
+					}
+
+				}
+			}
+			
+			private static String getHeader(HttpResponse resp, String headerName)
+			{
+				String retval = null;
+				Header header =  resp.getFirstHeader(headerName);
+				if (header != null)
+					retval = header.getValue();
+				return retval;
+			}
 
 	/**
 	 * Adds a query string to the end of a URL, handling the case where the URL
@@ -435,5 +543,11 @@ public class OSLCUtils {
 		updatedUrl.append(URLEncoder.encode(value, "UTF-8"));
 		
 		return updatedUrl.toString();
+	}
+
+	public static String getContentType(HttpResponse resp) {
+		String contentType = resp.getEntity().getContentType().getValue();
+		String contentTypeSplit[] = contentType.split(";");
+		return contentTypeSplit[0];
 	}
 }

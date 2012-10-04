@@ -97,10 +97,9 @@ public abstract class TestsBase {
 			String userId = setupProps.getProperty("userId");
 			String pw = setupProps.getProperty("pw");
 			basicCreds = new UsernamePasswordCredentials(userId, pw);
-			Header h = new BasicHeader("OSLC-Core-Version", "2.0");
-			Header h2 = new BasicHeader("DoorsRP-Request-Type", "private"); // TODO: RRC special sauce
+			Header h = new BasicHeader("OSLC-Core-Version", "2.0");			
 			
-			headers = new Header[] { h, h2 };
+			headers = new Header[] { h};
 			String onlyOnceStr = setupProps.getProperty("runOnlyOnce");
 			if (onlyOnceStr != null && onlyOnceStr.equals("false")) {
 				onlyOnce = false;
@@ -609,6 +608,10 @@ public abstract class TestsBase {
 			assertEquals("Failed to retrieve ServiceProviders at: " +base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 			
 			String respBody = EntityUtils.toString(resp.getEntity());
+			
+			String contentType = OSLCUtils.getContentType(resp);	
+
+			assertEquals("Expected content-type "+OSLCConstants.CT_JSON+" but received "+contentType, OSLCConstants.CT_JSON, contentType);
 			
 			// Create mapping of JSON variables
 			JSONArtifact userData = JSON.parse(respBody);

@@ -92,7 +92,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
 		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
-					OSLCConstants.CT_RDF, OSLCConstants.CT_RDF, artifact, header);
+					OSLCConstants.CT_RDF, null, artifact, header);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
