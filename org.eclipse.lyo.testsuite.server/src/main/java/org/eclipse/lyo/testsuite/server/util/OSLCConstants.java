@@ -51,6 +51,7 @@ public interface OSLCConstants {
 	static String CT_XML = "application/xml";
 	static String CT_RDF = "application/rdf+xml";
 	static String CT_JSON = "application/json";
+	static String CT_COMPACT = "application/x-oslc-compact+xml";
 	static String CT_ATOM = "application/atom+xml";
 	
 	// Version 1 headers:
@@ -119,7 +120,11 @@ public interface OSLCConstants {
 	public static final String QM_TEST_RESULT_QUERY = OSLC_QM_V2 + "TestResultQuery";
 	public static final String QM_TEST_EXECUTION_RECORD_QUERY = OSLC_QM_V2 + "TestExecutionRecordQuery";
 
-	
+	 //OSLC RM 2.0
+	 
+	 public static final String RM_REQUIREMENT_TYPE = OSLC_RM_V2 + "Requirement";
+	 public static final String RM_REQUIREMENT_COLLECTION_TYPE = OSLC_RM_V2 + "RequirementCollection";
+	 
 	// RDF
 	public static final String RDF_TYPE_PROP		= RDF + "type";
 	public static final String RDF_DESCRIPTION_PROP	= RDF + "Description";

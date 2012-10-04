@@ -88,9 +88,11 @@ public class DynamicSuiteBuilder
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.FetchResourceTests.class);
 			
 			if (OSLCConstants.OSLC_CM_V2.equals(testVersions) || 
 				OSLCConstants.OSLC_QM_V2.equals(testVersions) || 
+				OSLCConstants.OSLC_RM_V2.equals(testVersions) ||
 				OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests.class);
@@ -136,6 +138,13 @@ public class DynamicSuiteBuilder
 					
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseRdfXmlTests.class);										
+				} else if (OSLCConstants.OSLC_RM_V2.equals(testVersions)) {
+					log.info("Setting up to test RM v2 features");
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementCollectionXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementCollectionRdfXmlTests.class);
+
 				}
 				
 				if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
@@ -50,9 +51,9 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 public class ServiceProviderCatalogRdfXmlTests extends
 		ServiceProviderCatalogBaseTests {
 
-	private static Model rdfModel = ModelFactory.createDefaultModel();
-	private static Resource catalog = null;
-	private static HttpResponse response = null;
+	private Model rdfModel = ModelFactory.createDefaultModel();
+	private Resource catalog = null;
+	private HttpResponse response = null;
 	
 	public ServiceProviderCatalogRdfXmlTests(String thisUrl) 
 		throws IOException 
@@ -66,12 +67,11 @@ public class ServiceProviderCatalogRdfXmlTests extends
 
 		assertEquals("Did not successfully retrieve catalog at: " 
 				+ currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-	
+
 		rdfModel.read(response.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
 		RDFUtils.validateModel(rdfModel);
-		
 		catalog = (Resource) rdfModel.getResource(currentUrl);
 
 		assertNotNull("Failed to read Catalog resource at URI: "+currentUrl, catalog);
@@ -96,12 +96,6 @@ public class ServiceProviderCatalogRdfXmlTests extends
 		
 	    // ArrayList to contain the urls from all SPCs
 	    Collection<Object[]> data = new ArrayList<Object[]>();
-	    
-	    // If we are given a shortcut, then use it and skip the rest
-	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
-	    	data.add(new Object[] {useThisServiceProvider});
-	    	return data;
-	    }
 
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base, basicCreds, OSLCConstants.CT_RDF, headers);
 		

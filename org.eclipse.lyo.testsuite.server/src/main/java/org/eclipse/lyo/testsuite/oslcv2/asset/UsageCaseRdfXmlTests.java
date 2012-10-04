@@ -121,7 +121,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
 		resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
-					OSLCConstants.CT_RDF, OSLCConstants.CT_RDF, artifact, header);
+					OSLCConstants.CT_RDF, null, artifact, header);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
@@ -140,11 +140,9 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		StmtIterator artifactStatements = model.listStatements(selectArtifact);
 		List<Statement> statementList = artifactStatements.toList();
 		for(int i = 0; i < statementList.size(); i++) {
-			Statement statement = statementList.get(i);
-			Selector selectChildren = new SimpleSelector(statement.getObject().asResource() , null, (RDFNode)null);
-			StmtIterator childrenStatements = model.listStatements(selectChildren);
+			Statement artifactStatement = statementList.get(i);
 			Property prop = model.createProperty(OSLCConstants.LABEL_PROP);
-			setPropertyValue(childrenStatements.nextStatement(), prop, labelValue);
+			setPropertyValue(artifactStatement, prop, labelValue);
 		}
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -162,15 +160,12 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		artifactStatements = model.listStatements(selectArtifact);
 		statementList = artifactStatements.toList();
 		for(int i = 0; i < statementList.size(); i++) {
-			Statement statement = statementList.get(i);
-			Selector selectChildren = new SimpleSelector(statement.getObject().asResource() , null, (RDFNode)null);
-			StmtIterator childrenStatements = model.listStatements(selectChildren);
-			Statement childStatement = childrenStatements.nextStatement();
+			Statement artifactStatement = statementList.get(i);
 			Property prop = model.createProperty(OSLCConstants.LABEL_PROP);
-			StmtIterator statements = childStatement.getResource().listProperties(prop);
-			assertTrue("No label was found", statements.hasNext());
-			Statement label = statements.nextStatement();
-			assertEquals("Label was not set", labelValue, label.getObject().toString());
+			setPropertyValue(artifactStatement, prop, labelValue);
+			StmtIterator statements = artifactStatement.getResource().listProperties(prop);
+			assertTrue("No label property was found", statements.hasNext());
+			assertEquals(labelValue, statements.next().getObject().toString());
 		}
 	}
 	
