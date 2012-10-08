@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,7 +11,8 @@
  *
  * Contributors:
  *
- *    Steve Speicher - initial API and implementation
+ *    Steve Speicher
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Properties;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
@@ -33,8 +34,6 @@ import org.apache.http.HttpResponse;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
@@ -54,39 +53,39 @@ public class ServiceProviderCatalogRdfXmlTests extends
 
 	private Model rdfModel = ModelFactory.createDefaultModel();
 	private Resource catalog = null;
+	private HttpResponse response = null;
 	
-	public ServiceProviderCatalogRdfXmlTests(String thisUrl) {
+	public ServiceProviderCatalogRdfXmlTests(String thisUrl) 
+		throws IOException 
+	{		
 		super(thisUrl);
+		
 		fContentType = OSLCConstants.CT_RDF;
-	}
-
-	@Before
-	public void setup() throws IOException 
-	{
-		staticSetup();
 		
 		response = OSLCUtils.getResponseFromUrl(
-				setupBaseUrl, currentUrl, basicCreds, OSLCConstants.CT_RDF, headers);
+				setupBaseUrl, currentUrl, basicCreds, fContentType, headers);
 
 		assertEquals("Did not successfully retrieve catalog at: " 
 				+ currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-	
+
 		rdfModel.read(response.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
 				OSLCConstants.JENA_RDF_XML);
 		RDFUtils.validateModel(rdfModel);
-		
 		catalog = (Resource) rdfModel.getResource(currentUrl);
 
 		assertNotNull("Failed to read Catalog resource at URI: "+currentUrl, catalog);
+
 	}
 	
 	@Parameters
-	public static Collection<Object[]> getAllServiceProviderCatalogUrls() throws IOException, ParserConfigurationException, SAXException, XPathException
+	public static Collection<Object[]> getAllServiceProviderCatalogUrls() 
+		throws IOException, ParserConfigurationException, SAXException, XPathException
 	{
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProviders contained within it, recursively.
-		Properties setupProps = SetupProperties.setup(null);
+		staticSetup();
+		
 		Collection<Object[]> coll = getReferencedCatalogUrlsUsingRdfXml(setupProps.getProperty("baseUri"));
 		return coll;
 	}
@@ -94,12 +93,14 @@ public class ServiceProviderCatalogRdfXmlTests extends
 	public static Collection<Object[]> getReferencedCatalogUrlsUsingRdfXml(String base) throws IOException, ParserConfigurationException, SAXException, XPathException
 	{
 		staticSetup();
+		
+	    // ArrayList to contain the urls from all SPCs
+	    Collection<Object[]> data = new ArrayList<Object[]>();
+
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base, basicCreds, OSLCConstants.CT_RDF, headers);
 		
 		assertEquals("Did not successfully retrieve catalog at: "+base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 		
-	    // ArrayList to contain the urls from all SPCs
-	    Collection<Object[]> data = new ArrayList<Object[]>();
 	    // Add ourself (base)
     	data.add(new Object[] { base });
 

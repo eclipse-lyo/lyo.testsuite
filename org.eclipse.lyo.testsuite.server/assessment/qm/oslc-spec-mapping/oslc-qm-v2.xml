@@ -1,5 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <provider-test version="2.0" domain="OSLC-QM">
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestPlanXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+	</testclass>
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestCaseXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+		<testcase level="MAY">TestCaseRelatedChangeRequest</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestScriptXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+		<testcase level="MAY">TestScriptRelatedChangeRequest</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestExecutionRecordXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+		<testcase level="MUST">TestExecutionRecordHasOneReportsOnTestPlan</testcase>
+		<testcase level="MUST">TestExecutionRecordHasOneRunsTestCase</testcase>
+		<testcase level="MAY">TestExecutionRecordRelatedChangeRequest</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestResultXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+		<testcase level="MUST">TestResultHasOneExecutsTestScript</testcase>
+		<testcase level="MUST">TestResultHasOneProducedByTestExecutionRecord</testcase>
+		<testcase level="MUST">TestResultHasOneReportsOnTestCase</testcase>
+		<testcase level="MUST">TestResultHasOneReportsOnTestPlan</testcase>
+		<testcase level="MUST">TestResultHasOneStatus</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestPlanRdfXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+	</testclass>
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestCaseRdfXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+		<testcase level="MAY">TestCaseRelatedChangeRequest</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestScriptRdfXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestExecutionRecordRdfXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+		<testcase level="MUST">TestExecutionRecordHasOneReportsOnTestPlan</testcase>
+		<testcase level="MUST">TestExecutionRecordHasOneRunsTestCase</testcase>
+		<testcase level="MAY">TestExecutionRecordRelatedChangeRequest</testcase>		
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.qm" name="TestResultRdfXmlTests">
+		<testcase level="MUST">CoreResourceHasOneTitle</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDescription</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneIdentifier</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneName</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneCreatedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneModifiedDate</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneDiscussion</testcase>
+		<testcase level="MUST">CoreResourceHasAtMostOneInstanceShape</testcase>
+		<testcase level="MUST">TestResultHasOneExecutesTestScript</testcase>
+		<testcase level="MUST">TestResultHasOneProducedByTestExecutionRecord</testcase>
+		<testcase level="MUST">TestResultHasOneReportsOnTestCase</testcase>
+		<testcase level="MUST">TestResultHasOneReportsOnTestPlan</testcase>
+		<testcase level="MUST">TestResultHasOneStatus</testcase>
+	</testclass>
+
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateRdfXmlTests">
 		<testcase level="MUST">createResourceWithInvalidContent</testcase>
 		<testcase level="MUST">createResourceAndUpdateIt</testcase>
@@ -11,12 +140,12 @@
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateXmlTests">
-		<testcase level="MAY">createValidResourceUsingTemplate</testcase>
-		<testcase level="MAY">createResourceWithInvalidContent</testcase>
-		<testcase level="MAY">createResourceAndUpdateIt</testcase>
-		<testcase level="MAY">createResourceWithInvalidContentType</testcase>
-		<testcase level="MAY">updateCreatedResourceWithInvalidContent</testcase>
-		<testcase level="MAY">updateCreatedResourceWithFailedPrecondition</testcase>
+		<testcase level="MUST">createValidResourceUsingTemplate</testcase>
+		<testcase level="MUST">createResourceWithInvalidContent</testcase>
+		<testcase level="MUST">createResourceAndUpdateIt</testcase>
+		<testcase level="MUST">createResourceWithInvalidContentType</testcase>
+		<testcase level="MUST">updateCreatedResourceWithInvalidContent</testcase>
+		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
 		<testcase level="MAY">updateCreatedResourceWithInvalidContentType</testcase>
 	</testclass>
 	
@@ -30,15 +159,6 @@
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryXmlTests">
-		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
-		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
-		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
-		<testcase level="MUST">validGreaterThanQueryContainsExpectedDefects</testcase>
-		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
-		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
-	</testclass>
-	
-	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryAtomTests">
 		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
 		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
@@ -69,7 +189,7 @@
 		<testcase level="MAY">serviceProvidersHaveAtMostOneTitle</testcase>
 		<testcase level="MAY">serviceProviderCatalogsHaveAtMostOnePublisher</testcase>
 		<testcase level="MAY">serviceProvidersHaveAtMostOnePublisher</testcase>
-		<testcase level="MUST">publisherElementsAreValid</testcase>
+		<testcase level="MAY">publisherElementsAreValid</testcase>
 		<testcase level="MAY">serviceProviderCatalogsHaveAtMostOneOAuthElement</testcase>
 		<testcase level="MAY">serviceProvidersHaveAtMostOneOAuthElement</testcase>
 		<testcase level="MUST">oAuthElementsAreValid</testcase>
@@ -82,7 +202,7 @@
 	</testclass>
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderRdfXmlTests">
 		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
-		<testcase level="MUST">misplacedParametersDoNotEffectResponse</testcase>
+		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
 		<testcase level="MUST">currentUrlIsValid</testcase>
 		<testcase level="MUST">rootAboutElementPointsToSelf</testcase>
 		<testcase level="MUST">typeIsServiceProvider</testcase>
@@ -90,11 +210,12 @@
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasService</testcase>
 	</testclass>
+	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderXmlTests">
 		<testcase level="MUST">baseUrlIsValid</testcase>
 		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
 		<testcase level="MUST">responseContentTypeIsXML</testcase>
-		<testcase level="MUST">misplacedParametersDoNotEffectResponse</testcase>
+		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOnePublisher</testcase>
 		<testcase level="MUST">publisherElementsAreValid</testcase>
@@ -108,6 +229,7 @@
 		<testcase level="MUST">queryCapabilityBlocksAreValid</testcase>
 		<testcase level="MUST">dialogsAreValid</testcase>
 	</testclass>
+	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="QueryTests">
 		<testcase level="SHOULD">validEqualsQueryContainsExpectedDefect</testcase>
 		<testcase level="SHOULD">validNotEqualQueryContainsExpectedDefect</testcase>
@@ -118,9 +240,4 @@
 		<testcase level="SHOULD">fullTextSearchContainsExpectedResults</testcase>
 	</testclass>
 	
-	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="OAuthTests">
-		<testcase level="MAY">oAuthRequestTokenProperlyRecieved</testcase>
-		<testcase level="MAY">oAuthAuthorizationHandled</testcase>
-		<testcase level="MAY">oAuthAccessTokenReceived</testcase>
-	</testclass>
 </provider-test>

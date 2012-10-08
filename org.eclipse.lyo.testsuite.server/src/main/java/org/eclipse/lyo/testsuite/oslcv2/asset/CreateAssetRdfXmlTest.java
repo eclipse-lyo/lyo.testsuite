@@ -19,18 +19,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -42,17 +37,9 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 @RunWith(Parameterized.class)
 public class CreateAssetRdfXmlTest extends CreateAssetBase {
-	private String baseUrl;
 
 	public CreateAssetRdfXmlTest(String url) {
 		super(url, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
-	}
-		
-	@Before
-	public void setup()
-		throws IOException, ParserConfigurationException, SAXException, XPathException 	{
-		super.setup();
-		baseUrl = setupProps.getProperty("baseUrl");
 	}
 	
 	@Test

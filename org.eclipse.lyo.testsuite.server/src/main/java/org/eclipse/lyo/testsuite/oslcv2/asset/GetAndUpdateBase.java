@@ -72,7 +72,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
 		
 		assertTrue("No Location header", resp.getFirstHeader("Location") != null);
-		//assertTrue("No content length header", resp.getFirstHeader("Content-Length") != null);
+		assertTrue("No content length header", resp.getFirstHeader("Content-Length") != null);
 		return resp.getFirstHeader("Location").getValue();
 	}
 	

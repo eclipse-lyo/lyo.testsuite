@@ -35,7 +35,6 @@ import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -59,16 +58,12 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 		super(thisUri);
 	}
 
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
-	}
-
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException, ParserConfigurationException, SAXException,
 			XPathException {
+		
+		staticSetup();
 		
 		ArrayList<String> capabilityURLsUsingXML = new ArrayList<String>();
 		
@@ -114,8 +109,6 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 
 		// Only test oslc:ResponseInfo if found
 		if (results != null) {
-			//assertEquals("Expended ResponseInfo/@rdf:about to equal request URL",
-			//		queryUrl, results.getNodeValue());
 			results = (Node) OSLCUtils.getXPath().evaluate("//oslc:totalCount",
 					doc, XPathConstants.NODE);
 			if (results != null) {

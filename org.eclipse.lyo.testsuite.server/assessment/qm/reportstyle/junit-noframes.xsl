@@ -254,8 +254,8 @@
             <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
 			
-			<!-- Assessment part -->
-            <xsl:call-template name="assessmentpart"/>
+			<!-- Assessmen part -->
+            <xsl:call-template name="compliancepart"/>
             <hr size="1" width="95%" align="left"/>
 
             <!-- Summary part -->
@@ -379,43 +379,32 @@
     </xsl:template>
 
 	<xsl:template name="compliancepart">
-	
-	
+		
 			<!-- Object Container to render the SVG User Load Preview Graph within the HTML -->
 							<span style="text-align:center;display:block;margin: 0 auto;"><object id="svgid" type="image/svg+xml" name="SVGContainer" data="barchartSVG.svg" codebase="http://www.adobe.com/svg/viewer/install/" width="1100" height="350">
  								<param name="src" value="barchartSVG.svg" />
 								<param name="wmode" value="transparent"  />
-								<embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="350" wmode="transparent" pluginspage="http://www.adobe.com/svg/viewer/install/" />
+								<embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="450" wmode="transparent" pluginspage="http://www.adobe.com/svg/viewer/install/" />
 							</object></span>
-							
-						<!--	<a href="#" onclick="SVGscale(0.1);">x-small</a>&#160;&#160;<a href="#" onclick="SVGscale(0.25);">small</a>&#160;&#160;<a href="#" onclick="SVGscale(0.5);">medium</a>&#160;&#160;
-							<a href="#" onclick="SVGscale(0.65);">1024x768</a>&#160;&#160;<a href="#" onclick="SVGscale(0.8);">1280x1024</a>&#160;&#160;
-        					<a href="#" onclick="SVGscale(1);">1600x1200</a>&#160;&#160;<a href="#" onclick="SVGscale(1.5);">x-large</a> -->
-		
-        <h2>OSLC compliance</h2>
+									
+        <h2>OSLC Assessment</h2>
 
-		<xsl:variable name="mustCount" select="'161'"/>
-		<xsl:variable name="junitMustCount" select="'122'"/>
-		<xsl:variable name="junitImplementedMustCount" select="'51'"/>
+		<xsl:variable name="mustCount" select="'180'"/>
+		<xsl:variable name="junitMustCount" select="'156'"/>
+		<xsl:variable name="junitUniqueReqMustCount" select="'51'"/>
 		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />    
-        <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMust'])"/>
-        <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMust'])"/>
-        <xsl:variable name="errorMustCount">
-        	<xsl:choose>
-        		<xsl:when test="/testsuites/testsuite/testcase[@compliance='passedMust' or @compliance='failedMust']//error">
-        			<xsl:value-of select="count(/testsuites/testsuite/testcase[@compliance='passedMust' or @compliance='failedMust']//error)"/>
-        		</xsl:when>
-        		<xsl:otherwise>
-        			<xsl:value-of select="$testsuiteMustCount - ($passedMustCount + $failedMustCount)"/>
-        		</xsl:otherwise>
-        	</xsl:choose>
+        <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMust'])"/>
+        <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMust'])"/>
+        <xsl:variable name="errorMustCount" select="count(/testsuites/testsuite/testcase[@assessment='errorMust'])"/>
+        <xsl:variable name="testsuiteAttemptedMustCount">
+        	<xsl:value-of select="$passedMustCount + $failedMustCount + $errorMustCount"/>
         </xsl:variable>
         <xsl:variable name="shouldCount" select="count($spec//testcase[@level='SHOULD'])"/>
-        <xsl:variable name="passedShouldCount" select="count(/testsuites/testsuite/testcase[@compliance='passedShould'])"/>
-        <xsl:variable name="failedShouldCount" select="count(/testsuites/testsuite/testcase[@compliance='failedShould'])"/>
+        <xsl:variable name="passedShouldCount" select="count(/testsuites/testsuite/testcase[@assessment='passedShould'])"/>
+        <xsl:variable name="failedShouldCount" select="count(/testsuites/testsuite/testcase[@assessment='failedShould'])"/>
         <xsl:variable name="mayCount" select="count($spec//testcase[@level='MAY'])"/>
-        <xsl:variable name="passedMayCount" select="count(/testsuites/testsuite/testcase[@compliance='passedMay'])"/>
-        <xsl:variable name="failedMayCount" select="count(/testsuites/testsuite/testcase[@compliance='failedMay'])"/>
+        <xsl:variable name="passedMayCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMay'])"/>
+        <xsl:variable name="failedMayCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMay'])"/>
 
         <xsl:variable name="domain" select="$spec/provider-test/@domain"/>
         <xsl:variable name="version" select="$spec/provider-test/@version"/>
@@ -434,7 +423,7 @@
         	<td bgcolor="eeeee0"><xsl:value-of select="$date"/></td>
         	<td bgcolor="eeeee0"><xsl:value-of select="$spec/provider-test/@domain"/></td>
         	<td bgcolor="eeeee0"><xsl:value-of select="$spec/provider-test/@version"/></td>
-        	<td bgcolor="eeeee0"><xsl:value-of select="substring-after($implName,'=')"/></td>
+        	<td bgcolor="eeeee0"><xsl:value-of select="$implName"/></td>
 
         	<xsl:choose>
                 <xsl:when test="($mustCount=$passedMustCount) and ($shouldCount=$passedShouldCount) and ($mayCount=$passedMayCount)">
@@ -451,14 +440,14 @@
                 </xsl:otherwise>
             </xsl:choose>
             <td><div style="color:blue;"><b><xsl:value-of select="format-number($junitMustCount div $mustCount,'#.#%')"/></b> (<xsl:value-of select="$junitMustCount"/>/<xsl:value-of select="$mustCount"/>)</div><xsl:value-of select="$junitMustCount"/> of the <xsl:value-of select="$mustCount"/><xsl:text> </xsl:text><xsl:value-of select="$domain"/><xsl:text> </xsl:text><xsl:value-of select="$version"/> MUST requirements are currently testable via the Lyo OSLC testsuite.</td>
-       		<td><div style="color:blue;"><b><xsl:value-of select="format-number($junitImplementedMustCount div $junitMustCount,'#.#%')"/></b> (<xsl:value-of select="$junitImplementedMustCount"/>/<xsl:value-of select="$junitMustCount"/>)</div><xsl:value-of select="$junitImplementedMustCount"/> of the <xsl:value-of select="$junitMustCount"/> testable MUST requirements currently have JUnit test case coverage within the Lyo OSLC testsuite</td>
+       		<td><div style="color:blue;"><b><xsl:value-of select="format-number($testsuiteMustCount div $junitMustCount,'#.#%')"/></b> (<xsl:value-of select="$testsuiteMustCount"/>/<xsl:value-of select="$junitMustCount"/>)</div><xsl:value-of select="$testsuiteMustCount"/> of the <xsl:value-of select="$junitMustCount"/> testable MUST requirements currently have JUnit test case coverage within the Lyo OSLC testsuite</td>
         </tr>
         </table>
         <table border="0" width="95%">
         <tr>
         <td style="text-align: justify;">
-        <span style="background-color:#ff0000;">Level 0</span>: One or more attempted tests covering a MUST requirement has encountered a failure or error<br/>
-        <span style="background-color:#ffff00;">Level 1</span>: All Attempted Tests covering a MUST requirement are Passing and free of failure or error<br/>
+        <span style="background-color:#ff0000;">Level 0</span>: Not all the MUST tests run, or one or more attempted tests covering a MUST requirement has encountered a failure or error<br/>
+        <span style="background-color:#ffff00;">Level 1</span>: All MUST tests run and Attempted Tests covering a MUST requirement are Passing and free of failure or error<br/>
         <span style="background-color:#00ff00;">Level 2</span>: All Attempted Tests covering a MUST and SHOULD requirement are Passing and free of failure or error<br/>
         <span style="background-color:#0000ff;color:#ffff00;">Level 3</span>: All Attempted Tests covering a MUST, SHOULD and MAY requirement are Passing and free of failure or error<br/>
         Note: This testsuite will continue to evolve and expand.  Requirements may have one or more associated test(s) for coverage to address positive and negative input behaviors.
@@ -470,23 +459,36 @@
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
         <tr valign="top">
             <th>Spec Type</th>
+            <th>Total Tests</th>
             <th>Attempted</th>
             <th>Passed</th>
             <th>Failed</th>
             <th>Error</th>
+            <th>Attempted Tests/Total Tests rate</th>
+            <th>Attempted Tests Success rate</th>
         </tr>
         <tr valign="top" style="align:center;">
             <td>MUSTs</td>
             <td><xsl:value-of select="$testsuiteMustCount"/></td>
+            <td><xsl:value-of select="$testsuiteAttemptedMustCount"/></td>
             <td><xsl:value-of select="$passedMustCount"/></td>
             <td><xsl:value-of select="$failedMustCount"/></td>
             <td><xsl:value-of select="$errorMustCount"/></td>
+            <td><xsl:call-template name="display-percent">
+            		<xsl:with-param name="value" select="$testsuiteAttemptedMustCount div $testsuiteMustCount"/>
+            	</xsl:call-template>
+            </td>
+            <td><xsl:call-template name="display-percent">
+            		<xsl:with-param name="value" select="$passedMustCount div $testsuiteAttemptedMustCount"/>
+            	</xsl:call-template>
+            </td>
         </tr>
         </table>
         
         <table border="0" width="95%">
         <tr>
         <td style="text-align: justify;">
+        Total: # of total tests for a Specification Type <br/>
         Attempted = Pass + Fail + Error.  # of Tests Executed for a Specification Type<br/>
         Pass: # of Test(s) achieving the respective test design's expected result<br/>
         Fail: # of Test(s) deviating from the respective test design's expected result.<br/>
@@ -503,7 +505,6 @@
         </div>
 
     </xsl:template>
-
 
     <xsl:template name="summary">
         <h2>Unit Test Summary</h2>
@@ -643,30 +644,27 @@
 <xsl:template match="testcase" mode="print.test">
 	<xsl:variable name="length" select="string-length(@name)"/>
 	<xsl:variable name="thiscase" select="substring(@name, 0, $length - 2)"/>
-	<xsl:variable name="thisPackage" select="@classname"/>
-	<xsl:variable name="level" select="$spec//testclass[contains($thisPackage,./@name)]/testcase[normalize-space(.)=$thiscase]/@level"/>
-	
     <tr valign="top">
         <xsl:attribute name="class">
             <xsl:choose>
                 <xsl:when test="failure | error">Error</xsl:when>
             </xsl:choose>
         </xsl:attribute>
-        <td><xsl:value-of select="$thiscase"/></td>
+        <td><xsl:value-of select="@name"/></td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>
-                <td><xsl:value-of select="$level"/></td>                
+                <td><xsl:value-of select="$spec//testcase[.=$thiscase]/@level"/></td>
                 <td><xsl:apply-templates select="failure"/></td>
             </xsl:when>
             <xsl:when test="error">
                 <td>Error</td>
-                <td><xsl:value-of select="$level"/></td>                
+                <td><xsl:value-of select="$spec//testcase[.=$thiscase]/@level"/></td>
                 <td><xsl:apply-templates select="error"/></td>
             </xsl:when>
             <xsl:otherwise>
                 <td>Success</td>
-                <td><xsl:value-of select="$level"/></td>
+                <td><xsl:value-of select="$spec//testcase[.=$thiscase]/@level"/></td>
                 <td></td>
             </xsl:otherwise>
         </xsl:choose>

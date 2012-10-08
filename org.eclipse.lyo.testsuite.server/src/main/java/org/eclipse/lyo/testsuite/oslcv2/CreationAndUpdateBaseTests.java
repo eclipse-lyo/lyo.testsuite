@@ -25,23 +25,19 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase.AuthMethods;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -63,7 +59,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
  * providers.
  */
 @RunWith(Parameterized.class)
-public class CreationAndUpdateBaseTests extends TestsBase {
+public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
 	@SuppressWarnings("rawtypes")
 	public static String[] getCreateTemplateTypes() throws FileNotFoundException {
@@ -84,12 +80,6 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		super(url);
 	}
 
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
-	}
-
 	@Test
 	public void createResourceWithInvalidContentType() throws IOException {
 		// Issue post request using the provided template and an invalid
@@ -100,12 +90,35 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		assertTrue(resp.getStatusLine().getStatusCode() == 415);
 	}
 
-	protected void createValidResourceUsingTemplate(String contentType,
-			String accept, String content) throws IOException {
-		// Issue post request using the provided template
+	private HttpResponse doPost (String contentType, String accept, String content) 
+		throws IOException {
+		
+		if (authMethod == AuthMethods.FORM) {
+			// make sure we have authenticated before the POST call
+			TestsBase.formLogin(basicCreds.getUserPrincipal().getName(), basicCreds.getPassword());
+		}
+		
+		// issue the POST call
 		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
 				accept, contentType, content, headers);
 
+		if ( resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE) {
+			EntityUtils.consume(resp.getEntity());
+			String knownIssue = "";
+			if ( implName.equalsIgnoreCase("RQM") ) {
+				knownIssue = "Reported as Defect: PUT and POST requests with Content-Type: application/xml should be allowed (72920)";
+			}
+			throw new AssertionError("Provider "+implName+" does not support POST with "+contentType+". "+knownIssue);
+		}
+		
+		return resp;
+	}
+	
+	protected void createValidResourceUsingTemplate(String contentType,
+			String accept, String content) throws IOException {
+		
+		HttpResponse resp = doPost(contentType, accept, content);
+		
 		// Assert the response gave a 201 Created
 		String responseBody = EntityUtils.toString(resp.getEntity());
 		EntityUtils.consume(resp.getEntity());
@@ -139,6 +152,8 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 
 	protected void createResourceAndUpdateIt(String contentType, String accept,
 			String newContent, String updateContent) throws IOException {
+		
+		
 		HttpResponse resp = createResource(contentType, accept, newContent);
 		
 		Header location = getRequiredLocationHeader(resp);
@@ -182,13 +197,20 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		else {
 			putHeaders[i++] = new BasicHeader("bogus1", "bogus1");
 		}
+
+		String updateUrl = location.getValue();
 		
-		
+		// We need to replace the rdf:about in the template with the real url
+		if ( updateContent.contains("rdf:about=\"\"") ) {
+			String replacement = "rdf:about=\"" + updateUrl+ "\"";		
+			updateContent = updateContent.replace("rdf:about=\"\"", replacement);
+		}
+
 		// Now, go to the url of the new change request and update it.
 		// We may need to add something to update URL to match the template
-		String updateUrl = location.getValue();
 		if (updateParams != null && !updateParams.isEmpty())
 			updateUrl = updateUrl + updateParams;
+				
 		resp = OSLCUtils.putDataToUrl(updateUrl, basicCreds, accept,
 				contentType, updateContent, putHeaders);
 		String responseBody = EntityUtils.toString(resp.getEntity());
@@ -293,9 +315,9 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 
 	private HttpResponse createResource(String contentType, String accept,
 			String createContent) throws IOException {
-		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
-				accept, contentType, createContent, headers);
-
+				
+		HttpResponse resp = doPost(contentType, accept, createContent);
+				
 		// Assert the response gave a 201 Created
 		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
@@ -359,6 +381,15 @@ public class CreationAndUpdateBaseTests extends TestsBase {
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
 
+		if ( resp.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+			String knownIssue = "";
+			if ( implName.equalsIgnoreCase("RQM") ) {
+				knownIssue = "Reported as Defect: Updating (PUT) with a failed precondition should result in http status 412 instead of server internal error (73374)";
+			}
+			
+			throw new AssertionError("Known issue for provider "+implName+". "+knownIssue);	
+		}
+		
 		assertEquals(HttpStatus.SC_PRECONDITION_FAILED, resp.getStatusLine()
 				.getStatusCode());
 

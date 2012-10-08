@@ -15,7 +15,10 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,8 +26,11 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.lyo.testsuite.oslcv2.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
+import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
+
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
 
@@ -37,10 +43,60 @@ public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 		
+		staticSetup();
+
+		// If a particular TestResult asset is specified, use it 
+		String useThis = setupProps.getProperty("useThisTestResult");
+		if ( (useThis != null) && (useThis != "") ) {			
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThis);
+			return toCollection(results);
+		}
+		
+		// Otherwise, run a query and pick up one
 		setResourceTypeQuery(OSLCConstants.RESOURCE_TYPE_PROP);
 		setxpathSubStmt(OSLCConstants.QM_TEST_RESULT_QUERY);
-
 		return getAllDescriptionUrls(eval);
+	}
+	
+	@Test
+	public void TestResultHasOneExecutesTestScript() throws XPathExpressionException
+	{
+		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:executesTestScript");
+		int size=listStatements.toList().size();
+		assertTrue("TestResult has one oslc_qm_v2:executesTestScript, found "+size, size == 1);
+	}
+
+	@Test
+	public void TestResultHasOneProducedByTestExecutionRecord() throws XPathExpressionException
+	{
+		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:producedByTestExecutionRecord");
+		int size=listStatements.toList().size();
+		assertTrue("TestResult has one oslc_qm_v2:producedByTestExecutionRecord, found "+size, size == 1);
+	}
+
+	@Test
+	public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException
+	{
+		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:reportsOnTestCase");
+		int size=listStatements.toList().size();
+		assertTrue("TestResult has one oslc_qm_v2:reportsOnTestCase, found "+size, size == 1);
+	}
+
+	@Test
+	public void TestResultHasOneReportsOnTestPlan() throws XPathExpressionException
+	{
+		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:reportsOnTestPlan");
+		int size=listStatements.toList().size();
+		assertTrue("TestResult has one oslc_qm_v2:reportsOnTestPlan, found "+size, size == 1);
+	}
+
+	@Test
+	public void TestResultHasOneStatus() throws XPathExpressionException
+	{
+		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:status");
+		int size=listStatements.toList().size();
+		assertTrue("TestResult has zeor or one oslc_qm_v2:status, found "+size, size <= 1);
 	}
 	
 	public static String eval = OSLCConstants.QM_TEST_RESULT; 

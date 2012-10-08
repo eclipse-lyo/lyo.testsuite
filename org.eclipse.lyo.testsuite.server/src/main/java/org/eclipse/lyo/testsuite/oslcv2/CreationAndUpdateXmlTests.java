@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -23,7 +24,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -48,21 +48,27 @@ public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
 		super(url);
 	}
 
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
-	}
-
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException, ParserConfigurationException, SAXException,
 			XPathException {
-		String v = "//oslc_v2:CreationFactory/oslc_v2:creation/@rdf:resource";
-		ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
-		Collection<Object[]> data = toCollection(TestsBase
-				.getCapabilityURLsUsingXML(v, serviceUrls, true));
-		return data;
+		
+		staticSetup();
+		
+		ArrayList<String> capabilityURLsUsingXml = new ArrayList<String>();
+		
+		String useThisCapability = setupProps.getProperty("useThisCapability");
+		
+		if ( useThisCapability != null ) {
+			capabilityURLsUsingXml.add(useThisCapability);
+		}
+		else {			
+			String v = "//oslc_v2:CreationFactory/oslc_v2:creation/@rdf:resource";
+			ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
+			capabilityURLsUsingXml = getCapabilityURLsUsingXML(v, serviceUrls, true);
+		}
+		
+		return toCollection(capabilityURLsUsingXml);
 	}
 
 	@Test

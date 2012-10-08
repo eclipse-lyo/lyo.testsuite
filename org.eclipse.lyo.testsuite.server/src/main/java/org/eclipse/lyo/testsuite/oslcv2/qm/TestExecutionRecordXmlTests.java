@@ -1,8 +1,9 @@
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,6 +32,17 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 	public static Collection<Object[]> getAllDescriptionUrls() 
 		throws IOException, ParserConfigurationException, SAXException, XPathException {
 				
+		staticSetup();
+		
+		// If a particular TestExecutionRecord asset is specified, use it 
+		String useThis = setupProps.getProperty("useThisTestExecutionRecord");
+		if ( (useThis != null) && (useThis != "") ) {			
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThis);
+			return toCollection(results);
+		}
+
+		// Otherwise, run a query and pick up one
 		setResourceTypeQuery(OSLCConstants.QM_TEST_EXECUTION_RECORD_QUERY);
 		setxpathSubStmt("//oslc_v2:QueryCapability/oslc:resourceType/@rdf:resource");
 		return getAllDescriptionUrls(eval);
@@ -42,10 +54,11 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 	{
 		String eval = "//" + getNode() + "/" + "oslc_qm_v2:reportsOnTestPlan";
 		
-		NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+		NodeList testplans = (NodeList) OSLCUtils.getXPath().evaluate(eval,
 	    		doc, XPathConstants.NODESET);		
 		
-		assertEquals(getFailureMessage(), 1, results.getLength());
+		int size = testplans.getLength();
+		assertTrue("TestExecutionRecord has zero or one oslc_qm_v2:reportsOnTestPlan, found "+size, size <= 1);
 	}
 
 	@Test
@@ -56,13 +69,13 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 		NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval,
 	    		doc, XPathConstants.NODESET);		
 		
-		assertEquals(getFailureMessage(), 1, results.getLength());
+		assertEquals("oslc_qm_v2:runsTestCase"+getFailureMessage(), 1, results.getLength());
 	}
 
 	@Test
 	public void TestExecutionRecordRelatedChangeRequest() throws XPathExpressionException
 	{
-		// TestCase specific test
+		// TestExecutionRecord specific test
 	}
 
 	public static String ns = "oslc_qm_v2";

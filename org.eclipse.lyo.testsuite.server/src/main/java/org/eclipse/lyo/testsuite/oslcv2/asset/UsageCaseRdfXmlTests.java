@@ -114,7 +114,8 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		// Creates the artifact
 		String fileName = setupProps.getProperty("createTemplateArtifactRdfXmlFile");
 		if (fileName == null) // Fall back to the xml if the rdf is not defined
-			fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+			//fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+			fileName = setupProps.getProperty("createTemplateXmlFile");
 		
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
@@ -135,14 +136,13 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		// TODO make this so that if the label is not there it is added
 		Property artifactProp = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
 		String labelValue = "this subject has been changed";
-		
 		Selector selectArtifact = new SimpleSelector(null, artifactProp, (RDFNode)null);
 		StmtIterator artifactStatements = model.listStatements(selectArtifact);
 		List<Statement> statementList = artifactStatements.toList();
 		for(int i = 0; i < statementList.size(); i++) {
 			Statement artifactStatement = statementList.get(i);
 			Property prop = model.createProperty(OSLCConstants.LABEL_PROP);
-			setPropertyValue(artifactStatement.getResource(), prop, labelValue);
+			setPropertyValue(artifactStatement, prop, labelValue);
 		}
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -162,12 +162,11 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		for(int i = 0; i < statementList.size(); i++) {
 			Statement artifactStatement = statementList.get(i);
 			Property prop = model.createProperty(OSLCConstants.LABEL_PROP);
-			setPropertyValue(artifactStatement.getResource(), prop, labelValue);
+			setPropertyValue(artifactStatement, prop, labelValue);
 			StmtIterator statements = artifactStatement.getResource().listProperties(prop);
 			assertTrue("No label property was found", statements.hasNext());
 			assertEquals(labelValue, statements.next().getObject().toString());
 		}
-
 	}
 	
 	private Model runQuery() throws IOException, ParserConfigurationException, SAXException {
@@ -239,22 +238,17 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		return null;
 	}
 	
-	private void setPropertyValue(Resource resource, Property property, String newValue) {
-		StmtIterator statements = resource.listProperties(property);
+	private void setPropertyValue(Statement statement, Property property, String newValue) {
+		StmtIterator statements = statement.getResource().listProperties(property);
 		ArrayList<Statement> statementList = new ArrayList<Statement>();
 		// Converts the iterator into an array list so that the statement(s) can be modified
-		
-		boolean propFound = statements.hasNext();
 		while(statements.hasNext()) {
 			statementList.add(statements.nextStatement());
 		}
-		for(int i = 0; i < statementList.size(); i++) {
-			Statement statement = statementList.get(i);
-			statement.changeObject(newValue);
-		}
 		
-		if(!propFound) {
-			resource.addProperty(property, newValue);
+		for(int i = 0; i < statementList.size(); i++) {
+			statement = statementList.get(i);
+			statement.changeObject(newValue);
 		}
 	}
 }

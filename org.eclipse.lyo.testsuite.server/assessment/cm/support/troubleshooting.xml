@@ -9,11 +9,9 @@
 			<action>Investigate Response Code 406...</action>
 		</error>
 		<error type="TestConfiguration" regexp="Expected oslc:totalCount > 0">
-			<rootcause>OSLC Total Count Failures of this type occur when ...</rootcause>
-			<action>Create Total Count ...</action>
-			<action>Adjust Total Count ...</action>
-			<action>Verify Total Count ...</action>
-			<action>Investigate Total Count ...</action>
+			<rootcause>OSLC provider query fails to return any resource. It could be a product issue or a configuration issue.</rootcause>
+			<action>Verify that there is at least resource satifies query logic.</action>
+			<action>Investigate OSLC provider's query implementation.</action>
 		</error>
 		<error type="TestConfiguration" regexp="invalid_consumer_key">
 			<rootcause>OAuth Failures of this type occur when ...</rootcause>
@@ -71,6 +69,11 @@
 			<action>Verify baseUri is valid and accessible ...</action>
 			<action>Investigate network adapter ...</action>
 		</error>
+		<error type="AppBehavior" regexp="expected:<400> but was:<500>">
+			<rootcause>Product Defect</rootcause>
+			<action>Submit defect against the OSLC provider</action>
+		</error>
+
 		<error type="AppBehavior" regexp="Expected content-type(.*?)received :(.*?)">
 			<rootcause>Content-type Failures of this type occur when ...</rootcause>
 			<action>Check content-type ...</action>

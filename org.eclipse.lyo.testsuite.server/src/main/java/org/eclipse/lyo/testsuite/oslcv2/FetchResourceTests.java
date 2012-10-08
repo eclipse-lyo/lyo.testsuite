@@ -70,16 +70,11 @@ public class FetchResourceTests extends TestsBase {
 	public FetchResourceTests(String url) {
 		super(url);
 	}
-
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
-	}
 	
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException {
+		staticSetup();
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
 		//query capability of the REST service, then fetch the resource using the query service.

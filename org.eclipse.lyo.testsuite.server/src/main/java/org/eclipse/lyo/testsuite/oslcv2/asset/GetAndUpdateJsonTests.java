@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
@@ -34,7 +33,6 @@ import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -43,19 +41,13 @@ import org.xml.sax.SAXException;
 @RunWith(Parameterized.class)
 public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
-	public GetAndUpdateJsonTests(String thisUrl) {
+	public GetAndUpdateJsonTests(String thisUrl) throws IOException {
 		super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
-	}
-		
-	@Before
-	public void setup() 
-		throws IOException, ParserConfigurationException, SAXException, XPathException {
-		super.setup();
 		
 		assetUrl = createAsset(jsonCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 	}
-	
+			
 	@Test
 	public void updateAnAssetProperty() 
 			throws IOException, ParseException, ParserConfigurationException, SAXException, TransformerException, JSONException

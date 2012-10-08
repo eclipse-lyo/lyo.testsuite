@@ -36,7 +36,6 @@ import org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryBaseTests;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -55,12 +54,6 @@ public class SimplifiedQueryAtomTests extends SimplifiedQueryBaseTests {
 
 	public SimplifiedQueryAtomTests(String thisUri) {
 		super(thisUri);
-	}
-
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
 	}
 
 	@Parameters

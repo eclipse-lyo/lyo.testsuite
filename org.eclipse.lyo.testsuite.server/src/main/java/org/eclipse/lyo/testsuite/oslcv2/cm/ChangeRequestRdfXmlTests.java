@@ -18,12 +18,14 @@ package org.eclipse.lyo.testsuite.oslcv2.cm;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.lyo.testsuite.oslcv2.CoreResourceRdfXmlTests;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +51,15 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 	
+		staticSetup();
+		
+		String useThisCR = setupProps.getProperty("useThisChangeRequest");
+		if ( useThisCR != null ) {
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThisCR);
+			return toCollection(results);
+		}
+
 		setResourceTypeQuery(OSLCConstants.USAGE_PROP);
 		setxpathSubStmt("//oslc_v2:QueryCapability/oslc:resourceType/@rdf:resource");
 

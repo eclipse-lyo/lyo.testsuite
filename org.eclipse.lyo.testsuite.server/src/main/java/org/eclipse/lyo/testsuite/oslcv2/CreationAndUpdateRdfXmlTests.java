@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,28 +11,20 @@
  *
  * Contributors:
  *
- *    Steve Speicher - initial API and implementation
+ *    Steve Speicher
+ *    Yuhong Yin
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Properties;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
-
-import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.xml.sax.SAXException;
-
 
 /**
  * This class provides JUnit tests for the validation of the OSLCv2 creation and
@@ -52,22 +44,27 @@ public class CreationAndUpdateRdfXmlTests extends CreationAndUpdateBaseTests {
 		super(url);
 	}
 
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
-	}
-	
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException {
-		Properties setupProps = SetupProperties.setup(null);
-		ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"),
+		
+		staticSetup();
+		
+		ArrayList<String> capabilityURLsUsingRdfXml = new ArrayList<String>();
+		
+		String useThisCapability = setupProps.getProperty("useThisCapability");
+		
+		if ( useThisCapability != null ) {
+			capabilityURLsUsingRdfXml.add(useThisCapability);
+		}
+		else {
+			ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"),
 				onlyOnce);
-		String [] types = getCreateTemplateTypes();
-		ArrayList<String> capabilityURLsUsingRdfXml = TestsBase
-				.getCapabilityURLsUsingRdfXml(OSLCConstants.CREATION_PROP,
+			String [] types = getCreateTemplateTypes();
+			capabilityURLsUsingRdfXml = getCapabilityURLsUsingRdfXml(OSLCConstants.CREATION_PROP,
 						serviceUrls, useDefaultUsageForCreation, types);
+		}
+		
 		return toCollection(capabilityURLsUsingRdfXml);
 	}
 

@@ -56,12 +56,6 @@ public class SimplifiedQueryJsonTests extends SimplifiedQueryBaseTests {
 		super(thisUri);
 	}
 
-	@Before
-	public void setup() throws IOException, ParserConfigurationException,
-			SAXException, XPathException {
-		super.setup();
-	}
-
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls()
 			throws IOException, ParserConfigurationException, SAXException,

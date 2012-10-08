@@ -45,6 +45,7 @@ import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
 import org.eclipse.lyo.testsuite.server.util.SetupProperties;
+import org.junit.BeforeClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -61,7 +62,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 
-public class TestsBase {
+public abstract class TestsBase {
 	public enum AuthMethods {BASIC, FORM, OAUTH};
 
 	protected static Credentials basicCreds;
@@ -78,8 +79,9 @@ public class TestsBase {
 	protected static String useThisServiceProvider;
 	protected static Header[] headers;
 	protected static AuthMethods authMethod = AuthMethods.BASIC;
+	protected static String implName;
 
-	protected String currentUrl = null;      // URL of current service being tested
+	protected static String currentUrl = null;      // URL of current service being tested
 	protected static String setupBaseUrl = null;  // Configuration baseUrl, think ServiceProvider or ServiceProviderCatalog
 	
 	public TestsBase(String thisUrl) {
@@ -87,8 +89,10 @@ public class TestsBase {
 	}
 	
 	public static void staticSetup() {
+
 		if (setupProps == null) {
 			setupProps = SetupProperties.setup(null);
+			implName = setupProps.getProperty("implName");
 			updateParams = setupProps.getProperty("updateParams");
 			String userId = setupProps.getProperty("userId");
 			String pw = setupProps.getProperty("pw");
@@ -105,6 +109,8 @@ public class TestsBase {
 				useDefaultUsageForCreation = false;
 			}
 			setupBaseUrl = setupProps.getProperty("baseUri");
+			currentUrl = setupBaseUrl;
+			
 			String authType = setupProps.getProperty("authMethod");
 			if (authType.equalsIgnoreCase("OAUTH")) {
 				authMethod = AuthMethods.OAUTH;
@@ -144,7 +150,8 @@ public class TestsBase {
 		}
 	}
 
-	public void setup() throws IOException, ParserConfigurationException,
+	@BeforeClass
+	public static void setup() throws IOException, ParserConfigurationException,
 			SAXException, XPathException {
 		 staticSetup();
 	}
@@ -333,7 +340,8 @@ public class TestsBase {
 					for (int u=0; u < usages.getLength(); u++) {
 						String usageValue = usages.item(u).getNodeValue();
 						//if (OSLCConstants.USAGE_DEFAULT_URI.equals(usageValue)) {
-						if (rT.equals(usageValue) && (u ==i)) {
+						//if (rT.equals(usageValue) && (u ==i)) {
+						if (rT.contains(usageValue) && (u ==i)) {
 							data.add(sDescs.item(i).getNodeValue());
 							return data;
 						}

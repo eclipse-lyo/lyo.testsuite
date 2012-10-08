@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
@@ -34,7 +33,6 @@ import org.apache.http.HttpResponse;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -95,15 +93,9 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 
 	@Parameters
 	protected static Collection<Object[]> getAllDescriptionUrls(String eval) throws IOException
-	{
+	{		
 		ArrayList<String> results = new ArrayList<String>();
 	
-		String useThisCR = setupProps.getProperty("useThisChangeRequest");
-		if ( useThisCR != null ) {
-			results.add(useThisCR);
-			return toCollection(results);
-		}
-		
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
 		//query factories of the REST service.
@@ -151,12 +143,6 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 		}
 		return toCollection(results);
 	}	
-
-	@Before
-	public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException
-	{
-		super.setup();
-	}
 
 	@Test
 	public void CoreResourceHasOneTitle()

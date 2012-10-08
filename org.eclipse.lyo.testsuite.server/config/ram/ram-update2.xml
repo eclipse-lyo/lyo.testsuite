@@ -11,12 +11,7 @@
    
     Contributors:
    
-       Steve Speicher - initial API and implementation
+       Yuhong Yin
  -->
 
-<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:oslc="http://open-services.net/ns/core#"
-	xmlns:oslc_cm="http://open-services.net/ns/cm#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-	<oslc_cm:ChangeRequest>
-		<dcterms:description>Updated via OSLC Test Suite (XML)</dcterms:description>
-	</oslc_cm:ChangeRequest>
-</rdf:RDF>
+<rdf:RDF    xmlns:dcterms="http://purl.org/dc/terms/"    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"    xmlns:oslc_acc="http://open-services.net/ns/access#"    xmlns:ram_asset="http://jazz.net/xmlns/prod/ram/2.0/"    xmlns:oslc="http://open-services.net/ns/core#"    xmlns:oslc_asset="http://open-services.net/ns/asset#">  <oslc_asset:Asset >    <dcterms:title>My Lyo Asset Application</dcterms:title>    <ram_asset:community rdf:resource="http://ramsrvr1.raleigh.ibm.com/ram7.5.1.1/internal/communities/1022"/>    <oslc_asset:version>2.0.20121003</oslc_asset:version>    <dcterms:abstract>Asset created by Lyo test</dcterms:abstract>    <oslc:serviceProvider rdf:resource="http://ramsrvr1.raleigh.ibm.com/ram7.5.1.1/oslc/assetServices"/>  </oslc_asset:Asset></rdf:RDF>

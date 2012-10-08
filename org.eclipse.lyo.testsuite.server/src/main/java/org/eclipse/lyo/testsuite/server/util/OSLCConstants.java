@@ -37,6 +37,8 @@ public interface OSLCConstants {
 	// Version 1.0 namespace definitions
 	static String OSLC_DISC = "http://open-services.net/xmlns/discovery/1.0/";
 	static String OSLC_CM   = "http://open-services.net/xmlns/cm/1.0/";
+	static String OSLC_ASSET   = "http://open-services.net/xmlns/asset/1.0/";
+	
 	// Misc definitions
 	static String RTC_CM = "http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/";
 	static String JFS = "http://jazz.net/xmlns/prod/jazz/jfs/1.0/";
