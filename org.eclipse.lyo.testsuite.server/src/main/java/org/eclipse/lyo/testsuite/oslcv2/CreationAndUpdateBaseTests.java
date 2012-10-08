@@ -185,7 +185,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		}
 		
 		if( eTag != null ) {
-			putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue());
+			putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue() );
 		}
 		else {
 			putHeaders[i++] = new BasicHeader("bogus1", "bogus1");
@@ -370,7 +370,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		}
 		
 		if ( !hasPayLoad || eTag != null ) {
-			putHeaders[i++] = new BasicHeader("If-Match", "Bogus");
+			putHeaders[i++] = new BasicHeader("If-Match", "\"Bogus\"");
 		} else if( lastModified != null ) {
 			putHeaders[i++] = new BasicHeader("If-Unmodified-Since", "Tue, 15 Nov 1994 12:45:26 GMT");
 		}
