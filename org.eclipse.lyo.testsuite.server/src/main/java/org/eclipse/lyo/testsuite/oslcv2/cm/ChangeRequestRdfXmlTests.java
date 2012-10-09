@@ -53,6 +53,8 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 	
 		staticSetup();
 		
+		setResourceType(OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+		
 		String useThisCR = setupProps.getProperty("useThisChangeRequest");
 		if ( useThisCR != null ) {
 			ArrayList<String> results = new ArrayList<String>();

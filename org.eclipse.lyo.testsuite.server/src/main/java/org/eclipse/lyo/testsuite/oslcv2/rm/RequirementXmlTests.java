@@ -1,6 +1,7 @@
 package org.eclipse.lyo.testsuite.oslcv2.rm;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,6 +42,17 @@ public class RequirementXmlTests extends CoreResourceXmlTests {
 	public static Collection<Object[]> getAllDescriptionUrls() 
 		throws IOException, ParserConfigurationException, SAXException, XPathException, javax.xml.xpath.XPathException {
 
+		 staticSetup();
+		 
+		 
+		// If a particular Requirement is specified, use it
+		String useThis = setupProps.getProperty("useThisRequirement");
+		if ((useThis != null) && (useThis != "")) {
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThis);
+			return toCollection(results);
+		}
+		
 		setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
 		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
 		return getAllDescriptionUrls(eval);

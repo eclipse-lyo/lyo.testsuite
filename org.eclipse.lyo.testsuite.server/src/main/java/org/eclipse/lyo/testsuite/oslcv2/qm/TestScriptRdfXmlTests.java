@@ -40,6 +40,8 @@ public class TestScriptRdfXmlTests extends CoreResourceRdfXmlTests {
 		
 		staticSetup();
 		
+		setResourceType(OSLCConstants.QM_TEST_SCRIPT);
+		
 		// If a particular TestScript asset is specified, use it 
 		String useThis = setupProps.getProperty("useThisTestScript");
 		if ( (useThis != null) && (useThis != "") ) {			

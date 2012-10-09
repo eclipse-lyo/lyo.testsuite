@@ -39,6 +39,8 @@ public class TestPlanRdfXmlTests extends CoreResourceRdfXmlTests {
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 		
 		staticSetup();
+		
+		setResourceType(OSLCConstants.QM_TEST_PLAN);
 
 		// If a particular TestPlan asset is specified, use it 
 		String useThis = setupProps.getProperty("useThisTestPlan");

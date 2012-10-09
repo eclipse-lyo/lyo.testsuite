@@ -78,8 +78,17 @@ public class FetchResourceTests extends TestsBase {
 		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
 		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
 		//query capability of the REST service, then fetch the resource using the query service.
-		ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
-		ArrayList<String> capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
+		
+		ArrayList<String> capabilityURLsUsingRdfXml = null;
+        String useThisQuery = setupProps.getProperty("useThisQuery");
+		
+		if ( useThisQuery != null ) {
+			capabilityURLsUsingRdfXml = new ArrayList<String>();
+			capabilityURLsUsingRdfXml.add(useThisQuery);
+		} else {
+			ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
+		    capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
+		}
 		String where = setupProps.getProperty("changeRequestWhere");
 		if (where == null) {
 			String queryProperty = setupProps.getProperty("queryEqualityProperty");

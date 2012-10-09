@@ -44,6 +44,8 @@ public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 		
 		staticSetup();
+		
+		setResourceType(OSLCConstants.QM_TEST_RESULT);
 
 		// If a particular TestResult asset is specified, use it 
 		String useThis = setupProps.getProperty("useThisTestResult");

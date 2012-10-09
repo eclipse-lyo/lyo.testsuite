@@ -40,6 +40,8 @@ public class TestCaseRdfXmlTests extends CoreResourceRdfXmlTests {
 		
 		staticSetup();
 		
+		setResourceType(OSLCConstants.QM_TEST_CASE);
+		
 		// If a particular TestCase asset is specified, use it 
 		String useThis = setupProps.getProperty("useThisTestCase");
 		if ( (useThis != null) && (useThis != "") ) {			

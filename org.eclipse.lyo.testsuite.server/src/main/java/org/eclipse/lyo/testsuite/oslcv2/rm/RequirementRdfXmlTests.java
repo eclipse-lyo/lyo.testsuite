@@ -17,6 +17,7 @@ package org.eclipse.lyo.testsuite.oslcv2.rm;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,7 +43,18 @@ public class RequirementRdfXmlTests extends CoreResourceRdfXmlTests{
 
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
-			
+		
+		staticSetup();
+		
+		setResourceType(OSLCConstants.RM_REQUIREMENT_TYPE);
+		 
+		// If a particular Requirement is specified, use it
+		String useThis = setupProps.getProperty("useThisRequirement");
+		if ((useThis != null) && (useThis != "")) {
+			ArrayList<String> results = new ArrayList<String>();
+			results.add(useThis);
+			return toCollection(results);
+		}	
 		setResourceTypeQuery(OSLCConstants.RESOURCE_TYPE_PROP);
 		setxpathSubStmt(OSLCConstants.RM_REQUIREMENT_TYPE);
 

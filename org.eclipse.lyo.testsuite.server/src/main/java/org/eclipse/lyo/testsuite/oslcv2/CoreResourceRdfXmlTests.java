@@ -61,6 +61,7 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 
 	protected static String resourceTypeQuery = "";
 	protected static String xpathSubStmt = "";
+	protected static String resourceType ="";
 	
 	public CoreResourceRdfXmlTests(String thisUrl) 
 		throws IOException,ParserConfigurationException, SAXException, XPathExpressionException, NullPointerException {
@@ -87,7 +88,7 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 		
 		fResource = (Resource) fRdfModel.getResource(currentUrl);
 		assumeTrue(fRdfModel.contains(fResource, RDF.type,
-				        				fRdfModel.createResource(OSLCConstants.CM_CHANGE_REQUEST_TYPE)));
+				        				fRdfModel.createResource(getResourceType())));
 
 	}
 
@@ -228,5 +229,13 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 
 	protected static String getxpathSubStmt() {
 		return xpathSubStmt;
+	}
+
+	public static String getResourceType() {
+		return resourceType;
+	}
+
+	public static void setResourceType(String resourceType) {
+		CoreResourceRdfXmlTests.resourceType = resourceType;
 	}
 }

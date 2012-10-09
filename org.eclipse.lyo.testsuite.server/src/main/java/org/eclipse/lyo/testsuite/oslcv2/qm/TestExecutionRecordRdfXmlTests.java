@@ -44,6 +44,8 @@ public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 		
 		staticSetup();
+		
+		setResourceType(OSLCConstants.QM_TEST_EXECUTION_RECORD);
 
 		// If a particular TestExecutionRecord asset is specified, use it 
 		String useThis = setupProps.getProperty("useThisTestExecutionRecord");
