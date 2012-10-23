@@ -381,10 +381,10 @@
 	<xsl:template name="compliancepart">
 		
 			<!-- Object Container to render the SVG User Load Preview Graph within the HTML -->
-							<span style="text-align:center;display:block;margin: 0 auto;"><object id="svgid" type="image/svg+xml" name="SVGContainer" data="barchartSVG.svg" codebase="http://www.adobe.com/svg/viewer/install/" width="1100" height="350">
+							<span style="text-align:center;display:block;margin: 0 auto;"><object id="svgid" type="image/svg+xml" name="SVGContainer" data="barchartSVG.svg" width="1100" height="450">
  								<param name="src" value="barchartSVG.svg" />
 								<param name="wmode" value="transparent"  />
-								<embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="450" wmode="transparent" pluginspage="http://www.adobe.com/svg/viewer/install/" />
+								<embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="600" wmode="transparent" />
 							</object></span>
 									
         <h2>OSLC Assessment</h2>

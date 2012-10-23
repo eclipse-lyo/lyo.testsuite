@@ -382,10 +382,10 @@
 	
 	
 			<!-- Object Container to render the SVG User Load Preview Graph within the HTML -->
-							<span style="text-align:center;display:block;margin: 0 auto;"><object id="svgid" type="image/svg+xml" name="SVGContainer" data="barchartSVG.svg" codebase="http://www.adobe.com/svg/viewer/install/" width="1100" height="350">
+							<span style="text-align:center;display:block;margin: 0 auto;"><object id="svgid" type="image/svg+xml" name="SVGContainer" data="barchartSVG.svg" width="1100" height="350">
  								<param name="src" value="barchartSVG.svg" />
 								<param name="wmode" value="transparent"  />
-								<embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="350" wmode="transparent" pluginspage="http://www.adobe.com/svg/viewer/install/" />
+								<embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="350" wmode="transparent"/>
 							</object></span>
 							
 						<!--	<a href="#" onclick="SVGscale(0.1);">x-small</a>&#160;&#160;<a href="#" onclick="SVGscale(0.25);">small</a>&#160;&#160;<a href="#" onclick="SVGscale(0.5);">medium</a>&#160;&#160;
@@ -394,9 +394,9 @@
 		
         <h2>OSLC Assessment</h2>
 
-		<xsl:variable name="mustCount" select="'185'"/>
-		<xsl:variable name="junitMustCount" select="'137'"/>
-		<xsl:variable name="junitUniqueReqMustCount" select="'122'"/>
+		<xsl:variable name="mustCount" select="'181'"/>
+		<xsl:variable name="junitMustCount" select="'136'"/>
+		<xsl:variable name="junitUniqueReqMustCount" select="'121'"/>
 		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />    
         <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMust'])"/>
         <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMust'])"/>

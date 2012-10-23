@@ -220,7 +220,7 @@
 		<testcase level="MUST">serviceProviderHasAtMostOnePublisher</testcase>
 		<testcase level="MUST">publisherElementsAreValid</testcase>
 		<testcase level="MUST">serviceProviderHasService</testcase>
-		<testcase level="MUST">serviceProviderHasValidDetails</testcase>
+		<testcase level="MAY">serviceProviderHasValidDetails</testcase>
 		<testcase level="MUST">prefixDefinitionsAreValid</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOneOAuthElement</testcase>
 		<testcase level="MUST">oAuthElementsAreValid</testcase>

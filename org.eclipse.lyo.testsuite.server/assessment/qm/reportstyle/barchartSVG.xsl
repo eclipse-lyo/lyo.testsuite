@@ -161,10 +161,10 @@
 					</svg:g>
     			</svg:svg>
 							<!-- Object Container to render the SVG User Load Preview Graph within the HTML
-							<object type="image/svg+xml" name="SVGContainer" data="{concat(@name,'.svg')}" codebase="http://www.adobe.com/svg/viewer/install/" width="450" height="200">
+							<object type="image/svg+xml" name="SVGContainer" data="{concat(@name,'.svg')}" width="600" height="300">
  								<param name="src" value="{concat(@name,'.svg')}" />
 								<param name="wmode" value="transparent"  />
-								<embed src="{concat(@name,'.svg')}" type="image/svg+xml" width="450" height="200" wmode="transparent" pluginspage="http://www.adobe.com/svg/viewer/install/" />
+								<embed src="{concat(@name,'.svg')}" type="image/svg+xml" width="450" height="300" wmode="transparent" />
 							</object> -->
     </xsl:template>
 
