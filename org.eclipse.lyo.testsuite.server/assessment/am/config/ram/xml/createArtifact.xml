@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:dcterms="http://purl.org/dc/terms/" 
+   xmlns:oslc="http://open-services.net/ns/core#"
+   xmlns:oslc_asset="http://open-services.net/ns/artifact#">
+   <oslc_asset:Artifact>    
+      <rdf:type rdf:resource="http://open-services.net/ns/asset#Artifact"/>
+      <dcterms:title>Build help documentation</dcterms:title>
+      <oslc:label>documentation</oslc:label>
+      <oslc_asset:content rdf:resource="http://help.example.com"/>
+      <dcterms:format>text/html</dcterms:format>
+   </oslc_asset:Artifact>
+</rdf:RDF>

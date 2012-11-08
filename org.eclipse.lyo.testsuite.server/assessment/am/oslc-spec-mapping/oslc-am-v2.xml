@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<provider-test version="2.0" domain="OSLC-AM">
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateRdfXmlTests">
+		<testcase level="MUST">createResourceWithInvalidContent</testcase>
+		<testcase level="MUST">createResourceAndUpdateIt</testcase>
+		<testcase level="MUST">createValidResourceUsingRdfXmlTemplate</testcase>
+		<testcase level="MAY">createResourceWithInvalidContentType</testcase>		
+		<testcase level="MUST">updateCreatedResourceWithInvalidContent</testcase>
+		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
+		<testcase level="MUST">updateCreatedResourceWithBadType</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateXmlTests">
+		<testcase level="MUST">createValidResourceUsingTemplate</testcase>
+		<testcase level="MUST">createResourceWithInvalidContent</testcase>
+		<testcase level="MUST">createResourceAndUpdateIt</testcase>
+		<testcase level="MUST">createResourceWithInvalidContentType</testcase>
+		<testcase level="MUST">updateCreatedResourceWithInvalidContent</testcase>
+		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
+		<testcase level="MAY">updateCreatedResourceWithInvalidContentType</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryRdfXmlTests">
+		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
+		<testcase level="MUST">validGreaterThanQueryContainsExpectedDefects</testcase>
+		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="SimplifiedQueryXmlTests">
+		<testcase level="MUST">validEqualsQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validNotEqualQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">validLessThanQueryContainsExpectedResources</testcase>
+		<testcase level="MUST">validGreaterThanQueryContainsExpectedDefects</testcase>
+		<testcase level="MUST">validCompoundQueryContainsExpectedResource</testcase>
+		<testcase level="MUST">fullTextSearchContainsExpectedResults</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderCatalogRdfXmlTests">
+		<testcase level="MUST">baseUrlIsValid</testcase>
+		<testcase level="MAY">catalogRootIsRdfNamespaceDeclaration</testcase>
+		<testcase level="MAY">catalogRootAboutElementPointsToSelf</testcase>
+		<testcase level="MAY">serviceProviderCatalogsHaveAtMostOneTitle</testcase>
+		<testcase level="MAY">serviceProviderCatalogHaveAtMostOneTitle</testcase>
+		<testcase level="MAY">serviceProvidersHaveAtMostOneTitle</testcase>
+		<testcase level="MAY">serviceProviderCatalogsHaveAtMostOnePublisher</testcase>
+		<testcase level="MAY">serviceProvidersHaveAtMostOnePublisher</testcase>
+		<testcase level="MAY">publisherElementsAreValid</testcase>
+		<testcase level="MAY">invalidContentTypeGivesNotSupported</testcase>
+		<testcase level="MAY">contentTypeIsSuggestedType</testcase>
+		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
+	</testclass>
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderCatalogXmlTests">
+		<testcase level="MUST">baseUrlIsValid</testcase>
+		<testcase level="MAY">catalogRootIsRdfNamespaceDeclaration</testcase>
+		<testcase level="MAY">catalogRootAboutElementPointsToSelf</testcase>
+		<testcase level="MAY">serviceProviderCatalogsHaveAtMostOneTitle</testcase>
+		<testcase level="MAY">serviceProvidersHaveAtMostOneTitle</testcase>
+		<testcase level="MAY">serviceProviderCatalogsHaveAtMostOnePublisher</testcase>
+		<testcase level="MAY">serviceProvidersHaveAtMostOnePublisher</testcase>
+		<testcase level="MAY">publisherElementsAreValid</testcase>
+		<testcase level="MAY">serviceProviderCatalogsHaveAtMostOneOAuthElement</testcase>
+		<testcase level="MAY">serviceProvidersHaveAtMostOneOAuthElement</testcase>
+		<testcase level="MUST">oAuthElementsAreValid</testcase>
+		<testcase level="MAY">serviceProviderCatalogsHaveValidResourceUrl</testcase>
+		<testcase level="MAY">servicesProvidersHaveValidResourceUrl</testcase>
+		<testcase level="MUST">detailsElementsHaveValidResourceAttribute</testcase>
+		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
+		<testcase level="MAY">contentTypeIsSuggestedType</testcase>
+		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
+	</testclass>
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderRdfXmlTests">
+		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
+		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
+		<testcase level="MUST">currentUrlIsValid</testcase>
+		<testcase level="MUST">rootAboutElementPointsToSelf</testcase>
+		<testcase level="MUST">typeIsServiceProvider</testcase>
+		<testcase level="MUST">responseContentTypeIsXML</testcase>
+		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
+		<testcase level="MUST">serviceProviderHasService</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderXmlTests">
+		<testcase level="MUST">baseUrlIsValid</testcase>
+		<testcase level="MAY">invalidContentTypeGivesNotSupportedOPTIONAL</testcase>
+		<testcase level="MUST">responseContentTypeIsXML</testcase>
+		<testcase level="MAY">misplacedParametersDoNotEffectResponse</testcase>
+		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
+		<testcase level="MUST">serviceProviderHasAtMostOnePublisher</testcase>
+		<testcase level="MUST">publisherElementsAreValid</testcase>
+		<testcase level="MUST">serviceProviderHasService</testcase>
+		<testcase level="MAY">serviceProviderHasValidDetails</testcase>
+		<testcase level="MUST">prefixDefinitionsAreValid</testcase>
+		<testcase level="MUST">serviceProviderHasAtMostOneOAuthElement</testcase>
+		<testcase level="MUST">oAuthElementsAreValid</testcase>
+		<testcase level="MUST">eachServiceHasOneDomain</testcase>
+		<testcase level="MUST">creationFactoriesAreValid</testcase>
+		<testcase level="MUST">queryCapabilityBlocksAreValid</testcase>
+		<testcase level="MUST">dialogsAreValid</testcase>
+	</testclass>
+	
+    <testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="CreateAssetJsonTest">
+        <testcase level="MUST">createSimpleAsset</testcase>	
+		<testcase level="MUST">createAssetWithCategory</testcase>
+		<testcase level="MUST">createAssetWithRelationship</testcase>
+		<testcase level="MUST">deletingAsset</testcase>
+	</testclass>
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="CreateAssetRdfXmlTest">
+	    <testcase level="MUST">createSimpleAsset</testcase>
+		<testcase level="MUST">createAssetWithCategory</testcase>
+		<testcase level="MUST">createAssetWithRelationship</testcase>
+		<testcase level="MUST">deletingAsset</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="CreateAssetXmlTest">
+	    <testcase level="MUST">createSimpleAsset</testcase>
+		<testcase level="MUST">createAssetWithCategory</testcase>
+		<testcase level="MUST">createAssetWithRelationship</testcase>
+		<testcase level="MUST">deletingAsset</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="GetAndUpdateJsonTests">
+		<testcase level="MUST">addArtifactToAsset</testcase>
+		<testcase level="MUST">downloadArtifact</testcase>
+		<testcase level="MUST">removeArtifactFromAsset</testcase>
+		<testcase level="MUST">updateAnAssetProperty</testcase>
+		<testcase level="MUST">uploadArtifact</testcase>
+		<testcase level="MUST">getAnAsset</testcase>
+		
+	</testclass>
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="GetAndUpdateRdfXmlTests">
+		<testcase level="MUST">addArtifactToAsset</testcase>
+		<testcase level="MUST">downloadArtifact</testcase>
+		<testcase level="MUST">removeArtifactFromAsset</testcase>
+		<testcase level="MUST">updateAnAssetProperty</testcase>
+		<testcase level="MUST">uploadArtifact</testcase>
+		<testcase level="MUST">getAnAsset</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="GetAndUpdateXmlTests">
+		<testcase level="MUST">addArtifactToAsset</testcase>
+		<testcase level="MUST">downloadArtifact</testcase>
+		<testcase level="MUST">removeArtifactFromAsset</testcase>
+		<testcase level="MUST">updateAnAssetProperty</testcase>
+		<testcase level="MUST">uploadArtifact</testcase>
+		<testcase level="MUST">getAnAsset</testcase>
+	</testclass>
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="UsageCaseJsonTests">
+		<testcase level="MUST">publishUsageCase</testcase>
+		<testcase level="MUST">queryUsageTest</testcase>
+		<testcase level="MUST">queryUsageCase</testcase>
+	</testclass>
+	
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="UsageCaseRdfXmlTests">
+		<testcase level="MUST">publishUsageCase</testcase>
+		<testcase level="MUST">retrieveUsageCase</testcase>
+		<testcase level="MUST">queryUsageCase</testcase>
+	</testclass>
+
+	<testclass package="org.eclipse.lyo.testsuite.oslcv2.asset" name="UsageCaseXmlTests">
+		<testcase level="MUST">publishUsageCase</testcase>
+		<testcase level="MUST">retrieveUsageCase</testcase>
+		<testcase level="MUST">queryUsageCase</testcase>
+	</testclass>
+	    	
+</provider-test>

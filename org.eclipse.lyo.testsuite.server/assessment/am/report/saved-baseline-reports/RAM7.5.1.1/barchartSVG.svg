@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg:svg xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:lxslt="http://xml.apache.org/xslt" version="1.1" width="1100" height="600" name="svgBOX" id="svgBOX" title="OSLC Assessment Chart" x="0.0000000" y="0.0000000" onload="RunScript(evt)">
+<script type="text/ecmascript">
+	
+		var SVGDoc;
+		var SVGRoot;
+
+		function RunScript(LoadEvent) {
+			top.SVGsetDimension	= setDimension;
+			top.SVGsetScale	= setScale;
+			SVGDoc			= LoadEvent.target.ownerDocument;
+			g_element		= SVGDoc.getElementById("layer1");
+		}
+
+		function setDimension(w,h) {
+			SVGDoc.documentElement.setAttribute("width", w);
+			SVGDoc.documentElement.setAttribute("height", h);
+		}
+
+		function setScale(sw, sh) {
+			g_element.setAttribute("transform", "scale(" + sw + " " + sh +")");
+		}
+		</script>
+<svg:g transform="translate(0,50)" id="layer1">
+<svg:g style="stroke:black">
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:24px;" x="100" y="-20">OSLC TestSuite Execution Summary</svg:text>
+<svg:path d="M 100 200 L 500 200 Z" stroke-width="1"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="115" y="230">Attempted</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="120" y="250">(MUSTS)</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="230" y="230">Passed</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="225" y="250">(MUSTS)</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="330" y="230">Failed</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="325" y="250">(MUSTS)</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="430" y="230">Error</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="425" y="250">(MUSTS)</svg:text>
+<svg:path d="M 100 0 L 100 200 Z" stroke-width="1"/>
+<svg:path d="M 500 0 L 500 200 Z" stroke-width="1"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="20">170</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="50">150</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="75">125</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="100">100</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="125">75</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="150">50</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="175">25</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="50" y="200">0</svg:text>
+<svg:g transform="rotate(-90)">
+<svg:text style="fill:black;stroke:none;font-family:tahoma;" x="-150" y="20"># of Requirements</svg:text>
+</svg:g>
+<svg:rect x="10" y="295" width="10" height="10" style="fill:rgb(0,0,255);"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:14px;" x="30" y="305">Attempted = Pass + Fail + Error.  # of Tests Executed for a Specification Type</svg:text>
+<svg:rect x="10" y="315" width="10" height="10" style="fill:rgb(0,255,0);"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:14px;" x="30" y="325">Pass: # of Test(s) achieving the respective test design's expected result</svg:text>
+<svg:rect x="10" y="335" width="10" height="10" style="fill:rgb(255,0,0);"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:14px;" x="30" y="345">Fail: # of Test(s) deviating from the respective test design's expected result.</svg:text>
+<svg:rect x="10" y="355" width="10" height="10" style="fill:rgb(160,32,240);"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:14px;" x="30" y="365">Error: # of Inconclusive Results. Test executions encountering error due to poor test design,</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:14px;" x="70" y="380">faulty environment or invalid configuration. Test results could not be assessed.</svg:text>
+<svg:rect x="155" y="140" width="10" height="60" style="fill:rgb(0,0,255);"/>
+<svg:rect x="255" y="153" width="10" height="47" style="fill:rgb(0,255,0);"/>
+<svg:rect x="355" y="187" width="10" height="13" style="fill:rgb(255,0,0);"/>
+<svg:rect x="455" y="200" width="10" height="0" style="fill:rgb(160,32,240);"/>
+<svg:path d="M 20 260 L 500 260 Z" stroke-width="1"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:10px;text-anchor: start;" x="30" y="275"> </svg:text>
+<svg:path d="M 20 280 L 500 280 Z" stroke-width="1"/>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:12px;text-anchor: start;" x="145" y="275">60</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:12px;text-anchor: start;" x="245" y="275">47</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:12px;text-anchor: start;" x="345" y="275">13</svg:text>
+<svg:text style="fill:black;stroke:none;font-family:tahoma;font-size:12px;text-anchor: start;" x="445" y="275">0</svg:text>
+<svg:path d="M 20 260 L 20 280 Z" stroke-width="1" stroke-dasharray="5"/>
+</svg:g>
+<svg:g style="fill:none; stroke:#97694F; stroke-width:1; stroke-dasharray:2,4;text-anchor:end; font-size:30">
+<svg:path d="M 100 0 L 500 0 Z"/>
+<svg:path d="M 100 25 L 500 25 Z"/>
+<svg:path d="M 100 50 L 500 50 Z"/>
+<svg:path d="M 100 75 L 500 75 Z"/>
+<svg:path d="M 100 100 L 500 100 Z"/>
+<svg:path d="M 100 125 L 500 125 Z"/>
+<svg:path d="M 100 150 L 500 150 Z"/>
+<svg:path d="M 100 170 L 500 170 Z"/>
+<svg:path d="M 100 280 L 100 200 Z" stroke-width="1" stroke-dasharray="5"/>
+<svg:path d="M 200 280 L 200 200 Z" stroke-width="1" stroke-dasharray="5"/>
+<svg:path d="M 300 280 L 300 200 Z" stroke-width="1" stroke-dasharray="5"/>
+<svg:path d="M 400 280 L 400 200 Z" stroke-width="1" stroke-dasharray="5"/>
+<svg:path d="M 500 280 L 500 200 Z" stroke-width="1" stroke-dasharray="5"/>
+</svg:g>
+</svg:g>
+</svg:svg>
