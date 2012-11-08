@@ -1,0 +1,9 @@
+Change-Id: I01ac4f01c546c6b2e6848aa9dab665fb10545779
+Code-Review+2: Michael Fiedler <fiedler.mf@gmail.com>
+IP-Clean+1: Michael Fiedler <fiedler.mf@gmail.com>
+Verified+1: Michael Fiedler <fiedler.mf@gmail.com>
+Submitted-by: Michael Fiedler <fiedler.mf@gmail.com>
+Submitted-at: Thu, 08 Nov 2012 12:07:24 -0500
+Reviewed-on: https://git.eclipse.org/r/8604
+Project: lyo/org.eclipse.lyo.testsuite
+Branch: refs/heads/master
