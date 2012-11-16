@@ -45,9 +45,11 @@ import org.xml.sax.SAXException;
 @RunWith(Parameterized.class)
 public class UsageCaseJsonTests extends UsageCaseBase {
 	private static JSONObject bestAsset = null;
+	private String baseUrl;
 	
 	public UsageCaseJsonTests(String thisUrl) {
 		super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
+		baseUrl = setupProps.getProperty("baseUrl");
 	}
 	
 	@Test
@@ -61,7 +63,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 	public void retrieveUsageCase() throws JSONException, IOException {
 		assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
 		
-		assetUrl = bestAsset.getString("about");
+		assetUrl = bestAsset.getString("rdf:about");
 		String asset = getAssetAsString();
 		assetUrl = null; // This is required so that the asset is not deleted
 		retrieveArtifact(asset);
@@ -86,7 +88,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 		JSONObject asset = new JSONObject(resp);	
 		// Gets the artifact factory from the asset
 		JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
-		String artifactFactory = asset.getString("base") + factory.getString("resource");
+		String artifactFactory = baseUrl + factory.getString("rdf:resource");
 		assertTrue("There needs to be an artifact factory",
 				artifactFactory != null && artifactFactory.length() > 0);
 		

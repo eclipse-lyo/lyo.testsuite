@@ -46,7 +46,7 @@ public class CreateAssetJsonTest extends CreateAssetBase {
 		assetUrl = createAsset(readFileFromProperty("createWithCategoryTemplateJsonFile"));
 		String resp = getAssetAsString();
 		JSONObject asset = new JSONObject(resp);
-		assertTrue("The category was not set", asset.get("oslc_asset:categorization") != null);
+		assertTrue("The category was not set", asset.containsKey("oslc_asset:categorization"));
 	}
 
 	@Test

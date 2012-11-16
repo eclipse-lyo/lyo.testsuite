@@ -45,14 +45,94 @@ import org.xml.sax.SAXException;
 
 @RunWith(Parameterized.class)
 public class GetAndUpdateXmlTests extends GetAndUpdateBase {
-
-	public GetAndUpdateXmlTests(String thisUrl) throws IOException {
+	private Document hasDocument;
+	
+	public GetAndUpdateXmlTests(String thisUrl) throws IOException, ParserConfigurationException, SAXException {
 		super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
 		
 		assetUrl = createAsset(xmlCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+
+		String resp = getAssetAsString();
+		hasDocument = OSLCUtils.createXMLDocFromResponseBody(resp);
 	}
-		
+
+	@Test
+	public void assetHasAtMostOneModel() {
+		assertTrue(isOneOrNone(hasDocument, "oslc_asset:model"));
+	}
+
+	@Test
+	public void assetHasAtMostOneSerialNumber() {
+		assertTrue(isOneOrNone(hasDocument, "oslc_asset:serialNumber"));
+	}
+
+	@Test
+	public void assetHasArtifactFactory() {
+		assertTrue("Artifact Factory was not found", hasNode(hasDocument, "oslc_asset:artifactFactory"));
+	}
+	
+	@Test
+	public void assetHasAtMostOneGuid() {
+		assertTrue("Multiple guids returned", isOneOrNone(hasDocument, "oslc_asset:guid"));
+	}
+
+	@Test
+	public void assetHasAtMostOneVersion() {
+		assertTrue("Multiple versions returned", isOneOrNone(hasDocument, "oslc_asset:version"));
+	}
+
+	@Test
+	public void assetHasAtMostOneAbstract() {
+		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ABSTRACT));
+	}
+	
+
+	@Test
+	public void assetHasAtMostOneType() {
+		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_TYPE));
+	}
+
+	@Test
+	public void assetHasAtMostOneState() {
+		assertTrue(isOneOrNone(hasDocument, "oslc_asset:state"));
+	}
+
+	@Test
+	public void assetHasAtMostOneManufacturer() {
+		assertTrue(isOneOrNone(hasDocument, "oslc_asset:manufacturer"));
+	}
+	
+	@Test
+	public void assetHasAtMostOneIdentifier(){
+		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ID));
+	}
+
+	@Test
+	public void assetHasAtMostOneDescription() {
+		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_DESC));
+	}
+
+	@Test
+	public void assetHasTitle() {
+		assertTrue("Title was not found", hasNode(hasDocument, OSLCConstants.DCTERMS_TITLE));
+	}
+
+	@Test
+	public void assetHasAtMostOneCreatedDate() {
+		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_CREATED));
+	}
+
+	@Test
+	public void assetHasAtMostOneModifiedDate() {
+		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_MODIFIED));
+	}
+
+	@Test
+	public void assetHasAtMostOneInstanceShape() {
+		assertTrue(isOneOrNone(hasDocument, "oslc:instanceShape"));
+	}
+	
 	@Test
 	public void updateAnAssetProperty() 
 			throws IOException, ParseException, ParserConfigurationException, SAXException,
@@ -157,6 +237,14 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 				fail("The artifact was not removed");
 			}
 		}
+	}
+	
+	private boolean hasNode(Document document, String tagName){
+		return document.getElementsByTagName(tagName).getLength() == 1;
+	}
+	
+	private boolean isOneOrNone(Document document, String tagName) {
+		return document.getElementsByTagName(tagName).getLength() <= 1;
 	}
 	
 	private NodeList getAssetNodeChildren(Document document) throws XPathExpressionException {

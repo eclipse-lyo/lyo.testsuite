@@ -40,12 +40,26 @@ import org.xml.sax.SAXException;
 
 @RunWith(Parameterized.class)
 public class GetAndUpdateJsonTests extends GetAndUpdateBase {
+	private JSONObject hasJson;
 
-	public GetAndUpdateJsonTests(String thisUrl) throws IOException {
+	public GetAndUpdateJsonTests(String thisUrl) throws IOException, JSONException {
 		super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
 		
 		assetUrl = createAsset(jsonCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+		
+		String resp = getAssetAsString();
+		hasJson = new JSONObject(resp);
+	}
+
+	@Test
+	public void assetHasArtifactFactory() {
+		assertTrue("Artifact Factory was not found", hasJson.has("oslc_asset:artifactFactory"));
+	}
+
+	@Test
+	public void assetHasTitle() {
+		assertTrue("Title was not found", hasJson.has(OSLCConstants.DCTERMS_TITLE));
 	}
 			
 	@Test
@@ -82,7 +96,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
 		JSONObject asset = new JSONObject(resp);	
 		JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
-		String artifactFactory = asset.getString("base") + factory.getString("resource");
+		String artifactFactory = factory.getString("rdf:resource");
 		assertTrue("There needs to be an artifact factory url",
 				artifactFactory != null && artifactFactory.length() > 0);	
 		
@@ -137,7 +151,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
 		resp = getAssetAsString();
 		asset = new JSONObject(resp);
-		assertTrue("The artifact was not removed", asset.get("oslc_asset:artifact") != null);
+		assertTrue("The artifact was not removed", !asset.containsKey("oslc_asset:artifact"));
 	}
 	
 	private String JSONToString(JSONObject jsonObject) throws JSONException {
@@ -153,7 +167,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 		JSONObject asset = new JSONObject(resp);	
 		// Gets the artifact factory from the asset
 		JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
-		String artifactFactory = asset.getString("base") + factory.getString("resource");
+		String artifactFactory = factory.getString("rdf:resource");
 		assertTrue("There needs to be an artifact factory",
 				artifactFactory != null && artifactFactory.length() > 0);
 		return artifactFactory;

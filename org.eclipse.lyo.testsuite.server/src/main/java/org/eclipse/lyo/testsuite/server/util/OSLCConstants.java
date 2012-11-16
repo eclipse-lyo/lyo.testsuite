@@ -88,6 +88,7 @@ public interface OSLCConstants {
 	public static final String RESOURCE_SHAPE_PROP  = OSLC_V2 + "resourceShape";
 	public static final String LABEL_PROP			= OSLC_V2 + "label";
 	public static final String DESCRIPTION_PROP 	= OSLC_V2 + "Description";
+	
 	// OSLC CM 2.0
 	public static final String CM_CHANGE_REQUEST_TYPE = OSLC_CM_V2 + "ChangeRequest";
 	public static final String CM_CLOSE_DATE_PROP 	= OSLC_CM_V2 + "closeDate";
@@ -106,6 +107,10 @@ public interface OSLCConstants {
 	public static final String ASSET_ARTIFACT_PROP	= OSLC_ASSET_V2 + "artifact";
 	public static final String ASSET_ARTIFACT_FACTORY_PROP = OSLC_ASSET_V2 + "artifactFactory";
 	public static final String ASSET_CATEGORIZATION_PROP = OSLC_ASSET_V2 + "categorization";
+	public static final String ASSET_STATE_PROP		= OSLC_ASSET_V2 + "state";
+	public static final String ASSET_MANUFACTURER_PROP = OSLC_ASSET_V2 + "manufacturer";
+	public static final String ASSET_MODEL_PROP		= OSLC_ASSET_V2 + "model";
+	public static final String ASSET_SERIAL_NUMBER_PROP = OSLC_ASSET_V2 + "serialNumber";
 
 	// OSLC QM 2.0
 	public static final String QM_TEST_PLAN = OSLC_QM_V2 + "testPlan";
@@ -140,6 +145,7 @@ public interface OSLCConstants {
 	public static final String DC_CREATED_PROP		= DC + "created";
 	public static final String DC_MODIFIED_PROP		= DC + "modified";
 	public static final String DC_RELATION_PROP		= DC + "relation";
+	public static final String DC_ABSTRACT_PROP		= DC + "abstract";
 
 	// DCTERMSs
 	public static final String DCTERMS_TITLE 		= DCTERMS + "title";
@@ -151,5 +157,6 @@ public interface OSLCConstants {
 	public static final String DCTERMS_CREATED		= DCTERMS + "created";
 	public static final String DCTERMS_MODIFIED		= DCTERMS + "modified";
 	public static final String DCTERMS_RELATION		= DCTERMS + "relation";
+	public static final String DCTERMS_ABSTRACT		= DCTERMS + "abstract";
 	
 }

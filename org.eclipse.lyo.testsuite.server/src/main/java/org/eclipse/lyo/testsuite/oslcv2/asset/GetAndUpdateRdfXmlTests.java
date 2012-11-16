@@ -46,6 +46,7 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 @RunWith(Parameterized.class)
 public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 	private String baseUrl;
+	private Model hasModel;
 	
 	public GetAndUpdateRdfXmlTests(String thisUrl) throws IOException {
 		super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
@@ -53,8 +54,90 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		assetUrl = createAsset(rdfXmlCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 		baseUrl = setupProps.getProperty("baseUrl");
+		
+		HttpResponse resp = getAssetResponse();
+		
+		hasModel = ModelFactory.createDefaultModel();
+		hasModel.read(resp.getEntity().getContent(), baseUrl);
+		EntityUtils.consume(resp.getEntity());
 	}
 
+	@Test
+	public void assetHasAtMostOneModel() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_MODEL_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneSerialNumber() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_SERIAL_NUMBER_PROP));
+	}
+
+	@Test
+	public void assetHasArtifactFactory() {
+		assertTrue("Artifact Factory was not found", getPropertyValue(hasModel, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP) != null);
+	}
+	
+	@Test
+	public void assetHasAtMostOneGuid() {
+		assertTrue("Multiple guids returned", isOneOrNone(hasModel, OSLCConstants.ASSET_GUID_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneVersion() {
+		assertTrue("Multiple versions returned", isOneOrNone(hasModel, OSLCConstants.ASSET_VERSION_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneAbstract() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_ABSTRACT_PROP));
+	}
+	
+
+	@Test
+	public void assetHasAtMostOneType() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_TYPE_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneState() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_STATE_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneManufacturer() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_MANUFACTURER_PROP));
+	}
+	
+	@Test
+	public void assetHasAtMostOneIdentifier(){
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_ID_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneDescription() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_DESC_PROP));
+	}
+
+	@Test
+	public void assetHasTitle() {
+		assertTrue("Title was not found", getPropertyValue(hasModel, OSLCConstants.DC_TITLE_PROP) != null);
+	}
+
+	@Test
+	public void assetHasAtMostOneCreatedDate() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_CREATED_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneModifiedDate() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_MODIFIED_PROP));
+	}
+
+	@Test
+	public void assetHasAtMostOneInstanceShape() {
+		assertTrue(isOneOrNone(hasModel, OSLCConstants.INST_SHAPE_PROP));
+	}
+	
 	@Test
 	public void updateAnAssetProperty() throws IOException {
 		HttpResponse resp = getAssetResponse();
@@ -173,6 +256,17 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 			return statement.getObject().toString();
 		}
 		return null;
+	}
+	
+	/**
+	 * Determines if there is at most one of the properties found
+	 * @return true is properties count <= 1, else false
+	 */
+	private boolean isOneOrNone(Model model, String uri) {
+		Property property = model.getProperty(uri);
+		Selector select = new SimpleSelector(null, property, (RDFNode)null);
+		StmtIterator statements = model.listStatements(select);
+		return statements.toList().size() <= 1;
 	}
 	
 	private void setPropertyValue(Model model, String uri, String newValue) {
