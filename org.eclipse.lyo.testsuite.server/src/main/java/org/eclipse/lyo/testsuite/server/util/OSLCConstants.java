@@ -33,6 +33,7 @@ public interface OSLCConstants {
 	static String OSLC_ASSET_V2 = "http://open-services.net/ns/asset#";
 	static String OSLC_QM_V2 = "http://open-services.net/ns/qm#";
 	static String OSLC_RM_V2 = "http://open-services.net/ns/rm#";
+	static String OSLC_AUTO_V2 = "http://open-services.net/ns/auto#";
 	
 	// Version 1.0 namespace definitions
 	static String OSLC_DISC = "http://open-services.net/xmlns/discovery/1.0/";
@@ -129,6 +130,11 @@ public interface OSLCConstants {
 	 
 	 public static final String RM_REQUIREMENT_TYPE = OSLC_RM_V2 + "Requirement";
 	 public static final String RM_REQUIREMENT_COLLECTION_TYPE = OSLC_RM_V2 + "RequirementCollection";
+	 
+	 //OSLC Automation 2.0
+	 public static final String AUTO_AUTOMATION_PLAN_TYPE = OSLC_AUTO_V2 + "AutomationPlan";
+	 public static final String AUTO_AUTOMATION_REQUEST_TYPE = OSLC_AUTO_V2 + "AutomationRequest";
+	 public static final String AUTO_AUTOMATION_RESULT_TYPE = OSLC_AUTO_V2 + "AutomationRESULT";
 	 
 	// RDF
 	public static final String RDF_TYPE_PROP		= RDF + "type";

@@ -1,0 +1,37 @@
+{
+	"dcterms:description": "This is a test plan for the OSLC test suite created from JSON",
+	"dcterms:title": "OSLC JSON Test Automation Plan",
+	"oslc_auto:parameterDefinition": [
+		{
+			"oslc:name": "command",
+			"oslc:occurs": {
+				"rdf:resource": "http:\/\/open-services.net\/ns\/core#Exactly-one"
+			},
+			"oslc:propertyDefinition": {
+				"rdf:resource": "http:\/\/open-services.net\/ns\/auto#parameterDefinition"
+			},
+			"oslc:valueType": {
+				"rdf:resource": "http:\/\/www.w3.org\/2001\/XMLSchema#string"
+			},
+			"rdf:type": [
+				{
+					"rdf:resource": "http:\/\/open-services.net\/ns\/core#Property"
+				}
+			]
+		}
+	],
+	"prefixes": {
+		"dcterms": "http:\/\/purl.org\/dc\/terms\/",
+		"foaf": "http:\/\/xmlns.com\/foaf\/0.1\/",
+		"oslc": "http:\/\/open-services.net\/ns\/core#",
+		"oslc_auto": "http:\/\/open-services.net\/ns\/auto#",
+		"oslc_data": "http:\/\/open-services.net\/ns\/servicemanagement\/1.0\/",
+		"rdf": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#",
+		"rdfs": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#"
+	},
+	"rdf:type": [
+		{
+			"rdf:resource": "http:\/\/open-services.net\/ns\/auto#AutomationPlan"
+		}
+	]
+}

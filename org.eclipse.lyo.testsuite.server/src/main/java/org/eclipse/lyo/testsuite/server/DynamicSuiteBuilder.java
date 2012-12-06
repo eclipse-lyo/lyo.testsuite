@@ -84,7 +84,8 @@ public class DynamicSuiteBuilder
 			|| OSLCConstants.OSLC_QM_V2.equals(testVersions) 
 			|| testVersions.equals("both") 
 			|| OSLCConstants.OSLC_AM_V2.equals(testVersions)
-			|| OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
+			|| OSLCConstants.OSLC_ASSET_V2.equals(testVersions)
+			|| OSLCConstants.OSLC_AUTO_V2.equals(testVersions)) {
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
@@ -93,7 +94,8 @@ public class DynamicSuiteBuilder
 			if (OSLCConstants.OSLC_CM_V2.equals(testVersions) || 
 				OSLCConstants.OSLC_QM_V2.equals(testVersions) || 
 				OSLCConstants.OSLC_RM_V2.equals(testVersions) ||
-				OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
+				OSLCConstants.OSLC_ASSET_V2.equals(testVersions) ||
+				OSLCConstants.OSLC_AUTO_V2.equals(testVersions)) {
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests.class);
 				
@@ -145,9 +147,14 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementCollectionRdfXmlTests.class);
 
-				}
-				
-				if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
+				} else if (OSLCConstants.OSLC_AUTO_V2.equals(testVersions)) {
+					log.info("Setting up to test Automation v2 features");
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanJsonTests.class);
+			
+				} else if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
+					log.info("Setting up to test QM v2 features");
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestPlanXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestCaseXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestScriptXmlTests.class);

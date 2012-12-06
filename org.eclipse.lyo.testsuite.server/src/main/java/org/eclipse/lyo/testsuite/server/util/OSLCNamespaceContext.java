@@ -43,6 +43,7 @@ public class OSLCNamespaceContext implements NamespaceContext {
         else if ("oslc_cm_v2".equals(prefix)) return OSLCConstants.OSLC_CM_V2;
         else if ("oslc_qm_v2".equals(prefix)) return OSLCConstants.OSLC_QM_V2;
         else if ("oslc_rm_v2".equals(prefix)) return OSLCConstants.OSLC_RM_V2;
+        else if ("oslc_auto_v2".equals(prefix)) return OSLCConstants.OSLC_AUTO_V2;
         return XMLConstants.NULL_NS_URI;
 	}
     public String getPrefix(String uri) { return null; }
