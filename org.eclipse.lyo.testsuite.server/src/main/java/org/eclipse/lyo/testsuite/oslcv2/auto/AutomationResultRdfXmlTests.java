@@ -71,5 +71,43 @@ public class AutomationResultRdfXmlTests extends CoreResourceRdfXmlTests {
 	
 	public static String eval = OSLCConstants.RDFS_MEMBER; 
 		
-
+	@Test
+	public void autoResulttHasAtLeastOneState()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_STATE);
+		int size=listStatements.toList().size();
+		assertTrue("Can have 1 or more oslc_auto:state, found "+size, size >= 1); 
+	}
+	
+	@Test
+	public void autoResulttHasAtLeastOneVerdict()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_VERDICT);
+		int size=listStatements.toList().size();
+		assertTrue("Can have 1 or more oslc_auto:verdict, found "+size, size >= 1); 
+	}
+	
+	@Test
+	public void autoResultHasAtMostOneDesiredState()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_DESIRED_STATE);
+		int size=listStatements.toList().size();
+		assertTrue("Can have at most 1 oslc_auto:desiredState, found "+size, size <= 1); 
+	}
+	
+	@Test
+	public void autoResultHasOneReportsOnLink()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_REPORTS_AUTO_PLAN);
+		int size=listStatements.toList().size();
+		assertTrue("Can have 1  oslc_auto:reportsOnAutomationPlan, found "+size, size == 1); 
+	}
+	
+	@Test
+	public void autoResultHasOneProducedByLink()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_PRODUCED_AUTO_REQUEST);
+		int size=listStatements.toList().size();
+		assertTrue("Can have 1  oslc_auto:producedByAutomationRequest, found "+size, size == 1); 
+	}
 }

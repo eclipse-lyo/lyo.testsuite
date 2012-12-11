@@ -71,5 +71,28 @@ public class AutomationRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 	
 	public static String eval = OSLCConstants.RDFS_MEMBER; 
 		
+	@Test
+	public void autoRequestHasAtLeastOneState()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_STATE);
+		int size=listStatements.toList().size();
+		assertTrue("Can have 1 or more oslc_auto:state, found "+size, size >= 1); 
+	}
+	
+	@Test
+	public void autoRequestHasAtMostOneDesiredState()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_DESIRED_STATE);
+		int size=listStatements.toList().size();
+		assertTrue("Can have at most 1 oslc_auto:desiredState, found "+size, size <= 1); 
+	}
+	
+	@Test
+	public void autoRequestHasOneExecutesLink()
+	{
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_EXECUTES_AUTO_PLAN);
+		int size=listStatements.toList().size();
+		assertTrue("Can have 1  oslc_auto:executesAutomationPlan, found "+size, size == 1); 
+	}
 
 }

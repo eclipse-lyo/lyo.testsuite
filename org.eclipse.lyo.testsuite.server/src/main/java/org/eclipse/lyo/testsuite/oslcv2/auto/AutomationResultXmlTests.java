@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -76,5 +77,58 @@ public class AutomationResultXmlTests extends CoreResourceXmlTests {
 	public static String resource = "AutomationResult"; 
 	public static String eval = "//rdfs:member/@rdf:resource";
 
+	@Test
+	public void autoResultHasAtLeastOneState() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:state";
+		
+		NodeList states = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertTrue("oslc_auto_v2:state"+getFailureMessage(), (states.getLength()>=1));
+	}
 	
+	@Test
+	public void autoResultHasAtLeastOneVerdict() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:verdict";
+		
+		NodeList states = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertTrue("oslc_auto_v2:verdict"+getFailureMessage(), (states.getLength()>=1));
+	}
+	
+	@Test
+	public void autoResultHasAtMostOneDesiredState() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:desiredState";
+		
+		NodeList desiredStates = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertTrue("oslc_auto_v2:desiredState"+getFailureMessage(), (desiredStates.getLength()<=1));
+	}
+	
+	@Test
+	public void autoResultHasOneReportsOnLink() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:reportsOnAutomationPlan";
+		
+		NodeList executes = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertEquals("oslc_auto_v2:reportsOnAutomationPlan"+getFailureMessage(),1, executes.getLength());
+	}
+	
+	@Test
+	public void autoResultHasOneProducedByLink() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:producedByAutomationRequest";
+		
+		NodeList executes = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertEquals("oslc_auto_v2:producedByAutomationRequest"+getFailureMessage(),1, executes.getLength());
+	}
 }

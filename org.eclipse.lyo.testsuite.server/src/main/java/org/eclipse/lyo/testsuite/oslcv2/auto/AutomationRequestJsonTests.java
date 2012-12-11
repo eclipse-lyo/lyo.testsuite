@@ -143,5 +143,27 @@ public class AutomationRequestJsonTests extends CoreResourceJsonTests {
 		return toCollection(results);
 	}	
 	
+	@Test
+	public void autoRequestHasAtLeastOneState() throws JSONException
+	{
+		assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONObject) ||
+				   (doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONArray));		
+	}
+	
+	@Test
+	public void autoRequestHasAtMostOneDesiredState() throws JSONException
+	{
+		if ( doc.containsKey(OSLCConstants.AUTO_OSLC_AUTO_DESIRED_STATE) ) { 
+			assertTrue(doc.get(OSLCConstants.AUTO_OSLC_AUTO_DESIRED_STATE) instanceof JSONObject);
+		}
+	}
+	
+	@Test
+	public void autoRequestHasOneExecutesLink() throws JSONException
+	{
+		assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN) instanceof JSONObject) ||
+				   (doc.get(OSLCConstants.AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN) instanceof JSONArray));		
+	}
+	
 	
 }

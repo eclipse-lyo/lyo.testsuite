@@ -152,6 +152,12 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanJsonTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestJsonTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultJsonTests.class);
 			
 				} else if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
 					log.info("Setting up to test QM v2 features");

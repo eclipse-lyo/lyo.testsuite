@@ -132,9 +132,22 @@ public interface OSLCConstants {
 	 public static final String RM_REQUIREMENT_COLLECTION_TYPE = OSLC_RM_V2 + "RequirementCollection";
 	 
 	 //OSLC Automation 2.0
+	 public static final String AUTO_OSLC_AUTO = "oslc_auto:";
 	 public static final String AUTO_AUTOMATION_PLAN_TYPE = OSLC_AUTO_V2 + "AutomationPlan";
 	 public static final String AUTO_AUTOMATION_REQUEST_TYPE = OSLC_AUTO_V2 + "AutomationRequest";
-	 public static final String AUTO_AUTOMATION_RESULT_TYPE = OSLC_AUTO_V2 + "AutomationRESULT";
+	 public static final String AUTO_AUTOMATION_RESULT_TYPE = OSLC_AUTO_V2 + "AutomationResult";
+	 public static final String AUTO_AUTOMATION_STATE = OSLC_AUTO_V2 + "state";
+	 public static final String AUTO_OSLC_AUTO_STATE = AUTO_OSLC_AUTO + "state";
+	 public static final String AUTO_AUTOMATION_DESIRED_STATE = OSLC_AUTO_V2 + "desiredState";
+	 public static final String AUTO_OSLC_AUTO_DESIRED_STATE = AUTO_OSLC_AUTO + "desriedState";
+	 public static final String AUTO_AUTOMATION_VERDICT = OSLC_AUTO_V2 + "verdict";
+	 public static final String AUTO_OSLC_AUTO_VERDICT = AUTO_OSLC_AUTO + "verdict";
+	 public static final String AUTO_AUTOMATION_EXECUTES_AUTO_PLAN = OSLC_AUTO_V2 + "executesAutomationPlan";
+	 public static final String AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN = AUTO_OSLC_AUTO + "executesAutomationPlan";
+	 public static final String AUTO_AUTOMATION_REPORTS_AUTO_PLAN = OSLC_AUTO_V2 + "reportsOnAutomationPlan";
+	 public static final String AUTO_OSLC_AUTO_REPORTS_AUTO_PLAN = AUTO_OSLC_AUTO + "reportsOnAutomationPlan";
+	 public static final String AUTO_AUTOMATION_PRODUCED_AUTO_REQUEST = OSLC_AUTO_V2 + "producedByAutomationRequest";
+	 public static final String AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST = AUTO_OSLC_AUTO + "producedByAutomationRequest";
 	 
 	// RDF
 	public static final String RDF_TYPE_PROP		= RDF + "type";

@@ -17,6 +17,7 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -76,6 +77,39 @@ public class AutomationRequestXmlTests extends CoreResourceXmlTests {
 	public static String ns = "oslc_auto_v2";
 	public static String resource = "AutomationRequest"; 
 	public static String eval = "//rdfs:member/@rdf:resource";
+	
+	@Test
+	public void autoRequestHasAtLeastOneState() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:state";
+		
+		NodeList states = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertTrue("oslc_auto_v2:state"+getFailureMessage(), (states.getLength()>=1));
+	}
+	
+	@Test
+	public void autoRequestHasAtMostOneDesiredState() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:desiredState";
+		
+		NodeList desiredStates = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertTrue("oslc_auto_v2:desiredState"+getFailureMessage(), (desiredStates.getLength()<=1));
+	}
+	
+	@Test
+	public void autoRequestHasOneExecutesLink() throws XPathExpressionException
+	{
+		String eval = "//" + getNode() + "/" + "oslc_auto_v2:executesAutomationPlan";
+		
+		NodeList executes = (NodeList) OSLCUtils.getXPath().evaluate(eval,
+	    		doc, XPathConstants.NODESET);		
+		
+		assertEquals("oslc_auto_v2:executesAutomationPlan"+getFailureMessage(),1, executes.getLength());
+	}
 
 	
 }

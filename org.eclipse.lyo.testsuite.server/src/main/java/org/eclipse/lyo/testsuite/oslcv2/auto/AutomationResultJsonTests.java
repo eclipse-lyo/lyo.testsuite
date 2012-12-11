@@ -143,5 +143,40 @@ public class AutomationResultJsonTests extends CoreResourceJsonTests {
 		return toCollection(results);
 	}	
 	
+	@Test
+	public void autoResultHasAtLeastOneState() throws JSONException
+	{
+		assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONObject) ||
+				   (doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONArray));		
+	}
+	
+	@Test
+	public void autoResultHasAtLeastOneVerdict() throws JSONException
+	{
+		assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_VERDICT) instanceof JSONObject) ||
+				   (doc.get(OSLCConstants.AUTO_OSLC_AUTO_VERDICT) instanceof JSONArray));		
+	}
+	
+	@Test
+	public void autoResultHasAtMostOneDesiredState() throws JSONException
+	{
+		if ( doc.containsKey(OSLCConstants.AUTO_OSLC_AUTO_DESIRED_STATE) ) { 
+			assertTrue(doc.get(OSLCConstants.AUTO_OSLC_AUTO_DESIRED_STATE) instanceof JSONObject);
+		}
+	}
+	
+	@Test
+	public void autoResultHasOneReportsOnLink() throws JSONException
+	{
+		assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_REPORTS_AUTO_PLAN) instanceof JSONObject) ||
+				   (doc.get(OSLCConstants.AUTO_OSLC_AUTO_REPORTS_AUTO_PLAN) instanceof JSONArray));		
+	}
+	
+	@Test
+	public void autoResultHasOneProducedByLink() throws JSONException
+	{
+		assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST) instanceof JSONObject) ||
+				   (doc.get(OSLCConstants.AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST) instanceof JSONArray));		
+	}
 	
 }
