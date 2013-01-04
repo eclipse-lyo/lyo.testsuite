@@ -69,7 +69,7 @@
 			<action>Verify baseUri is valid and accessible ...</action>
 			<action>Investigate network adapter ...</action>
 		</error>
-		<error type="AppBehavior" regexp="expected:<400> but was:<500>">
+		<error type="AppBehavior" regexp="expected:&lt;400&gt; but was:&lt;500&gt;">
 			<rootcause>Product Defect</rootcause>
 			<action>Submit defect against the OSLC provider</action>
 		</error>
