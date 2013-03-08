@@ -7,39 +7,6 @@
 	<artifactId>org.eclipse.lyo.testsuite.trs</artifactId>
 	<description>Toolkit to assist with TRS implementation testing.</description>
 
-	<repositories>
-		<repository>
-			<id>oauth</id>
-			<url>http://oauth.googlecode.com/svn/code/maven</url>
-		</repository>
-		<repository>
-			<id>eclipse.lyo.release</id>
-			<url>http://gearbox-build.rtp.raleigh.ibm.com:8081/nexus/content/repositories/eclipse.lyo.release/</url>
-		</repository>
-		<repository>
-			<id>eclipse.lyo</id>
-			<url>http://gearbox-build.rtp.raleigh.ibm.com:8081/nexus/content/repositories/eclipse.lyo/</url>
-		</repository>
-		<repository>
-			<id>thirdparty</id>
-			<url>http://gearbox-build.rtp.raleigh.ibm.com:8081/nexus/content/repositories/thirdparty/</url>
-		</repository>
-		<repository>
-			<id>central</id>
-			<url>http://gearbox-build.rtp.raleigh.ibm.com:8081/nexus/content/repositories/central/</url>
-		</repository>
-		<repository>
-			<id>jena</id>
-			<url>http://gearbox-build.rtp.raleigh.ibm.com:8081/nexus/content/repositories/jena/</url>
-		</repository>
-		<repository>
-			<id>integration.sdk</id>
-			<url>http://gearbox-build.rtp.raleigh.ibm.com:8081/nexus/content/repositories/integration.sdk/</url>
-		</repository>
-	</repositories>
-
-
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
