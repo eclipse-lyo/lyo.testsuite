@@ -56,13 +56,6 @@
 		</dependency>
 	</dependencies>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>integration.sdk</id>
-			<url>http://gearbox-build.rtp.raleigh.ibm.com:8081/nexus/content/repositories/integration.sdk</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<build>
 		<finalName>org.eclipse.lyo.testsuite.serverTemp</finalName>
 		<outputDirectory>target/classes</outputDirectory>
