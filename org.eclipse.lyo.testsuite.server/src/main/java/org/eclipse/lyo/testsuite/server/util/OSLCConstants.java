@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -23,6 +23,7 @@ public interface OSLCConstants {
 
 	static String DC = "http://purl.org/dc/terms/";
 	static String DCTERMS ="dcterms:";
+	static String EMS = "http://open-services.net/ns/ems#";
 	static String RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	static String RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 	static String ATOM = "http://www.w3.org/2005/Atom";
@@ -34,6 +35,8 @@ public interface OSLCConstants {
 	static String OSLC_QM_V2 = "http://open-services.net/ns/qm#";
 	static String OSLC_RM_V2 = "http://open-services.net/ns/rm#";
 	static String OSLC_AUTO_V2 = "http://open-services.net/ns/auto#";
+	static String OSLC_PM_V2 = "http://open-services.net/ns/pm#";
+	static String OSLC_CRTV_V2 = "http://open-services.net/ns/crtv#";
 	
 	// Version 1.0 namespace definitions
 	static String OSLC_DISC = "http://open-services.net/xmlns/discovery/1.0/";
@@ -64,6 +67,7 @@ public interface OSLCConstants {
 	
 	static String POST = "POST";
 	static String SSL = "SSL";
+
 
 	public static final String JENA_RDF_XML = "RDF/XML";
 	
@@ -149,6 +153,17 @@ public interface OSLCConstants {
 	 public static final String AUTO_AUTOMATION_PRODUCED_AUTO_REQUEST = OSLC_AUTO_V2 + "producedByAutomationRequest";
 	 public static final String AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST = AUTO_OSLC_AUTO + "producedByAutomationRequest";
 	 
+	 //OSLC Performance Monitoring 2.0
+	 public static String PM_PMR_ISPARTOF = DC + "isPartOf";
+	 public static final String CRTV_COMPUTERSYSTEM_TYPE = OSLC_CRTV_V2 + "ComputerSystem";
+	 public static final String CRTV_PROCESS_TYPE = OSLC_CRTV_V2 + "Process";	
+	 public static final String CRTV_STORAGEVOLUME_TYPE = OSLC_CRTV_V2 + "StorageVolume";
+	 public static final String CRTV_AGENT_TYPE = OSLC_CRTV_V2 + "Agent";
+	 public static final String CRTV_SOFTWARESERVER_TYPE = OSLC_CRTV_V2 + "SoftwareServer";
+	 public static final String CRTV_SOFTWAREMODULE_TYPE = OSLC_CRTV_V2 + "SoftwareModule";	 
+	 public static final String CRTV_DATABASE_TYPE = OSLC_CRTV_V2 + "Database";	 
+	 public static String PM_PMR_OBSERVES = EMS + "observes";	 
+	 
 	// RDF
 	public static final String RDF_TYPE_PROP		= RDF + "type";
 	public static final String RDF_DESCRIPTION_PROP	= RDF + "Description";
@@ -165,7 +180,7 @@ public interface OSLCConstants {
 	public static final String DC_MODIFIED_PROP		= DC + "modified";
 	public static final String DC_RELATION_PROP		= DC + "relation";
 	public static final String DC_ABSTRACT_PROP		= DC + "abstract";
-
+ 
 	// DCTERMSs
 	public static final String DCTERMS_TITLE 		= DCTERMS + "title";
 	public static final String DCTERMS_DESC 		= DCTERMS + "description";

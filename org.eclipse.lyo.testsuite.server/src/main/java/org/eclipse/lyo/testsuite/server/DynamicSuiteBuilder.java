@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,6 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Yuhong Yin
  *    Tim Eck II     - asset management test cases
+ *    Julie Bielski  - performance management test cases
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server;
 
@@ -85,7 +86,8 @@ public class DynamicSuiteBuilder
 			|| testVersions.equals("both") 
 			|| OSLCConstants.OSLC_AM_V2.equals(testVersions)
 			|| OSLCConstants.OSLC_ASSET_V2.equals(testVersions)
-			|| OSLCConstants.OSLC_AUTO_V2.equals(testVersions)) {
+			|| OSLCConstants.OSLC_AUTO_V2.equals(testVersions)
+			|| OSLCConstants.OSLC_PM_V2.equals(testVersions)) {
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
@@ -95,7 +97,8 @@ public class DynamicSuiteBuilder
 				OSLCConstants.OSLC_QM_V2.equals(testVersions) || 
 				OSLCConstants.OSLC_RM_V2.equals(testVersions) ||
 				OSLCConstants.OSLC_ASSET_V2.equals(testVersions) ||
-				OSLCConstants.OSLC_AUTO_V2.equals(testVersions)) {
+				OSLCConstants.OSLC_AUTO_V2.equals(testVersions) ||
+				OSLCConstants.OSLC_PM_V2.equals(testVersions)) {
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests.class);
 				testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests.class);
 				
@@ -172,6 +175,15 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestScriptRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestExecutionRecordRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestResultRdfXmlTests.class);
+				} else if(OSLCConstants.OSLC_PM_V2.equals(testVersions)) {
+					log.info("Setting up to test PM v2 features");
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordComputerSystemRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordAgentRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordDatabaseRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordProcessRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordSoftwareModuleRdfXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordSoftwareServerRdfXmlTests.class);					
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordStorageVolumeRdfXmlTests.class);					
 				}
 			}
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests.class);			
