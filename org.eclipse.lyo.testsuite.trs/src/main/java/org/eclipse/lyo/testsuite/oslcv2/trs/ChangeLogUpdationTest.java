@@ -42,9 +42,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -72,6 +75,7 @@ public class ChangeLogUpdationTest extends TestCore {
 			String resContentType = prop.getProperty("configContentType");
 			String resUpdateContentType = prop.getProperty("configUpdateContentType");
 			String trsEndpoint = prop.getProperty("configTrsEndpoint");
+			String acceptType = prop.getProperty("acceptType");
 			
 			httpClient = new DefaultHttpClient();
 			httpContext = 
@@ -88,7 +92,7 @@ public class ChangeLogUpdationTest extends TestCore {
 			
 			SendUtil.updateResource(createdResourceUrl, httpClient, httpContext,resUpdateContentType, updateContent);
 			
-			trsResource = getResource(trsEndpoint, httpClient, httpContext);
+			trsResource = getResource(trsEndpoint, httpClient, httpContext, acceptType);
 			
 			
 		} catch (FileNotFoundException e) {
@@ -124,15 +128,15 @@ public class ChangeLogUpdationTest extends TestCore {
 	}
 	
 	@Test
-	public void testChangeLogHasChangesProperty() {
+	public void testChangeLogHasChangeProperty() {
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)) {
-				if (!changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) {
+				if (!changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) {
 					throw new InvalidTRSException(
-						Messages.getServerString("validators.missing.trs.changes.property")); //$NON-NLS-1$
+						Messages.getServerString("validators.missing.trs.change.property")); //$NON-NLS-1$
 				}
 				
 			}
@@ -150,18 +154,27 @@ public class ChangeLogUpdationTest extends TestCore {
 	@Test
 	public void testChangeLogEventChangedPropertyHasCreatedResource() {
 		boolean matchFound = false;
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+		
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
 			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
 					
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;

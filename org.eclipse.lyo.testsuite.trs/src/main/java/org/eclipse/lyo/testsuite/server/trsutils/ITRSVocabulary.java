@@ -12,6 +12,7 @@
  * Contributors:
  * 
  *    Joseph Leong, Sujeet Mishra - Initial implementation
+ *    David Terry - Add fields for TRS 2.0 compliance
  *******************************************************************************/
 
 package org.eclipse.lyo.testsuite.server.trsutils;
@@ -34,7 +35,7 @@ public interface ITRSVocabulary {
 	public static final String CUTOFFEVENT_LOCALNAME = "cutoffEvent"; //$NON-NLS-1$
 	public static final String NEXT_LOCALNAME = "nextPage"; //$NON-NLS-1$
 	public static final String CHANGELOG_LOCALNAME = "changeLog"; //$NON-NLS-1$
-	public static final String CHANGES_LOCALNAME = "changes"; //$NON-NLS-1$
+	public static final String CHANGE_LOCALNAME = "change"; //$NON-NLS-1$
 	public static final String CHANGED_LOCALNAME = "changed"; //$NON-NLS-1$
 	public static final String ORDER_LOCALNAME = "order"; //$NON-NLS-1$
 	public static final String PREVIOUS_LOCALNAME = "previous"; //$NON-NLS-1$
@@ -42,11 +43,14 @@ public interface ITRSVocabulary {
 	public static final String CREATION_LOCALNAME = "Creation"; //$NON-NLS-1$
 	public static final String MODIFICATION_LOCALNAME = "Modification"; //$NON-NLS-1$
 	public static final String DELETION_LOCALNAME = "Deletion"; //$NON-NLS-1$
+	public static final String AGGREGATE_CONTAINER_LOCALNAME = "AggregateContainer"; //$NON-NLS-1$
+	public static final String PAGE_LOCALNAME = "Page"; //$NON-NLS-1$
+	public static final String PAGE_OF_LOCALNAME = "pageOf"; //$NON-NLS-1$
 
 	/**
 	 * The namespace of the vocabulary as a string
 	 */
-	public static final String NS = "http://jazz.net/ns/trs#"; //$NON-NLS-1$
+	public static final String NS = "http://open-services.net/ns/core/trs#"; //$NON-NLS-1$
 
 	/**
 	 * Get a specific vocabulary within the TRS provider as a string
@@ -75,22 +79,16 @@ public interface ITRSVocabulary {
 		CUTOFFEVENT_LOCALNAME);
 
 	/**
-	 * The property for the next page predicate in a TRS or base resource
-	 */
-	public static final Property NEXT_PAGE_PROPERTY = ResourceFactory.createProperty(NS,
-		NEXT_LOCALNAME);
-
-	/**
 	 * The property for a change log predicate within a tracked resource set
 	 */
 	public static final Property CHANGELOG_PROPERTY = ResourceFactory.createProperty(NS,
 		CHANGELOG_LOCALNAME);
 
 	/**
-	 * The property for the changes predicate in a TRS
+	 * The property for the change predicate in a TRS
 	 */
-	public static final Property CHANGES_PROPERTY = ResourceFactory.createProperty(NS,
-		CHANGES_LOCALNAME);
+	public static final Property CHANGE_PROPERTY = ResourceFactory.createProperty(NS,
+		CHANGE_LOCALNAME);
 
 	/**
 	 * The property for the changes predicate of a change log entry
@@ -134,4 +132,35 @@ public interface ITRSVocabulary {
 	public static final Resource DELETION_RESOURCE = ResourceFactory.createResource(NS
 		+ DELETION_LOCALNAME);
 
+	// LDP related namespace, resources, and properties
+	/**
+	 * Namespace for the Linked Data Platform
+	 */
+	public static final String LDP_NS = "http://www.w3.org/ns/ldp#"; //$NON-NLS-1$
+	
+	/**
+	 * The AggregateContainer resource type used by the base resource 
+	 */
+	public static final Resource CONTAINER_RESOURCE = ResourceFactory.createResource(LDP_NS
+			+ AGGREGATE_CONTAINER_LOCALNAME);
+	
+	/**
+	 * The Page resource type used by the base resource to reference the next
+	 * page in the base sequence.
+	 */
+	public static final Resource PAGE_RESOURCE = ResourceFactory.createResource(LDP_NS
+			+ PAGE_LOCALNAME);
+	
+	/**
+	 * A reference back to the aggregate container this page belongs to
+	 */
+	public static final Property PAGE_OF_RESOURCE = ResourceFactory.createProperty(LDP_NS
+			+ PAGE_OF_LOCALNAME);
+	
+	/**
+	 * The property for the next page resource in a base resource
+	 */
+	public static final Property NEXT_PAGE_PROPERTY = ResourceFactory.createProperty(LDP_NS,
+		NEXT_LOCALNAME);
+			
 }

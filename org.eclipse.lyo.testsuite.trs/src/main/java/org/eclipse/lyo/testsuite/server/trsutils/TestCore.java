@@ -49,10 +49,10 @@ public class TestCore {
 		}
 	}
 	
-	protected static Resource getResource(String uri, HttpClient httpClient, HttpContext httpContext) 
+	protected static Resource getResource(String uri, HttpClient httpClient, HttpContext httpContext, String acceptType) 
 	throws  InterruptedException, FetchException
 	{
-		Model model = FetchUtil.fetchResource(uri, httpClient, httpContext);
+		Model model = FetchUtil.fetchResource(uri, httpClient, httpContext, acceptType);
 			
 		return model.createResource(uri);
 	}

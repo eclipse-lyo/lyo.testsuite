@@ -37,9 +37,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.RDFList;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ChangeLogTest extends TestCore{
@@ -55,11 +57,12 @@ public class ChangeLogTest extends TestCore{
 			prop = getConfigPropertiesInstance();
 			
 			String trsEndpoint = prop.getProperty("configTrsEndpoint");
+			String acceptType = prop.getProperty("acceptType");
 				
 			httpContext = 
 					new DefaultedHttpContext(new BasicHttpContext(), new SyncBasicHttpContext(null));
 				
-			trsResource = getResource(trsEndpoint, httpClient, httpContext);	
+			trsResource = getResource(trsEndpoint, httpClient, httpContext, acceptType);	
 		} catch (FileNotFoundException e) {
 			terminateTest(Messages.getServerString("tests.general.config.properties.missing"), e);
 		} catch (InterruptedException e) {
@@ -72,15 +75,15 @@ public class ChangeLogTest extends TestCore{
 	}
 		
 	@Test
-	public void testChangeLogHasChangesProperty() {
+	public void testChangeLogHasChangeProperty() {
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)) {
-				if (!changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) {
+				if (!changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) {
 					throw new InvalidTRSException(
-						Messages.getServerString("validators.missing.trs.changes.property")); //$NON-NLS-1$
+						Messages.getServerString("validators.missing.trs.change.property")); //$NON-NLS-1$
 				}
 				
 			}
@@ -96,42 +99,18 @@ public class ChangeLogTest extends TestCore{
 	}
 	
 	@Test
-	public void testChangeLogHasExactlyOneChangesProperty() {
-		try {
-			Resource changeLogResource =
-					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
-				
-			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)) {
-				if (changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY) && getStatementsForProp(changeLogResource,ITRSVocabulary.CHANGES_PROPERTY).toList().size()!=1) {
-					throw new InvalidTRSException(
-						Messages.getServerString("validators.invalid.trs.changes.property")); //$NON-NLS-1$
-				}
-				
-			}
-		} catch (InvalidTRSException e) {
-			e.printStackTrace();
-			Assert.fail(e.getLocalizedMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail(MessageFormat.format(
-					Messages.getServerString("tests.general.error"),
-					e.getLocalizedMessage()));
-		} 
-	}
-	
-	@Test
-	public void testChangeLogIsList() {
+	public void testChangeLogIsResource() {
 		try {
 			
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
 			{				
-				if (!isList(changeLogResource.getProperty(ITRSVocabulary.CHANGES_PROPERTY).getObject())) {
+				if (!changeLogResource.getProperty(ITRSVocabulary.CHANGE_PROPERTY).getObject().isURIResource()) {
 					throw new InvalidTRSException(
-							Messages.getServerString("validators.invalid.trs.changes.property")); //$NON-NLS-1$
+							Messages.getServerString("validators.invalid.trs.change.property")); //$NON-NLS-1$
 				}
 				
 			}
@@ -148,17 +127,26 @@ public class ChangeLogTest extends TestCore{
 		
 	@Test
 	public void testChangeLogEventIsURIResource() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+		
 		try {
+			// Get the trs resource's change log
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil) 
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
 			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					RDFNode changeNode = rdfModel.getResource(trsChangeReference.getObject().toString());
+				
 					if (!changeNode.isURIResource()) {
 						throw new InvalidTRSException(
 							Messages.getServerString("validators.missing.uri.change.event")); //$NON-NLS-1$
@@ -179,18 +167,27 @@ public class ChangeLogTest extends TestCore{
 	
 	@Test
 	public void testChangeLogEventType() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+					
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
 			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
 					
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
@@ -219,18 +216,27 @@ public class ChangeLogTest extends TestCore{
 	
 	@Test
 	public void testChangeLogEventHasExactlyOneEventType() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+					
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
 			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
 					
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
@@ -268,19 +274,28 @@ public class ChangeLogTest extends TestCore{
 	
 	@Test
 	public void testChangeLogEventHasChangedProperty() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+		
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
 			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
 					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
+							
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
 					
@@ -305,18 +320,28 @@ public class ChangeLogTest extends TestCore{
 	
 	@Test
 	public void testChangeLogEventHasExactlyOneChangedProperty() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+		
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
-			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
+			{			
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
+							
 					
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
@@ -341,18 +366,27 @@ public class ChangeLogTest extends TestCore{
 	
 	@Test
 	public void testChangeLogEventChangedPropertyIsURIResource() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+		
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
-			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
+			{		
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
 					
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
@@ -378,18 +412,28 @@ public class ChangeLogTest extends TestCore{
 	
 	@Test
 	public void testChangeLogEventHasOrderProperty() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+					
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
 			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
+							
 					
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
@@ -415,19 +459,28 @@ public class ChangeLogTest extends TestCore{
 	
 	@Test
 	public void testChangeLogEventHasExactlyOneOrderProperty() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+		
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY)) 
-			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) 
+			{	
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
 					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
+							
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
 					
@@ -450,18 +503,27 @@ public class ChangeLogTest extends TestCore{
 	}
 	@Test
 	public void testChangeLogEventOrderPropertyIsPositiveNumber() {
+		// Get the overall model, we will need it to follow trs:change 
+		// references in the change log to the actual change event later.
+		Model rdfModel = trsResource.getModel();
+					
 		try {
 			Resource changeLogResource =
 					trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 				
 			if (changeLogResource != null && !changeLogResource.equals(RDF.nil)
-						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGES_PROPERTY))
+						&& changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY))
 			{
-				RDFList changeEvents =
-						changeLogResource.getPropertyResourceValue(ITRSVocabulary.CHANGES_PROPERTY).as(RDFList.class);
+				// Iterate over all trs:change properties referenced by the change log
+				StmtIterator iter = changeLogResource.listProperties(ITRSVocabulary.CHANGE_PROPERTY);
 				
-				for (RDFNode changeNode : changeEvents.asJavaList()) {
-					Resource changeEvent = changeNode.asResource();
+				while (iter.hasNext()) {
+					Statement trsChangeReference = iter.nextStatement();
+					
+					// Obtain the actual change event resource using the URI 
+					// mentioned in the change log's trs:change property we are
+					// currently examining
+					Resource changeEvent = rdfModel.getResource(trsChangeReference.getObject().toString());
 					
 					if (RDF.nil.getURI().equals(changeEvent.getURI()))
 						break;
