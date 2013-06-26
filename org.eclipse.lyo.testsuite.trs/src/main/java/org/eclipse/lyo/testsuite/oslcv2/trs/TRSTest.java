@@ -52,11 +52,12 @@ public class TRSTest extends TestCore{
 			prop = getConfigPropertiesInstance();
 			
 			String trsEndpoint = prop.getProperty("configTrsEndpoint");
+			String acceptType = prop.getProperty("acceptType");
 				
 			httpContext = 
 					new DefaultedHttpContext(new BasicHttpContext(), new SyncBasicHttpContext(null));
 				
-			trsResource = getResource(trsEndpoint, httpClient, httpContext);	
+			trsResource = getResource(trsEndpoint, httpClient, httpContext, acceptType);	
 		} catch (FileNotFoundException e) {
 			terminateTest(Messages.getServerString("tests.general.config.properties.missing"), e);
 		} catch (InterruptedException e) {
