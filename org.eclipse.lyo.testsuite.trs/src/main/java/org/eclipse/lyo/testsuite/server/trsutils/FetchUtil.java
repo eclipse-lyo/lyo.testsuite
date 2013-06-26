@@ -33,7 +33,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public class FetchUtil {
 	/**
-	 * Fetches an application/rdf+xml resource. In case of success, this method
+	 * Fetches a resource. In case of success, this method
 	 * returns an instance of the {@link Model}. 
 	 * 
 	 * @param uri
@@ -42,6 +42,8 @@ public class FetchUtil {
 	 *            client used to fetch the resource
 	 * @param httpContext
 	 *            http context to use for the call
+	 * @param acceptType 
+	 * 			  value to use in the accept header
 	 * @throws InterruptedException
 	 *             if the thread is interrupted
 	 * @throws FetchException
@@ -50,7 +52,7 @@ public class FetchUtil {
 	 *             if an error occurs while updating the retryable error
 	 *             information into the error handler
 	 */
-	public static Model fetchResource(String uri, HttpClient httpClient, HttpContext httpContext) 
+	public static Model fetchResource(String uri, HttpClient httpClient, HttpContext httpContext, String acceptType) 
 	throws InterruptedException, FetchException 
 	{
 		if (uri == null)
@@ -67,7 +69,7 @@ public class FetchUtil {
 			
 			HttpGet get = new HttpGet(uri);
 			
-			get.setHeader(HttpConstants.ACCEPT, HttpConstants.CT_APPLICATION_RDF_XML);
+			get.setHeader(HttpConstants.ACCEPT, acceptType);
 
 			// Caches must revalidate with origin server. This is to prevent a cache
 			// from serving stale data. We may still get a cached response if the
