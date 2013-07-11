@@ -57,7 +57,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>org.eclipse.lyo.testsuite.serverTemp</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<outputDirectory>target/classes</outputDirectory>
 		<resources>
 			<resource>
