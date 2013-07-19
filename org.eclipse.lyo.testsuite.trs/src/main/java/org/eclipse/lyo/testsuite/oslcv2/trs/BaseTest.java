@@ -188,7 +188,7 @@ public class BaseTest extends TestCore{
 	}
 	
 	/**
-	 * Determine if the base resource contains the rdf:type ldp:AggregateContainer
+	 * Determine if the base resource contains the rdf:type ldp:Container
 	 * property.
 	 */
 	@Test
