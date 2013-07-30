@@ -27,6 +27,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.DefaultedHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
+import org.eclipse.lyo.testsuite.server.trsutils.EasySSLClient;
 import org.eclipse.lyo.testsuite.server.trsutils.FetchException;
 import org.eclipse.lyo.testsuite.server.trsutils.ITRSVocabulary;
 import org.eclipse.lyo.testsuite.server.trsutils.InvalidTRSException;
@@ -48,11 +49,12 @@ public class TRSTest extends TestCore{
 	@BeforeClass
 	public static void setupOnce() {
 		try {
-			httpClient = new DefaultHttpClient();
 			prop = getConfigPropertiesInstance();
 			
 			String trsEndpoint = prop.getProperty("configTrsEndpoint");
 			String acceptType = prop.getProperty("acceptType");
+			
+			httpClient = new EasySSLClient().getClient();
 				
 			httpContext = 
 					new DefaultedHttpContext(new BasicHttpContext(), new SyncBasicHttpContext(null));
@@ -66,6 +68,8 @@ public class TRSTest extends TestCore{
 			terminateTest(Messages.getServerString("tests.general.config.properties.unreadable"), e);
 		} catch (FetchException e) {
 			terminateTest(Messages.getServerString("tests.general.trs.fetch.error"), e);
+		} catch (Exception e) {
+			terminateTest(null, e);
 		}
 	}
 
