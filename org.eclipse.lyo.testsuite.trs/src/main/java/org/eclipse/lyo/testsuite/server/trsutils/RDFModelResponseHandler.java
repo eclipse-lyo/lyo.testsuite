@@ -42,6 +42,7 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
 
 	protected int statusCode = 0;
 	protected String reason = null;
+	protected Header[] authTypes = null;
 
 	public RDFModelResponseHandler(Node base) {
 		this.base = base;
@@ -53,6 +54,7 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
 
 	@Override
 	public Model handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+		authTypes = response.getHeaders("WWW-Authenticate");
 		statusCode = response.getStatusLine().getStatusCode();
 		reason = response.getStatusLine().getReasonPhrase();
 		Model model = ModelUtil.createDefaultModel();
@@ -126,5 +128,14 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
 
 	public String getReasonPhrase() {
 		return reason;
+	}
+
+	/**
+	 * Return the supported authentication types of the server.
+	 * 
+	 * @return authTypes - The value of the server's WWW-Authenticate header
+	 */
+	public Header[] getAuthTypes() {
+		 return authTypes;
 	}
 }

@@ -148,8 +148,8 @@ public class BaseTest extends TestCore{
 		
 		try {
 			if (iter == null || iter.hasNext() != true) {
-				throw new InvalidTRSException(
-						Messages.getServerString("validators.missing.rdf.type.ldp.page"));
+				System.out.println(Messages.getServerString("validators.missing.rdf.type.ldp.page"));
+				return;
 			}
 			
 			Resource page = iter.nextResource();

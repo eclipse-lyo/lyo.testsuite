@@ -16,6 +16,7 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -30,11 +31,14 @@ import net.oauth.OAuthException;
 import net.oauth.OAuthMessage;
 import net.oauth.OAuthServiceProvider;
 
+import org.apache.http.Header;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HttpContext;
+import org.apache.xerces.impl.dv.util.Base64;
 import org.eclipse.lyo.core.trs.HttpConstants;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -90,37 +94,16 @@ public class FetchUtil {
 			// http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.4
 			get.addHeader(HttpConstants.CACHE_CONTROL, "max-age=0"); //$NON-NLS-1$
 			
+			RDFModelResponseHandler handler = new RDFModelResponseHandler(uri);
+			
+			// Try to access the uri directly.  If this fails attempt to retry
+			// using authentication.
 			try {
-				model = httpClient.execute(get, new RDFModelResponseHandler(uri), httpContext);
+				model = httpClient.execute(get, handler, httpContext);
 			} catch (HttpResponseException e1) {
 				if (e1.getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
-					// If authentication is required attempt OAuth authentication.
-					// This uses two legged OAuth which requires a functional
-					// user be already configured on the resource server.
-					Properties prop = TestCore.getConfigPropertiesInstance();
-					String consumerKey = prop.getProperty("consumerKey");
-					String consumerSecret = prop.getProperty("consumerSecret");
-					String authorizationTokenURL = prop.getProperty("OAuthURL");
-					String oAuthRealm = prop.getProperty("OAuthRealm");
-					
-					// Using the information from the config.properties file
-					// construct the authentication header to use in our GET request
-					OAuthServiceProvider provider = new OAuthServiceProvider(null, authorizationTokenURL, null);
-					OAuthConsumer consumer = new OAuthConsumer("",consumerKey,consumerSecret,provider);
-					OAuthAccessor accessor = new OAuthAccessor(consumer);
-					accessor.accessToken = "";
-
-					try {
-						OAuthMessage message = accessor.newRequestMessage(HttpMethod.GET, prop.getProperty("configTrsEndpoint"), null);
-						String authHeader = message.getAuthorizationHeader(oAuthRealm);
-						get.setHeader("Authorization",authHeader);
-						get.setHeader("OSLC-Core-Version", "2.0");
-						
-						model = httpClient.execute(get, new RDFModelResponseHandler(uri), httpContext);
-					} catch (OAuthException e) {
-						TestCore.terminateTest(Messages.getServerString("fetch.util.authentication.failure"), e);
-					}
-				} 
+					model = attemptAuthentication(uri, httpClient, httpContext, model, get, handler);
+				}
 			}
 		} catch (Exception e) {
 			String uriLocation = Messages.getServerString("fetch.util.uri.unidentifiable"); //$NON-NLS-1$
@@ -132,9 +115,155 @@ public class FetchUtil {
 				
 			throw new FetchException(MessageFormat.format(
 					Messages.getServerString("fetch.util.retrieve.error"), //$NON-NLS-1$
-					uriLocation)); 
+					uriLocation), e); 
 		}
 
 		return model;
+	}
+
+	/**
+	 * This method performs authentication based on the config.properties' 
+	 * AuthType setting.
+	 * 
+	 * @param uri
+	 * @param httpClient
+	 * @param httpContext
+	 * @param model
+	 * @param get
+	 * @param handler
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws URISyntaxException
+	 */
+	private static Model attemptAuthentication(String uri,
+			HttpClient httpClient, HttpContext httpContext, Model model,
+			HttpGet get, RDFModelResponseHandler handler)
+			throws FileNotFoundException, IOException, ClientProtocolException,
+			URISyntaxException {
+		// Check the config.properties to see if the user is overriding
+		// the WWW-Authenticate header.
+		String override = TestCore.getConfigPropertiesInstance().getProperty("AuthType");
+		AuthenticationTypes overrideType = AuthenticationTypes.valueOf(override.toUpperCase());
+		
+		switch (overrideType) {				
+			case OAUTH:
+				return perform2LeggedOauth(httpClient, httpContext, get, uri);
+			
+			case BASIC:
+				return performBasicAuthentication(httpClient, httpContext, get, uri);
+				
+			case HEADER: 
+				Header authTypes[] = handler.getAuthTypes();
+			
+				// Determine the authentication type to attempt based on the
+				// server's response. Attempt the first type encountered that
+				// both the server and the tests support.
+				for (Header authType : authTypes) {
+					if (authType.getValue().startsWith("OAuth ")) {
+						return perform2LeggedOauth(httpClient, httpContext, get, uri);
+					} else if (authType.getValue().startsWith("Basic ")) {
+						return performBasicAuthentication(httpClient, httpContext, get, uri);
+					}
+				}
+		}
+		
+		throw new InvalidRDFResourceException(Messages.getServerString("fetch.util.authentication.unknown"));
+	}
+
+	/**
+	 * This method uses the username and password specified in config.properties
+	 * to attempt basic authentication against a resource server.
+	 * 
+	 * @param httpClient
+	 * @param httpContext
+	 * @param get
+	 * @param uri
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private static Model performBasicAuthentication(HttpClient httpClient, HttpContext httpContext, HttpGet get, String uri) throws FileNotFoundException, IOException {
+		// Obtain the username and password from the config.properties file
+		Properties prop = TestCore.getConfigPropertiesInstance();
+		String username = prop.getProperty("username");
+		String password = prop.getProperty("password");
+		
+		// Construct the authentication header by using Base64 encoding on the
+		// supplied username and password
+		String authString = username + ":" + password;
+		authString = new String(Base64.encode(authString.getBytes(HttpConstants.DEFAULT_ENCODING)));
+		authString = "Basic " + authString;
+		
+		get.setHeader("Authorization", authString);
+		get.setHeader("OSLC-Core-Version", "2.0");
+		
+		Model model = null;
+		
+		try {
+			model = httpClient.execute(get, new RDFModelResponseHandler(uri), httpContext);
+		} catch (Exception e) {
+			TestCore.terminateTest(Messages.getServerString("fetch.util.authentication.failure"), e);
+		}
+	
+		return model;
+	}
+
+	/**
+	 * This method attempts to authenticate with a server using OAuth two 
+	 * legged authentication.  A functional user with a consumer key and secret
+	 * must have already been created on the resource server and specified in
+	 * the config.properties file.
+	 * 
+	 * @param httpClient
+	 * @param httpContext
+	 * @param get
+	 * @param uri
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	private static Model perform2LeggedOauth(HttpClient httpClient, HttpContext httpContext, HttpGet get, String uri) throws ClientProtocolException, IOException, URISyntaxException {
+		// Get the necessary OAuth values from the config.properties file
+		Properties prop = TestCore.getConfigPropertiesInstance();
+		String consumerKey = prop.getProperty("consumerKey");
+		String consumerSecret = prop.getProperty("consumerSecret");
+		String authorizationTokenURL = prop.getProperty("OAuthURL");
+		String oAuthRealm = prop.getProperty("OAuthRealm");
+		
+		// Using the information from the config.properties file
+		// construct the authentication header to use in our GET request
+		OAuthServiceProvider provider = new OAuthServiceProvider(null, authorizationTokenURL, null);
+		OAuthConsumer consumer = new OAuthConsumer("",consumerKey,consumerSecret,provider);
+		OAuthAccessor accessor = new OAuthAccessor(consumer);
+		accessor.accessToken = "";
+
+		Model model = null;
+		
+		try {
+			OAuthMessage message = accessor.newRequestMessage(HttpMethod.GET, uri, null);
+			String authHeader = message.getAuthorizationHeader(oAuthRealm);
+			
+			get.setHeader("Authorization",authHeader);
+			get.setHeader("OSLC-Core-Version", "2.0");
+			
+			model = httpClient.execute(get, new RDFModelResponseHandler(uri), httpContext);
+		} catch (OAuthException e) {
+			TestCore.terminateTest(Messages.getServerString("fetch.util.authentication.failure"), e);
+		}
+		
+		return model;
+	}
+	
+	/**
+	 * A list of the currently supported authentication types.  The user specifies
+	 * the desired type in the config.properties' AuthType property.
+	 */
+	private enum AuthenticationTypes {
+		HEADER,
+		OAUTH,
+		BASIC
 	}
 }
