@@ -104,8 +104,9 @@ public class DynamicSuiteBuilder
 				
 				if ( supportCreationFactory ) {
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests.class);			
 				}
-				
+	
 				if ( supportQuery ) {
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests.class);
@@ -186,7 +187,6 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordStorageVolumeRdfXmlTests.class);					
 				}
 			}
-			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests.class);			
 			//testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.OAuthTests.class);
 		}
 		if (OSLCConstants.OSLC_CM.equals(testVersions) || 
