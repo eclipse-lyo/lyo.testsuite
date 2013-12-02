@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -13,6 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Matthew Brown
+ *    Samuel Padgett - fix suite error when using Ant
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server;
 
@@ -33,6 +34,6 @@ public class OslcTestSuite extends Suite
 {
 	public OslcTestSuite(Class<?> setupClass) throws InitializationError, IOException
 	{
-		super(setupClass, DynamicSuiteBuilder.suite());
+		super(setupClass, DynamicSuiteBuilder.suitesArray());
 	}
 }
