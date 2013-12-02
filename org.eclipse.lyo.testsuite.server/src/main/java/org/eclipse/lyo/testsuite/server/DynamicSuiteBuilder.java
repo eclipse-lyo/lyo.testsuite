@@ -15,6 +15,7 @@
  *    Yuhong Yin
  *    Tim Eck II     - asset management test cases
  *    Julie Bielski  - performance management test cases
+ *    Samuel Padgett - fix suite error when using Ant
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server;
 
@@ -43,7 +44,7 @@ import org.slf4j.LoggerFactory;
 @RunWith(OslcTestSuite.class)
 public class DynamicSuiteBuilder
 {	
-	public static Class<?>[] suite() throws IOException
+	public static Class<?>[] suitesArray() throws IOException
 	{
 		final Logger log = LoggerFactory.getLogger(DynamicSuiteBuilder.class);
 		Properties setupProps = SetupProperties.setup(null);
