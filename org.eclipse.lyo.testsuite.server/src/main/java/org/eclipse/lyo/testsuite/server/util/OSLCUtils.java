@@ -13,6 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Tim Eck II     - asset management test cases
+ *    Samuel Padgett - add null guards in getContentType()
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server.util;
 
@@ -47,6 +48,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -546,7 +548,18 @@ public class OSLCUtils {
 	}
 
 	public static String getContentType(HttpResponse resp) {
-		String contentType = resp.getEntity().getContentType().getValue();
+		Assert.assertNotNull(resp);
+		HttpEntity entity = resp.getEntity();
+		if (entity == null) {
+			return null;
+		}
+		
+		Header h = entity.getContentType();
+		if (h == null) {
+			return null;
+		}
+
+		String contentType = h.getValue();
 		String contentTypeSplit[] = contentType.split(";");
 		return contentTypeSplit[0];
 	}
