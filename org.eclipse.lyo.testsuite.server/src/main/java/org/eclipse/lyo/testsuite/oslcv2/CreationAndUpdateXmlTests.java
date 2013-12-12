@@ -109,4 +109,12 @@ public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
 				OSLCConstants.CT_XML, xmlCreateTemplate,
 				xmlUpdateTemplate);
 	}
+	
+	@Test
+	public void updateCreatedResourceWithEmptyPrecondition()
+			throws IOException {
+		updateCreatedResourceWithEmptyPrecondition(OSLCConstants.CT_XML,
+				OSLCConstants.CT_XML, xmlCreateTemplate,
+				xmlUpdateTemplate);
+	}
 }
