@@ -100,4 +100,12 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
 				OSLCConstants.CT_JSON, jsonCreateTemplate,
 				jsonUpdateTemplate);
 	}
+	
+	@Test
+	public void updateCreatedResourceWithEmptyPrecondition()
+			throws IOException {
+		updateCreatedResourceWithEmptyPrecondition(OSLCConstants.CT_JSON,
+				OSLCConstants.CT_JSON, jsonCreateTemplate,
+				jsonUpdateTemplate);
+	}
 }
