@@ -119,10 +119,11 @@ public class DynamicSuiteBuilder
 				
 				if (OSLCConstants.OSLC_CM_V2.equals(testVersions)) {
 					log.info("Setting up to test CM v2 features");
-					if ( supportCreationFactory ) {
+					boolean jsonCreationSupported = setupProps.getProperty("createTemplateJsonFile") != null;
+					if ( supportCreationFactory && jsonCreationSupported ) { // shapes aren't yet supported for JSON
 						testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests.class);
 					}
-					
+	
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);

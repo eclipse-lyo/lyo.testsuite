@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -13,6 +13,7 @@
  *    Steve Speicher - initial API and implementation
  *    Tim Eck II     - asset management test cases
  *    Yuhong Yin
+ *    Samuel Padgett - create and update resources using shapes
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -21,6 +22,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -81,8 +84,11 @@ public abstract class TestsBase {
 	protected static AuthMethods authMethod = AuthMethods.BASIC;
 	protected static String implName;
 
-	protected static String currentUrl = null;      // URL of current service being tested
+	protected static String currentUrl = null;    // URL of current service being tested
 	protected static String setupBaseUrl = null;  // Configuration baseUrl, think ServiceProvider or ServiceProviderCatalog
+	protected static String shapeUrl = null;      // Shape for the creation dialog
+	
+	protected static Map<String, String> capabilityToShapeMap = new HashMap<String, String>();
 	
 	public TestsBase(String thisUrl) {
 		currentUrl = thisUrl;
@@ -472,6 +478,10 @@ public abstract class TestsBase {
 			
 			while (statements.hasNext()) {
 				Statement stmt = statements.nextStatement();
+				Statement shape = stmt.getSubject().getProperty(spModel.createProperty(OSLCConstants.RESOURCE_SHAPE_PROP));
+				if (shape != null) {
+					capabilityToShapeMap.put(stmt.getObject().toString(), shape.getObject().toString());
+				}
 				
 				if (firstUrl == null)
 					firstUrl = stmt.getObject().toString();
@@ -513,7 +523,14 @@ public abstract class TestsBase {
 			data.add(firstUrl);
 		return data;
 	}
-
+	
+	/*
+	 * Return the cached shape URI associated with this capability URI. You must have previously called getCapabilityURLsUsingRdfXml().
+	 */
+	public static String getShapeUriForCapability(String capabilityUri) {
+		return capabilityToShapeMap.get(capabilityUri);
+	}
+	
 	public static boolean formLogin(String userId, String pw) {
 		String formUri = setupProps.getProperty("formUri");
 		// Get cookies for forms login procedure (ie: get redirected to login

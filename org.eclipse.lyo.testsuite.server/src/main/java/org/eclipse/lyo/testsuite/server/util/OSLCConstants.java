@@ -14,6 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Yuhong Yin
  *    Tim Eck II     - asset management test cases
+ *    Samuel Padgett - add constants for resource shapes
  *******************************************************************************/
 
 package org.eclipse.lyo.testsuite.server.util;
@@ -93,6 +94,33 @@ public interface OSLCConstants {
 	public static final String RESOURCE_SHAPE_PROP  = OSLC_V2 + "resourceShape";
 	public static final String LABEL_PROP			= OSLC_V2 + "label";
 	public static final String DESCRIPTION_PROP 	= OSLC_V2 + "Description";
+	
+	// OSLC Core - Shapes
+	public static final String INSTANCE_SHAPE       = OSLC_V2 + "instanceShape";
+	public static final String DESCRIBES            = OSLC_V2 + "describes";
+	public static final String PROPERTY             = OSLC_V2 + "property";
+	public static final String OCCURS               = OSLC_V2 + "occurs";
+	public static final String EXACTLY_ONE          = OSLC_V2 + "Exactly-one";
+	public static final String ONE_OR_MANY          = OSLC_V2 + "One-or-many";
+	public static final String PROPERTY_DEFINITION  = OSLC_V2 + "propertyDefinition";
+	public static final String DEFAULT_VALUE        = OSLC_V2 + "defaultValue";
+	public static final String ALLOWED_VALUE        = OSLC_V2 + "allowedValue";
+	public static final String ALLOWED_VALUES       = OSLC_V2 + "allowedValues";
+	public static final String VALUE_TYPE           = OSLC_V2 + "valueType";
+	public static final String RANGE                = OSLC_V2 + "range";
+	public static final String READ_ONLY            = OSLC_V2 + "readOnly";
+	public static final String MAX_SIZE_PROP        = OSLC_V2 + "maxSize";
+	public static final String VALUE_SHAPE_PROP     = OSLC_V2 + "valueShape";
+	
+	// Value types
+	public static final String BOOLEAN_TYPE         = "http://www.w3.org/2001/XMLSchema#boolean";
+	public static final String DATE_TIME_TYPE       = "http://www.w3.org/2001/XMLSchema#dateTime";
+	public static final String DECIMAL_TYPE         = "http://www.w3.org/2001/XMLSchema#decimal";
+	public static final String DOUBLE_TYPE          = "http://www.w3.org/2001/XMLSchema#double";
+	public static final String FLOAT_TYPE           = "http://www.w3.org/2001/XMLSchema#float";
+	public static final String INTEGER_TYPE         = "http://www.w3.org/2001/XMLSchema#integer";
+	public static final String STRING_TYPE          = "http://www.w3.org/2001/XMLSchema#string";
+	public static final String XML_LITERAL_TYPE     = "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral";
 	
 	// OSLC CM 2.0
 	public static final String CM_CHANGE_REQUEST_TYPE = OSLC_CM_V2 + "ChangeRequest";
