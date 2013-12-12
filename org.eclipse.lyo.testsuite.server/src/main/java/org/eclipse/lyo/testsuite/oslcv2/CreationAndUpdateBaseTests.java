@@ -31,7 +31,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.oslcv2.TestsBase.AuthMethods;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
@@ -391,6 +390,60 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		}
 		
 		assertEquals(HttpStatus.SC_PRECONDITION_FAILED, resp.getStatusLine()
+				.getStatusCode());
+
+		// Clean up after the test by attempting to delete the created resource
+		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
+
+		if (resp != null && resp.getEntity() != null)
+			EntityUtils.consume(resp.getEntity());
+	}
+
+	protected void updateCreatedResourceWithEmptyPrecondition(
+			String contentType, String accept, String createContent,
+			String updateContent) throws IOException {
+
+		HttpResponse resp = createResource(contentType, accept, createContent);
+
+		Header location = getRequiredLocationHeader(resp);
+		assertTrue("Location(" + location + ")" + " must not be null",
+				location != null);
+
+		// check whether a POST response body is empty (which is allowed)
+		Header contentLength = resp.getFirstHeader("Content-Length");
+		boolean hasPayLoad = true;
+		if (contentLength != null) {
+			String len = contentLength.getValue().toString();
+			if (len.equalsIgnoreCase("0")) {
+				hasPayLoad = false;
+			}
+		}
+
+		Header eTag = resp.getFirstHeader("ETag");
+		Header lastModified = resp.getFirstHeader("Last-Modified");
+
+		if (hasPayLoad) {
+			assertTrue("Either ETag(" + eTag + ") or Last-Modified("
+					+ lastModified + ") must not be null", eTag != null
+					|| lastModified != null);
+		}
+
+		int size = headers.length;
+
+		// Put headers but ignore the precondition headers: "If-Match", and "If-Unmodified-Since"
+		Header[] putHeaders = new Header[size];
+		int i = 0;
+		for (; i < headers.length; i++) {
+			putHeaders[i] = headers[i];
+		}
+
+		// Now, go to the url of the new change request and update it.
+		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, accept,
+				contentType, updateContent, putHeaders);
+		if (resp != null && resp.getEntity() != null)
+			EntityUtils.consume(resp.getEntity());
+
+		assertEquals(HttpStatus.SC_BAD_REQUEST, resp.getStatusLine()
 				.getStatusCode());
 
 		// Clean up after the test by attempting to delete the created resource

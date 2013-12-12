@@ -107,4 +107,12 @@ public class CreationAndUpdateRdfXmlTests extends CreationAndUpdateBaseTests {
 				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
 				rdfXmlUpdateTemplate);
 	}
+	
+	@Test
+	public void updateCreatedResourceWithEmptyPrecondition()
+			throws IOException {
+		updateCreatedResourceWithEmptyPrecondition(OSLCConstants.CT_RDF,
+				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
+				rdfXmlUpdateTemplate);
+	}
 }
