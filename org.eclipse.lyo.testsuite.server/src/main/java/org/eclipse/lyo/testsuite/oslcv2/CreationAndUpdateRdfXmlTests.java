@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -13,6 +13,7 @@
  *
  *    Steve Speicher
  *    Yuhong Yin
+ *    Samuel Padgett
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -38,7 +38,7 @@ import org.junit.runners.Parameterized.Parameters;
  * providers.
  */
 @RunWith(Parameterized.class)
-public class CreationAndUpdateRdfXmlTests extends CreationAndUpdateBaseTests {
+public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTests {
 
 	public CreationAndUpdateRdfXmlTests(String url) {
 		super(url);
@@ -51,7 +51,6 @@ public class CreationAndUpdateRdfXmlTests extends CreationAndUpdateBaseTests {
 		staticSetup();
 		
 		ArrayList<String> capabilityURLsUsingRdfXml = new ArrayList<String>();
-		
 		String useThisCapability = setupProps.getProperty("useThisCapability");
 		
 		if ( useThisCapability != null ) {
@@ -66,53 +65,20 @@ public class CreationAndUpdateRdfXmlTests extends CreationAndUpdateBaseTests {
 		}
 		
 		return toCollection(capabilityURLsUsingRdfXml);
-	}
+	}	
 
-	@Test
-	public void createValidResourceUsingRdfXmlTemplate() throws IOException {
-		createValidResourceUsingTemplate(OSLCConstants.CT_RDF,
-				OSLCConstants.CT_RDF, rdfXmlCreateTemplate);
-	}
+	@Override
+    public String getContentType() {
+	    return OSLCConstants.CT_RDF;
+    }
 
-	@Test
-	public void createResourceWithInvalidContent() throws IOException {
-		createResourceWithInvalidContent(OSLCConstants.CT_RDF,
-				OSLCConstants.CT_RDF, "notvalidrdfxmlcontent");
-	}
+	@Override
+    public String getCreateContent() throws IOException {
+	    return getCreateContent(rdfXmlCreateTemplate);
+    }
 
-	@Test
-	public void createResourceAndUpdateIt() throws IOException {
-		createResourceAndUpdateIt(OSLCConstants.CT_RDF, OSLCConstants.CT_RDF,
-				rdfXmlCreateTemplate, rdfXmlUpdateTemplate);
-	}
-
-	@Test
-	public void updateCreatedResourceWithInvalidContent() throws IOException {
-		updateCreatedResourceWithInvalidContent(OSLCConstants.CT_RDF,
-				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
-				"notvalidrdfxmlcontent");
-	}
-
-	@Test
-	public void updateCreatedResourceWithBadType() throws IOException {
-		updateCreatedResourceWithBadType(OSLCConstants.CT_RDF,
-				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
-				rdfXmlUpdateTemplate, "invalid/type");
-	}
-
-	@Test
-	public void updateCreatedResourceWithFailedPrecondition()
-			throws IOException {
-		updateCreatedResourceWithFailedPrecondition(OSLCConstants.CT_RDF,
-				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
-				rdfXmlUpdateTemplate);
-	}
-	
-	@Test
-	public void updateCreatedResourceWithEmptyPrecondition()
-			throws IOException {
-		updateCreatedResourceWithEmptyPrecondition(OSLCConstants.CT_RDF,
-				OSLCConstants.CT_RDF, rdfXmlCreateTemplate,
-				rdfXmlUpdateTemplate);
-	}
+	@Override
+    public String getUpdateContent(String resourceUri) throws IOException {
+	    return getUpdateContent(resourceUri, rdfXmlUpdateTemplate);
+    }
 }

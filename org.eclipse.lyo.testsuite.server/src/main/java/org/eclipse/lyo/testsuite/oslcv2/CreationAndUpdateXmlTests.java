@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -24,7 +24,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -42,7 +41,7 @@ import org.xml.sax.SAXException;
  * providers.
  */
 @RunWith(Parameterized.class)
-public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
+public class CreationAndUpdateXmlTests extends AbstractCreationAndUpdateRdfTests {
 
 	public CreationAndUpdateXmlTests(String url) {
 		super(url);
@@ -70,51 +69,19 @@ public class CreationAndUpdateXmlTests extends CreationAndUpdateBaseTests {
 		
 		return toCollection(capabilityURLsUsingXml);
 	}
-
-	@Test
-	public void createValidResourceUsingTemplate() throws IOException {
-		createValidResourceUsingTemplate(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate);
-	}
-
-	@Test
-	public void createResourceWithInvalidContent() throws IOException {
-		createResourceWithInvalidContent(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, "notvalidxmldefect");
-	}
-
-	@Test
-	public void createResourceAndUpdateIt() throws IOException {
-		createResourceAndUpdateIt(OSLCConstants.CT_XML, OSLCConstants.CT_XML,
-				xmlCreateTemplate, xmlUpdateTemplate);
-	}
-
-	@Test
-	public void updateCreatedResourceWithInvalidContent() throws IOException {
-		updateCreatedResourceWithInvalidContent(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate, "NOTVALIDXML");
-	}
-
-	@Test
-	public void updateCreatedResourceWithInvalidContentType() throws IOException {
-		updateCreatedResourceWithBadType(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate, xmlUpdateTemplate,
-				"invalid/type");
-	}
-
-	@Test
-	public void updateCreatedResourceWithFailedPrecondition()
-			throws IOException {
-		updateCreatedResourceWithFailedPrecondition(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate,
-				xmlUpdateTemplate);
-	}
 	
-	@Test
-	public void updateCreatedResourceWithEmptyPrecondition()
-			throws IOException {
-		updateCreatedResourceWithEmptyPrecondition(OSLCConstants.CT_XML,
-				OSLCConstants.CT_XML, xmlCreateTemplate,
-				xmlUpdateTemplate);
-	}
+	@Override
+    public String getContentType() {
+	    return OSLCConstants.CT_XML;
+    }
+
+	@Override
+    public String getCreateContent() throws IOException {
+	    return getCreateContent(xmlCreateTemplate);
+    }
+
+	@Override
+    public String getUpdateContent(String resourceUri) throws IOException {
+	    return getUpdateContent(resourceUri, xmlUpdateTemplate);
+    }
 }

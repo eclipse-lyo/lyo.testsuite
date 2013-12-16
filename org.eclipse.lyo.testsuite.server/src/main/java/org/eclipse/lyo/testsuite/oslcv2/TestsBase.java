@@ -561,13 +561,13 @@ public abstract class TestsBase {
 
 	public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL)
 	throws IOException, XPathException, ParserConfigurationException,
-	SAXException {
-		return getServiceProviderURLsUsingXML(inBaseURL, onlyOnce);
+	SAXException, JSONException {
+		return getServiceProviderURLsUsingJson(inBaseURL, onlyOnce);
 	}
 	
 	public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL, boolean dontGoDeep)
 		throws IOException, XPathException, ParserConfigurationException,
-		SAXException, NullPointerException, JSONException {
+		SAXException, JSONException {
 		
 		staticSetup();
 		
@@ -598,7 +598,7 @@ public abstract class TestsBase {
 		if (userData instanceof JSONArtifact) {
 			resultJson = (JSONObject)userData;
 		}
-
+		
 		JSONArray results = (JSONArray)resultJson.get("oslc:serviceProvider");
 		
 		// Now walk through the array to get a list of service providers
