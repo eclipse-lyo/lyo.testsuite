@@ -204,13 +204,24 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 		Property domainProp = fRdfModel.createProperty(OSLCConstants.OSLC_V2, "domain");
 		Property serviceProp = fRdfModel.createProperty(OSLCConstants.SERVICE_PROP);
 		List<Statement> list = fServiceProvider.listProperties(serviceProp).toList();
+		String returnVal = "";
 		for(int i = 0; i < list.size(); i++ )
 		{
 			Statement services = list.get(i);
-			Resource r = services.getResource();
+			Resource service = services.getResource();
+			List<Statement> domains = service.listProperties(domainProp).toList();
 			// Make sure each service has one domain
-			assertEquals(1, r.listProperties(domainProp).toList().size());
+			assertEquals(1, domains.size());
+			// Make sure the domain is a resource
+			assertTrue(domains.get(0).getResource().isURIResource());
+			// Make sure one of the domains found in the services matches the test version
+			if(domains.get(0).getResource().getNameSpace().equals(testVersion))
+			{
+				returnVal = "Domain " + domains.get(0).getResource().getNameSpace() + " found for Service resource";
+			}
 		}
+		
+		assertEquals("Domain " + testVersion + " found for Service resource", returnVal);
 		
 	}
 	
