@@ -13,6 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Yuhong Yin
+ *    Tori Santonil  - validate oslc:domain property on oslc:Service resource
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -203,15 +204,24 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	{
 		Property domainProp = fRdfModel.createProperty(OSLCConstants.OSLC_V2, "domain");
 		Property serviceProp = fRdfModel.createProperty(OSLCConstants.SERVICE_PROP);
-		List<Statement> list = fServiceProvider.listProperties(serviceProp).toList();
-		for(int i = 0; i < list.size(); i++ )
+		List<Statement> statements = fServiceProvider.listProperties(serviceProp).toList();
+		boolean domainFound = false;
+		for(Statement statement : statements)
 		{
-			Statement services = list.get(i);
-			Resource r = services.getResource();
+			Resource service = statement.getResource();
+			List<Statement> domains = service.listProperties(domainProp).toList();
 			// Make sure each service has one domain
-			assertEquals(1, r.listProperties(domainProp).toList().size());
+			assertEquals(1, domains.size());
+			// Make sure the domain is a resource with a URI
+			assertTrue(domains.get(0).getObject().isURIResource());
+			// Make sure one of the domains found in the services matches the test version
+			if(domains.get(0).getResource().getNameSpace().equals(testVersion))
+			{
+				domainFound = true;
+			}
 		}
 		
+		assertTrue("Domain " + testVersion + " not found for any Service resource", domainFound);
 	}
 	
 	@Test
