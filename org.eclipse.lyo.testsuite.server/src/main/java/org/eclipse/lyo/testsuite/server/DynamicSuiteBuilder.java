@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.eclipse.lyo.testsuite.oslcv2.OSLCCoreVersionJsonTest;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.CreationAndUpdateTests;
 import org.eclipse.lyo.testsuite.server.oslcv1tests.QueryTests;
@@ -93,6 +94,9 @@ public class DynamicSuiteBuilder
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests.class);
 			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.FetchResourceTests.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.OSLCCoreVersionJsonTest.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.OSLCCoreVersionRdfXmlTest.class);
+			testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.OSLCCoreVersionXmlTest.class);
 			
 			if (OSLCConstants.OSLC_CM_V2.equals(testVersions) || 
 				OSLCConstants.OSLC_QM_V2.equals(testVersions) || 
@@ -126,6 +130,9 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.InvalidateOSLCPropertiesJsonTest.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.InvalidateOSLCPropertiesRdfXmlTest.class);
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.InvalidateOSLCPropertiesXmlTest.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests.class);
 					
 				} else if(OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
@@ -141,8 +148,8 @@ public class DynamicSuiteBuilder
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetXmlTest.class);
 					
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateRdfXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateXmlTests.class);					
-					
+					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateXmlTests.class);
+
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseRdfXmlTests.class);										
 				} else if (OSLCConstants.OSLC_RM_V2.equals(testVersions)) {
