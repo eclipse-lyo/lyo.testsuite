@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -199,13 +199,37 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	}
 	
 	@Test
+	public void eachServiceHasOneDomain() throws XPathExpressionException
+	{
+		Property domainProp = fRdfModel.createProperty(OSLCConstants.OSLC_V2, "domain");
+		Property serviceProp = fRdfModel.createProperty(OSLCConstants.SERVICE_PROP);
+		List<Statement> list = fServiceProvider.listProperties(serviceProp).toList();
+		for(int i = 0; i < list.size(); i++ )
+		{
+			Statement services = list.get(i);
+			Resource r = services.getResource();
+			// Make sure each service has one domain
+			assertEquals(1, r.listProperties(domainProp).toList().size());
+		}
+		
+	}
+	
+	@Test
 	public void serviceProviderHasService()
 	{
 		Property service = fRdfModel.createProperty(OSLCConstants.SERVICE_PROP);
 		List<?> lst = fServiceProvider.listProperties(service).toList();
 		assertTrue(lst.size() >= 1);
 	}
-
+	
+	@Test
+	public void serviceProviderHasAtMostOnePublisher()
+	{
+		Property dcPublisher = fRdfModel.createProperty(OSLCConstants.DC_PUBLISHER_PROP);
+		assertTrue(fServiceProvider.listProperties(dcPublisher).toList().size() <= 1);
+	}
+	
+	
 	/* TODO: Complete ServiceProvider RDF/XML test validation
 
 	@Test
@@ -218,11 +242,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	{
 	}
 	
-	@Test
-	public void serviceProviderHasAtMostOnePublisher()
-	{
-	}
-	
+
 	@Test
 	public void publisherElementsAreValid()
 	{
@@ -235,11 +255,6 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	
 	@Test
 	public void oAuthElementsAreValid()
-	{
-	}
-	
-	@Test
-	public void eachServiceHasOneDomain()
 	{
 	}
 	
