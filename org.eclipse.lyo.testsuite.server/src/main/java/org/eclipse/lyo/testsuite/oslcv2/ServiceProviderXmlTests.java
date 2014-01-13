@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -379,6 +379,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 			for (int j = 0; j < serviceChildren.getLength(); j++)
 			{
 				Node sChild = serviceChildren.item(j);
+				
 				if (sChild.getLocalName() == null)
 				{
 					continue;
@@ -391,6 +392,12 @@ public class ServiceProviderXmlTests extends TestsBase {
 			//Make sure the service has exactly one domain element
 			assertTrue(numDomains == 1);
 		}
+		
+		// Test to make sure the CM domain contains the test version
+		Node detail = (Node) OSLCUtils.getXPath().evaluate("//oslc_v2:service/oslc_v2:Service/oslc_v2:domain", doc, 
+				XPathConstants.NODE);
+		Node node = detail.getAttributes().getNamedItemNS(OSLCConstants.RDF, "resource");
+		assertTrue(node.toString().contains(testVersion));
 	}
 	
 	@Test

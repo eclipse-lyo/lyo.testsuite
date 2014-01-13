@@ -88,6 +88,8 @@ public abstract class TestsBase {
 	protected static String setupBaseUrl = null;  // Configuration baseUrl, think ServiceProvider or ServiceProviderCatalog
 	protected static String shapeUrl = null;      // Shape for the creation dialog
 	
+	protected static String testVersion = null;
+	
 	protected static Map<String, String> capabilityToShapeMap = new HashMap<String, String>();
 	
 	public TestsBase(String thisUrl) {
@@ -153,6 +155,9 @@ public abstract class TestsBase {
 				rdfXmlCreateTemplate = xmlCreateTemplate;
 			if (rdfXmlUpdateTemplate == null)
 				rdfXmlUpdateTemplate = xmlUpdateTemplate;
+			
+			// TODO Acquire the test version (v1/v2)
+			testVersion = setupProps.getProperty("testVersions");
 		}
 	}
 
