@@ -191,6 +191,32 @@ public class OSLCUtils {
 		return 1;
 	}
 	
+	public static String getOslcVersion(String url, Credentials creds,
+			String acceptTypes, String requestVersion)
+			throws ClientProtocolException, IOException {
+		getHttpClient(creds);
+
+		HttpGet httpget = new HttpGet(url);
+
+		// Get the response and return it, accept only service provider catalogs
+		// & description documents
+		httpget.setHeader("Accept", acceptTypes);
+
+		// If request version is not given, set "2.0" as default
+		if (requestVersion != null) {
+			httpget.setHeader("OSLC-Core-Version", requestVersion);
+		}
+
+		HttpResponse response = httpclient.execute(httpget);
+		EntityUtils.consume(response.getEntity());
+
+		if (response.containsHeader("OSLC-Core-Version")) {
+			return response.getFirstHeader("OSLC-Core-Version").getValue();
+		}
+
+		return "No Version Info";
+	}
+	
 	public static HttpResponse postDataToUrl(String url, Credentials creds, String acceptTypes, String contentType, 
 			String content) throws IOException
 	{
