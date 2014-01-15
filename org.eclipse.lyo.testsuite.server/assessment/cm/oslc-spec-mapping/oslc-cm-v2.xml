@@ -65,6 +65,7 @@
 		<testcase level="MUST">updateCreatedResourceWithInvalidContent</testcase>
 		<testcase level="MUST">updateCreatedResourceWithInvalidContentType</testcase>
 		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
+		<testcase level="SHOULD">updateCreatedResourceWithEmptyPrecondition</testcase>
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateRdfXmlTests">
@@ -75,6 +76,7 @@
 		<testcase level="MUST">updateCreatedResourceWithInvalidContent</testcase>
 		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
 		<testcase level="MUST">updateCreatedResourceWithBadType</testcase>
+		<testcase level="SHOULD">updateCreatedResourceWithEmptyPrecondition</testcase>
 	</testclass>
 		
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="CreationAndUpdateXmlTests">
@@ -85,6 +87,7 @@
 		<testcase level="MUST">updateCreatedResourceWithInvalidContent</testcase>
 		<testcase level="MUST">updateCreatedResourceWithInvalidContentType</testcase>
 		<testcase level="MUST">updateCreatedResourceWithFailedPrecondition</testcase>
+		<testcase level="SHOULD">updateCreatedResourceWithEmptyPrecondition</testcase>
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderCatalogRdfXmlTests">
@@ -131,6 +134,8 @@
 		<testcase level="MUST">responseContentTypeIsXML</testcase>
 		<testcase level="MUST">serviceProviderHasAtMostOneTitle</testcase>
 		<testcase level="MUST">serviceProviderHasService</testcase>
+		<testcase level="MUST">serviceProviderHasAtMostOnePublisher</testcase>
+		<testcase level="MUST">eachServiceHasOneDomain</testcase>
 	</testclass>
 	
 	<testclass package="org.eclipse.lyo.testsuite.oslcv2" name="ServiceProviderXmlTests">
