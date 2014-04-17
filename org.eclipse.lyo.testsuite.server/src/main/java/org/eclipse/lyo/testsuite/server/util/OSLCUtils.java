@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -24,8 +24,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -33,8 +35,14 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.X509TrustManager;
+
+import java.security.cert.X509Certificate;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -65,6 +73,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
@@ -317,9 +326,59 @@ public class OSLCUtils {
 			}
 		} };
 
+		X509HostnameVerifier verifier = new X509HostnameVerifier() {
+			 
+            @Override
+            public void verify(String string, SSLSocket ssls) throws IOException {
+            }
+
+            @Override
+            public void verify(String string, X509Certificate xc) throws SSLException {
+            }
+
+            @Override
+            public void verify(String string, String[] strings, String[] strings1) throws SSLException {
+            }
+
+            @Override
+            public boolean verify(String string, SSLSession ssls) {
+                return true;
+            }
+        };
+        
+        class TLSSocketFactory extends SSLSocketFactory {
+        	private final javax.net.ssl.SSLSocketFactory socketfactory;
+        	public TLSSocketFactory(SSLContext sslContext) {
+        		super(sslContext);
+        		this.socketfactory = sslContext.getSocketFactory();
+        	}
+        	
+        	public Socket createSocket() throws IOException {
+        		SSLSocket socket = (SSLSocket) super.createSocket();
+        		socket.setEnabledProtocols(new String[] {"SSLv3", "TLSv1"});
+        		return socket;
+        	}
+        	
+        	public Socket createSocket(
+        			final Socket socket,
+        	        final String host,
+        	        final int port,
+        	        final boolean autoClose) throws IOException, UnknownHostException {
+        		SSLSocket sslSocket = (SSLSocket) this.socketfactory.createSocket(
+        	            socket,
+        	            host,
+        	            port,
+        	            autoClose
+        	      );
+        		sslSocket.setEnabledProtocols(new String[] {"SSLv3", "TLSv1"});
+        		getHostnameVerifier().verify(host,  sslSocket);
+        		return sslSocket;
+        	}
+        }
+        
 		SSLContext sc = null;
 		try {
-			sc = SSLContext.getInstance("SSL"); //$NON-NLS-1$
+			sc = SSLContext.getInstance("TLS"); //$NON-NLS-1$
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 		} catch (NoSuchAlgorithmException e) {
 			/* Fail Silently */
@@ -327,8 +386,8 @@ public class OSLCUtils {
 			/* Fail Silently */
 		}
 
-		SSLSocketFactory sf = new SSLSocketFactory(sc);
-		sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+		SSLSocketFactory sf = new TLSSocketFactory(sc);
+		sf.setHostnameVerifier(verifier);
 		Scheme https = new Scheme("https", sf, 443);
 
 		schemeRegistry.register(https);
