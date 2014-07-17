@@ -14,147 +14,163 @@
        Steve Speicher - initial API and implementation
        Yuhong Yin
        Samuel Padgett - set UTF-8 source encoding
+       Samuel Padgett - created shaded JAR with dependencies during build
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>org.eclipse.lyo.testsuite.server</artifactId>
-    <name>Test Client - HTTPClient </name>
-    <groupId>org.eclipse.lyo</groupId>
-    <version>3.0.0-SNAPSHOT</version>
+	<artifactId>org.eclipse.lyo.testsuite.server</artifactId>
+	<name>Test Client - HTTPClient </name>
+	<groupId>org.eclipse.lyo</groupId>
+	<version>3.0.0-SNAPSHOT</version>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <skipTests>true</skipTests>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<skipTests>true</skipTests>
+	</properties>
+	<repositories>
+		<repository>
+			<id>oauth</id>
+			<url>http://oauth.googlecode.com/svn/code/maven</url>
+		</repository>
+	</repositories>
 
-    <repositories>
-        <repository>
-            <id>oauth</id>
-            <url>http://oauth.googlecode.com/svn/code/maven</url>
-        </repository>
-    </repositories>
+	<dependencies>
 
-    <dependencies>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <scope>compile</scope>
-            <version>1.1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.1.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth</artifactId>
-            <version>20090617</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth-consumer</artifactId>
-            <version>20090617</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth-httpclient3</artifactId>
-            <version>20090617</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.wink</groupId>
-            <artifactId>wink-json4j</artifactId>
-            <version>1.2.1-incubating</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.5.10</version>
-        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+		</dependency>
 
 
-        <dependency>
-            <groupId>org.apache.abdera</groupId>
-            <artifactId>abdera-parser</artifactId>
-            <version>1.1.2</version>
-        </dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<scope>compile</scope>
+			<version>1.1.1</version>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-core</artifactId>
-            <version>2.7.1</version>
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.1.2</version>
+		</dependency>
 
-    <build>
-        <plugins>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth</artifactId>
+			<version>20090617</version>
+			<scope>compile</scope>
+		</dependency>
 
-            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
-                <configuration> <includes> <include>org/eclipse/lyo/testsuite/server/DynamicSuiteBuilder.java</include> 
-                </includes> </configuration> </plugin> -->
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth-consumer</artifactId>
+			<version>20090617</version>
+			<scope>compile</scope>
+		</dependency>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-            </plugin>
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth-httpclient3</artifactId>
+			<version>20090617</version>
+		</dependency>
 
-        </plugins>
+		<dependency>
+			<groupId>org.apache.wink</groupId>
+			<artifactId>wink-json4j</artifactId>
+			<version>1.2.1-incubating</version>
+		</dependency>
 
-        <testSourceDirectory>${basedir}/src/main/java</testSourceDirectory>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.5.10</version>
+		</dependency>
 
-    </build>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
+		<dependency>
+			<groupId>org.apache.abdera</groupId>
+			<artifactId>abdera-parser</artifactId>
+			<version>1.1.2</version>
+		</dependency>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>xml-apis</groupId>
-                <artifactId>xml-apis</artifactId>
-                <version>1.4.01</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-core</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
+				<configuration> <includes> <include>org/eclipse/lyo/testsuite/server/DynamicSuiteBuilder.java</include> 
+				</includes> </configuration> </plugin> -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<shadedArtifactAttached>true</shadedArtifactAttached>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<testSourceDirectory>${basedir}/src/main/java</testSourceDirectory>
+
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>xml-apis</groupId>
+				<artifactId>xml-apis</artifactId>
+				<version>1.4.01</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
 
