@@ -1,0 +1,30 @@
+<!--
+    Copyright (c) 2014 IBM Corporation.
+   
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+   
+    The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+    and the Eclipse Distribution License is available at 
+    http://www.eclipse.org/org/documents/edl-v10.php.
+   
+    Contributors:
+  
+       Samuel Padgett - initial API and implementation
+ -->
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion> 
+	<groupId>org.eclipse.lyo.testsuite</groupId>  
+	<version>3.0.0-SNAPSHOT</version> 
+	<packaging>pom</packaging>
+    <name>Lyo OSLC Assessment Test Build</name>
+    <scm>
+        <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.testsuite.git</url>
+    </scm>
+	<modules> 
+		<module>../org.eclipse.lyo.testsuite.server</module> 
+		<module>../org.eclipse.lyo.testsuite.trs</module>
+	</modules> 
+	<artifactId>testsuite-build</artifactId>
+</project>

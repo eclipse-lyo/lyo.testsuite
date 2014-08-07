@@ -15,15 +15,16 @@
        Yuhong Yin
        Samuel Padgett - set UTF-8 source encoding
        Samuel Padgett - created shaded JAR with dependencies during build
+       Samuel Padgett - update Maven group ID and artifact ID
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.lyo.testsuite.server</artifactId>
-	<name>Test Client - HTTPClient </name>
-	<groupId>org.eclipse.lyo</groupId>
+	<artifactId>testsuite-server</artifactId>
+	<name>OSLC Implementation Assessment Test</name>
+	<groupId>org.eclipse.lyo.testsuite</groupId>
 	<version>3.0.0-SNAPSHOT</version>
 
 	<properties>
@@ -36,16 +37,15 @@
 			<url>http://oauth.googlecode.com/svn/code/maven</url>
 		</repository>
 	</repositories>
-
+	<scm>
+		<url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.testsuite.git</url>
+	</scm>
 	<dependencies>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
@@ -97,7 +97,6 @@
 			<version>1.5.10</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.apache.abdera</groupId>
 			<artifactId>abdera-parser</artifactId>
@@ -109,11 +108,16 @@
 			<artifactId>jena-core</artifactId>
 			<version>2.7.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -151,7 +155,6 @@
 			</plugin>
 		</plugins>
 		<testSourceDirectory>${basedir}/src/main/java</testSourceDirectory>
-
 	</build>
 
 	<reporting>
@@ -162,15 +165,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>xml-apis</groupId>
-				<artifactId>xml-apis</artifactId>
-				<version>1.4.01</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>
 
