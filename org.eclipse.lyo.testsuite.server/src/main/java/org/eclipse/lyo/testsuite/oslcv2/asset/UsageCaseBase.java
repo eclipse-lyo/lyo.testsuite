@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -86,7 +86,7 @@ public class UsageCaseBase extends AssetTestBase {
 						"&oslc.where=" +
 						URLEncoder.encode(queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8");
 		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
-		return OSLCUtils.getDataFromUrl(queryUrl, basicCreds, acceptType, contentType, headers);
+		return OSLCUtils.getDataFromUrl(queryUrl, creds, acceptType, contentType, headers);
 	}
 	
 	protected Header[] addHeader(Header header) {

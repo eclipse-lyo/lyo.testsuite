@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -64,7 +64,7 @@ public class AssetTestBase  extends TestsBase {
 	public void tearDown() throws IOException {
 		if(assetUrl == null)
 			return;
-		HttpResponse resp =OSLCUtils.deleteFromUrl(assetUrl, basicCreds, acceptType);
+		HttpResponse resp =OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
 		EntityUtils.consume(resp.getEntity());
 	}
 	
@@ -75,7 +75,7 @@ public class AssetTestBase  extends TestsBase {
 	 */
 	protected String getAssetAsString() throws IOException
 	{
-		HttpResponse resp = OSLCUtils.getDataFromUrl(assetUrl, basicCreds, acceptType, contentType, headers);
+		HttpResponse resp = OSLCUtils.getDataFromUrl(assetUrl, creds, acceptType, contentType, headers);
 		String content = EntityUtils.toString(resp.getEntity());
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
@@ -89,7 +89,7 @@ public class AssetTestBase  extends TestsBase {
 	 */
 	protected HttpResponse getAssetResponse() throws IOException
 	{
-		HttpResponse resp = OSLCUtils.getDataFromUrl(assetUrl, basicCreds, acceptType, contentType, headers);
+		HttpResponse resp = OSLCUtils.getDataFromUrl(assetUrl, creds, acceptType, contentType, headers);
 		try {
 			assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 					resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
@@ -107,7 +107,7 @@ public class AssetTestBase  extends TestsBase {
 	protected String createAsset(String content) throws IOException
 	{
 		HttpResponse resp = 
-			OSLCUtils.postDataToUrl(currentUrl, basicCreds, acceptType, contentType, content, headers);
+			OSLCUtils.postDataToUrl(currentUrl, creds, acceptType, contentType, content, headers);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
@@ -128,7 +128,7 @@ public class AssetTestBase  extends TestsBase {
 	
 	protected void putAsset(String content) throws IOException {
 		HttpResponse resp = OSLCUtils.putDataToUrl(assetUrl,
-				basicCreds, acceptType, contentType, content, headers);
+				creds, acceptType, contentType, content, headers);
 
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),

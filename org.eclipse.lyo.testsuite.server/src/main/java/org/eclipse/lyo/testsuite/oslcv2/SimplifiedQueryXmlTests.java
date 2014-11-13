@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -93,7 +93,7 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 			ParserConfigurationException, SAXException {
 		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				queryUrl, basicCreds, OSLCConstants.CT_XML, headers);
+				queryUrl, creds, OSLCConstants.CT_XML, headers);
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (HttpStatus.SC_OK != statusCode)
 		{

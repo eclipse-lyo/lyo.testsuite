@@ -14,6 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Tim Eck II     - asset management test cases
  *    Samuel Padgett - add null guards in getContentType()
+ *    Samuel Padgett - add support for two-legged OAuth authentication
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.server.util;
 
@@ -30,19 +31,17 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.TrustManager;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
-import java.security.cert.X509Certificate;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -54,6 +53,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
+
+import net.oauth.OAuthAccessor;
+import net.oauth.OAuthConsumer;
+import net.oauth.OAuthMessage;
+import net.oauth.OAuthServiceProvider;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -69,6 +73,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -79,6 +84,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.lyo.testsuite.oauth.OAuthCredentials;
 import org.junit.Assert;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -86,6 +93,7 @@ import org.xml.sax.SAXException;
 
 
 public class OSLCUtils {
+	private static Logger logger = Logger.getLogger(OSLCUtils.class);
 	//HttpClient used for all requests
 	public static DefaultHttpClient httpclient = null;
 	private static final String JAZZ_AUTH_MESSAGE_HEADER = "X-com-ibm-team-repository-web-auth-msg";
@@ -144,6 +152,7 @@ public class OSLCUtils {
 			httpget.setHeaders(headers);
 		}
 		httpget.setHeader("Accept", acceptTypes);
+		oAuthSign(httpget, creds);
 		
 		//Get the response and return it
 		HttpResponse response = httpclient.execute(httpget);
@@ -155,7 +164,7 @@ public class OSLCUtils {
 		if (httpclient == null) {
 			httpclient = new DefaultHttpClient();
 			setupLazySSLSupport(httpclient);
-			if (creds != null) {
+			if (creds != null && !(creds instanceof OAuthCredentials)) {
 				httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
 			}
 
@@ -181,6 +190,29 @@ public class OSLCUtils {
 		return httpclient;
 	}
 	
+	// Sign the request using 2-legged OAuth if necessary.
+	private static void oAuthSign(HttpRequestBase request, Credentials creds) {
+		if (creds instanceof OAuthCredentials) {
+			OAuthServiceProvider provider = new OAuthServiceProvider(null, null, null);
+			OAuthConsumer consumer =
+					new OAuthConsumer("",
+							creds.getUserPrincipal().getName(),
+							creds.getPassword(),
+							provider);
+			OAuthAccessor accessor = new OAuthAccessor(consumer);
+			accessor.accessToken = "";
+			OAuthMessage message;
+			try {
+				message = accessor.newRequestMessage(request.getMethod(), request.getURI().toString(), null);
+				String authHeader = message.getAuthorizationHeader(null);
+				request.addHeader("Authorization", authHeader);
+			} catch (Exception e) {
+				logger.error("Could not OAuth sign request", e);
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	public static int checkOslcVersion(String url, Credentials creds, String acceptTypes) throws ClientProtocolException, IOException
 	{
 		getHttpClient(creds);
@@ -189,6 +221,7 @@ public class OSLCUtils {
 		//Get the response and return it, accept only service provider catalogs & description documents
 		httpget.setHeader("Accept", acceptTypes);
 		httpget.setHeader("OSLC-Core-Version", "2.0");
+		oAuthSign(httpget, creds);
 		HttpResponse response = httpclient.execute(httpget);
 		EntityUtils.consume(response.getEntity());
 		
@@ -223,6 +256,8 @@ public class OSLCUtils {
 		if (acceptTypes != null && !acceptTypes.isEmpty())
 			httppost.addHeader("Accept", acceptTypes);
 		
+		oAuthSign(httppost, creds);
+
 		//Send the request and return the response
 		HttpResponse resp = httpclient.execute(httppost);
 		return resp;
@@ -238,6 +273,7 @@ public class OSLCUtils {
 		if (acceptTypes != null && !acceptTypes.isEmpty())
 			httpdelete.addHeader("Accept", acceptTypes);
 		
+		oAuthSign(httpdelete, creds);
 		//Send the request and return the response
 		HttpResponse resp = httpclient.execute(httpdelete, new BasicHttpContext());
 		return resp;
@@ -266,6 +302,8 @@ public class OSLCUtils {
 		if (acceptTypes != null && !acceptTypes.isEmpty())
 			httpput.addHeader("Accept", acceptTypes);
 		
+		oAuthSign(httpput, creds);
+
 		//Send the request and return the response
 		HttpResponse resp = httpclient.execute(httpput, new BasicHttpContext());
 		return resp;
@@ -292,6 +330,8 @@ public class OSLCUtils {
 		if (acceptTypes != null && !acceptTypes.isEmpty())
 			httpget.addHeader("Accept", acceptTypes);
 		
+		oAuthSign(httpget, creds);
+
 		//Send the request and return the response
 		HttpResponse resp = httpclient.execute(httpget, new BasicHttpContext());
 		return resp;

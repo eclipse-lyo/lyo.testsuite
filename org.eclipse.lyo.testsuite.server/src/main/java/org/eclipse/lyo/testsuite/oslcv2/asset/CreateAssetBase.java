@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -32,7 +32,7 @@ public class CreateAssetBase extends AssetTestBase {
 	
 	protected void deletingAsset(String initialAsset) throws IOException {
 		assetUrl = createAsset(initialAsset);
-		HttpResponse resp = OSLCUtils.deleteFromUrl(assetUrl, basicCreds, acceptType);
+		HttpResponse resp = OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);

@@ -123,7 +123,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 	public void createResourceWithInvalidContentType() throws Exception {
 		// Issue post request using the provided template and an invalid
 		// contentType
-		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, creds,
 				"*/*", "weird/type", getCreateContent(), headers);
 		EntityUtils.consume(resp.getEntity());
 		assertEquals(415, resp.getStatusLine().getStatusCode());
@@ -134,11 +134,11 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		
 		if (authMethod == AuthMethods.FORM) {
 			// make sure we have authenticated before the POST call
-			TestsBase.formLogin(basicCreds.getUserPrincipal().getName(), basicCreds.getPassword());
+			TestsBase.formLogin(creds.getUserPrincipal().getName(), creds.getPassword());
 		}
 		
 		// issue the POST call
-		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, creds,
 				accept, contentType, content, headers);
 
 		if ( resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE) {
@@ -171,7 +171,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		// Attempt to clean up after the test by calling delete on the given
 		// url,
 		// which is not a MUST according to the oslc cm spec
-		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
+		resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "*/*");
 		if (resp.getEntity() != null) {
 			EntityUtils.consume(resp.getEntity());
 		}
@@ -180,7 +180,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 	@Test
 	public void createResourceWithInvalidContent() throws IOException {
 		// Issue post request using valid content type but invalid content
-		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, creds,
 				getContentType(), getContentType(), "invalid content", headers);
 		EntityUtils.consume(resp.getEntity());
 		
@@ -247,7 +247,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		if (updateParams != null && !updateParams.isEmpty())
 			updateUrl = updateUrl + updateParams;
 	
-		resp = OSLCUtils.putDataToUrl(updateUrl, basicCreds, getContentType(),
+		resp = OSLCUtils.putDataToUrl(updateUrl, creds, getContentType(),
 				getContentType(), updateContent, putHeaders);
 		String responseBody = EntityUtils.toString(resp.getEntity());
 		if (resp.getEntity() != null)
@@ -258,7 +258,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
 		// Clean up after the test by attempting to delete the created resource
 		if (location != null) {
-			resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds,
+			resp = OSLCUtils.deleteFromUrl(location.getValue(), creds,
 					"*/*");
 			if (resp != null && resp.getEntity() != null)
 				EntityUtils.consume(resp.getEntity());
@@ -289,7 +289,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		}		
 
 		// Now, go to the url of the new change request and update it.
-		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, getContentType(),
+		resp = OSLCUtils.putDataToUrl(location.getValue(), creds, getContentType(),
 				getContentType(), "invalid content", putHeaders);
 		if (resp.getEntity() != null) {
 			EntityUtils.consume(resp.getEntity());
@@ -300,7 +300,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
 		// Clean up after the test by attempting to delete the created resource
 		if (location != null)
-			resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
+			resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
 
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
@@ -332,8 +332,8 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		String updateContent = getUpdateContent(location.getValue());
 
 		// Now, go to the url of the new change request and update it.
-		//resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "*/*",
-		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, "application/xml",
+		//resp = OSLCUtils.putDataToUrl(location.getValue(), creds, "*/*",
+		resp = OSLCUtils.putDataToUrl(location.getValue(), creds, "application/xml",
 				"application/invalid", updateContent, putHeaders);
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
@@ -342,7 +342,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 				.getStatusCode());
 
 		// Clean up after the test by attempting to delete the created resource
-		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
+		resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
 
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
@@ -420,7 +420,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		String updateContent = getUpdateContent(location.getValue());
 
 		// Now, go to the url of the new change request and update it.
-		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, getContentType(),
+		resp = OSLCUtils.putDataToUrl(location.getValue(), creds, getContentType(),
 				getContentType(), updateContent, putHeaders);
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
@@ -438,7 +438,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 				.getStatusCode());
 
 		// Clean up after the test by attempting to delete the created resource
-		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
+		resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
 
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
@@ -483,7 +483,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
 		// Now, go to the url of the new change request and update it.
 		String updateContent = getUpdateContent(location.getValue());
-		resp = OSLCUtils.putDataToUrl(location.getValue(), basicCreds, getContentType(),
+		resp = OSLCUtils.putDataToUrl(location.getValue(), creds, getContentType(),
 				getContentType(), updateContent, putHeaders);
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());
@@ -492,7 +492,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 				.getStatusCode());
 
 		// Clean up after the test by attempting to delete the created resource
-		resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
+		resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
 
 		if (resp != null && resp.getEntity() != null)
 			EntityUtils.consume(resp.getEntity());

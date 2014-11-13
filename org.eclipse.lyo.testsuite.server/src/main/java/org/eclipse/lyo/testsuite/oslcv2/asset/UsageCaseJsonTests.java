@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -97,7 +97,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 		BasicHeader h = new BasicHeader("oslc_asset.name", file.getName());
 		
 		HttpResponse response = OSLCUtils.postDataToUrl(
-				artifactFactory, basicCreds, acceptType, setupProps.getProperty("artifactContentType"),
+				artifactFactory, creds, acceptType, setupProps.getProperty("artifactContentType"),
 				readFileFromProperty("artifactFile"), addHeader(h));
 		EntityUtils.consume(response.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + response.getStatusLine().getStatusCode(),
@@ -157,7 +157,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 		JSONObject content = artifact.getJSONObject("oslc_asset:content");
 		String artifactUrl = content.getString("rdf:resource");
 		
-		HttpResponse resp = OSLCUtils.getDataFromUrl(artifactUrl, basicCreds, acceptType, contentType, headers);
+		HttpResponse resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);

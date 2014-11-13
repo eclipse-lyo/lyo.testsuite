@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -100,7 +100,7 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
+		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  creds,
 					OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
 		EntityUtils.consume(response.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + response.getStatusLine().getStatusCode(),
@@ -195,7 +195,7 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 		String artifactUrl = attributes.getNamedItem("rdf:resource").getNodeValue();
 		assertTrue("No artifact could be found in the asset", artifactUrl != null);
 		
-		HttpResponse resp = OSLCUtils.getDataFromUrl(artifactUrl, basicCreds, acceptType, contentType, headers);
+		HttpResponse resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);

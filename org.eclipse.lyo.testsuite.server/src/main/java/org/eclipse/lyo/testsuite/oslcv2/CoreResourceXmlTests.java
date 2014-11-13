@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -64,7 +64,7 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 		// records. This isn't exactly a failure, but there's nothing more we
 		// can test.
 		assumeNotNull(currentUrl);
-        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, OSLCConstants.CT_XML,
+        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, OSLCConstants.CT_XML,
         		headers);
         responseBody = EntityUtils.toString(response.getEntity());
         int sc = response.getStatusLine().getStatusCode();
@@ -110,7 +110,7 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 	
 		for (String queryBase : capabilityURLsUsingXML) {
 			String queryUrl = OSLCUtils.addQueryStringToURL(queryBase, query);
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, basicCreds, 
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, 
 					OSLCConstants.CT_XML, headers);
 			String respBody = EntityUtils.toString(resp.getEntity());
 			EntityUtils.consume(resp.getEntity());
