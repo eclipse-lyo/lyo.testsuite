@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -103,7 +103,7 @@ public class FetchResourceTests extends TestsBase {
 		ArrayList<String> results = new ArrayList<String>();
 		for (String queryBaseUri : capabilityURLsUsingRdfXml) {
 			String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, basicCreds, 
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, 
 					OSLCConstants.CT_RDF, headers);
 			Model queryModel = ModelFactory.createDefaultModel();
 			queryModel.read(resp.getEntity().getContent(), queryBaseUri, OSLCConstants.JENA_RDF_XML);
@@ -124,7 +124,7 @@ public class FetchResourceTests extends TestsBase {
 	}
 	
 	protected String getValidResourceUsingContentType(String requestType) throws IOException {
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(currentUrl, currentUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(currentUrl, currentUrl, creds,
 				requestType, headers);
 
 		String responseBody = EntityUtils.toString(resp.getEntity());
@@ -205,7 +205,7 @@ public class FetchResourceTests extends TestsBase {
 			assertNotNull("oslc:icon in oslc:Compact missing rdf:about attribute", rdfAbout);
 			iconUrl = rdfAbout.getTextContent();
 			
-			HttpResponse response = OSLCUtils.getResponseFromUrl(iconUrl, iconUrl, basicCreds, 
+			HttpResponse response = OSLCUtils.getResponseFromUrl(iconUrl, iconUrl, creds, 
 	        		"*/*", headers);
 	        int statusCode = response.getStatusLine().getStatusCode();
 	        EntityUtils.consume(response.getEntity());
@@ -238,7 +238,7 @@ public class FetchResourceTests extends TestsBase {
 				XPathConstants.NODE);
 		assertNotNull("Expected number of oslc:Preview/oslc:document/@rdf:resource", node);	
 		String previewUrl = node.getTextContent();
-		HttpResponse response = OSLCUtils.getResponseFromUrl(previewUrl, previewUrl, basicCreds, 
+		HttpResponse response = OSLCUtils.getResponseFromUrl(previewUrl, previewUrl, creds, 
         		"*/*", headers);
 
         int statusCode = response.getStatusLine().getStatusCode();
@@ -251,7 +251,7 @@ public class FetchResourceTests extends TestsBase {
 	
 	@Test
 	public void getResourceUsingInvalidContentType() throws IOException {
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, "invalid/content-type", 
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", 
 				headers);
 		String respType =  OSLCUtils.getContentType(resp);
 		EntityUtils.consume(resp.getEntity());

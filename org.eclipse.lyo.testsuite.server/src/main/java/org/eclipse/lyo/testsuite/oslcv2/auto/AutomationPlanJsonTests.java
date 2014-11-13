@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -96,7 +96,7 @@ public class AutomationPlanJsonTests extends CoreResourceJsonTests {
 			
 			String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
             
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, basicCreds, 
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, 
 					OSLCConstants.CT_JSON, headers);
 			
 			String respBody = EntityUtils.toString(resp.getEntity());

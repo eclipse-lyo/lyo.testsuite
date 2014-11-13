@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -72,7 +72,7 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 		// records. This isn't exactly a failure, but there's nothing more we
 		// can test.
 		assumeNotNull(currentUrl);
-        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, OSLCConstants.CT_RDF,
+        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, OSLCConstants.CT_RDF,
         		headers);
 		// Some records in the system might not be accessible to this user. This
 		// isn't a failure, but there's nothing more we can test.
@@ -123,7 +123,7 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 
 		for (String queryBaseUri : capabilityURLsUsingRdfXml) {
 			String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, basicCreds, 
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, 
 					OSLCConstants.CT_RDF, headers);
 			Model queryModel = ModelFactory.createDefaultModel();
 			queryModel.read(resp.getEntity().getContent(), queryBaseUri, OSLCConstants.JENA_RDF_XML);

@@ -68,7 +68,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	{
 		super(url);
 		
-		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, fContentType,
+		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType,
         		headers);
 		assertEquals("Did not successfully retrieve ServiceProvider at: "+currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
@@ -148,7 +148,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	// OSLC: Optional
 	public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException
 	{
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, "invalid/content-type", 
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", 
 				headers);
 		String respType =  (resp.getEntity().getContentType() == null) ? "" : resp.getEntity().getContentType().getValue();
 		EntityUtils.consume(resp.getEntity());
@@ -159,7 +159,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 	@Test
 	public void responseContentTypeIsXML() throws IOException
 	{
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds,
 				fContentType, headers);
 		//Make sure the response to this URL was of valid type
 		EntityUtils.consume(resp.getEntity());
@@ -178,7 +178,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
         String badParmUrl = currentUrl+"?oslc_cm:query";
         
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				badParmUrl, basicCreds, fContentType,
+				badParmUrl, creds, fContentType,
 				headers);
 		assertEquals("Did not successfully retrieve catalog at: " 
 				+ badParmUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());

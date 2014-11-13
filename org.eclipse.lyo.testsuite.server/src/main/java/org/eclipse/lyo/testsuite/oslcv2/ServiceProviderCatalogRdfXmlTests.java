@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -64,7 +64,7 @@ public class ServiceProviderCatalogRdfXmlTests extends
 		fContentType = OSLCConstants.CT_RDF;
 
 		response = OSLCUtils.getResponseFromUrl(
-				setupBaseUrl, currentUrl, basicCreds, fContentType, headers);
+				setupBaseUrl, currentUrl, creds, fContentType, headers);
 
 		assertEquals("Did not successfully retrieve catalog at: "
 				+ currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
@@ -98,7 +98,7 @@ public class ServiceProviderCatalogRdfXmlTests extends
 	    // ArrayList to contain the urls from all SPCs
 	    Collection<Object[]> data = new ArrayList<Object[]>();
 
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base, basicCreds, OSLCConstants.CT_RDF, headers);
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_RDF, headers);
 
 		assertEquals("Did not successfully retrieve catalog at: "+base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 
@@ -233,7 +233,7 @@ public class ServiceProviderCatalogRdfXmlTests extends
         String badParmUrl = currentUrl+"?oslc_cm:query";
 
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				badParmUrl, basicCreds, fContentType,
+				badParmUrl, creds, fContentType,
 				headers);
 		assertEquals("Did not successfully retrieve catalog at: "
 				+ badParmUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());

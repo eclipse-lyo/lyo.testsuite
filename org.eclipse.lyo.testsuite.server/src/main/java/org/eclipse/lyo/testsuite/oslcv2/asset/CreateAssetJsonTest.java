@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -60,7 +60,7 @@ public class CreateAssetJsonTest extends CreateAssetBase {
 			JSONObject asset = new JSONObject(resp);
 			assertTrue("The category was not set", asset.get("dcterms:relation") != null);
 		} finally {
-			HttpResponse resp = OSLCUtils.deleteFromUrl(otherUrl, basicCreds, acceptType);
+			HttpResponse resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
 			EntityUtils.consume(resp.getEntity());
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -59,7 +59,7 @@ public abstract class CoreResourceJsonTests extends TestsBase {
 		// records. This isn't exactly a failure, but there's nothing more we
 		// can test.
 		assumeNotNull(currentUrl);
-        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, 
+        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, 
         		                                OSLCConstants.CT_JSON, headers);
         responseBody = EntityUtils.toString(response.getEntity());
         int sc = response.getStatusLine().getStatusCode();
