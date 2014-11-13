@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -13,6 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Samuel Padgett - create and update resources using shapes
+ *    Samuel Padgett - add logging
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -26,11 +27,13 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
+import org.apache.axiom.attachments.utils.IOUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
@@ -60,6 +63,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
  */
 @RunWith(Parameterized.class)
 public abstract class CreationAndUpdateBaseTests extends TestsBase {
+	private Logger logger = Logger.getLogger(CreationAndUpdateBaseTests.class);
 
 	@SuppressWarnings("rawtypes")
 	public static String[] getCreateTemplateTypes() throws FileNotFoundException {
@@ -349,8 +353,15 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
 		HttpResponse resp = doPost(contentType, accept, createContent);
 				
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("HTTP Response: %s", resp.getStatusLine()));
+			byte[] content = IOUtils.getStreamAsByteArray(resp.getEntity().getContent());
+			logger.debug(new String(content, "UTF-8"));
+		} else {
+			EntityUtils.consume(resp.getEntity());
+		}
+
 		// Assert the response gave a 201 Created
-		EntityUtils.consume(resp.getEntity());
 		assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine()
 				.getStatusCode());
 		return resp;
