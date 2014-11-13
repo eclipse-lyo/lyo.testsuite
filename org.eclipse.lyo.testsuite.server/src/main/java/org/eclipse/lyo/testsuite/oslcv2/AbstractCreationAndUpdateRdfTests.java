@@ -13,6 +13,7 @@
  *
  *    Samuel Padgett - create and update resources using shapes
  *    Samuel Padgett - don't cache query shapes for creation when the URIs are the same
+ *    Samuel Padgett - handle oslc:AllowedValues blank nodes
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -141,11 +142,19 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 		}
 
 		if (propertyToFill.hasProperty(allowedValuesProp)) {
-			// The allowed values are not inline. Make another request to get the list.
-			String allowedValuesUri = propertyToFill.getProperty(allowedValuesProp).getResource().getURI();
-			Model allowedValuesModel = getModel(allowedValuesUri);
-			Resource allowedValuesResource = allowedValuesModel.getResource(allowedValuesUri);
-			RDFNode randomAllowedValue = getAllowedValue(allowedValuesResource);
+			Resource allowedValuesResource = propertyToFill.getProperty(allowedValuesProp).getResource();
+			String allowedValuesUri = allowedValuesResource.getURI();
+			RDFNode randomAllowedValue; 
+			if (allowedValuesUri == null) {
+				// Blank node. Maybe the allowed values are inline?
+				// It's not normal since in that case you can use oslc:allowedValue directly on Property.
+				randomAllowedValue = getAllowedValue(allowedValuesResource);
+			} else {
+				// Make another request to get the list.
+				Model allowedValuesModel = getModel(allowedValuesUri);
+				allowedValuesResource = allowedValuesModel.getResource(allowedValuesUri);
+				randomAllowedValue = getAllowedValue(allowedValuesResource);
+			}
 			toCreate.addProperty(requestProp, randomAllowedValue);
 			return;
 		}
