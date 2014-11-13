@@ -317,7 +317,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
 
 	private JSONObject getResource(String uri) throws IOException,
             JSONException {
-	    HttpResponse resp = OSLCUtils.getResponseFromUrl(uri, null, basicCreds, OSLCConstants.CT_JSON, headers);
+	    HttpResponse resp = OSLCUtils.getResponseFromUrl(uri, null, creds, OSLCConstants.CT_JSON, headers);
 		try {
 			assertEquals("Failed to get resource at " + uri, 200, resp.getStatusLine().getStatusCode());
 			return (JSONObject) JSON.parse(resp.getEntity().getContent());

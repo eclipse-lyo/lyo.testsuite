@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -70,7 +70,7 @@ public class ServiceProviderCatalogXmlTests extends
 		fContentType = OSLCConstants.CT_XML;
 		
 		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl,
-				basicCreds, fContentType, headers);
+				creds, fContentType, headers);
 		responseBody = EntityUtils.toString(response.getEntity());
 		// Get XML Doc from response
 		doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
@@ -98,7 +98,7 @@ public class ServiceProviderCatalogXmlTests extends
 		staticSetup();
 		
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-				basicCreds, OSLCConstants.CT_XML, headers);
+				creds, OSLCConstants.CT_XML, headers);
 		
 		int statusCode = resp.getStatusLine().getStatusCode();
 		if (HttpStatus.SC_OK != statusCode)
@@ -466,7 +466,7 @@ public class ServiceProviderCatalogXmlTests extends
 			String url = catalogAbouts.item(i).getNodeValue();
 			assertFalse(url.isEmpty());
 			HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl, url,
-					basicCreds, "*/*");
+					creds, "*/*");
 			EntityUtils.consume(response.getEntity());
 			assertFalse(response.getStatusLine().getStatusCode() == 404);
 		}
@@ -490,7 +490,7 @@ public class ServiceProviderCatalogXmlTests extends
 			String url = resources.item(i).getNodeValue();
 			assertNotNull(url);
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, url,
-					basicCreds, "*/*");
+					creds, "*/*");
 			EntityUtils.consume(resp.getEntity());
 			assertFalse(resp.getStatusLine().getStatusCode() == 404);
 		}
@@ -517,7 +517,7 @@ public class ServiceProviderCatalogXmlTests extends
 	@Test
 	public void misplacedParametersDoNotEffectResponse() throws IOException {
 		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				currentUrl, basicCreds, fContentType, headers);
+				currentUrl, creds, fContentType, headers);
 
 		Model baseRespModel = ModelFactory.createDefaultModel();
 		baseRespModel.read(baseResp.getEntity().getContent(),
@@ -528,7 +528,7 @@ public class ServiceProviderCatalogXmlTests extends
 		String badParmUrl = currentUrl+"?oslc_cm:query";
 		
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				badParmUrl, basicCreds, fContentType,
+				badParmUrl, creds, fContentType,
 				headers);
 	
 		Model badParmModel = ModelFactory.createDefaultModel();

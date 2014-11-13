@@ -67,7 +67,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 	{
 		super(url);
 		
-		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, 
+		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, 
         		fContentType, headers);
         responseBody = EntityUtils.toString(response.getEntity());
         //Get XML Doc from response
@@ -110,7 +110,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 	// OSLC: Optional
 	public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException
 	{
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds, "invalid/content-type", 
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", 
 				headers);
 		String respType =  (resp.getEntity().getContentType() == null) ? "" : resp.getEntity().getContentType().getValue();
 		EntityUtils.consume(resp.getEntity());
@@ -121,7 +121,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 	@Test
 	public void responseContentTypeIsXML() throws IOException
 	{
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds,
 				fContentType, headers);
 		//Make sure the response to this URL was of valid type
 		EntityUtils.consume(resp.getEntity());
@@ -137,7 +137,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 	@Test
 	public void misplacedParametersDoNotEffectResponse() throws IOException
 	{
-		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, basicCreds,
+		HttpResponse baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds,
 				fContentType, headers);
 
 		Model baseRespModel = ModelFactory.createDefaultModel();
@@ -149,7 +149,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 		String badParmUrl = currentUrl+"?oslc_cm:query";
 		
 		HttpResponse parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				badParmUrl, basicCreds, fContentType,
+				badParmUrl, creds, fContentType,
 				headers);
 	
 		Model badParmModel = ModelFactory.createDefaultModel();
@@ -264,7 +264,7 @@ public class ServiceProviderXmlTests extends TestsBase {
 		assertNotNull("oslc:details element is required for oslc:ServiceProfile", details);
 		Node node = details.getAttributes().getNamedItemNS(OSLCConstants.RDF, "resource");
 		assertNotNull(node.getNodeValue());
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, node.getNodeValue(), basicCreds, "");
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, node.getNodeValue(), creds, "");
 		resp.getEntity().consumeContent();
     	assertFalse(resp.getStatusLine().getStatusCode() == 404);
 	}

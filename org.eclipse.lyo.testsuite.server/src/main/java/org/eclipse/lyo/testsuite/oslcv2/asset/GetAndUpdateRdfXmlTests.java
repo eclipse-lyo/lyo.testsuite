@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -174,7 +174,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
+		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  creds,
 					OSLCConstants.CT_RDF, null, artifact, header);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
@@ -209,7 +209,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
 		// Adds the artifact to the asset
-		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
+		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  creds,
 				OSLCConstants.CT_RDF, "text/xml", artifact, header);
 		EntityUtils.consume(resp.getEntity());
 		

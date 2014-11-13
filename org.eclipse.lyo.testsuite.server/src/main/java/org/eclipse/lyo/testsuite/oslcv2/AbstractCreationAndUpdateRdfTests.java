@@ -306,7 +306,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 	}
 
 	private Model getModel(String uri) throws IOException {
-	    HttpResponse resp = OSLCUtils.getResponseFromUrl(uri, null, basicCreds, OSLCConstants.CT_RDF, headers);
+	    HttpResponse resp = OSLCUtils.getResponseFromUrl(uri, null, creds, OSLCConstants.CT_RDF, headers);
 	    try {
 	    	assertEquals("Failed to get resource at " + uri, 200, resp.getStatusLine().getStatusCode());
 	    	Model model = ModelFactory.createDefaultModel();

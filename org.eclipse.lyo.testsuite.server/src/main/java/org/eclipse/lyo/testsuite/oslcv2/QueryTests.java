@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -102,7 +102,7 @@ public class QueryTests extends SimplifiedQueryBaseTests {
 	}
 
 	protected String runQuery(String queryURL, String contentType) throws IOException {
-		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl + queryURL, basicCreds, 
+		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl + queryURL, creds, 
         		contentType, headers);
 		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         String responseBody = EntityUtils.toString(response.getEntity());
@@ -117,7 +117,7 @@ public class QueryTests extends SimplifiedQueryBaseTests {
 				URLEncoder.encode("<\"" + queryComparisonValue + "\"", "UTF-8") + "&oslc.select="
 				+ queryComparisonProperty;
 		//Get response
-		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl + query, basicCreds,
+		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl + query, creds,
 				"application/xml", headers);
 		String respBody = EntityUtils.toString(resp.getEntity());
 		Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);

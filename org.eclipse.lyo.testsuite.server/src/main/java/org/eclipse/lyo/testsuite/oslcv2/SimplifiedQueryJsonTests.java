@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -79,7 +79,7 @@ public class SimplifiedQueryJsonTests extends SimplifiedQueryBaseTests {
 		
 		// Send JSON request
 		HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl,
-				queryUrl, basicCreds, OSLCConstants.CT_JSON, headers);
+				queryUrl, creds, OSLCConstants.CT_JSON, headers);
 
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (HttpStatus.SC_OK != statusCode)

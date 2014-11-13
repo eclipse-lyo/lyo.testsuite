@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -47,7 +47,7 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 	@Test
 	public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl,
-				basicCreds, "invalid/content-type", headers);
+				creds, "invalid/content-type", headers);
 		if (resp.getEntity() != null) {
 			String respType = "";
 			if (resp.getEntity().getContentType() != null) {
@@ -68,7 +68,7 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 	@Test
 	public void contentTypeIsSuggestedType() throws IOException {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl,
-				basicCreds, fContentType, headers);
+				creds, fContentType, headers);
 		EntityUtils.consume(resp.getEntity());
 		// Make sure the response to this URL was of valid type
 		String ct = resp.getEntity().getContentType().getValue();

@@ -46,6 +46,8 @@ import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
+import org.eclipse.lyo.testsuite.oslcv2.oauth.OAuthConsumerPrincipal;
+import org.eclipse.lyo.testsuite.oslcv2.oauth.OAuthCredentials;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
@@ -72,7 +74,7 @@ public abstract class TestsBase {
 
 	public enum AuthMethods {BASIC, FORM, OAUTH};
 
-	protected static Credentials basicCreds;
+	protected static Credentials creds;
 	protected static boolean onlyOnce = true;
 	protected static boolean useDefaultUsageForCreation = true;
 	protected static Properties setupProps = null;
@@ -108,7 +110,18 @@ public abstract class TestsBase {
 			updateParams = setupProps.getProperty("updateParams");
 			String userId = setupProps.getProperty("userId");
 			String pw = setupProps.getProperty("pw");
-			basicCreds = new UsernamePasswordCredentials(userId, pw);
+			if (userId != null && pw != null) {
+				creds = new UsernamePasswordCredentials(userId, pw);
+			} else {
+				String consumerKey = setupProps.getProperty("consumerKey");
+				String consumerSecret = setupProps.getProperty("consumerSecret");
+				if (consumerKey != null && consumerSecret != null) {
+					creds = new OAuthCredentials(new OAuthConsumerPrincipal(consumerKey), consumerSecret);
+				} else {
+					logger.warn("No credentials found in setup.properties");
+				}
+			}
+			
 			Header h = new BasicHeader("OSLC-Core-Version", "2.0");			
 			
 			headers = new Header[] { h};
@@ -206,7 +219,7 @@ public abstract class TestsBase {
 		else
 			base = inBaseURL;
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-				basicCreds, OSLCConstants.CT_XML, headers);
+				creds, OSLCConstants.CT_XML, headers);
 
 		String responseBody = EntityUtils.toString(resp.getEntity());
 		if (logger.isDebugEnabled()) {
@@ -293,7 +306,7 @@ public abstract class TestsBase {
 		
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-					basicCreds, OSLCConstants.CT_XML, headers);
+					creds, OSLCConstants.CT_XML, headers);
 
 			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(
 					EntityUtils.toString(resp.getEntity()));
@@ -337,7 +350,7 @@ public abstract class TestsBase {
 		
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-					basicCreds, OSLCConstants.CT_XML, headers);
+					creds, OSLCConstants.CT_XML, headers);
 
 			String responseBody = EntityUtils.toString(resp.getEntity());
 			if (logger.isDebugEnabled()) {
@@ -396,7 +409,7 @@ public abstract class TestsBase {
 	    	return data;
 	    }
 
-	    HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, inBaseURL, basicCreds, OSLCConstants.CT_RDF, headers);
+	    HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, inBaseURL, creds, OSLCConstants.CT_RDF, headers);
 		assertEquals("Did not successfully retrieve ServiceProviders at: "+inBaseURL,
 				HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 
@@ -482,7 +495,7 @@ public abstract class TestsBase {
 		String firstUrl = null;
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-					basicCreds, OSLCConstants.CT_RDF, headers);
+					creds, OSLCConstants.CT_RDF, headers);
 			
 			Model spModel = ModelFactory.createDefaultModel();
 			spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
@@ -603,7 +616,7 @@ public abstract class TestsBase {
 	    }
 	    
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-				basicCreds, OSLCConstants.CT_JSON, headers);		
+				creds, OSLCConstants.CT_JSON, headers);		
 		assertEquals("Failed to retrieve ServiceProviders at: "+inBaseURL, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 		
 		String respBody = EntityUtils.toString(resp.getEntity());
@@ -637,7 +650,7 @@ public abstract class TestsBase {
 		
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-					basicCreds, OSLCConstants.CT_JSON, headers);
+					creds, OSLCConstants.CT_JSON, headers);
 			assertEquals("Failed to retrieve ServiceProviders at: " +base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 			
 			String respBody = EntityUtils.toString(resp.getEntity());
