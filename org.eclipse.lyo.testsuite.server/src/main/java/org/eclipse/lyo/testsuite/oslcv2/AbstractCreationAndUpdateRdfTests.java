@@ -62,7 +62,8 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 		return toString(m);
 	}
 	
-	private String asString(Model m) {
+	// For debugging.
+	private String asTurtle(Model m) {
 		StringWriter writer = new StringWriter();
 		m.write(writer, "TURTLE");
 
@@ -77,7 +78,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 		// Get the shape.
 		Model shapeModel = getModel(shapeUri);
 		if (logger.isDebugEnabled()) {
-			logger.debug(asString(shapeModel));
+			logger.debug(asTurtle(shapeModel));
 		}
 
 		Resource toCreate = requestModel.createResource();
@@ -374,13 +375,25 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 	}
 	
     protected String getCreateContent(String template) throws IOException {
+    	String content;
 		if (template == null) {
 			String shapeUri = getShapeUriForCreation(currentUrl);
 			assertNotNull("No shape for creation factory: " + currentUrl, shapeUri);
-			return createResourceFromShape(shapeUri);
+			content = createResourceFromShape(shapeUri);
+			if (logger.isDebugEnabled()) {
+				logger.debug("POST content:");
+				logger.debug(content);
+			}
+		} else {
+			content = template;
 		}
 
-	    return template;
+		if (logger.isDebugEnabled()) {
+			logger.debug("POST content:");
+			logger.debug(content);
+		}
+
+	    return content;
     }
 
     protected String getUpdateContent(String resourceUri, String template) throws IOException {
