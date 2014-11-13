@@ -95,7 +95,7 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
 			
 			String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
             
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, basicCreds, 
+			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, 
 					OSLCConstants.CT_JSON, headers);
 			
 			String respBody = EntityUtils.toString(resp.getEntity());

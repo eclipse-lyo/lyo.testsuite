@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -179,12 +179,12 @@ public class OAuthTests extends TestsBase {
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
 		client.getRequestToken(accessor);
 		// Get a response from the base URL to setup cookies (to prevent form redirection)
-		HttpResponse resp = OSLCUtils.getResponseFromUrl("", setupBaseUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.getResponseFromUrl("", setupBaseUrl, creds,
 				OSLCConstants.CT_XML);
 		EntityUtils.consume(resp.getEntity());
 		// Post authorization using user credentials provided.
 		resp = OSLCUtils.postDataToUrl(provider.userAuthorizationURL + "?oauth_token=" + accessor.requestToken, 
-				basicCreds, "", "application/x-www-form-urlencoded", postParameters+ 
+				creds, "", "application/x-www-form-urlencoded", postParameters+ 
 				"&oauth_token=" + accessor.requestToken, headers);
 		EntityUtils.consume(resp.getEntity());
 		int statusCode = resp.getStatusLine().getStatusCode();
@@ -198,12 +198,12 @@ public class OAuthTests extends TestsBase {
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
 		client.getRequestToken(accessor);
 		
-		HttpResponse resp = OSLCUtils.getResponseFromUrl("", setupBaseUrl, basicCreds,
+		HttpResponse resp = OSLCUtils.getResponseFromUrl("", setupBaseUrl, creds,
 				OSLCConstants.CT_XML);
 		EntityUtils.consume(resp.getEntity());
 		
 		resp = OSLCUtils.postDataToUrl(provider.userAuthorizationURL + "?oauth_token=" + accessor.requestToken, 
-				basicCreds, "", "application/x-www-form-urlencoded", postParameters+ 
+				creds, "", "application/x-www-form-urlencoded", postParameters+ 
 				"&oauth_token=" + accessor.requestToken, headers);
 		EntityUtils.consume(resp.getEntity());
 		int sc = resp.getStatusLine().getStatusCode();

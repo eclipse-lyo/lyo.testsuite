@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -65,7 +65,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 		Header h = new BasicHeader("oslc_asset.name", file.getName());
 		
 		HttpResponse resp = OSLCUtils.postDataToUrl(
-				artifactFactory, basicCreds, acceptType, setupProps.getProperty("artifactContentType"),
+				artifactFactory, creds, acceptType, setupProps.getProperty("artifactContentType"),
 				readFileFromProperty("artifactFile"), addHeader(h));
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
@@ -77,7 +77,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 	}
 	
 	protected void downloadArtifact(String artifactUrl) throws ClientProtocolException, IOException {
-		HttpResponse resp = OSLCUtils.getDataFromUrl(artifactUrl, basicCreds, acceptType, contentType, headers);
+		HttpResponse resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);

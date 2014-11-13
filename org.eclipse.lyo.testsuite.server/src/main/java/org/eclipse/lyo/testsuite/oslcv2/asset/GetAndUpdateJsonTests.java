@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -106,7 +106,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
+		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  creds,
 					OSLCConstants.CT_JSON, OSLCConstants.CT_JSON, artifact, header);
 		EntityUtils.consume(response.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + response.getStatusLine().getStatusCode(),
@@ -138,7 +138,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
 		// Adds the artifact to the asset
-		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  basicCreds,
+		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  creds,
 				OSLCConstants.CT_JSON, OSLCConstants.CT_JSON, artifact, header);
 		EntityUtils.consume(response.getEntity());
 		
