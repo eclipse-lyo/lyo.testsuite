@@ -556,14 +556,6 @@ public abstract class TestsBase {
 		return true;
 	}
 	
-	public static void printRdfModel(Model model) {
-		StmtIterator listStatements = model.listStatements();
-		while (listStatements.hasNext()) {
-			Statement s = listStatements.nextStatement();
-			System.out.println(s.toString());
-		}
-	}
-
 	public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL)
 	throws IOException, XPathException, ParserConfigurationException,
 	SAXException, JSONException {
