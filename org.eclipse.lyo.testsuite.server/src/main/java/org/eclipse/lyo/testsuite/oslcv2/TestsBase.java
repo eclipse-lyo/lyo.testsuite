@@ -14,6 +14,7 @@
  *    Tim Eck II     - asset management test cases
  *    Yuhong Yin
  *    Samuel Padgett - create and update resources using shapes
+ *    Samuel Padgett - don't cache query shapes for creation when the URIs are the same
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -39,6 +40,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
@@ -66,6 +68,8 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 
 public abstract class TestsBase {
+	private static Logger logger = Logger.getLogger(TestsBase.class);
+
 	public enum AuthMethods {BASIC, FORM, OAUTH};
 
 	protected static Credentials basicCreds;
@@ -90,7 +94,7 @@ public abstract class TestsBase {
 	
 	protected static String testVersion = null;
 	
-	protected static Map<String, String> capabilityToShapeMap = new HashMap<String, String>();
+	protected static Map<String, String> creationShapeMap = new HashMap<String, String>();
 	
 	public TestsBase(String thisUrl) {
 		currentUrl = thisUrl;
@@ -204,9 +208,12 @@ public abstract class TestsBase {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 				basicCreds, OSLCConstants.CT_XML, headers);
 
-		Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(EntityUtils
-				.toString(resp.getEntity()));
-
+		String responseBody = EntityUtils.toString(resp.getEntity());
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Reading service catalog <%s>", base));
+			logger.debug(responseBody);
+		}
+		Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
 
 		// Get all ServiceProvider urls from the base document in order to
 		// recursively add all the capability urls from them as well.
@@ -332,8 +339,13 @@ public abstract class TestsBase {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					basicCreds, OSLCConstants.CT_XML, headers);
 
-			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(
-					EntityUtils.toString(resp.getEntity()));
+			String responseBody = EntityUtils.toString(resp.getEntity());
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("Reading service provider document <%s>", base));
+				logger.debug(responseBody);
+			}
+
+			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
 			
 			NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(
 					xpathStmt,
@@ -483,9 +495,15 @@ public abstract class TestsBase {
 			
 			while (statements.hasNext()) {
 				Statement stmt = statements.nextStatement();
-				Statement shape = stmt.getSubject().getProperty(spModel.createProperty(OSLCConstants.RESOURCE_SHAPE_PROP));
-				if (shape != null) {
-					capabilityToShapeMap.put(stmt.getObject().toString(), shape.getObject().toString());
+				// Only cache creation factory shapes. Some providers use the same capability URI for both query and creation.
+				if (OSLCConstants.CREATION_PROP.equals(propertyUri)) {
+					Statement shape = stmt.getSubject().getProperty(spModel.createProperty(OSLCConstants.RESOURCE_SHAPE_PROP));
+					if (shape != null) {
+						if (logger.isDebugEnabled()) {
+							logger.debug(String.format("Caching shape URI <%s> for capability URI <%s>", shape.getObject().toString(), stmt.getObject().toString()));
+						}
+						creationShapeMap.put(stmt.getObject().toString(), shape.getObject().toString());
+					}
 				}
 				
 				if (firstUrl == null)
@@ -530,10 +548,11 @@ public abstract class TestsBase {
 	}
 	
 	/*
-	 * Return the cached shape URI associated with this capability URI. You must have previously called getCapabilityURLsUsingRdfXml().
+	 * Return the cached shape URI associated with this creation factory URI. You must
+	 * have previously called getCapabilityURLsUsingRdfXml().
 	 */
-	public static String getShapeUriForCapability(String capabilityUri) {
-		return capabilityToShapeMap.get(capabilityUri);
+	public static String getShapeUriForCreation(String creationFactoryUri) {
+		return creationShapeMap.get(creationFactoryUri);
 	}
 	
 	public static boolean formLogin(String userId, String pw) {

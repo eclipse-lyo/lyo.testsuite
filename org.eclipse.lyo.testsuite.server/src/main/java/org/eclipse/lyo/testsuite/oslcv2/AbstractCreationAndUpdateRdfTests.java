@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 IBM Corporation.
+ * Copyright (c) 2013, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Samuel Padgett - create and update resources using shapes
+ *    Samuel Padgett - don't cache query shapes for creation when the URIs are the same
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -25,6 +26,7 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
@@ -45,18 +47,28 @@ import com.hp.hpl.jena.vocabulary.RDF;
  */
 public abstract class AbstractCreationAndUpdateRdfTests extends
         CreationAndUpdateBaseTests {
+	
+	private static Logger logger = Logger.getLogger(AbstractCreationAndUpdateRdfTests.class);
 
 	public AbstractCreationAndUpdateRdfTests(String url) {
 	    super(url);
     }
 
 	public String createResourceFromShape(String shapeUri) throws IOException {
+		logger.debug(String.format("Creating resource from shape <%s>", shapeUri));
 		Model m = ModelFactory.createDefaultModel();
 		createResourceFromShape(m, shapeUri, 1);
 
 		return toString(m);
 	}
+	
+	private String asString(Model m) {
+		StringWriter writer = new StringWriter();
+		m.write(writer, "TURTLE");
 
+		return writer.toString();
+	}
+	
 	// Max depth is used to detect cycles.
 	private final static int MAX_DEPTH = Integer.parseInt(System.getProperty("org.eclipse.lyo.testsuite.oslcv2.createResource.maxDepth", "10"));
 	protected Resource createResourceFromShape(Model requestModel, String shapeUri, int depth) throws IOException {
@@ -64,6 +76,10 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 
 		// Get the shape.
 		Model shapeModel = getModel(shapeUri);
+		if (logger.isDebugEnabled()) {
+			logger.debug(asString(shapeModel));
+		}
+
 		Resource toCreate = requestModel.createResource();
 		
 		Resource shapeResource = shapeModel.getResource(shapeUri);
@@ -359,7 +375,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 	
     protected String getCreateContent(String template) throws IOException {
 		if (template == null) {
-			String shapeUri = getShapeUriForCapability(currentUrl);
+			String shapeUri = getShapeUriForCreation(currentUrl);
 			assertNotNull("No shape for creation factory: " + currentUrl, shapeUri);
 			return createResourceFromShape(shapeUri);
 		}

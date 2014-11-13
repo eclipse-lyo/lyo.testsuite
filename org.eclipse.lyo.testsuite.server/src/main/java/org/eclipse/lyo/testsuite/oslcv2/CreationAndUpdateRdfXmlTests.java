@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 IBM Corporation.
+ * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -39,6 +40,7 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @RunWith(Parameterized.class)
 public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTests {
+	private static Logger logger = Logger.getLogger(CreationAndUpdateRdfXmlTests.class);
 
 	public CreationAndUpdateRdfXmlTests(String url) {
 		super(url);
@@ -62,6 +64,13 @@ public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTe
 			String [] types = getCreateTemplateTypes();
 			capabilityURLsUsingRdfXml = getCapabilityURLsUsingRdfXml(OSLCConstants.CREATION_PROP,
 						serviceUrls, useDefaultUsageForCreation, types);
+		}
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Running RDF/XML creation tests on the following creation factories:");
+			for (String capability : capabilityURLsUsingRdfXml) {
+				logger.debug(capability);
+			}
 		}
 		
 		return toCollection(capabilityURLsUsingRdfXml);
