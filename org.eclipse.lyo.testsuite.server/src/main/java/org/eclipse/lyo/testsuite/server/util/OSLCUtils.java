@@ -112,7 +112,12 @@ public class OSLCUtils {
 		DocumentBuilder db = dbf.newDocumentBuilder();
 	    InputSource is = new InputSource();
 	    is.setCharacterStream(new StringReader(respBody));
-	    return db.parse(is);
+	    try {
+			return db.parse(is);
+	    } catch (SAXException e) {
+	    	logger.error(String.format("Exception parsing XML response body:%n%s%n", respBody), e);
+	    	throw e;
+	    }
 	}
 	
 	public static String createStringFromXMLDoc(Document document) throws TransformerException {
