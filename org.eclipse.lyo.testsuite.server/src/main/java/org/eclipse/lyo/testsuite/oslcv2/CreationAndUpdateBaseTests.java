@@ -14,6 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Samuel Padgett - create and update resources using shapes
  *    Samuel Padgett - add logging
+ *    Samuel Padgett - relax status code assertion for updateCreatedResourceWithInvalidContent
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -294,9 +295,9 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 		if (resp.getEntity() != null) {
 			EntityUtils.consume(resp.getEntity());
 		}
-		// Assert that an invalid PUT resulted in a 400 BAD REQUEST
-		assertEquals(HttpStatus.SC_BAD_REQUEST, resp.getStatusLine()
-				.getStatusCode());
+		// Assert that an invalid PUT resulted in a 4xx status
+		final int status = resp.getStatusLine().getStatusCode();
+		assertTrue(String.format("Expected a 4xx status code, but got %s.%n", resp.getStatusLine()), status >= 400 && status <= 499);
 
 		// Clean up after the test by attempting to delete the created resource
 		if (location != null)
