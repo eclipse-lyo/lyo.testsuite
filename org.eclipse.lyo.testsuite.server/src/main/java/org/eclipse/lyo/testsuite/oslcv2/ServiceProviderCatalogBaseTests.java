@@ -23,6 +23,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -45,6 +46,10 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 	}
 
 	@Test
+	@Ignore("Neither HTTP/1.1 nor OSLC Core 2.0 REQUIRE a 406 Not Acceptable response. " +
+			"It doesn't appear to be mentioned in the OSLC 2.0 Core specification. " +
+			"This is a SHOULD per HTTP/1.1, but not a MUST. See " +
+			"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
 	public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl,
 				creds, "invalid/content-type", headers);
