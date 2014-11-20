@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
+ *    Samuel Padgett - don't fail if queryAdditionalParameters is not defined
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -27,7 +28,6 @@ import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
@@ -39,7 +39,6 @@ import org.apache.wink.json4j.JSONException;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -96,7 +95,7 @@ public class FetchResourceTests extends TestsBase {
 			where = queryProperty + "=\"" + queryPropertyValue + "\"";
 		}
 
-		String additionalParameters = setupProps.getProperty("queryAdditionalParameters");
+		String additionalParameters = setupProps.getProperty("queryAdditionalParameters", "");
 		String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&"; 
 		query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
 

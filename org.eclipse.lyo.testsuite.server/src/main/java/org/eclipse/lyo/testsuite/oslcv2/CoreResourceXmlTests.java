@@ -12,6 +12,7 @@
  * Contributors:
  *
  *    Yuhong Yin - initial API and implementation
+ *    Samuel Padgett - don't fail if queryAdditionalParameters is not defined
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2;
 
@@ -104,7 +105,7 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 			where = queryProperty + "=\"" + queryPropertyValue + "\"";
 		}
 
-		String additionalParameters = setupProps.getProperty("queryAdditionalParameters");
+		String additionalParameters = setupProps.getProperty("queryAdditionalParameters", "");
 		String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&"; 
 		query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
 	
