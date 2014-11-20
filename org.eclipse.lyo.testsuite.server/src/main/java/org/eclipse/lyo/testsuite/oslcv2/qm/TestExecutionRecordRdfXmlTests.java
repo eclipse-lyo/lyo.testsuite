@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,11 +11,12 @@
  *
  * Contributors:
  *
- *    Yuhong Yin - initial API and implementation
+ *    Yuhong Yin    - initial API and implementation
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,20 +46,13 @@ public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 		
 		staticSetup();
 		
-		setResourceType(OSLCConstants.QM_TEST_EXECUTION_RECORD);
-
 		// If a particular TestExecutionRecord asset is specified, use it 
 		String useThis = setupProps.getProperty("useThisTestExecutionRecord");
-		if ( (useThis != null) && (useThis != "") ) {			
-			ArrayList<String> results = new ArrayList<String>();
-			results.add(useThis);
-			return toCollection(results);
-		}
-		
-		// Otherwise, run a query and pick up one
-		setResourceTypeQuery(OSLCConstants.RESOURCE_TYPE_PROP);
-		setxpathSubStmt(OSLCConstants.QM_TEST_EXECUTION_RECORD_QUERY);
-		return getAllDescriptionUrls(eval);
+		assumeTrue(useThis != null && !"".equals(useThis));
+
+		ArrayList<String> results = new ArrayList<String>();
+		results.add(useThis);
+		return toCollection(results);
 	}
 	
 	@Test

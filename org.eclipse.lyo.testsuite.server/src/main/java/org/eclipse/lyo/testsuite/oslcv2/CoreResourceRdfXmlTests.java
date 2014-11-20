@@ -22,6 +22,7 @@ import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
+import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
@@ -56,6 +58,8 @@ import com.hp.hpl.jena.vocabulary.RDF;
  */
 @RunWith(Parameterized.class)
 public abstract class CoreResourceRdfXmlTests  extends TestsBase {
+	private static Logger logger = Logger.getLogger(CoreResourceRdfXmlTests.class);
+
 	private HttpResponse response;
 	private Model fRdfModel = ModelFactory.createDefaultModel();
 	private Resource fResource = null;
@@ -88,8 +92,18 @@ public abstract class CoreResourceRdfXmlTests  extends TestsBase {
 		RDFUtils.validateModel(fRdfModel);
 		
 		fResource = (Resource) fRdfModel.getResource(currentUrl);
-		assumeTrue(fRdfModel.contains(fResource, RDF.type,
-				        				fRdfModel.createResource(getResourceType())));
+		if (logger.isDebugEnabled()) {
+			StringWriter w = new StringWriter();
+			fRdfModel.write(w, "TURTLE");
+			logger.debug(String.format("Testing Resource <%s> with type <%s>", currentUrl, getResourceType()));
+			logger.debug(w.toString());
+		}
+		
+		String resourceType = getResourceType();
+		if (resourceType != null && !"".equals(resourceType)) {
+			assumeTrue(fRdfModel.contains(fResource, RDF.type,
+					fRdfModel.createResource(getResourceType())));
+		}
 
 	}
 

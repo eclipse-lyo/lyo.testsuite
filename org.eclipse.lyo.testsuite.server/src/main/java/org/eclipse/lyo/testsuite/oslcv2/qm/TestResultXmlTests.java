@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation.
+ * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,9 +15,6 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,12 +25,15 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.lyo.testsuite.oslcv2.CoreResourceXmlTests;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 public class TestResultXmlTests extends CoreResourceXmlTests {
 
@@ -47,22 +47,17 @@ public class TestResultXmlTests extends CoreResourceXmlTests {
 
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() 
-		throws IOException, ParserConfigurationException, SAXException, XPathException {
-		
+			throws IOException, ParserConfigurationException, SAXException, XPathException {
+
 		staticSetup();
-		
+
 		// If a particular TestResult asset is specified, use it 
 		String useThis = setupProps.getProperty("useThisTestResult");
-		if ( (useThis != null) && (useThis != "") ) {			
-			ArrayList<String> results = new ArrayList<String>();
-			results.add(useThis);
-			return toCollection(results);
-		}
-		
-		// Otherwise, run a query and pick up one
-		setResourceTypeQuery(OSLCConstants.QM_TEST_RESULT_QUERY);
-		setxpathSubStmt("//oslc_v2:QueryCapability/oslc:resourceType/@rdf:resource");
-		return getAllDescriptionUrls(eval);
+		assumeTrue(useThis != null && !"".equals(useThis));
+		ArrayList<String> results = new ArrayList<String>();
+		results.add(useThis);
+
+		return toCollection(results);
 	}
 	
 	@Test
