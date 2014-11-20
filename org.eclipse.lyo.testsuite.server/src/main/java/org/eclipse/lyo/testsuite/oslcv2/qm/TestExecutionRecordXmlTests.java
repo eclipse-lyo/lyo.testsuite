@@ -32,7 +32,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
@@ -60,18 +59,6 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 	}
 
 	@Test
-	public void TestExecutionRecordHasOneReportsOnTestPlan() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_qm_v2:reportsOnTestPlan";
-		
-		NodeList testplans = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);		
-		
-		int size = testplans.getLength();
-		assertTrue("TestExecutionRecord has zero or one oslc_qm_v2:reportsOnTestPlan, found "+size, size <= 1);
-	}
-
-	@Test
 	public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException
 	{
 		String eval = "//" + getNode() + "/" + "oslc_qm_v2:runsTestCase";
@@ -80,12 +67,6 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 	    		doc, XPathConstants.NODESET);		
 		
 		assertEquals("oslc_qm_v2:runsTestCase"+getFailureMessage(), 1, results.getLength());
-	}
-
-	@Test
-	public void TestExecutionRecordRelatedChangeRequest() throws XPathExpressionException
-	{
-		// TestExecutionRecord specific test
 	}
 
 	public static String ns = "oslc_qm_v2";

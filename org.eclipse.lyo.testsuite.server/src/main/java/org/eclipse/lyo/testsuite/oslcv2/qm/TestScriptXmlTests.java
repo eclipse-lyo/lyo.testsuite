@@ -24,7 +24,6 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.lyo.testsuite.oslcv2.CoreResourceXmlTests;
-import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
@@ -54,12 +53,6 @@ public class TestScriptXmlTests extends CoreResourceXmlTests {
 		return toCollection(results);
 	}
 	
-	@Test
-	public void TestScriptRelatedChangeRequest() throws XPathExpressionException
-	{
-		// TestScript specific test
-	}
-
 	public static String ns = "oslc_qm_v2";
 	public static String resource = "TestScript"; 
 	public static String eval = "//" + ns + ":" + resource + "/@rdf:about";

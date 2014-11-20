@@ -56,26 +56,11 @@ public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 	}
 	
 	@Test
-	public void TestExecutionRecordHasOneReportsOnTestPlan() throws XPathExpressionException
-	{
-		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:reportsOnTestPlan");
-		int size=listStatements.toList().size();
-		assertTrue("TestExecutionRecord has zero or one oslc_qm_v2:reportsOnTestPlan, found "+size, size <= 1);
-	}
-
-	@Test
 	public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException
 	{
-		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:runsTestCase");
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "runsTestCase");
 		int size=listStatements.toList().size();
-		assertTrue("TestExecutionRecord has one oslc_qm_v2:runsTestCase, found "+size, size == 1);
-	}
-
-	@Test
-	public void TestExecutionRecordRelatedChangeRequest() throws XPathExpressionException
-	{
-		// TestExecutionRecord specific test
-		// zero or many
+		assertTrue("TestExecutionRecord has one oslc_qm:runsTestCase, found "+size, size == 1);
 	}
 
 	public static String ns = "oslc_qm_v2";

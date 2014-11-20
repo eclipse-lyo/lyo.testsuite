@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
-import static org.junit.Assume.assumeTrue;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,9 +24,10 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.lyo.testsuite.oslcv2.CoreResourceXmlTests;
-import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
+
+import static org.junit.Assume.assumeTrue;
 
 public class TestCaseXmlTests extends CoreResourceXmlTests {
 
@@ -53,12 +52,6 @@ public class TestCaseXmlTests extends CoreResourceXmlTests {
 		return toCollection(results);
 	}
 	
-	@Test
-	public void TestCaseRelatedChangeRequest() throws XPathExpressionException
-	{
-		// TestCase specific test
-	}
-
 	public static String ns = "oslc_qm_v2";
 	public static String resource = "TestCase";
 	public static String eval = "//" + ns + ":" + resource + "/@rdf:about";	 

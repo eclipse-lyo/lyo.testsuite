@@ -69,46 +69,13 @@ public class TestResultXmlTests extends CoreResourceXmlTests {
 	    		doc, XPathConstants.NODESET);		
 		
 		int size = statuses.getLength();
-		assertTrue("TestResult has zeor or one oslc_qm_v2:status, found "+size, size <= 1);
-	}
-
-	@Test
-	public void TestResultHasOneExecutesTestScript() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_qm_v2:executesTestScript";
-		
-		NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);		
-		
-		assertEquals(getFailureMessage(), 1, results.getLength());
-	}
-
-	@Test
-	public void TestResultHasOneProducedByTestExecutionRecord() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_qm_v2:producedByTestExecutionRecord";
-		
-		NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);		
-		
-		assertEquals(getFailureMessage(), 1, results.getLength());
+		assertTrue("TestResult has zero or one oslc_qm_v2:status, found "+size, size <= 1);
 	}
 
 	@Test
 	public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException
 	{
 		String eval = "//" + getNode() + "/" + "oslc_qm_v2:reportsOnTestCase";
-		
-		NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);		
-		
-		assertEquals(getFailureMessage(), 1, results.getLength());
-	}
-
-	@Test
-	public void TestResultHasOneReportsOnTestPlan() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_qm_v2:reportsOnTestPlan";
 		
 		NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval,
 	    		doc, XPathConstants.NODESET);		

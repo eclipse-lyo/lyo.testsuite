@@ -30,6 +30,7 @@ import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -56,43 +57,19 @@ public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
 	}
 	
 	@Test
-	public void TestResultHasOneExecutesTestScript() throws XPathExpressionException
-	{
-		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:executesTestScript");
-		int size=listStatements.toList().size();
-		assertTrue("TestResult has one oslc_qm_v2:executesTestScript, found "+size, size == 1);
-	}
-
-	@Test
-	public void TestResultHasOneProducedByTestExecutionRecord() throws XPathExpressionException
-	{
-		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:producedByTestExecutionRecord");
-		int size=listStatements.toList().size();
-		assertTrue("TestResult has one oslc_qm_v2:producedByTestExecutionRecord, found "+size, size == 1);
-	}
-
-	@Test
 	public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException
 	{
-		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:reportsOnTestCase");
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "reportsOnTestCase");
 		int size=listStatements.toList().size();
-		assertTrue("TestResult has one oslc_qm_v2:reportsOnTestCase, found "+size, size == 1);
+		assertEquals("TestResult has exactly one oslc_qm:reportsOnTestCase", 1, size);
 	}
 
 	@Test
-	public void TestResultHasOneReportsOnTestPlan() throws XPathExpressionException
+	public void TestResultHasAtMostOneStatus() throws XPathExpressionException
 	{
-		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:reportsOnTestPlan");
+		StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "status");
 		int size=listStatements.toList().size();
-		assertTrue("TestResult has one oslc_qm_v2:reportsOnTestPlan, found "+size, size == 1);
-	}
-
-	@Test
-	public void TestResultHasOneStatus() throws XPathExpressionException
-	{
-		StmtIterator listStatements = getStatementsForProp("oslc_qm_v2:status");
-		int size=listStatements.toList().size();
-		assertTrue("TestResult has zeor or one oslc_qm_v2:status, found "+size, size <= 1);
+		assertTrue("TestResult has zero or one oslc_qm:status, found " + size, size <= 1);
 	}
 	
 	public static String eval = OSLCConstants.QM_TEST_RESULT; 
