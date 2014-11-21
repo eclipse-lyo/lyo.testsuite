@@ -181,7 +181,13 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 			return allowedValues.get(0).getObject();
 		}
 
-		return allowedValues.get(1).getObject();
+		if (allowedValues.size() == 2) {
+			return allowedValues.get(1).getObject();
+		}
+		
+		// Even the second item causes problems sometimes.
+		// Use the second to last... Maybe it's safe?
+		return allowedValues.get(allowedValues.size() - 2).getObject();
 	}
 
 	/*
