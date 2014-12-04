@@ -68,12 +68,12 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
 	@SuppressWarnings("rawtypes")
 	public static String[] getCreateTemplateTypes() throws FileNotFoundException {
-		if (rdfXmlUpdateTemplate == null) {
+		if (rdfXmlCreateTemplate == null) {
 			return null;
 		}
 
 		Model m = ModelFactory.createDefaultModel();
-		m.read(new StringReader(rdfXmlUpdateTemplate), "http://base.url", OSLCConstants.JENA_RDF_XML);
+		m.read(new StringReader(rdfXmlCreateTemplate), "http://base.url", OSLCConstants.JENA_RDF_XML);
 		RDFUtils.validateModel(m);
 		Property rdfType = m.getProperty(OSLCConstants.RDF_TYPE_PROP);
 		Selector select = new SimpleSelector(null, rdfType, (RDFNode)null); 
@@ -132,11 +132,6 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
 	private HttpResponse doPost (String contentType, String accept, String content) 
 		throws IOException {
-		
-		if (authMethod == AuthMethods.FORM) {
-			// make sure we have authenticated before the POST call
-			TestsBase.formLogin(creds.getUserPrincipal().getName(), creds.getPassword());
-		}
 		
 		// issue the POST call
 		HttpResponse resp = OSLCUtils.postDataToUrl(currentUrl, creds,
