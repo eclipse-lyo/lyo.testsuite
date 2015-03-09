@@ -1,21 +1,21 @@
 <!--
-    Copyright (c) 2011, 2014 IBM Corporation.
+	Copyright (c) 2011, 2014 IBM Corporation.
    
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
    
-    The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
-    and the Eclipse Distribution License is available at 
-    http://www.eclipse.org/org/documents/edl-v10.php.
+	The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+	and the Eclipse Distribution License is available at 
+	http://www.eclipse.org/org/documents/edl-v10.php.
    
-    Contributors:
+	Contributors:
   
-       Steve Speicher - initial API and implementation
-       Yuhong Yin
-       Samuel Padgett - set UTF-8 source encoding
-       Samuel Padgett - created shaded JAR with dependencies during build
-       Samuel Padgett - update Maven group ID and artifact ID
+	   Steve Speicher - initial API and implementation
+	   Yuhong Yin
+	   Samuel Padgett - set UTF-8 source encoding
+	   Samuel Padgett - created shaded JAR with dependencies during build
+	   Samuel Padgett - update Maven group ID and artifact ID
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -31,6 +31,19 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<skipTests>true</skipTests>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>doclint-java8-disable</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<javadoc.opts>-Xdoclint:none</javadoc.opts>
+			</properties>
+		</profile>
+	</profiles>
+
 	<repositories>
 		<repository>
 			<id>oauth</id>
@@ -118,51 +131,54 @@
 
 	<build>
 		<plugins>
-            <!-- Compiler Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
+			<!-- Compiler Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 
-            <!-- Source Jar Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+			<!-- Source Jar Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-            <!-- Javadoc Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+			<!-- Javadoc Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>${javadoc.opts}</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-                                <version>2.12</version>
+				<version>2.12</version>
 			</plugin>
 
 			<plugin>
@@ -191,7 +207,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-                                <version>2.12</version>
+				<version>2.12</version>
 			</plugin>
 		</plugins>
 	</reporting>
