@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.server.util.RDFUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -441,6 +442,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 	}
 	
 	@Test
+	@Ignore("This is OPTIONAL in OSLC 2.0 (and HTTP)")
 	public void updateCreatedResourceWithEmptyPrecondition() throws Exception {
 
 		HttpResponse resp = createResource(getContentType(), getContentType(), getCreateContent());
