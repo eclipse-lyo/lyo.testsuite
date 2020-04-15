@@ -1,4 +1,6 @@
 OVERVIEW
+========
+
 
 The goal of this README is to provide a quick overview of the OSLC provider tests 
 and how to easily use / modify them to validate an OSLC service provider.
@@ -7,22 +9,26 @@ The current work focused on OSLC-CM 1.0 and 2.0 implementations.  It can test
 both 1.0 and 2.0 implementations at the same time.  It is intended to work
 with any OSLC Core-based implementations such as OSLC-QM and OSLC-RM 2.0.
 
---------------------------------------------------------------------------------
+## Running tests
+
+### Eclipse
+
 Running the tests in Eclipse:
 
 Use an existing launch config created for known tests:
   - OSLC V2 RTC.launch
   - OSLC V2 CQ.launch
   
-From Eclipse, Run -> Run Configurations... -> JUnits
+From Eclipse, _Run -> Run Configurations... -> JUnits_
 
+### Maven
 
 [Alternative]: running the tests with Maven on the command-line with something like :
 
-  $mvn -Dtest=DynamicSuiteBuilder -DargLine="-Dprops=config/fusionforge/fusionforge-setupv1.properties" test
+    $mvn -Dtest=DynamicSuiteBuilder -DargLine="-Dprops=config/fusionforge/fusionforge-setupv1.properties" test
 
---------------------------------------------------------------------------------
-Provider specific setup:
+
+## Provider specific setup
 
 - Note: for some configurations that use internal IBM hosted servers, you will
   first need to BSO-login before accessing the servers.
@@ -31,7 +37,8 @@ Provider specific setup:
   - Template files for creation tests: config/cq/*template*
   - OAuth registration keys
 
---------------------------------------------------------------------------------
+## Adding tests
+
 To add another tool (OSLC service provider) to test:
 
 - setup a config/[tool] directory with configuration files 
@@ -42,13 +49,11 @@ To add another tool (OSLC service provider) to test:
    - can simply copy existing one, then change its name and location for 
       setup.properties
 
---------------------------------------------------------------------------------
 To add a tests for a domain:
 - Update org.eclipse.lyo.testsuite.server.DynamicSuiteBuilder.suite() to 
   conditionally include the appropriate tests 
   
---------------------------------------------------------------------------------
-Code Structure:
+## Code Structure
 
 The DynamicSuiteBuilder class is the driver of the suite, it determines which 
 version of OSLC the provider supports and runs the appropriate set of tests 
