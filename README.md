@@ -7,30 +7,33 @@
   - [Goals](#goals)
   - [OSLC Specifications Covered](#oslc-specifications-covered)
 - [Running the Test Suite](#running-the-test-suite)
+  - [Overview](#overview)
+  - [Test an RIO server (alternative 1)](#test-an-rio-server-alternative-1)
+  - [Test an RTC server (alternative 2)](#test-an-rtc-server-alternative-2)
+  - [Test a ClearQuest server (alternative 3)](#test-a-clearquest-server-alternative-3)
+  - [Test an RQM server (alt 4)](#test-an-rqm-server-alt-4)
   - [Configure the OSLC Test Suites](#configure-the-oslc-test-suites)
   - [Running the Suite](#running-the-suite)
+  - [OSLC Assessment Report (optional)](#oslc-assessment-report-optional)
 - [Additional information](#additional-information)
   - [Areas for Improvement](#areas-for-improvement)
-  - [Building and running the OSLC Test Suites and Reports](#building-and-running-the-oslc-test-suites-and-reports)
 
 ## Introduction
 
 ### Goals
 
-The goal of the Lyo OSLC Test Suite is to provide a suite of tests which
-will test OSLC domain provider implementations against the
-specification. A JUnit-based test suite is now available in the project
-Git repository. The suite is under development and does not provide full
-coverage of the implementations it tests at this time. The goals of the
-OSLC Test Suite are to:
+The OSLC test suite is a set of JUnit tests that made available through the Eclipse Lyo project. It is designed to test against an OSLC service provider (in specific domains, such as CM, QM and RM) for its implementation of the OSLC core specification and the corresponding domain specifications.
 
--   provide assessment tests for each of the OSLC domains
-    -   priority is to cover MUST items first followed by SHOULD and
-        then MAY items
-    -   provide reporting to show provider implementations an assessment
-        report of coverage and successful execution.
--   provide a tool to find bugs in OSLC providers and improve their
-    quality
+The roles of the OSLC test suite include:
+
+**As an OSLC assessment assessor**
+In this role, the test suite will run again a particular OSLC provider and as minimal, make sure the provider passes the OSLC core spec test and the OSLC domain spec test. It provides an assessment report delivering clear and actionable information to be eligible for each OSLC spec. Priority is to cover MUST items first followed by SHOULD and then MAY items.   
+
+**As an OSLC quality validator**
+In this role, the test suite provides functional capabilities to help test an OSLC based solutions and evolve new or existing OSLC embracing solutions into high quality offerings. It provides reusable test cases to reduce the effort improving the quality of OSLC solution and to find bugs in OSLC providers.
+
+**As an OSLC adoption accelerator**
+In this role, the test suite will consider building canned images for learning OSLC, adding inline comments to test cases, and providing additional documentation.
 
 ### OSLC Specifications Covered
 
@@ -42,6 +45,48 @@ OSLC Test Suite are to:
 -   Performance Monitoring (V2)
 
 ## Running the Test Suite
+
+### Overview
+
+It is recommended that you start with running an OSLC provider test against the reference implementation, with an OSLC domain (CM, QM or RM) that you are interested in.
+
+| :warning: WARNING                                             |
+|:--------------------------------------------------------------|
+| The test suite was written against the old RIO and hasn't been updated for https://github.com/oslc-op/refimpl yet |
+
+The following sections start on how to run the RIO provider tests, and then cover basic information about running the provider tests against some Rational Products, such as Rational Team Concert (RTC), ClearQuest, Rational Quality Manager (RQM) and Rational Requirements Composer (RRC). 
+
+### Test an RIO server (alternative 1)
+
+| :warning: WARNING                                             |
+|:--------------------------------------------------------------|
+| These are legacy RIO instructions. OSLC 2020 RefImpl runs via Maven w/o need for configuration. |
+
+1. To start the RIO-CM Server, from “Run” -> “Run Configurations …”, find Maven Build | Run RIO-CM and click “Run”.
+1. After the jetty server started, confirm that you can access Rio-CM server via 
+http://localhost:8080/rio-cm
+1. The very first time you run this on your machine, you will see the setup page. You can enter the defaults for RDF Store Path and Binary Resource Store Path as suggested, and click the “Configure” button. 
+
+**You will use http://localhost:8080/rio-cm in OSLC provider test setting later.**
+
+### Test an RTC server (alternative 2)
+
+1. Prefill some data. E.g. submit a defect type work item called “templatedDefect”.
+1. Edit `config/rtc/rtc-setupv2.properties`:
+   - `baseUri=https://quagmire.rtp.raleigh.ibm.com:14444/ccm/oslc/workitems/catalog`
+   - `formUri=https://quagmire.rtp.raleigh.ibm.com:14444/ccm/authenticated/j_security_check`
+   - `userId=admin`
+   - `Pw=admin`
+1. Use **OSLC V2 RTC.launch** in the next step.
+
+### Test a ClearQuest server (alternative 3)
+
+See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf), section 4.5 for the details.
+
+### Test an RQM server (alt 4)
+
+See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf), section 4.6 for the details.
+
 
 ### Configure the OSLC Test Suites
 
@@ -75,13 +120,10 @@ include in the run. The config is passed to the test suite run with the
 several launches already configured to run the suite based on the sample
 configuration files. We will run the launch to test the RIO CM provider.
 
+
 > **Note:** In order to run against RIO CM, you will need to build and
 > launch the CM reference implementation following the instructions
 > [here](http://wiki.eclipse.org/Lyo/BuildRIO).
-
-| :warning: WARNING                                             |
-|:--------------------------------------------------------------|
-| These docs have not been updated for https://github.com/oslc-op/refimpl yet  |
 
 
 1.   Select Run-&gt;Run Configurations and select JUnit
@@ -99,6 +141,10 @@ configuration files. We will run the launch to test the RIO CM provider.
 1.   Failures will have an exception indicating the root cause of the
     failure.
 
+### OSLC Assessment Report (optional)
+
+See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf), section 6 for the details.
+
 ## Additional information
 
 ### Areas for Improvement
@@ -108,10 +154,3 @@ configuration files. We will run the launch to test the RIO CM provider.
 -   Integrated reporting
 -   Improved query tests
 -   Improved OAuth tests
-
-### Building and running the OSLC Test Suites and Reports
-
-- [Detailed documentation](https://github.com/eclipse/lyo.testsuite/blob/master/org.eclipse.lyo.testsuite.server/assessment/documentation/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.doc) for the OSLC Test Suite and Reports in MS Word format.
-    - Overview of the test suites
-    - How to run the tests
-    - How to create reports
