@@ -11,7 +11,7 @@
   - [Test an RIO server (alternative 1)](#test-an-rio-server-alternative-1)
   - [Test an RTC server (alternative 2)](#test-an-rtc-server-alternative-2)
   - [Test a ClearQuest server (alternative 3)](#test-a-clearquest-server-alternative-3)
-  - [Test an RQM server (alt 4)](#test-an-rqm-server-alt-4)
+  - [Test an RQM server (alternative 4)](#test-an-rqm-server-alternative-4)
   - [Configure the OSLC Test Suites](#configure-the-oslc-test-suites)
   - [Running the Suite](#running-the-suite)
   - [OSLC Assessment Report (optional)](#oslc-assessment-report-optional)
@@ -83,7 +83,7 @@ http://localhost:8080/rio-cm
 
 See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf), section 4.5 for the details.
 
-### Test an RQM server (alt 4)
+### Test an RQM server (alternative 4)
 
 See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf), section 4.6 for the details.
 
