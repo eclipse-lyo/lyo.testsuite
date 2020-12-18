@@ -17,8 +17,7 @@
 	   Samuel Padgett - created shaded JAR with dependencies during build
 	   Samuel Padgett - update Maven group ID and artifact ID
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -29,7 +28,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<skipTests>true</skipTests>
+		<skipTests>true</skipTests> <!-- run mvn with -DskipTests=false -->
 	</properties>
 
 	<profiles>
@@ -50,17 +49,17 @@
 			<name>Eclipse Lyo Releases</name>
 			<url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
 			<snapshots>
-			  <enabled>false</enabled>
+				<enabled>false</enabled>
 			</snapshots>
-		  </repository>
-		  <repository>
+		</repository>
+		<repository>
 			<id>lyo-snapshots</id>
 			<name>Eclipse Lyo Snapshots</name>
 			<url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
 			<releases>
-			  <enabled>false</enabled>
+				<enabled>false</enabled>
 			</releases>
-		  </repository>
+		</repository>
 	</repositories>
 	<scm>
 		<url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.testsuite.git</url>

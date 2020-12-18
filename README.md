@@ -141,6 +141,10 @@ configuration files. We will run the launch to test the RIO CM provider.
 1.   Failures will have an exception indicating the root cause of the
     failure.
 
+From command line, the following command can be used:
+
+   mvn clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.server.DynamicSuiteBuilder -Dprops=config/rio-cm/rio-cm-setup.properties -fae
+
 ### OSLC Assessment Report (optional)
 
 See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf), section 6 for the details.
