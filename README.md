@@ -40,19 +40,9 @@ OSLC Test Suite are to:
 
 ## Building and running the OSLC Test Suites and Reports
 
--   [Detailed
-    documentation](https://git.eclipse.org/c/lyo/org.eclipse.lyo.testsuite.git/plain/org.eclipse.lyo.testsuite.server/assessment/documentation/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.doc)
+- [Detailed documentation](https://github.com/eclipse/lyo.testsuite/blob/master/org.eclipse.lyo.testsuite.server/assessment/documentation/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.doc)
     for the OSLC Test Suite and Reports in MS Word format.
-
-`  * Overview of the test suites`  
-`  * How to run the tests`  
-`  * How to create reports`
-
--   [ For Developers: Building and running the OSLC test
-    suite](Lyo/BuildTestSuite "wikilink")
-
-## Links
-
-- https://wiki.eclipse.org/Lyo/LyoTestSuite
-- https://wiki.eclipse.org/Lyo/BuildTestSuite
-- https://github.com/eclipse/lyo.testsuite/blob/master/org.eclipse.lyo.testsuite.server/assessment/documentation/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.doc
+    * Overview of the test suites
+    * How to run the tests
+    * How to create reports
+- [For Developers: Building and running the OSLC test suite](https://wiki.eclipse.org/Lyo/BuildTestSuite)
