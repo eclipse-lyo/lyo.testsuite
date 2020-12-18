@@ -143,7 +143,7 @@ configuration files. We will run the launch to test the RIO CM provider.
 
 From command line, the following command can be used:
 
-   mvn clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.server.DynamicSuiteBuilder -Dprops=config/rio-cm/rio-cm-setup.properties -fae
+    mvn clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.server.DynamicSuiteBuilder -Dprops=config/rio-cm/rio-cm-setup.properties -fae
 
 ### OSLC Assessment Report (optional)
 
