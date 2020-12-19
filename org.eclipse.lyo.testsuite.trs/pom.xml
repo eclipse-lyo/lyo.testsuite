@@ -15,8 +15,7 @@
        Samuel Padgett - update Maven group ID and artifact ID
        Samuel Padgett - create shaded JAR
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.eclipse.lyo.testsuite</groupId>
     <version>2.2.0-SNAPSHOT</version>
@@ -25,34 +24,34 @@
     <description>Toolkit to assist with TRS implementation testing.</description>
 
     <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<version-jvm>1.8</version-jvm>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<version-jetty>9.4.6.v20170531</version-jetty>
-		<version.lyo.core>2.2.0</version.lyo.core>
-		<version.lyo.server>2.2.0</version.lyo.server>
-		<version.lyo.trs>2.2.0</version.lyo.trs>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <version-jvm>1.8</version-jvm>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <version-jetty>9.4.6.v20170531</version-jetty>
+        <version.lyo.core>2.2.0</version.lyo.core>
+        <version.lyo.server>2.2.0</version.lyo.server>
+        <version.lyo.trs>2.2.0</version.lyo.trs>
     </properties>
 
     <repositories>
-		<repository>
-			<id>lyo-releases</id>
-			<name>Eclipse Lyo Releases</name>
-			<url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
-			<snapshots>
-			  <enabled>false</enabled>
-			</snapshots>
-		  </repository>
-		  <repository>
-			<id>lyo-snapshots</id>
-			<name>Eclipse Lyo Snapshots</name>
-			<url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
-			<releases>
-			  <enabled>false</enabled>
-			</releases>
-		  </repository>
+        <repository>
+            <id>lyo-releases</id>
+            <name>Eclipse Lyo Releases</name>
+            <url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>lyo-snapshots</id>
+            <name>Eclipse Lyo Snapshots</name>
+            <url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -139,7 +138,7 @@
             </plugin>
 
             <!-- Javadoc Plugin -->
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.4</version>
@@ -155,25 +154,25 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<shadedArtifactAttached>true</shadedArtifactAttached>
-					<createDependencyReducedPom>false</createDependencyReducedPom>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
