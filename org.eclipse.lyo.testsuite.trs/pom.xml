@@ -1,151 +1,151 @@
 <!--
     Copyright (c) 2013, 2014 IBM Corporation.
-   
+
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
-    and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
-   
+    and Eclipse Distribution License v. 1.0 which accompanies this distribution.
+
     The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
-    and the Eclipse Distribution License is available at 
+    and the Eclipse Distribution License is available at
     http://www.eclipse.org/org/documents/edl-v10.php.
-   
+
     Contributors:
-  
+
        David Terry    - initial API and implementation
        Samuel Padgett - update Maven group ID and artifact ID
        Samuel Padgett - create shaded JAR
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.eclipse.lyo.testsuite</groupId>
-    <version>2.2.0-SNAPSHOT</version>
-    <name>TRS Implementation Assessment Test</name>
-    <artifactId>testsuite-trs</artifactId>
-    <description>Toolkit to assist with TRS implementation testing.</description>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.eclipse.lyo.testsuite</groupId>
+  <version>2.2.0-SNAPSHOT</version>
+  <name>TRS Implementation Assessment Test</name>
+  <artifactId>testsuite-trs</artifactId>
+  <description>Toolkit to assist with TRS implementation testing.</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <version-jvm>1.8</version-jvm>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <version-jetty>9.4.6.v20170531</version-jetty>
-        <version.lyo.core>2.2.0</version.lyo.core>
-        <version.lyo.server>2.2.0</version.lyo.server>
-        <version.lyo.trs>2.2.0</version.lyo.trs>
-    </properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <version-jvm>1.8</version-jvm>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <version-jetty>9.4.6.v20170531</version-jetty>
+    <version.lyo.core>2.2.0</version.lyo.core>
+    <version.lyo.server>2.2.0</version.lyo.server>
+    <version.lyo.trs>2.2.0</version.lyo.trs>
+  </properties>
 
-    <repositories>
-        <repository>
-            <id>lyo-releases</id>
-            <name>Eclipse Lyo Releases</name>
-            <url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>lyo-snapshots</id>
-            <name>Eclipse Lyo Snapshots</name>
-            <url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
+  <repositories>
+    <repository>
+      <id>lyo-releases</id>
+      <name>Eclipse Lyo Releases</name>
+      <url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>lyo-snapshots</id>
+      <name>Eclipse Lyo Snapshots</name>
+      <url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth-consumer</artifactId>
-            <version>20090617</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.lyo</groupId>
-            <artifactId>oslc-trs</artifactId>
-            <version>${version.lyo.trs}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-arq</artifactId>
-            <version>2.9.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.lyo.oslc4j.core</groupId>
-            <artifactId>oslc4j-core</artifactId>
-            <version>${version.lyo.core}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.lyo.oslc4j.core</groupId>
-            <artifactId>oslc4j-wink</artifactId>
-            <version>${version.lyo.core}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.lyo.oslc4j.core</groupId>
-            <artifactId>oslc4j-json4j-provider</artifactId>
-            <version>${version.lyo.core}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.lyo.oslc4j.core</groupId>
-            <artifactId>oslc4j-jena-provider</artifactId>
-            <version>${version.lyo.core}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-servlet_2.5_spec</artifactId>
-            <version>1.2</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>net.oauth.core</groupId>
+      <artifactId>oauth-consumer</artifactId>
+      <version>20090617</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.lyo</groupId>
+      <artifactId>oslc-trs</artifactId>
+      <version>${version.lyo.trs}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-arq</artifactId>
+      <version>2.9.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.lyo.oslc4j.core</groupId>
+      <artifactId>oslc4j-core</artifactId>
+      <version>${version.lyo.core}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.lyo.oslc4j.core</groupId>
+      <artifactId>oslc4j-wink</artifactId>
+      <version>${version.lyo.core}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.lyo.oslc4j.core</groupId>
+      <artifactId>oslc4j-json4j-provider</artifactId>
+      <version>${version.lyo.core}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.lyo.oslc4j.core</groupId>
+      <artifactId>oslc4j-jena-provider</artifactId>
+      <version>${version.lyo.core}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-servlet_2.5_spec</artifactId>
+      <version>1.2</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
-    <build>
-        <outputDirectory>target/classes</outputDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include> **/*.properties</include>
-                    <include> **/*.index</include>
-                    <include> **/resources</include>
-                </includes>
-            </resource>
-        </resources>
-        <plugins>
+  <build>
+    <outputDirectory>target/classes</outputDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include> **/*.properties</include>
+          <include> **/*.index</include>
+          <include> **/resources</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
 
-            <!-- Source Jar Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+      <!-- Source Jar Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-            <!-- Javadoc Plugin -->
-            <!-- <plugin>
+      <!-- Javadoc Plugin -->
+      <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.4</version>
                 <configuration>
                     <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
-                
+
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -156,23 +156,23 @@
                 </executions>
             </plugin> -->
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
