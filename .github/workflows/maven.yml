@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [8, 9, 10, 11, 12, 13, 14, 15, 16-ea, 17-ea]
+        jdk: [8, 11, 15, 17-ea]
     runs-on: ubuntu-latest
 
     steps:
