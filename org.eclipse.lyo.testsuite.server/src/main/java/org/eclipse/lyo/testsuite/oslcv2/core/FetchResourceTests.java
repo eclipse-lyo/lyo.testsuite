@@ -158,16 +158,6 @@ public class FetchResourceTests extends TestsBase {
 		assertNotNull("XML document did not parse successfully", doc);
 	}
 
-	// TODO: JSON is not required by all tests, consider remove test annotation here, then
-	// subclassing by domain tests to add it back in.
-	@Test
-	public void getValidResourceUsingJSON() throws IOException, NullPointerException, JSONException {
-		String body = getValidResourceUsingContentType(OSLCConstants.CT_JSON);
-
-		JSONArtifact userData = JSON.parse(body);
-		assertNotNull("Received JSON content but did not parse properly", userData);
-	}
-
 	@Test
 	public void getValidResourceUsingCOMPACT() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 		String body = getValidResourceUsingContentType(OSLCConstants.CT_COMPACT);

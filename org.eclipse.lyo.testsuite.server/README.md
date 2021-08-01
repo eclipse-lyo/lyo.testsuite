@@ -79,3 +79,6 @@ ChangeRequestTests in OSLCv2 requires that the creation factory have a record to
 query on to actually retrieve a change request, this class as well as the 
 CreationAndUpdateTests class can both be improved by utilizing shapes to 
 programmatically create records on the fly.
+
+## Credits
+

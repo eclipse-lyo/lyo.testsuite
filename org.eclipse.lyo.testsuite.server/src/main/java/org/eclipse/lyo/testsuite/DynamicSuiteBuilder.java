@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2011, 2013 IBM Corporation.
+/*-******************************************************************************
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,6 +8,8 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
  *
  * Contributors:
  *
@@ -45,8 +47,7 @@ import org.slf4j.LoggerFactory;
 @RunWith(OslcTestSuite.class)
 public class DynamicSuiteBuilder
 {
-	public static Class<?>[] suitesArray() throws IOException
-	{
+	public static Class<?>[] suitesArray() {
 		final Logger log = LoggerFactory.getLogger(DynamicSuiteBuilder.class);
 		Properties setupProps = SetupProperties.setup(null);
 
@@ -85,7 +86,7 @@ public class DynamicSuiteBuilder
 			|| OSLCConstants.OSLC_V2.equals(testVersions)
 			|| OSLCConstants.OSLC_RM_V2.equals(testVersions)
 			|| OSLCConstants.OSLC_QM_V2.equals(testVersions)
-			|| testVersions.equals("both")
+			|| "both".equals(testVersions)
 			|| OSLCConstants.OSLC_AM_V2.equals(testVersions)
 			|| OSLCConstants.OSLC_ASSET_V2.equals(testVersions)
 			|| OSLCConstants.OSLC_AUTO_V2.equals(testVersions)
@@ -93,7 +94,11 @@ public class DynamicSuiteBuilder
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(ServiceProviderRdfXmlTests.class);
-			testsToRun.add(FetchResourceTests.class);
+			if(supportJSON) {
+                testsToRun.add(FetchResourceJsonTests.class);
+            } else {
+                testsToRun.add(FetchResourceTests.class);
+            }
 
 			if (OSLCConstants.OSLC_CM_V2.equals(testVersions) ||
 				OSLCConstants.OSLC_QM_V2.equals(testVersions) ||
@@ -120,15 +125,21 @@ public class DynamicSuiteBuilder
 
 				if (OSLCConstants.OSLC_CM_V2.equals(testVersions)) {
 					log.info("Setting up to test CM v2 features");
-					if ( supportCreationFactory && supportJSON ) {
-						testsToRun.add(CreationAndUpdateJsonTests.class);
-					}
 
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);
-					testsToRun.add(SimplifiedQueryJsonTests.class);
 
+					if(supportJSON) {
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);
+
+                        if(supportQuery) {
+                            testsToRun.add(SimplifiedQueryJsonTests.class);
+                        }
+
+                        if(supportCreationFactory) {
+                            testsToRun.add(CreationAndUpdateJsonTests.class);
+                        }
+                    }
 				} else if(OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
 					log.info("Setting up to test Asset v2 features");
 
