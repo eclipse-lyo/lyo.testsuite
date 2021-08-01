@@ -50,7 +50,7 @@ To add another tool (OSLC service provider) to test:
       setup.properties
 
 To add a tests for a domain:
-- Update org.eclipse.lyo.testsuite.server.DynamicSuiteBuilder.suite() to 
+- Update org.eclipse.lyo.testsuite.DynamicSuiteBuilder.suite() to 
   conditionally include the appropriate tests 
   
 ## Code Structure

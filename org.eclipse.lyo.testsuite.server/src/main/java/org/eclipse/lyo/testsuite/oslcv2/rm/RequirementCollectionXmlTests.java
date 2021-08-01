@@ -8,8 +8,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.abdera.xpath.XPathException;
-import org.eclipse.lyo.testsuite.oslcv2.CoreResourceXmlTests;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -24,14 +24,14 @@ public class RequirementCollectionXmlTests extends CoreResourceXmlTests {
 			XPathExpressionException {
 		super(thisUrl);
 		setNode(ns, resource);
-		
+
 	}
 	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls() 
+	public static Collection<Object[]> getAllDescriptionUrls()
 		throws IOException, ParserConfigurationException, SAXException, XPathException, javax.xml.xpath.XPathException {
 
 		staticSetup();
-		 
+
 		// If a particular RequirementCollection is specified, use it
 		String useThis = setupProps.getProperty("useThisRequirementCollection");
 		if ((useThis != null) && (useThis != "")) {
@@ -43,7 +43,7 @@ public class RequirementCollectionXmlTests extends CoreResourceXmlTests {
 		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
 		return getAllDescriptionUrls(eval);
 	}
-	
+
 public static String eval = "//rdfs:member/@rdf:resource";
 public static String ns = "oslc_rm_v2";
 public static String resource = "RequirementCollection";

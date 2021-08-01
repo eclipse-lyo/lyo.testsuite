@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -24,19 +24,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.eclipse.lyo.testsuite.oslcv2.CoreResourceXmlTests;
+import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.junit.Test;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.runners.Parameterized.Parameters;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -46,36 +41,36 @@ import org.xml.sax.SAXException;
  */
 //@RunWith(Parameterized.class)
 public class AutomationPlanXmlTests extends CoreResourceXmlTests {
-	 
+
 	public AutomationPlanXmlTests(String thisUrl) throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException {
-		
-		super(thisUrl);		
+
+		super(thisUrl);
 		setNode(ns, resource);
 	}
-	
+
 	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls() 
+	public static Collection<Object[]> getAllDescriptionUrls()
 		throws IOException, ParserConfigurationException, SAXException, XPathException {
-		
+
 		TestsBase.staticSetup();
-		
+
 		String useThisAutoPlan = setupProps.getProperty("useThisAutoPlan");
 		if ( useThisAutoPlan != null ) {
 			ArrayList<String> results = new ArrayList<String>();
 			results.add(useThisAutoPlan);
 			return toCollection(results);
 		}
-		
+
 		setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
 		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
 		return getAllDescriptionUrls(eval);
 	}
-	
+
 	public static String ns = "oslc_auto_v2";
-	public static String resource = "AutomationPlan"; 
+	public static String resource = "AutomationPlan";
 	public static String eval = "//rdfs:member/@rdf:resource";
 
-	
+
 }

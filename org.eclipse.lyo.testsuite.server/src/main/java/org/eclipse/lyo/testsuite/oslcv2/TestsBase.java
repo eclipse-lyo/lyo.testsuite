@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -46,12 +46,12 @@ import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
-import org.eclipse.lyo.testsuite.oauth.OAuthConsumerPrincipal;
-import org.eclipse.lyo.testsuite.oauth.OAuthCredentials;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
-import org.eclipse.lyo.testsuite.server.util.RDFUtils;
-import org.eclipse.lyo.testsuite.server.util.SetupProperties;
+import org.eclipse.lyo.testsuite.util.oauth.OAuthConsumerPrincipal;
+import org.eclipse.lyo.testsuite.util.oauth.OAuthCredentials;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.util.RDFUtils;
+import org.eclipse.lyo.testsuite.util.SetupProperties;
 import org.junit.BeforeClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -93,15 +93,15 @@ public abstract class TestsBase {
 	protected static String currentUrl = null;    // URL of current service being tested
 	protected static String setupBaseUrl = null;  // Configuration baseUrl, think ServiceProvider or ServiceProviderCatalog
 	protected static String shapeUrl = null;      // Shape for the creation dialog
-	
+
 	protected static String testVersion = null;
-	
+
 	protected static Map<String, String> creationShapeMap = new HashMap<String, String>();
-	
+
 	public TestsBase(String thisUrl) {
 		currentUrl = thisUrl;
 	}
-	
+
 	public static void staticSetup() {
 
 		if (setupProps == null) {
@@ -121,9 +121,9 @@ public abstract class TestsBase {
 					logger.warn("No credentials found in setup.properties");
 				}
 			}
-			
-			Header h = new BasicHeader("OSLC-Core-Version", "2.0");			
-			
+
+			Header h = new BasicHeader("OSLC-Core-Version", "2.0");
+
 			headers = new Header[] { h};
 			String onlyOnceStr = setupProps.getProperty("runOnlyOnce");
 			if (onlyOnceStr != null && onlyOnceStr.equals("false")) {
@@ -135,7 +135,7 @@ public abstract class TestsBase {
 			}
 			setupBaseUrl = setupProps.getProperty("baseUri");
 			currentUrl = setupBaseUrl;
-			
+
 			String authType = setupProps.getProperty("authMethod");
 			if (authType.equalsIgnoreCase("OAUTH")) {
 				authMethod = AuthMethods.OAUTH;
@@ -143,7 +143,7 @@ public abstract class TestsBase {
 				authMethod = AuthMethods.FORM;
 				formLogin(userId, pw);
 			}
-			
+
 			useThisServiceProvider = setupProps.getProperty("useThisServiceProvider");
 
 			// First, Setup plain old XML
@@ -172,7 +172,7 @@ public abstract class TestsBase {
 				rdfXmlCreateTemplate = xmlCreateTemplate;
 			if (rdfXmlUpdateTemplate == null)
 				rdfXmlUpdateTemplate = xmlUpdateTemplate;
-			
+
 			// Acquire the test version (v1/v2)
 			testVersion = setupProps.getProperty("testVersions");
 		}
@@ -189,32 +189,32 @@ public abstract class TestsBase {
 			SAXException {
 		return getServiceProviderURLsUsingXML(inBaseURL, onlyOnce);
 	}
-	
+
 	public static Collection<Object[]> toCollection(ArrayList<String> list) {
 		Collection<Object[]> data = new ArrayList<Object[]>();
 		for (String string : list) {
 			data.add(new Object[] {string});
 		}
-		return data;	
+		return data;
 	}
-		
+
 	public static ArrayList<String> getServiceProviderURLsUsingXML(String inBaseURL, boolean dontGoDeep)
 		throws IOException, XPathException, ParserConfigurationException,
 		SAXException {
 
 		staticSetup();
-		
+
 		// ArrayList to contain the urls from all SPCs
 	    ArrayList<String> data = new ArrayList<String>();
-	    
+
 	    // If we are given a shortcut, then use it and skip the rest
 	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
 	    	data.add(useThisServiceProvider);
 	    	return data;
 	    }
-		
+
 		String base=null;
-		if (inBaseURL == null) 
+		if (inBaseURL == null)
 			base = setupBaseUrl;
 		else
 			base = inBaseURL;
@@ -239,12 +239,12 @@ public abstract class TestsBase {
 				data.add(sps.item(i).getNodeValue());
 				if (onlyOnce)
 					return data;
-				
+
 				if (dontGoDeep)
 					return data;
 			}
 		}
-		
+
 		// Get all ServiceProvider urls from the base document in order to
 		// recursively add all the capability urls from them as well.
 		//   Referenced using oslc:serviceProvider/@rdf:resource
@@ -258,10 +258,10 @@ public abstract class TestsBase {
 					return data;
 			}
 		}
-		
+
 		// Get all ServiceProviderCatalog urls from the base document in order
 		// to recursively add all the capability from ServiceProviders within them as well.
-		//   Inlined using oslc:ServiceProviderCatalog/@rdf:about		
+		//   Inlined using oslc:ServiceProviderCatalog/@rdf:about
 		NodeList spcs = (NodeList) OSLCUtils.getXPath().evaluate(
 				"//oslc_v2:ServiceProviderCatalog/@rdf:about", baseDoc,
 				XPathConstants.NODESET);
@@ -278,7 +278,7 @@ public abstract class TestsBase {
 		}
 		// Get all ServiceProviderCatalog urls from the base document in order
 		// to recursively add all the capability from ServiceProviders within them as well.
-		//   Referenced using oslc:serviceProviderCatalog/@rdf:resource		
+		//   Referenced using oslc:serviceProviderCatalog/@rdf:resource
 		spcs = (NodeList) OSLCUtils.getXPath().evaluate(
 				"//oslc_v2:serviceProviderCatalog/@rdf:resource", baseDoc,
 				XPathConstants.NODESET);
@@ -296,14 +296,14 @@ public abstract class TestsBase {
 
 		return data;
 	}
-	
+
 	public static ArrayList<Node> getCapabilityDOMNodesUsingXML(String xpathStmt,
 			ArrayList<String> serviceUrls) throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException {
 		// Collection to contain the creationFactory urls from all SPs
 		ArrayList<Node> data = new ArrayList<Node>();
-		
+
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					creds, OSLCConstants.CT_XML, headers);
@@ -325,29 +325,29 @@ public abstract class TestsBase {
 
 	public static ArrayList<String> getCapabilityURLsUsingXML(
 			String xpathStmt,
-			ArrayList<String> serviceUrls, 
-			boolean useDefaultUsage) 
+			ArrayList<String> serviceUrls,
+			boolean useDefaultUsage)
 		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-		
+
 		return getCapabilityURLsUsingXML(xpathStmt,
 										 "//oslc_v2:usage/@rdf:resource",
 										 OSLCConstants.USAGE_DEFAULT_URI,
 				                         serviceUrls,
 				                         useDefaultUsage);
 	}
-	
+
 	public static ArrayList<String> getCapabilityURLsUsingXML(
 			String xpathStmt,
 			String xpathSubStmt,
 			String rT,
-			ArrayList<String> serviceUrls, 
-			boolean useDefaultUsage) 
+			ArrayList<String> serviceUrls,
+			boolean useDefaultUsage)
 		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-		
+
 		// Collection to contain the creationFactory urls from all SPs
 		ArrayList<String> data = new ArrayList<String>();
 		String firstUrl = null;
-		
+
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					creds, OSLCConstants.CT_XML, headers);
@@ -359,20 +359,20 @@ public abstract class TestsBase {
 			}
 
 			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
-			
+
 			NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(
 					xpathStmt,
 					baseDoc, XPathConstants.NODESET);
-									
+
 			for (int i = 0; i < sDescs.getLength(); i++) {
 				if (firstUrl == null)
 					firstUrl = sDescs.item(i).getNodeValue();
-					
+
 				if (useDefaultUsage) {
 					NodeList usages = (NodeList) OSLCUtils.getXPath().evaluate(
 							xpathSubStmt,
 							sDescs.item(i), XPathConstants.NODESET);
-					
+
 					for (int u=0; u < usages.getLength(); u++) {
 						String usageValue = usages.item(u).getNodeValue();
 						//if (OSLCConstants.USAGE_DEFAULT_URI.equals(usageValue)) {
@@ -399,10 +399,10 @@ public abstract class TestsBase {
 	public static ArrayList<String> getServiceProviderURLsUsingRdfXml(String inBaseURL, boolean dontGoDeep)
 	throws IOException {
 		staticSetup();
-		
+
 	    // ArrayList to contain the urls from all SPCs
 	    ArrayList<String> data = new ArrayList<String>();
-	    
+
 	    // If we are given a shortcut, then use it and skip the rest
 	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
 	    	data.add(useThisServiceProvider);
@@ -414,18 +414,18 @@ public abstract class TestsBase {
 				HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 
 	    // Used to hold RDF from doing service discovery
-		Model spModel = ModelFactory.createDefaultModel(); 
+		Model spModel = ModelFactory.createDefaultModel();
 		spModel.read(resp.getEntity().getContent(),
 				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, inBaseURL),
 				OSLCConstants.JENA_RDF_XML);
 		EntityUtils.consume(resp.getEntity());
 		RDFUtils.validateModel(spModel);
-		
+
 		// Get all the "inlined" definitions for Service Providers, namely
 		// all subjects whose rdf:type = oslc:ServiceProvider
 		Property rdfType = spModel.createProperty(OSLCConstants.RDF_TYPE_PROP);
 		Resource spTypeRes = spModel.getResource(OSLCConstants.SERVICE_PROVIDER_TYPE);
-		Selector select = new SimpleSelector(null, rdfType, spTypeRes); 
+		Selector select = new SimpleSelector(null, rdfType, spTypeRes);
 		StmtIterator statements = spModel.listStatements(select);
 		// Since resources can have multiple types, iterate over all
 		while (statements.hasNext()) {
@@ -437,7 +437,7 @@ public abstract class TestsBase {
 		// Get all the "referenced" definitions for Service Providers, namely
 		// of form: <oslc:serviceProvider rdf:resource="url" />
 		Property spProp = spModel.createProperty(OSLCConstants.SERVICE_PROVIDER_PROP);
-		select = new SimpleSelector(null, spProp, (RDFNode)null); 
+		select = new SimpleSelector(null, spProp, (RDFNode)null);
 		statements = spModel.listStatements(select);
 		// Since resources can have multiple types, iterate over all
 		while (statements.hasNext()) {
@@ -445,26 +445,26 @@ public abstract class TestsBase {
 			data.add(st.getObject().toString());
 			if (dontGoDeep)	return data;
 		}
-		
+
 		// Chase any ServiceProviderCatalogs, looking for ServiceProviders definitions.
 		Property spcPredicate = spModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
-		select = new SimpleSelector(null, spcPredicate, (RDFNode)null); 
+		select = new SimpleSelector(null, spcPredicate, (RDFNode)null);
 		statements = spModel.listStatements(select);
 		while (statements.hasNext()) {
 			ArrayList<String> results = getServiceProviderURLsUsingRdfXml(statements.nextStatement().getObject().toString(), dontGoDeep);
 			data.addAll(results);
 			if (dontGoDeep) return data;
-		}		
-	    
-	    return data;		
+		}
+
+	    return data;
 	}
 
 	public static ArrayList<String> getCapabilityURLsUsingRdfXml(String propertyUri,
 			ArrayList<String> serviceUrls, boolean useDefaultUsage) throws IOException {
 		return getCapabilityURLsUsingRdfXml(
-				propertyUri, 
-				serviceUrls, 
-				useDefaultUsage, 
+				propertyUri,
+				serviceUrls,
+				useDefaultUsage,
 				null,
 				OSLCConstants.USAGE_PROP,
 				OSLCConstants.USAGE_DEFAULT_URI
@@ -474,9 +474,9 @@ public abstract class TestsBase {
 	public static ArrayList<String> getCapabilityURLsUsingRdfXml(String propertyUri,
 			ArrayList<String> serviceUrls, boolean useDefaultUsage, String[] types) throws IOException {
 		return getCapabilityURLsUsingRdfXml(
-				propertyUri, 
-				serviceUrls, 
-				useDefaultUsage, 
+				propertyUri,
+				serviceUrls,
+				useDefaultUsage,
 				types,
 				OSLCConstants.USAGE_PROP,
 				OSLCConstants.USAGE_DEFAULT_URI
@@ -485,9 +485,9 @@ public abstract class TestsBase {
 
 	public static ArrayList<String> getCapabilityURLsUsingRdfXml(
 			String propertyUri,
-			ArrayList<String> serviceUrls, 
-			boolean useDefaultUsage, 
-			String[] types, 
+			ArrayList<String> serviceUrls,
+			boolean useDefaultUsage,
+			String[] types,
 			String prop,
 			String eval) throws IOException {
 		// Collection to contain the creationFactory urls from all SPs
@@ -496,16 +496,16 @@ public abstract class TestsBase {
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					creds, OSLCConstants.CT_RDF, headers);
-			
+
 			Model spModel = ModelFactory.createDefaultModel();
 			spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
 			RDFUtils.validateModel(spModel);
-						
+
 			Property capProp = spModel.createProperty(propertyUri);
 			Property usageProp = spModel.createProperty(prop);
 			Selector select = new SimpleSelector(null, capProp, (RDFNode)null);
 			StmtIterator statements = spModel.listStatements(select);
-			
+
 			while (statements.hasNext()) {
 				Statement stmt = statements.nextStatement();
 				// Only cache creation factory shapes. Some providers use the same capability URI for both query and creation.
@@ -518,16 +518,16 @@ public abstract class TestsBase {
 						creationShapeMap.put(stmt.getObject().toString(), shape.getObject().toString());
 					}
 				}
-				
+
 				if (firstUrl == null)
 					firstUrl = stmt.getObject().toString();
 				if (useDefaultUsage) {
 					StmtIterator usages = stmt.getSubject().listProperties(usageProp);
-					
+
 					while (usages.hasNext()) {
-						
+
 						Statement usageStmt = usages.nextStatement();
-						
+
 						if (eval.equals(usageStmt.getObject().toString())){
 							data.add(stmt.getObject().toString());
 							return data;
@@ -552,14 +552,14 @@ public abstract class TestsBase {
 						if (onlyOnce) return data;
 					}
 				}
-			}			
+			}
 		}
 		// If no default usage was found, then just return first one
 		if (useDefaultUsage && firstUrl != null)
 			data.add(firstUrl);
 		return data;
 	}
-	
+
 	/*
 	 * Return the cached shape URI associated with this creation factory URI. You must
 	 * have previously called getCapabilityURLsUsingRdfXml().
@@ -567,7 +567,7 @@ public abstract class TestsBase {
 	public static String getShapeUriForCreation(String creationFactoryUri) {
 		return creationShapeMap.get(creationFactoryUri);
 	}
-	
+
 	public static boolean formLogin(String userId, String pw) {
 		String formUri = setupProps.getProperty("formUri");
 		// Get cookies for forms login procedure (ie: get redirected to login
@@ -587,78 +587,78 @@ public abstract class TestsBase {
 		}
 		return true;
 	}
-	
+
 	public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL)
 	throws IOException, XPathException, ParserConfigurationException,
 	SAXException, JSONException {
 		return getServiceProviderURLsUsingJson(inBaseURL, onlyOnce);
 	}
-	
+
 	public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL, boolean dontGoDeep)
 		throws IOException, XPathException, ParserConfigurationException,
 		SAXException, JSONException {
-		
+
 		staticSetup();
-		
+
 	    // ArrayList to contain the urls from all SPCs
 	    ArrayList<String> data = new ArrayList<String>();
 
 		String base=null;
-		if (inBaseURL == null) 
+		if (inBaseURL == null)
 			base = setupBaseUrl;
 		else
 			base = inBaseURL;
-		
+
 		// If we are given a shortcut, then use it and skip the rest
 	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
 	    	data.add(useThisServiceProvider);
 	    	return data;
 	    }
-	    
+
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
-				creds, OSLCConstants.CT_JSON, headers);		
+				creds, OSLCConstants.CT_JSON, headers);
 		assertEquals("Failed to retrieve ServiceProviders at: "+inBaseURL, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
-		
+
 		String respBody = EntityUtils.toString(resp.getEntity());
-		
+
 		// Create mapping of JSON variables
 		JSONArtifact userData = JSON.parse(respBody);
 		JSONObject resultJson = null;
 		if (userData instanceof JSONArtifact) {
 			resultJson = (JSONObject)userData;
 		}
-		
+
 		JSONArray results = (JSONArray)resultJson.get("oslc:serviceProvider");
-		
+
 		// Now walk through the array to get a list of service providers
 		for (int i = 0; i < results.length(); i++) {
 			JSONObject serviceProviderJSON = (JSONObject) results.get(i);
 			String serviceProvider = (String)serviceProviderJSON.get("rdf:about");
 			data.add(serviceProvider);
-        } 
-		
+        }
+
 		return data;
 	}
-	
+
 	public static ArrayList<String> getCapabilityURLsUsingJson(String xpathStmt,
 			ArrayList<String> serviceUrls, boolean useDefaultUsage) throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException, NullPointerException, JSONException {
-		
+
 		// Collection to contain the creationFactory urls from all SPs
 		ArrayList<String> data = new ArrayList<String>();
-		
+
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					creds, OSLCConstants.CT_JSON, headers);
 			assertEquals("Failed to retrieve ServiceProviders at: " +base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
-			
+
 			String respBody = EntityUtils.toString(resp.getEntity());
-			
-			String contentType = OSLCUtils.getContentType(resp);	
+
+			String contentType = OSLCUtils.getContentType(resp);
 
 			assertEquals("Expected content-type "+OSLCConstants.CT_JSON+" but received "+contentType, OSLCConstants.CT_JSON, contentType);
-			
+
 			// Create mapping of JSON variables
 			JSONArtifact userData = JSON.parse(respBody);
 			JSONObject resultJson = null;
@@ -666,16 +666,16 @@ public abstract class TestsBase {
 				resultJson = (JSONObject)userData;
 			}
 			JSONArray s = (JSONArray)resultJson.get("oslc:service");
-			
+
 			for (int i = 0; i < s.length(); i++) {
 				JSONObject serviceProviderJson = (JSONObject) s.get(i);
 				try {
-					JSONArray u = (JSONArray)serviceProviderJson.get("oslc:queryCapability");				
+					JSONArray u = (JSONArray)serviceProviderJson.get("oslc:queryCapability");
 					JSONObject u1 = (JSONObject) u.get(0);
-					
-					JSONObject q = (JSONObject) u1.get("oslc:queryBase");				
+
+					JSONObject q = (JSONObject) u1.get("oslc:queryBase");
 					String queryBase = q.getString("rdf:resource");
-					
+
 					data.add(queryBase);
 				}
 				catch (JSONException e) {
@@ -683,7 +683,7 @@ public abstract class TestsBase {
 				}
 			}
 		}
-		
+
 		return data;
-	}	
+	}
 }

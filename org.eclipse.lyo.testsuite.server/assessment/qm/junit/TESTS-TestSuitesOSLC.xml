@@ -304,13 +304,13 @@
   <system-out/>
   <system-err/>
 </testsuite>
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.qm.TestPlanRdfXmlTests" package="" tests="8" time="1.156" timestamp="2012-09-21T13:48:18">
   <properties>
     <property name="java.vendor" value="IBM Corporation"/>
@@ -614,18 +614,18 @@
   <system-out/>
   <system-err/>
 </testsuite>
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" package="" tests="6" time="0.579" timestamp="2012-09-21T13:48:22">
+
+
+
+
+
+
+
+
+
+
+	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" package="" tests="6" time="0.579" timestamp="2012-09-21T13:48:22">
   <properties>
     <property name="java.vendor" value="IBM Corporation"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -765,17 +765,17 @@
     <property name="java.specification.version" value="1.6"/>
     <property name="env.PROCESSOR_LEVEL" value="6"/>
   </properties>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" name="validEqualsQueryContainsExpectedResource[0]" time="0.094" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" name="validNotEqualQueryContainsExpectedResource[0]" time="0.094" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" name="validLessThanQueryContainsExpectedResources[0]" time="0.094" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" name="validGreaterThanQueryContainsExpectedDefects[0]" time="0.109" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" name="validCompoundQueryContainsExpectedResource[0]" time="0.094" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" name="fullTextSearchContainsExpectedResults[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" name="validEqualsQueryContainsExpectedResource[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" name="validNotEqualQueryContainsExpectedResource[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" name="validLessThanQueryContainsExpectedResources[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" name="validGreaterThanQueryContainsExpectedDefects[0]" time="0.109" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" name="validCompoundQueryContainsExpectedResource[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" name="fullTextSearchContainsExpectedResults[0]" time="0.094" assessment="passedMust"/>
   <system-out/>
   <system-err/>
 </testsuite>
-	
-	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" package="" tests="6" time="0.875" timestamp="2012-09-21T13:48:21">
+
+	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" package="" tests="6" time="0.875" timestamp="2012-09-21T13:48:21">
   <properties>
     <property name="java.vendor" value="IBM Corporation"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -915,17 +915,17 @@
     <property name="java.specification.version" value="1.6"/>
     <property name="env.PROCESSOR_LEVEL" value="6"/>
   </properties>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" name="validEqualsQueryContainsExpectedResource[0]" time="0.172" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" name="validNotEqualQueryContainsExpectedResource[0]" time="0.125" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" name="validLessThanQueryContainsExpectedResources[0]" time="0.156" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" name="validGreaterThanQueryContainsExpectedDefects[0]" time="0.125" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" name="validCompoundQueryContainsExpectedResource[0]" time="0.141" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" name="fullTextSearchContainsExpectedResults[0]" time="0.14" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" name="validEqualsQueryContainsExpectedResource[0]" time="0.172" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" name="validNotEqualQueryContainsExpectedResource[0]" time="0.125" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" name="validLessThanQueryContainsExpectedResources[0]" time="0.156" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" name="validGreaterThanQueryContainsExpectedDefects[0]" time="0.125" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" name="validCompoundQueryContainsExpectedResource[0]" time="0.141" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" name="fullTextSearchContainsExpectedResults[0]" time="0.14" assessment="passedMust"/>
   <system-out/>
   <system-err/>
 </testsuite>
-	
-	<testsuite errors="2" failures="2" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" package="" tests="12" time="15.922" timestamp="2012-09-21T13:47:52">
+
+	<testsuite errors="2" failures="2" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" package="" tests="12" time="15.922" timestamp="2012-09-21T13:47:52">
   <properties>
     <property name="java.vendor" value="IBM Corporation"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -1065,51 +1065,62 @@
     <property name="java.specification.version" value="1.6"/>
     <property name="env.PROCESSOR_LEVEL" value="6"/>
   </properties>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="baseUrlIsValid[0]" time="13.469" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="catalogRootIsRdfNamespaceDeclaration[0]" time="0.219" assessment="errorMay">
-    <error message="expected:&lt;...core#ServiceProvider[Catalog]&gt; but was:&lt;...core#ServiceProvider[]&gt;" type="org.junit.ComparisonFailure">	at org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.catalogRootIsRdfNamespaceDeclaration(ServiceProviderCatalogRdfXmlTests.java:147)
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-</error>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="baseUrlIsValid[0]" time="13.469" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="catalogRootIsRdfNamespaceDeclaration[0]" time="0.219" assessment="errorMay">
+    <error message="expected:&lt;...core#ServiceProvider[Catalog]&gt; but was:&lt;...core#ServiceProvider[]&gt;" type="org.junit.ComparisonFailure">
+        at
+        org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests.catalogRootIsRdfNamespaceDeclaration(ServiceProviderCatalogRdfXmlTests.java:147)
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+    </error>
   </testcase>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="catalogRootAboutElementPointsToSelf[0]" time="0.141" assessment="errorMay">
-    <error message="expected:&lt;....com:8444/hpqm/rest/[catalog]s&gt; but was:&lt;....com:8444/hpqm/rest/[domains/DEVELOPMENT/projects/Development/service]s&gt;" type="org.junit.ComparisonFailure">	at org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.catalogRootAboutElementPointsToSelf(ServiceProviderCatalogRdfXmlTests.java:153)
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-</error>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="catalogRootAboutElementPointsToSelf[0]" time="0.141" assessment="errorMay">
+    <error message="expected:&lt;....com:8444/hpqm/rest/[catalog]s&gt; but was:&lt;....com:8444/hpqm/rest/[domains/DEVELOPMENT/projects/Development/service]s&gt;" type="org.junit.ComparisonFailure">
+        at
+        org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests.catalogRootAboutElementPointsToSelf(ServiceProviderCatalogRdfXmlTests.java:153)
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+    </error>
   </testcase>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="serviceProviderCatalogsHaveAtMostOneTitle[0]" time="0.125" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="serviceProviderCatalogHaveAtMostOneTitle[0]" time="0.14" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="serviceProvidersHaveAtMostOneTitle[0]" time="0.141" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="serviceProviderCatalogsHaveAtMostOnePublisher[0]" time="0.14" assessment="failedMay">
-    <failure message="ServiceProviderCatalogs have at most 1 oslc:publisher" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: ServiceProviderCatalogs have at most 1 oslc:publisher
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-	at org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.serviceProviderCatalogsHaveAtMostOnePublisher(ServiceProviderCatalogRdfXmlTests.java:205)
-</failure>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="serviceProviderCatalogsHaveAtMostOneTitle[0]" time="0.125" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="serviceProviderCatalogHaveAtMostOneTitle[0]" time="0.14" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="serviceProvidersHaveAtMostOneTitle[0]" time="0.141" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="serviceProviderCatalogsHaveAtMostOnePublisher[0]" time="0.14" assessment="failedMay">
+    <failure message="ServiceProviderCatalogs have at most 1 oslc:publisher" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError:
+        ServiceProviderCatalogs have at most 1 oslc:publisher
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+        at
+        org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests.serviceProviderCatalogsHaveAtMostOnePublisher(ServiceProviderCatalogRdfXmlTests.java:205)
+    </failure>
   </testcase>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="serviceProvidersHaveAtMostOnePublisher[0]" time="0.141" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="publisherElementsAreValid[0]" time="0.234" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.329" assessment="failedMay">
-    <failure type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: 
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-	at org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests.misplacedParametersDoNotEffectResponse(ServiceProviderCatalogRdfXmlTests.java:255)
-</failure>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="serviceProvidersHaveAtMostOnePublisher[0]" time="0.141" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="publisherElementsAreValid[0]" time="0.234" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.329" assessment="failedMay">
+    <failure type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError:
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+        at
+        org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests.misplacedParametersDoNotEffectResponse(ServiceProviderCatalogRdfXmlTests.java:255)
+    </failure>
   </testcase>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.187" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" name="contentTypeIsSuggestedType[0]" time="0.281" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.187" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" name="contentTypeIsSuggestedType[0]" time="0.281" assessment="passedMay"/>
   <system-out>Catalog does not contain other catalogs
 Catalog does not contain ServiceProviders
 Catalog does not contain ServiceProviders
 </system-out>
   <system-err/>
 </testsuite>
-	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" package="" tests="17" time="2.36" timestamp="2012-09-21T13:48:08">
+	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" package="" tests="17" time="2.36" timestamp="2012-09-21T13:48:08">
   <properties>
     <property name="java.vendor" value="IBM Corporation"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -1249,27 +1260,27 @@ Catalog does not contain ServiceProviders
     <property name="java.specification.version" value="1.6"/>
     <property name="env.PROCESSOR_LEVEL" value="6"/>
   </properties>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="baseUrlIsValid[0]" time="0.094" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="catalogRootIsRdfNamespaceDeclaration[0]" time="0.109" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="catalogRootAboutElementPointsToSelf[0]" time="0.094" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveAtMostOneTitle[0]" time="0.14" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="serviceProvidersHaveAtMostOneTitle[0]" time="0.11" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveAtMostOnePublisher[0]" time="0.14" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="serviceProvidersHaveAtMostOnePublisher[0]" time="0.11" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="publisherElementsAreValid[0]" time="0.109" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveAtMostOneOAuthElement[0]" time="0.125" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="serviceProvidersHaveAtMostOneOAuthElement[0]" time="0.109" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="oAuthElementsAreValid[0]" time="0.094" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveValidResourceUrl[0]" time="0.219" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="servicesProvidersHaveValidResourceUrl[0]" time="0.109" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="detailsElementsHaveValidResourceAttribute[0]" time="0.094" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.312" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.157" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" name="contentTypeIsSuggestedType[0]" time="0.203" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="baseUrlIsValid[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="catalogRootIsRdfNamespaceDeclaration[0]" time="0.109" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="catalogRootAboutElementPointsToSelf[0]" time="0.094" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveAtMostOneTitle[0]" time="0.14" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="serviceProvidersHaveAtMostOneTitle[0]" time="0.11" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveAtMostOnePublisher[0]" time="0.14" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="serviceProvidersHaveAtMostOnePublisher[0]" time="0.11" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="publisherElementsAreValid[0]" time="0.109" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveAtMostOneOAuthElement[0]" time="0.125" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="serviceProvidersHaveAtMostOneOAuthElement[0]" time="0.109" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="oAuthElementsAreValid[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="serviceProviderCatalogsHaveValidResourceUrl[0]" time="0.219" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="servicesProvidersHaveValidResourceUrl[0]" time="0.109" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="detailsElementsHaveValidResourceAttribute[0]" time="0.094" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.312" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.157" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" name="contentTypeIsSuggestedType[0]" time="0.203" assessment="passedMay"/>
   <system-out/>
   <system-err/>
 </testsuite>
-	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" package="" tests="8" time="1.406" timestamp="2012-09-21T13:48:11">
+	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" package="" tests="8" time="1.406" timestamp="2012-09-21T13:48:11">
   <properties>
     <property name="java.vendor" value="IBM Corporation"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -1409,19 +1420,19 @@ Catalog does not contain ServiceProviders
     <property name="java.specification.version" value="1.6"/>
     <property name="env.PROCESSOR_LEVEL" value="6"/>
   </properties>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="currentUrlIsValid[0]" time="0.156" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="rootAboutElementPointsToSelf[0]" time="0.125" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="typeIsServiceProvider[0]" time="0.125" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.171" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="responseContentTypeIsXML[0]" time="0.266" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.266" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="serviceProviderHasAtMostOneTitle[0]" time="0.14" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" name="serviceProviderHasService[0]" time="0.125" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="currentUrlIsValid[0]" time="0.156" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="rootAboutElementPointsToSelf[0]" time="0.125" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="typeIsServiceProvider[0]" time="0.125" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.171" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="responseContentTypeIsXML[0]" time="0.266" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.266" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="serviceProviderHasAtMostOneTitle[0]" time="0.14" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" name="serviceProviderHasService[0]" time="0.125" assessment="passedMust"/>
   <system-out/>
   <system-err/>
 </testsuite>
-	
-	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" package="" tests="16" time="3.032" timestamp="2012-09-21T13:48:12">
+
+	<testsuite errors="0" failures="0" hostname="yyin2" id="" name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" package="" tests="16" time="3.032" timestamp="2012-09-21T13:48:12">
   <properties>
     <property name="java.vendor" value="IBM Corporation"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -1561,26 +1572,26 @@ Catalog does not contain ServiceProviders
     <property name="java.specification.version" value="1.6"/>
     <property name="env.PROCESSOR_LEVEL" value="6"/>
   </properties>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="baseUrlIsValid[0]" time="0.141" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.187" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="responseContentTypeIsXML[0]" time="0.25" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.406" assessment="passedMay"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="serviceProviderHasAtMostOneTitle[0]" time="0.125" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="serviceProviderHasAtMostOnePublisher[0]" time="0.141" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="publisherElementsAreValid[0]" time="0.14" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="serviceProviderHasService[0]" time="0.141" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="serviceProviderHasValidDetails[0]" time="0.203" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="prefixDefinitionsAreValid[0]" time="0.375" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="serviceProviderHasAtMostOneOAuthElement[0]" time="0.156" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="oAuthElementsAreValid[0]" time="0.141" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="eachServiceHasOneDomain[0]" time="0.141" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="creationFactoriesAreValid[0]" time="0.172" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="queryCapabilityBlocksAreValid[0]" time="0.171" assessment="passedMust"/>
-  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" name="dialogsAreValid[0]" time="0.126" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="baseUrlIsValid[0]" time="0.141" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="invalidContentTypeGivesNotSupportedOPTIONAL[0]" time="0.187" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="responseContentTypeIsXML[0]" time="0.25" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="misplacedParametersDoNotEffectResponse[0]" time="0.406" assessment="passedMay"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="serviceProviderHasAtMostOneTitle[0]" time="0.125" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="serviceProviderHasAtMostOnePublisher[0]" time="0.141" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="publisherElementsAreValid[0]" time="0.14" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="serviceProviderHasService[0]" time="0.141" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="serviceProviderHasValidDetails[0]" time="0.203" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="prefixDefinitionsAreValid[0]" time="0.375" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="serviceProviderHasAtMostOneOAuthElement[0]" time="0.156" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="oAuthElementsAreValid[0]" time="0.141" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="eachServiceHasOneDomain[0]" time="0.141" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="creationFactoriesAreValid[0]" time="0.172" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="queryCapabilityBlocksAreValid[0]" time="0.171" assessment="passedMust"/>
+  <testcase classname="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" name="dialogsAreValid[0]" time="0.126" assessment="passedMust"/>
   <system-out/>
   <system-err/>
 </testsuite>
-	
-	
-	
+
+
+
 </testsuites>

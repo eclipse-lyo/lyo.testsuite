@@ -5,12 +5,12 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="OSLC Provider Test">
-	<echo message="basedir = ${basedir}"/>    
+	<echo message="basedir = ${basedir}"/>
 	<property name="assessment.props" value="${basedir}/assessment.props"/>
 	<property file="${assessment.props}"/>
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
-	
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 	<property environment="env"/>
 	<property name="ECLIPSE_HOME" value="${eclipse_home}"/>
@@ -51,7 +51,7 @@
         <pathelement location="../../target/classes"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
     </path>
-	
+
     <path id="run.provider-test.classpath">
         <path refid="provider-test.classpath"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
@@ -66,7 +66,7 @@
             </fileset>
         </copy>
     </target>
-	
+
     <target name="clean">
         <delete dir="../../target/classes"/>
     </target>
@@ -101,23 +101,23 @@
             <formatter type="xml"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.ServiceProviderXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
-            <test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
-        	<test name="org.eclipse.lyo.testsuite.oslcv2.SimplifiedQueryJsonTests" todir="${junit.output.dir}"/>
-        	
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.CreationAndUpdateJsonTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.CreationAndUpdateRdfXmlTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.CreationAndUpdateXmlTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogRdfXmlTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderCatalogXmlTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderRdfXmlTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.ServiceProviderXmlTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryRdfXmlTests" todir="${junit.output.dir}"/>
+            <test name="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryXmlTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryAtomTests" todir="${junit.output.dir}"/>
+        	<test name="org.eclipse.lyo.testsuite.oslcv2.core.SimplifiedQueryJsonTests" todir="${junit.output.dir}"/>
+
         	<jvmarg line="-Dprops=../../config/jira/jira.properties"/>
         	<classpath refid="provider-test.classpath"/>
         </junit>
     </target>
-	
+
 	<target name="merge-results">
 		<echo message="Detecting Previous TESTS-TestSuites.xml Result File ..."/>
 	    <if>
@@ -134,7 +134,7 @@
 		<echo message="Merging Results of Individual JUnit xml into TESTS-TestSuites.xml"/>
 		<xslt in="./oslc-spec-mapping/oslc-cm-v2.xml" out="${junit.output.dir}/TESTS-TestSuites.xml"	style="./reportstyle/merge-results.xsl"/>
 	</target>
-	
+
 	<target name="append-oslc-spec-info" depends="merge-results">
 		<echo message="Detecting A Previous TESTS-TestSuitesOSLC.xml Result File ..."/>
 			    <if>
@@ -154,7 +154,7 @@
 		      <fileset dir="${junit.output.dir}" includes="*.xml"/>
 		</copy>
 	</target>
-	
+
     <target name="junitreport" depends="append-oslc-spec-info">
     	<property name="reportdir" value="./report/${provider}"/>
     	<echo message="Detecting A Previous OSLCComplianceReport.html file within the report directory ..."/>
@@ -173,7 +173,7 @@
     			<echo message="Converting TESTS-TestSuitesOSLC.xml into a HTML report"/>
     	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/barchartSVG.svg"	style="./reportstyle/barchartSVG.xsl"/>
     	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/OSLCComplianceReport.html"	style="./reportstyle/junit-noframes.xsl"/>
-		
+
     	<copy todir="${reportdir}">
     		<fileset dir="./reportstyle" includes="*.png, *.gif"/>
     	</copy>

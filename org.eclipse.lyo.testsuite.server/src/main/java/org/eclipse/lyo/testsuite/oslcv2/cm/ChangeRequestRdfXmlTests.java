@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -24,9 +24,8 @@ import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.eclipse.lyo.testsuite.oslcv2.CoreResourceRdfXmlTests;
-import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -42,19 +41,19 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
  */
 @RunWith(Parameterized.class)
 public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
-	
-	public ChangeRequestRdfXmlTests(String thisUrl) 
+
+	public ChangeRequestRdfXmlTests(String thisUrl)
 		throws IOException, ParserConfigurationException, SAXException,	XPathExpressionException, NullPointerException {
-		super(thisUrl);		
+		super(thisUrl);
 	}
-	
+
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
-	
+
 		staticSetup();
-		
+
 		setResourceType(OSLCConstants.CM_CHANGE_REQUEST_TYPE);
-		
+
 		String useThisCR = setupProps.getProperty("useThisChangeRequest");
 		if ( useThisCR != null ) {
 			ArrayList<String> results = new ArrayList<String>();
@@ -67,9 +66,9 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 
 		return getAllDescriptionUrls(eval);
 	}
-	
-	public static String eval = OSLCConstants.RDFS_MEMBER; 
-		
+
+	public static String eval = OSLCConstants.RDFS_MEMBER;
+
 	@Test
 	public void changeRequestHasAtMostOneCloseDate()
 	{
@@ -77,7 +76,7 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 		int size=listStatements.toList().size();
 		assertTrue("Can have <=1 oslc_cm:closeDate, found "+size, size <= 1);
 	}
-	
+
 	@Test
 	public void changeRequestHasAtMostOneStatus()
 	{
@@ -85,7 +84,7 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 		int size=listStatements.toList().size();
 		assertTrue("Can have <=1 oslc_cm:status, found "+size, size <= 1);
 	}
-	
+
 	@Test
 	public void changeRequestHasAtMostOneClosedElement()
 	{
@@ -93,7 +92,7 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 		int size=listStatements.toList().size();
 		assertTrue("Can have <=1 oslc_cm:closed, found "+size, size <= 1);
 	}
-	
+
 	@Test
 	public void changeRequestHasAtMostInProgressElement()
 	{
@@ -101,7 +100,7 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 		int size=listStatements.toList().size();
 		assertTrue("Can have <=1 oslc_cm:inprogress, found "+size, size <= 1);
 	}
-	
+
 	@Test
 	public void changeRequestHasAtMostOneFixedElement()
 	{
@@ -109,7 +108,7 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 		int size=listStatements.toList().size();
 		assertTrue("Can have <=1 oslc_cm:fixed, found "+size, size <= 1);
 	}
-	
+
 	@Test
 	public void changeRequestHasAtMostOneApprovedElement()
 	{
@@ -117,7 +116,7 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 		int size=listStatements.toList().size();
 		assertTrue("Can have <=1 oslc_cm:approved, found "+size, size <= 1);
 	}
-	
+
 	@Test
 	public void changeRequestHasAtMostOneReviewedElement()
 	{
@@ -125,7 +124,7 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 		int size=listStatements.toList().size();
 		assertTrue("Can have <=1 oslc_cm:reviewed, found "+size, size <= 1);
 	}
-	
+
 	@Test
 	public void changeRequestHasAtMostOneVerifiedElement()
 	{

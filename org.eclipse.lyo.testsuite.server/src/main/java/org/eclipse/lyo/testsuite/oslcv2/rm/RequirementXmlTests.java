@@ -8,11 +8,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.abdera.xpath.XPathException;
-import org.eclipse.lyo.testsuite.oslcv2.CoreResourceXmlTests;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
@@ -24,27 +21,27 @@ import org.xml.sax.SAXException;
  */
 //@RunWith(Parameterized.class)
 public class RequirementXmlTests extends CoreResourceXmlTests {
-	
+
 	public static String eval = "//rdfs:member/@rdf:resource";
 	public static String ns = "oslc_rm_v2";
 	public static String resource = "Requirement";
-	
+
 	public RequirementXmlTests(String thisUrl) throws IOException,
 			ParserConfigurationException, SAXException,
 			XPathExpressionException {
 
-			super(thisUrl);	
+			super(thisUrl);
 			setNode(ns, resource);
 
 	}
 
 	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls() 
+	public static Collection<Object[]> getAllDescriptionUrls()
 		throws IOException, ParserConfigurationException, SAXException, XPathException, javax.xml.xpath.XPathException {
 
 		 staticSetup();
-		 
-		 
+
+
 		// If a particular Requirement is specified, use it
 		String useThis = setupProps.getProperty("useThisRequirement");
 		if ((useThis != null) && (useThis != "")) {
@@ -52,13 +49,13 @@ public class RequirementXmlTests extends CoreResourceXmlTests {
 			results.add(useThis);
 			return toCollection(results);
 		}
-		
+
 		setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
 		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
 		return getAllDescriptionUrls(eval);
 	}
-	
-	
+
+
 
 
 

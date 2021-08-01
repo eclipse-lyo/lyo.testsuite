@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -35,8 +35,8 @@ import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -46,12 +46,12 @@ import org.xml.sax.SAXException;
 public class UsageCaseJsonTests extends UsageCaseBase {
 	private static JSONObject bestAsset = null;
 	private String baseUrl;
-	
+
 	public UsageCaseJsonTests(String thisUrl) {
 		super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
 		baseUrl = setupProps.getProperty("baseUrl");
 	}
-	
+
 	@Test
 	public void queryUsageTest() throws IllegalStateException, IOException, JSONException {
 		JSONObject query = runQuery();
@@ -62,7 +62,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 	@Test
 	public void retrieveUsageCase() throws JSONException, IOException {
 		assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
-		
+
 		assetUrl = bestAsset.getString("rdf:about");
 		String asset = getAssetAsString();
 		assetUrl = null; // This is required so that the asset is not deleted
@@ -78,33 +78,33 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 		ArrayList<String> creationUrls = TestsBase.getCapabilityURLsUsingRdfXml(
 				OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
 		currentUrl = creationUrls.get(0);
-		
+
 		// Creates the asset
 		assetUrl = createAsset(jsonCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
-		
+
 		// Gets the created asset
 		String resp = getAssetAsString();
-		JSONObject asset = new JSONObject(resp);	
+		JSONObject asset = new JSONObject(resp);
 		// Gets the artifact factory from the asset
 		JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
 		String artifactFactory = baseUrl + factory.getString("rdf:resource");
 		assertTrue("There needs to be an artifact factory",
 				artifactFactory != null && artifactFactory.length() > 0);
-		
+
 		// Adds an artifact to the asset
 		File file = new File(setupProps.getProperty("artifactContentType"));
 		BasicHeader h = new BasicHeader("oslc_asset.name", file.getName());
-		
+
 		HttpResponse response = OSLCUtils.postDataToUrl(
 				artifactFactory, creds, acceptType, setupProps.getProperty("artifactContentType"),
 				readFileFromProperty("artifactFile"), addHeader(h));
 		EntityUtils.consume(response.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + response.getStatusLine().getStatusCode(),
 				response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
-		
+
 		assertTrue("No Location header", response.getFirstHeader("Location") != null);
-		
+
 		// Updates the artifacts subject
 		resp = getAssetAsString();
 		asset = new JSONObject(resp);
@@ -113,7 +113,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 		String labelValue = "updated subject";
 		artifact.put("oslc:label", labelValue);
 		String content = JSONToString(asset);
-		
+
 		// Update the asset
 		putAsset(content);
 		resp = getAssetAsString();
@@ -122,7 +122,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 		artifact = artifacts.getJSONObject(0);
 		assertEquals("The label value was not set", labelValue, artifact.getString("oslc:label"));
 	}
-	
+
 	private JSONObject runQuery() throws IOException, IllegalStateException, JSONException {
 		HttpResponse resp = executeQuery();
 		String content = EntityUtils.toString(resp.getEntity());
@@ -132,7 +132,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
 		return query;
 	}
-	
+
 	private JSONObject getBestAsset(JSONObject query) throws JSONException {
 		JSONArray assets = query.getJSONArray("results");
 		JSONObject bestAsset = null;
@@ -147,22 +147,22 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 		}
 		return bestAsset;
 	}
-	
+
 	private void retrieveArtifact(String rawAsset) throws JSONException, ClientProtocolException, IOException {
 		JSONObject asset = new JSONObject(rawAsset);
 		JSONArray artifacts = asset.getJSONArray("oslc_asset:artifact");
 		assertTrue("This asset has no artifacts", artifacts.length() > 0);
-		
+
 		JSONObject artifact = artifacts.getJSONObject(0);
 		JSONObject content = artifact.getJSONObject("oslc_asset:content");
 		String artifactUrl = content.getString("rdf:resource");
-		
+
 		HttpResponse resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
 	}
-	
+
 	private String JSONToString(JSONObject jsonObject) throws JSONException {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		jsonObject.write(output);

@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -28,8 +28,8 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -47,16 +47,16 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 	private String baseUrl;
 	private Model hasModel;
-	
+
 	public GetAndUpdateRdfXmlTests(String thisUrl) throws IOException {
 		super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
-		
+
 		assetUrl = createAsset(rdfXmlCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 		baseUrl = setupProps.getProperty("baseUrl");
-		
+
 		HttpResponse resp = getAssetResponse();
-		
+
 		hasModel = ModelFactory.createDefaultModel();
 		hasModel.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
@@ -76,7 +76,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 	public void assetHasArtifactFactory() {
 		assertTrue("Artifact Factory was not found", getPropertyValue(hasModel, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP) != null);
 	}
-	
+
 	@Test
 	public void assetHasAtMostOneGuid() {
 		assertTrue("Multiple guids returned", isOneOrNone(hasModel, OSLCConstants.ASSET_GUID_PROP));
@@ -91,7 +91,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 	public void assetHasAtMostOneAbstract() {
 		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_ABSTRACT_PROP));
 	}
-	
+
 
 	@Test
 	public void assetHasAtMostOneType() {
@@ -107,7 +107,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 	public void assetHasAtMostOneManufacturer() {
 		assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_MANUFACTURER_PROP));
 	}
-	
+
 	@Test
 	public void assetHasAtMostOneIdentifier(){
 		assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_ID_PROP));
@@ -137,15 +137,15 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 	public void assetHasAtMostOneInstanceShape() {
 		assertTrue(isOneOrNone(hasModel, OSLCConstants.INST_SHAPE_PROP));
 	}
-	
+
 	@Test
 	public void updateAnAssetProperty() throws IOException {
 		HttpResponse resp = getAssetResponse();
-		
+
 		Model model = ModelFactory.createDefaultModel();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		// Updates the title
 		String name = "updated asset";
 		setPropertyValue(model, OSLCConstants.DC_TITLE_PROP, name);
@@ -153,7 +153,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		model.write(output);
 		String content = output.toString();
 		putAsset(content);
-		
+
 		resp = getAssetResponse();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
@@ -161,16 +161,16 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		String actualName = getPropertyValue(model, OSLCConstants.DC_TITLE_PROP);
 		assertTrue("Expected " + name + ", received " + actualName, name.equals(actualName));
 	}
-	
+
 	@Test
 	public void addArtifactToAsset() throws IOException {
 		String artifactFactory = getArtifactFactory();
 		Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
-		
+
 		String fileName = setupProps.getProperty("createTemplateArtifactRdfXmlFile");
 		if (fileName == null) // Fall back to the xml if the rdf is not defined
 			fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
-		
+
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
@@ -180,31 +180,31 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
 	}
-	
+
 	@Test
 	public void uploadArtifact() throws IOException {
 		String artifactFactory = getArtifactFactory();
 		uploadArtifact(artifactFactory);
 	}
-	
+
 	@Test
 	public void downloadArtifact() throws IOException {
 		String artifactFactory = getArtifactFactory();
 		String location = uploadArtifact(artifactFactory);
 		downloadArtifact(location);
 	}
-	
+
 	@Test
 	public void removeArtifactFromAsset() throws IOException {
 		// Gets the artifact factory from the asset
-		String artifactFactory = getArtifactFactory();		
-		
+		String artifactFactory = getArtifactFactory();
+
 		Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
-		
+
 		String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
 		if (fileName == null) // Fall back to the xml if the rdf is not defined
 			fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
-		
+
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
@@ -212,14 +212,14 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		HttpResponse resp = OSLCUtils.postDataToUrl(artifactFactory,  creds,
 				OSLCConstants.CT_RDF, "text/xml", artifact, header);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		// Gets the asset with the artifact added to it
 		resp = getAssetResponse();
-		
+
 		Model model = ModelFactory.createDefaultModel();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		// Removes the artifact from the asset
 		Property property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
 		Selector select = new SimpleSelector(null, property, (RDFNode)null);
@@ -232,12 +232,12 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 			model.remove(childrenStatements);
 		}
 		model.remove(statementList);
-				
+
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		model.write(output);
 		String content = output.toString();
 		putAsset(content);
-		
+
 		resp = getAssetResponse();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
@@ -246,7 +246,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		statements = model.listStatements(select);
 		assertFalse("The artifact was no removed", statements.hasNext());
 	}
-	
+
 	private String getPropertyValue(Model model, String uri) {
 		Property property = model.getProperty(uri);
 		Selector select = new SimpleSelector(null, property, (RDFNode)null);
@@ -257,7 +257,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Determines if there is at most one of the properties found
 	 * @return true is properties count <= 1, else false
@@ -268,7 +268,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		StmtIterator statements = model.listStatements(select);
 		return statements.toList().size() <= 1;
 	}
-	
+
 	private void setPropertyValue(Model model, String uri, String newValue) {
 		Property property = model.getProperty(uri);
 		Selector select = new SimpleSelector(null, property, (RDFNode)null);
@@ -278,21 +278,21 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 		while(statements.hasNext()) {
 			statementList.add(statements.nextStatement());
 		}
-		
+
 		for(int i = 0; i < statementList.size(); i++) {
 			Statement statement = statementList.get(i);
 			statement.changeObject(newValue);
 		}
 	}
-	
+
 	private String getArtifactFactory() throws IOException {
 		// Gets the asset that the artifact will be added too
 		HttpResponse resp = getAssetResponse();
-		
+
 		Model model = ModelFactory.createDefaultModel();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		// Gets the artifact factory from the asset
 		String artifactFactory = getPropertyValue(model, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP);
 		assertTrue("There needs to be an artifact factory",

@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -31,8 +31,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,37 +54,37 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 public class UsageCaseRdfXmlTests extends UsageCaseBase {
 	private String baseUrl;
 	private static Resource bestAsset = null;
-	
+
 	public UsageCaseRdfXmlTests(String thisUrl) {
 		super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
 	}
-	
+
 	@Before
 	public void setUp() {
 		baseUrl = setupProps.getProperty("baseUrl");
 	}
-	
+
 	@Test
 	public void queryUsageTest() throws IOException, ParserConfigurationException, SAXException {
 		Model model = runQuery();
 		bestAsset = getBestAsset(model);
 		assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
 	}
-	
+
 	@Test
 	public void retrieveUsageCase() throws IOException, ParserConfigurationException, SAXException {
 		assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
-		
+
 		// Once the best asset is determined then the full asset is retrieved
 		Model model = ModelFactory.createDefaultModel();
 		Property versionProperty = model.getProperty(OSLCConstants.ASSET_VERSION_PROP);
-		Statement urlStatement = bestAsset.getProperty(versionProperty);	
+		Statement urlStatement = bestAsset.getProperty(versionProperty);
 		assetUrl = urlStatement.getSubject().toString();
 		HttpResponse resp = getAssetResponse();
 		assetUrl = null; // This is required so that the asset is not deleted
 		retrieveArtifact(resp);
 	}
-	
+
 	@Test
 	public void publishUsageCase() throws IllegalStateException, IOException {
 		// Get url
@@ -93,30 +93,30 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		ArrayList<String> capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(
 						OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
 		currentUrl = capabilityURLsUsingRdfXml.get(0);
-		
+
 		// Creates the asset
 		assetUrl = createAsset(rdfXmlCreateTemplate);
 		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 		baseUrl = setupProps.getProperty("baseUrl");
-		
+
 		HttpResponse resp = getAssetResponse();
-		
+
 		Model model = ModelFactory.createDefaultModel();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		// Gets the artifact factory from the asset
 		String artifactFactory = getPropertyValue(model, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP);
 		assertTrue("There needs to be an artifact factory",
 				artifactFactory != null && artifactFactory.length() > 0);
 		Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
-		
+
 		// Creates the artifact
 		String fileName = setupProps.getProperty("createTemplateArtifactRdfXmlFile");
 		if (fileName == null) // Fall back to the xml if the rdf is not defined
 			//fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
 			fileName = setupProps.getProperty("createTemplateXmlFile");
-		
+
 		assertTrue("There needs to be an artifact template file", fileName != null);
 		String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
@@ -125,14 +125,14 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
-		
+
 		// Get and updates the artifacts subject
 		resp = getAssetResponse();
-		
+
 		model = ModelFactory.createDefaultModel();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		// TODO make this so that if the label is not there it is added
 		Property artifactProp = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
 		String labelValue = "this subject has been changed";
@@ -155,7 +155,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		model = ModelFactory.createDefaultModel();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		selectArtifact = new SimpleSelector(null, artifactProp, (RDFNode)null);
 		artifactStatements = model.listStatements(selectArtifact);
 		statementList = artifactStatements.toList();
@@ -168,7 +168,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 			assertEquals(labelValue, statements.next().getObject().toString());
 		}
 	}
-	
+
 	private Model runQuery() throws IOException, ParserConfigurationException, SAXException {
 		HttpResponse resp = executeQuery();
 		Model model = ModelFactory.createDefaultModel();
@@ -178,7 +178,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
 		return model;
 	}
-	
+
 	private Resource getBestAsset(Model model) {
 		Property versionProperty = model.getProperty(OSLCConstants.ASSET_VERSION_PROP);
 		ResIterator iterator = model.listResourcesWithProperty(versionProperty);
@@ -226,7 +226,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
 	}
-	
+
 	private String getPropertyValue(Model model, String uri) {
 		Property property = model.getProperty(uri);
 		Selector select = new SimpleSelector(null, property, (RDFNode)null);
@@ -237,7 +237,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		}
 		return null;
 	}
-	
+
 	private void setPropertyValue(Statement statement, Property property, String newValue) {
 		StmtIterator statements = statement.getResource().listProperties(property);
 		ArrayList<Statement> statementList = new ArrayList<Statement>();
@@ -245,7 +245,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 		while(statements.hasNext()) {
 			statementList.add(statements.nextStatement());
 		}
-		
+
 		for(int i = 0; i < statementList.size(); i++) {
 			statement = statementList.get(i);
 			statement.changeObject(newValue);

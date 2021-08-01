@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -26,8 +26,8 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -43,12 +43,12 @@ public class CreateAssetXmlTest extends CreateAssetBase {
 	public CreateAssetXmlTest(String url) {
 		super(url, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
 	}
-	
+
 	@Test
 	public void createSimpleAsset() throws IOException {
 		assetUrl = createAsset(xmlCreateTemplate);
 	}
-	
+
 	@Test
 	public void createAssetWithCategory()
 		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
@@ -78,20 +78,20 @@ public class CreateAssetXmlTest extends CreateAssetBase {
 			EntityUtils.consume(resp.getEntity());
 		}
 	}
-	
+
 	@Test
 	public void deletingAsset() throws IOException
 	{
 		deletingAsset(xmlCreateTemplate);
 	}
-	
+
 	private NodeList getAssetNodeChildren(Document document) throws XPathExpressionException {
 		String path = "/rdf:RDF/oslc_asset:Asset";
 		XPath xpath = OSLCUtils.getXPath();
 		Node asset = (Node) xpath.evaluate(path, document, XPathConstants.NODE);
 		return asset.getChildNodes();
 	}
-	
+
 	private String getNodeAttribute(NodeList nodes, String nodeName, String attr) {
 		for(int i = 0; i < nodes.getLength(); i++) {
 			Node node = nodes.item(i);

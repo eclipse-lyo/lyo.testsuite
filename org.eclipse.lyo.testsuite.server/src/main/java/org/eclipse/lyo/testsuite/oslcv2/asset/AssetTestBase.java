@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -26,8 +26,8 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.After;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -36,7 +36,7 @@ public class AssetTestBase  extends TestsBase {
 	protected String assetUrl;
 	protected static String acceptType;
 	protected static String contentType;
-	
+
 	@SuppressWarnings("static-access")
 	public AssetTestBase(String url, String acceptType, String contentType)
 	{
@@ -44,14 +44,14 @@ public class AssetTestBase  extends TestsBase {
 		this.acceptType = acceptType;
 		this.contentType = contentType;
 	}
-	
+
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
-		
+
 		staticSetup();
-		
+
 		baseUrl = setupProps.getProperty("baseUri");
-		
+
 		ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(
 				baseUrl, onlyOnce);
 		String [] types = null;
@@ -59,7 +59,7 @@ public class AssetTestBase  extends TestsBase {
 				OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, types);
 		return toCollection(capabilityURLsUsingRdfXml);
 	}
-	
+
 	@After
 	public void tearDown() throws IOException {
 		if(assetUrl == null)
@@ -67,11 +67,11 @@ public class AssetTestBase  extends TestsBase {
 		HttpResponse resp =OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
 		EntityUtils.consume(resp.getEntity());
 	}
-	
+
 	/**
 	 * Gets an asset and the returns the content of the response in as a string
 	 * Guid and version must be set
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	protected String getAssetAsString() throws IOException
 	{
@@ -82,10 +82,10 @@ public class AssetTestBase  extends TestsBase {
 				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
 		return content;
 	}
-	
+
 	/**
 	 * Get's an asset and then returns the response
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	protected HttpResponse getAssetResponse() throws IOException
 	{
@@ -99,23 +99,23 @@ public class AssetTestBase  extends TestsBase {
 		}
 		return resp;
 	}
-	
+
 	/**
 	 * Creates an asset and then asserts that it was created. If all goes well the url to
 	 * the created asset is returned
 	 */
 	protected String createAsset(String content) throws IOException
 	{
-		HttpResponse resp = 
+		HttpResponse resp =
 			OSLCUtils.postDataToUrl(currentUrl, creds, acceptType, contentType, content, headers);
 		EntityUtils.consume(resp.getEntity());
 		assertTrue("Expected: " + HttpStatus.SC_CREATED + ", received: " + resp.getStatusLine().getStatusCode(),
 				HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
-		
+
 		Header loc = resp.getFirstHeader("Location");
 		return loc.getValue();
 	}
-	
+
 	/**
 	 * Given a property from the property file, the contents of the file are returned
 	 */
@@ -125,7 +125,7 @@ public class AssetTestBase  extends TestsBase {
 			return fileName;
 		return OSLCUtils.readFileByNameAsString(fileName);
 	}
-	
+
 	protected void putAsset(String content) throws IOException {
 		HttpResponse resp = OSLCUtils.putDataToUrl(assetUrl,
 				creds, acceptType, contentType, content, headers);

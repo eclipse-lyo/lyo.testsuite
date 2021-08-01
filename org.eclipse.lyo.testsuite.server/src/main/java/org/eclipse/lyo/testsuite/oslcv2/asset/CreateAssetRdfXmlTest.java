@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -21,8 +21,8 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.lyo.testsuite.server.util.OSLCConstants;
-import org.eclipse.lyo.testsuite.server.util.OSLCUtils;
+import org.eclipse.lyo.testsuite.util.OSLCConstants;
+import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -41,31 +41,31 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
 	public CreateAssetRdfXmlTest(String url) {
 		super(url, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
 	}
-	
+
 	@Test
 	public void createSimpleAsset() throws IOException {
 		assetUrl = createAsset(rdfXmlCreateTemplate);
 	}
-	
+
 	@Test
 	public void createAssetWithCategory() throws IOException {
 		String file = readFileFromProperty("createWithCategoryTemplateRdfXmlFile");
 		if (file == null) // Fall back to the xml if the rdf is not defined
 			file = readFileFromProperty("createWithCategoryTemplateXmlFile");
-		
+
 		assetUrl = createAsset(file);
 		HttpResponse resp = getAssetResponse();
-		
+
 		Model model = ModelFactory.createDefaultModel();
 		model.read(resp.getEntity().getContent(), baseUrl);
 		EntityUtils.consume(resp.getEntity());
-		
+
 		Property property = model.getProperty(OSLCConstants.ASSET_CATEGORIZATION_PROP);
 		Selector select = new SimpleSelector(null, property, (RDFNode)null);
 		StmtIterator statements = model.listStatements(select);
 		assertTrue("The category was not set", statements.hasNext());
 	}
-	
+
 	@Test
 	public void createAssetWithRelationship() throws IOException {
 		HttpResponse resp = null;
@@ -75,26 +75,26 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
 			String file = readFileFromProperty("createWithRelationshipTemplateRdfXmlFile");
 			if (file == null) // Fall back to the xml if the rdf is not defined
 				file = readFileFromProperty("createWithRelationshipTemplateXmlFile");
-			
+
 			String asset = file.replace("%s", otherUrl);
 			assetUrl = createAsset(asset);
 			resp = getAssetResponse();
-			
+
 			Model model = ModelFactory.createDefaultModel();
 			model.read(resp.getEntity().getContent(), baseUrl);
 			EntityUtils.consume(resp.getEntity());
-			
+
 			Property property = model.getProperty(OSLCConstants.DC_RELATION_PROP);
 			Selector select = new SimpleSelector(null, property, (RDFNode)null);
 			StmtIterator statements = model.listStatements(select);
-			
+
 			assertTrue("The relation was not created", statements.hasNext());
 		} finally {
 			resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
 			EntityUtils.consume(resp.getEntity());
 		}
 	}
-	
+
 	@Test
 	public void deletingAsset() throws IOException
 	{

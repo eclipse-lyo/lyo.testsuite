@@ -146,74 +146,98 @@ GC   - 20100308_AA" />
     <property name="env.PROCESSOR_LEVEL" value="6" />
   </properties>
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" name="createValidResourceUsingTemplate[0]" time="0.0">
-    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: Source string may not be null
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
-	at org.eclipse.lyo.testsuite.server.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createValidResourceUsingTemplate(CreationAndUpdateBaseTests.java:106)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.createValidResourceUsingTemplate(CreationAndUpdateJsonTests.java:72)
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-</error>
+    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException:
+        Source string may not be null
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
+        at org.eclipse.lyo.testsuite.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createValidResourceUsingTemplate(CreationAndUpdateBaseTests.java:106)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.createValidResourceUsingTemplate(CreationAndUpdateJsonTests.java:72)
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+    </error>
   </testcase>
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" name="createResourceWithInvalidContent[0]" time="0.0" />
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" name="createResourceAndUpdateIt[0]" time="0.015">
-    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: Source string may not be null
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
-	at org.eclipse.lyo.testsuite.server.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResourceAndUpdateIt(CreationAndUpdateBaseTests.java:142)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.createResourceAndUpdateIt(CreationAndUpdateJsonTests.java:84)
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-</error>
+    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException:
+        Source string may not be null
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
+        at org.eclipse.lyo.testsuite.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResourceAndUpdateIt(CreationAndUpdateBaseTests.java:142)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.createResourceAndUpdateIt(CreationAndUpdateJsonTests.java:84)
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+    </error>
   </testcase>
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" name="updateCreatedResourceWithInvalidContent[0]" time="0.0">
-    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: Source string may not be null
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
-	at org.eclipse.lyo.testsuite.server.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithInvalidContent(CreationAndUpdateBaseTests.java:191)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.updateCreatedResourceWithInvalidContent(CreationAndUpdateJsonTests.java:90)
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-</error>
+    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException:
+        Source string may not be null
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
+        at org.eclipse.lyo.testsuite.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithInvalidContent(CreationAndUpdateBaseTests.java:191)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.updateCreatedResourceWithInvalidContent(CreationAndUpdateJsonTests.java:90)
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+    </error>
   </testcase>
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" name="updateCreatedResourceWithInvalidContentType[0]" time="0.0">
-    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: Source string may not be null
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
-	at org.eclipse.lyo.testsuite.server.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithBadType(CreationAndUpdateBaseTests.java:233)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.updateCreatedResourceWithInvalidContentType(CreationAndUpdateJsonTests.java:98)
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-</error>
+    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException:
+        Source string may not be null
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
+        at org.eclipse.lyo.testsuite.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithBadType(CreationAndUpdateBaseTests.java:233)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.updateCreatedResourceWithInvalidContentType(CreationAndUpdateJsonTests.java:98)
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+    </error>
   </testcase>
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" name="updateCreatedResourceWithFailedPrecondition[0]" time="0.0">
-    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: Source string may not be null
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
-	at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
-	at org.eclipse.lyo.testsuite.server.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithFailedPrecondition(CreationAndUpdateBaseTests.java:296)
-	at org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.updateCreatedResourceWithFailedPrecondition(CreationAndUpdateJsonTests.java:106)
-	at org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
-</error>
+    <error message="Source string may not be null" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException:
+        Source string may not be null
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:62)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:86)
+        at org.apache.http.entity.StringEntity.&lt;init&gt;(StringEntity.java:102)
+        at org.eclipse.lyo.testsuite.util.OSLCUtils.postDataToUrl(OSLCUtils.java:159)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.createResource(CreationAndUpdateBaseTests.java:273)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateBaseTests.updateCreatedResourceWithFailedPrecondition(CreationAndUpdateBaseTests.java:296)
+        at
+        org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests.updateCreatedResourceWithFailedPrecondition(CreationAndUpdateJsonTests.java:106)
+        at
+        org.eclipse.ant.internal.launching.remote.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.run(InternalAntRunner.java:423)
+        at org.eclipse.ant.internal.launching.remote.InternalAntRunner.main(InternalAntRunner.java:137)
+    </error>
   </testcase>
   <testcase classname="org.eclipse.lyo.testsuite.server.oslcv2tests.CreationAndUpdateJsonTests" name="createResourceWithInvalidContentType[0]" time="0.0" />
   <system-out><![CDATA[]]></system-out>
