@@ -57,9 +57,9 @@ public class DynamicSuiteBuilder
 		String testVersions = setupProps.getProperty("testVersions");
 
 		// Does the provide support JSON format?
-		boolean supportJSON = true;
+		boolean supportOslcJson = true;
 		if ( setupProps.getProperty("supportJSON") != null ) {
-			supportJSON = !setupProps.getProperty("supportJSON").equalsIgnoreCase("false");
+			supportOslcJson = !setupProps.getProperty("supportJSON").equalsIgnoreCase("false");
 		}
 
 		// Does the provide support creation factory?
@@ -80,7 +80,13 @@ public class DynamicSuiteBuilder
 			supportATOMQuery = !setupProps.getProperty("supportATOMQuery").equalsIgnoreCase("false");
 		}
 
-		ArrayList<Class<?>> testsToRun = new ArrayList<Class<?>>();
+        // Does the provider support ATOM query
+        boolean supportRdfXmlAbbrev = true;
+        if ( setupProps.getProperty("supportXmlAbbrev") != null ) {
+            supportRdfXmlAbbrev = !setupProps.getProperty("supportRdfXmlAbbrev").equalsIgnoreCase("false");
+        }
+
+		ArrayList<Class<?>> testsToRun = new ArrayList<>();
 		//Determine if this is a v1 or v2 provider
 		if (   OSLCConstants.OSLC_CM_V2.equals(testVersions)
 			|| OSLCConstants.OSLC_V2.equals(testVersions)
@@ -94,7 +100,7 @@ public class DynamicSuiteBuilder
 			log.info("Setting up to test Core v2 features");
 			testsToRun.add(ServiceProviderCatalogRdfXmlTests.class);
 			testsToRun.add(ServiceProviderRdfXmlTests.class);
-			if(supportJSON) {
+			if(supportOslcJson) {
                 testsToRun.add(FetchResourceJsonTests.class);
             } else {
                 testsToRun.add(FetchResourceTests.class);
@@ -106,19 +112,25 @@ public class DynamicSuiteBuilder
 				OSLCConstants.OSLC_ASSET_V2.equals(testVersions) ||
 				OSLCConstants.OSLC_AUTO_V2.equals(testVersions) ||
 				OSLCConstants.OSLC_PM_V2.equals(testVersions)) {
-				testsToRun.add(ServiceProviderCatalogXmlTests.class);
-				testsToRun.add(ServiceProviderXmlTests.class);
+                if (supportRdfXmlAbbrev) {
+                    testsToRun.add(ServiceProviderCatalogXmlTests.class);
+                    testsToRun.add(ServiceProviderXmlTests.class);
+                }
 
-				if ( supportCreationFactory ) {
-					testsToRun.add(CreationAndUpdateXmlTests.class);
+                if ( supportCreationFactory ) {
 					testsToRun.add(CreationAndUpdateRdfXmlTests.class);
-				}
+                    if (supportRdfXmlAbbrev) {
+                        testsToRun.add(CreationAndUpdateXmlTests.class);
+                    }
+                }
 
 				if ( supportQuery ) {
-					testsToRun.add(SimplifiedQueryXmlTests.class);
 					testsToRun.add(SimplifiedQueryRdfXmlTests.class);
+                    if (supportRdfXmlAbbrev) {
+                        testsToRun.add(SimplifiedQueryXmlTests.class);
+                    }
 
-					if ( supportATOMQuery ) {
+                    if ( supportATOMQuery ) {
 						testsToRun.add(SimplifiedQueryAtomTests.class);
 					}
 				}
@@ -126,10 +138,12 @@ public class DynamicSuiteBuilder
 				if (OSLCConstants.OSLC_CM_V2.equals(testVersions)) {
 					log.info("Setting up to test CM v2 features");
 
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestRdfXmlTests.class);
+                    if (supportRdfXmlAbbrev) {
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestXmlTests.class);
+                    }
 
-					if(supportJSON) {
+                    if(supportOslcJson) {
                         testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.cm.ChangeRequestJsonTests.class);
 
                         if(supportQuery) {
@@ -143,53 +157,63 @@ public class DynamicSuiteBuilder
 				} else if(OSLCConstants.OSLC_ASSET_V2.equals(testVersions)) {
 					log.info("Setting up to test Asset v2 features");
 
-					if ( supportJSON ) {
+					if ( supportOslcJson ) {
 						testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetJsonTest.class);
 						testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateJsonTests.class);
 						testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseJsonTests.class);
 					}
 
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetRdfXmlTest.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetXmlTest.class);
-
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateRdfXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateXmlTests.class);
-
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseRdfXmlTests.class);
-				} else if (OSLCConstants.OSLC_RM_V2.equals(testVersions)) {
+
+                    if (supportRdfXmlAbbrev) {
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.CreateAssetXmlTest.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.GetAndUpdateXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseXmlTests.class);
+                    }
+                } else if (OSLCConstants.OSLC_RM_V2.equals(testVersions)) {
 					log.info("Setting up to test RM v2 features");
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementCollectionXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementCollectionRdfXmlTests.class);
 
-				} else if (OSLCConstants.OSLC_AUTO_V2.equals(testVersions)) {
+                    if (supportRdfXmlAbbrev) {
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.rm.RequirementCollectionXmlTests.class);
+                    }
+                } else if (OSLCConstants.OSLC_AUTO_V2.equals(testVersions)) {
 					log.info("Setting up to test Automation v2 features");
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanRdfXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanJsonTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestRdfXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestJsonTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultRdfXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultJsonTests.class);
 
-				} else if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
+                    if (supportRdfXmlAbbrev) {
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultXmlTests.class);
+                    }
+
+                    if (supportOslcJson) {
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationPlanJsonTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationRequestJsonTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.auto.AutomationResultJsonTests.class);
+                    }
+                } else if (OSLCConstants.OSLC_QM_V2.equals(testVersions)) {
 					log.info("Setting up to test QM v2 features");
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestPlanXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestCaseXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestScriptXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestExecutionRecordXmlTests.class);
-					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestResultXmlTests.class);
-
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestPlanRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestCaseRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestScriptRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestExecutionRecordRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestResultRdfXmlTests.class);
-				} else if(OSLCConstants.OSLC_PM_V2.equals(testVersions)) {
+
+                    if (supportRdfXmlAbbrev) {
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestPlanXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestCaseXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestScriptXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestExecutionRecordXmlTests.class);
+                        testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.qm.TestResultXmlTests.class);
+                    }
+                } else if(OSLCConstants.OSLC_PM_V2.equals(testVersions)) {
 					log.info("Setting up to test PM v2 features");
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordComputerSystemRdfXmlTests.class);
 					testsToRun.add(org.eclipse.lyo.testsuite.oslcv2.pm.PerformanceMonitoringRecordAgentRdfXmlTests.class);

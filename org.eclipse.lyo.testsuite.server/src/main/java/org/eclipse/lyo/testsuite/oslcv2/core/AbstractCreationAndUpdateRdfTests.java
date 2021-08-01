@@ -202,7 +202,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 		if (propertyResource.hasProperty(valueTypeProp)) {
 			final Property rangeProp = shapeModel.createProperty(OSLCConstants.RANGE);
 			final Property valueShapeProp = shapeModel.createProperty(OSLCConstants.VALUE_SHAPE_PROP);
-			HashSet<String> valueTypes = new HashSet<String>();
+			HashSet<String> valueTypes = new HashSet<>();
 			StmtIterator valueTypeIter = propertyResource.listProperties(valueTypeProp);
 			while (valueTypeIter.hasNext()) {
 				String typeUri = valueTypeIter.next().getResource().getURI();
