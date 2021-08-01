@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:dcterms="http://purl.org/dc/terms/" 
+   xmlns:oslc="http://open-services.net/ns/core#"
+   xmlns:oslc_asset="http://open-services.net/ns/asset#"
+   xmlns:ram_asset="http://jazz.net/xmlns/prod/ram/2.0/">
+   <oslc_asset:Asset>
+      <rdf:type rdf:resource="http://open-services.net/ns/asset#Asset"/>
+	  <dcterms:type rdf:resource="http://ramsrvr1.raleigh.ibm.com:9080/ram7.5.1.1/internal/types/classif/assetTypesSchema.xmi#documentation"/>
+      <dcterms:title>Updated asset</dcterms:title>
+      <oslc_asset:version>1.0</oslc_asset:version>
+      <dcterms:abstract>This asset was created</dcterms:abstract>
+      <ram_asset:revisionCount>1</ram_asset:revisionCount>
+      <ram_asset:community rdf:resource="http://ramsrvr1.raleigh.ibm.com:9080/ram7.5.1.1/internal/communities/1001"/>
+   </oslc_asset:Asset>
+</rdf:RDF>

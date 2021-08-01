@@ -1,0 +1,6 @@
+{
+	"rdf:type":[{ "rdf:resource" : "http:\/\/open-services.net\/ns\/cm#ChangeRequest" }],
+	"dcterms:title":"OSLC Test Suite created",
+	"dcterms:type":"Defect",
+	"cq:Severity":"3-Average"
+}
