@@ -35,6 +35,7 @@ import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
@@ -69,6 +70,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -82,9 +84,12 @@ import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.oauth.OAuthCredentials;
 import org.junit.Assert;
 import org.w3c.dom.Document;
@@ -95,7 +100,7 @@ import org.xml.sax.SAXException;
 public class OSLCUtils {
 	private static Logger logger = Logger.getLogger(OSLCUtils.class);
 	//HttpClient used for all requests
-	public static DefaultHttpClient httpclient = null;
+	public static DefaultHttpClient httpClient = null;
 	private static final String JAZZ_AUTH_MESSAGE_HEADER = "X-com-ibm-team-repository-web-auth-msg";
 	private static final String JAZZ_AUTH_FAILED = "authfailed";
 
@@ -152,6 +157,12 @@ public class OSLCUtils {
 
 		url = absoluteUrlFromRelative(baseUrl, url);
 		HttpGet httpget = new HttpGet(url);
+        RequestConfig requestConfig = RequestConfig.custom()
+            .setConnectionRequestTimeout(TestsBase.getPropertyInt("timeoutRequest", 10000))
+            .setConnectTimeout(TestsBase.getPropertyInt("timeoutConnect", 500))
+            .setSocketTimeout(TestsBase.getPropertyInt("timeoutSocket", 5000))
+            .build();
+        httpget.setConfig(requestConfig);
 		//Set headers, accept only the types passed in
 		if (headers != null) {
 			httpget.setHeaders(headers);
@@ -160,20 +171,20 @@ public class OSLCUtils {
 		oAuthSign(httpget, creds);
 
 		//Get the response and return it
-		HttpResponse response = httpclient.execute(httpget);
+		HttpResponse response = httpClient.execute(httpget);
         return response;
 	}
 
 	private static HttpClient getHttpClient(Credentials creds) {
 		//If this is our first request, initialized our httpclient
-		if (httpclient == null) {
-			httpclient = new DefaultHttpClient();
-			setupLazySSLSupport(httpclient);
+		if (httpClient == null) {
+			httpClient = new DefaultHttpClient();
+			setupLazySSLSupport(httpClient);
 			if (creds != null && !(creds instanceof OAuthCredentials)) {
-				httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+				httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
 			}
 
-			httpclient.setRedirectStrategy(new DefaultRedirectStrategy() {
+			httpClient.setRedirectStrategy(new DefaultRedirectStrategy() {
 		        @Override
 				public boolean isRedirected(HttpRequest request, HttpResponse response, org.apache.http.protocol.HttpContext context)  {
 		            boolean isRedirect=false;
@@ -191,8 +202,16 @@ public class OSLCUtils {
 		            return isRedirect;
 		        }
 		    });
+
+			// workaround from https://stackoverflow.com/questions/21800495/invalid-use-of-singleclientconnmanager-connection-still-allocated
+            ClientConnectionManager mgr = httpClient.getConnectionManager();
+            HttpParams params = httpClient.getParams();
+
+            mgr.closeIdleConnections(30, TimeUnit.SECONDS);
+
+            httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()), params);
 		}
-		return httpclient;
+		return httpClient;
 	}
 
 	// Sign the request using 2-legged OAuth if necessary.
@@ -227,7 +246,7 @@ public class OSLCUtils {
 		httpget.setHeader("Accept", acceptTypes);
 		httpget.setHeader("OSLC-Core-Version", "2.0");
 		oAuthSign(httpget, creds);
-		HttpResponse response = httpclient.execute(httpget);
+		HttpResponse response = httpClient.execute(httpget);
 		EntityUtils.consume(response.getEntity());
 
 		if (response.containsHeader("OSLC-Core-Version") &&
@@ -264,7 +283,7 @@ public class OSLCUtils {
 		oAuthSign(httppost, creds);
 
 		//Send the request and return the response
-		HttpResponse resp = httpclient.execute(httppost);
+		HttpResponse resp = httpClient.execute(httppost);
 		return resp;
 	}
 
@@ -280,7 +299,7 @@ public class OSLCUtils {
 
 		oAuthSign(httpdelete, creds);
 		//Send the request and return the response
-		HttpResponse resp = httpclient.execute(httpdelete, new BasicHttpContext());
+		HttpResponse resp = httpClient.execute(httpdelete, new BasicHttpContext());
 		return resp;
 	}
 
@@ -310,7 +329,7 @@ public class OSLCUtils {
 		oAuthSign(httpput, creds);
 
 		//Send the request and return the response
-		HttpResponse resp = httpclient.execute(httpput, new BasicHttpContext());
+		HttpResponse resp = httpClient.execute(httpput, new BasicHttpContext());
 		return resp;
 	}
 
@@ -338,7 +357,7 @@ public class OSLCUtils {
 		oAuthSign(httpget, creds);
 
 		//Send the request and return the response
-		HttpResponse resp = httpclient.execute(httpget, new BasicHttpContext());
+		HttpResponse resp = httpClient.execute(httpget, new BasicHttpContext());
 		return resp;
 	}
 
@@ -465,9 +484,9 @@ public class OSLCUtils {
 	public static void setupFormsAuth(String url, String username, String password) throws ClientProtocolException, IOException
 	{
 		//If this is our first request, initialized our httpclient
-		if (httpclient == null) {
-			httpclient = new DefaultHttpClient();
-			setupLazySSLSupport(httpclient);
+		if (httpClient == null) {
+			httpClient = new DefaultHttpClient();
+			setupLazySSLSupport(httpClient);
 		}
 		//parse the old style of properties file baseUrl so users don't have to modify properties files
 				String [] tmpUrls = url.split("/authenticated");
@@ -479,19 +498,19 @@ public class OSLCUtils {
 				int statusCode = -1;
 				String location = null;
 				HttpGet get1 = new HttpGet(url + "/auth/authrequired");
-				resp = httpclient.execute(get1);
+				resp = httpClient.execute(get1);
 				statusCode = resp.getStatusLine().getStatusCode();
 				location = getHeader(resp,"Location");
 				EntityUtils.consume(resp.getEntity());
-				followRedirects(statusCode,location,httpclient);
+				followRedirects(statusCode,location, httpClient);
 
 				HttpGet get2= new HttpGet(url + "/authenticated/identity");
 
-				resp = httpclient.execute(get2);
+				resp = httpClient.execute(get2);
 				statusCode = resp.getStatusLine().getStatusCode();
 				location = getHeader(resp,"Location");
 				EntityUtils.consume(resp.getEntity());
-				followRedirects(statusCode,location,httpclient);
+				followRedirects(statusCode,location, httpClient);
 
 				HttpPost httppost = new HttpPost(url + "/j_security_check");
 				StringEntity entity = new StringEntity("j_username=" + username + "&j_password=" + password);
@@ -502,7 +521,7 @@ public class OSLCUtils {
 				httppost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 				httppost.addHeader("OSLC-Core-Version", "2.0");
 				//Get the response and return it
-				resp = httpclient.execute(httppost);
+				resp = httpClient.execute(httppost);
 				statusCode = resp.getStatusLine().getStatusCode();
 
 				String jazzAuthMessage = null;
@@ -525,13 +544,13 @@ public class OSLCUtils {
 			    {
 			    	location = getHeader(resp,"Location");
 			    	EntityUtils.consume(resp.getEntity());
-			    	followRedirects(statusCode,location,httpclient);
+			    	followRedirects(statusCode,location, httpClient);
 			    	HttpGet get3 = new HttpGet(url + "/service/com.ibm.team.repository.service.internal.webuiInitializer.IWebUIInitializerRestService/initializationData");
-			    	resp = httpclient.execute(get3);
+			    	resp = httpClient.execute(get3);
 			    	statusCode = resp.getStatusLine().getStatusCode();
 			    	location = getHeader(resp,"Location");
 			    	EntityUtils.consume(resp.getEntity());
-			    	followRedirects(statusCode,location,httpclient);
+			    	followRedirects(statusCode,location, httpClient);
 
 			    }
 				EntityUtils.consume(resp.getEntity());
@@ -592,7 +611,7 @@ public class OSLCUtils {
 	 *
 	 * @param url
 	 *            the URL to modify
-	 * @param params
+	 * @param queryParameters
 	 *            a map of query parameters as name/value pairs
 	 * @return the new URL
 	 * @throws UnsupportedEncodingException

@@ -178,6 +178,19 @@ public abstract class TestsBase {
 		}
 	}
 
+	public static Object getProperty(String propName) {
+	    return setupProps.get(propName);
+    }
+
+    public static int getPropertyInt(String propName, int defaultValue) {
+        Object property = getProperty(propName);
+        if(property == null) {
+            return defaultValue;
+        } else {
+            return Integer.parseInt((String)property);
+        }
+    }
+
 	@BeforeClass
 	public static void setup() throws IOException, ParserConfigurationException,
 			SAXException, XPathException {

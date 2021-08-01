@@ -35,7 +35,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 
 	public GetAndUpdateBase(String url, String acceptType, String contentType) {
 		super(url, acceptType, contentType);
-	    HttpConnectionParams.setConnectionTimeout(OSLCUtils.httpclient.getParams(), 30000);
+	    HttpConnectionParams.setConnectionTimeout(OSLCUtils.httpClient.getParams(), 30000);
 	}
 
 	@Test
