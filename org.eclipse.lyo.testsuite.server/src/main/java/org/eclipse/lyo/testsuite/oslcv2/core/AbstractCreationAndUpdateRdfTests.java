@@ -339,7 +339,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends
 	 * Change a resource using its instance shape. Will only attempt to change
 	 * one property to limit the chance of errors.
 	 *
-	 * @param resource
+	 * @param uri
 	 *            the resource to modify
 	 *
 	 * @throws IOException
