@@ -17,6 +17,7 @@
   - [OSLC Assessment Report (optional)](#oslc-assessment-report-optional)
 - [Additional information](#additional-information)
   - [Areas for Improvement](#areas-for-improvement)
+- [Contributing](#contributing)
 
 ## Introduction
 
@@ -158,3 +159,7 @@ See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunO
 -   Integrated reporting
 -   Improved query tests
 -   Improved OAuth tests
+
+## Contributing
+
+See [contributing](https://github.com/eclipse/lyo#contributing) under the main [Eclipse Lyo](https://github.com/eclipse/lyo) repository.
