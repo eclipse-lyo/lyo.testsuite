@@ -30,7 +30,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <version-jetty>9.4.6.v20170531</version-jetty>
-    <version.lyo.core>2.2.0</version.lyo.core>
+    <version.lyo.core>4.1.0</version.lyo.core>
     <version.lyo.server>2.2.0</version.lyo.server>
     <version.lyo.trs>2.2.0</version.lyo.trs>
   </properties>
