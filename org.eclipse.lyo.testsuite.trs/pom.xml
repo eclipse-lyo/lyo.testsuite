@@ -32,7 +32,7 @@
     <version-jetty>9.4.6.v20170531</version-jetty>
     <version.lyo.core>2.2.0</version.lyo.core>
     <version.lyo.server>2.2.0</version.lyo.server>
-    <version.lyo.trs>2.2.0</version.lyo.trs>
+    <version.lyo.trs>5.1.1.Final</version.lyo.trs>
   </properties>
 
   <repositories>
