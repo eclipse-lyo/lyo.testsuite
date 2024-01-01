@@ -39,13 +39,14 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Run RefImpl
+      - name: Build RefImpl
         working-directory: refimpl/src/
         run: |
           mvn -B clean package
-          sleep 30
-          docker-compose -f docker-compose.yml up --build --detach
+          docker-compose -f docker-compose.yml build
       - name: Run Lyo Test Suite
-        working-directory: testsuite
-        run: ./scripts/run-suite.sh
-
+        run: |
+          docker-compose -f refimpl/src/docker-compose.yml up --detach
+          echo "Sleeping for 30 seconds"
+          sleep 30
+          testsuite/scripts/run-suite.sh
