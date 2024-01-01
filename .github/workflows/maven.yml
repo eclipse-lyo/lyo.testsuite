@@ -18,7 +18,7 @@ jobs:
       matrix:
         jdk: ['17', '21', '22-ea']
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,6 +47,6 @@ jobs:
       - name: Run Lyo Test Suite
         run: |
           docker-compose -f refimpl/src/docker-compose.yml up --detach
-          echo "Sleeping for 30 seconds"
-          sleep 30
+          echo "Sleeping for 60 seconds"
+          sleep 60
           testsuite/scripts/run-suite.sh
