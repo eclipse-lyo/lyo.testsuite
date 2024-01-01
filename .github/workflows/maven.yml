@@ -43,8 +43,8 @@ jobs:
         run: |
           # disable basic auth
           cp -f testsuite/org.eclipse.lyo.testsuite.server/config/refimpl2020/cm/web.xml refimpl/src/server-cm/src/main/webapp/WEB-INF/web.xml
-          mvn -B -f refimpl/src/server-cm/lib-common/pom.xml clean install
-          mvn -B -f refimpl/src/server-cm/pom.xml clean package
+          mvn -B -f refimpl/src/lib-common/pom.xml clean install
+          mvn -B -f refimpl/src/pom.xml clean package
           docker-compose -f refimpl/src/docker-compose.yml build
       - name: Run Lyo Test Suite
         run: |
