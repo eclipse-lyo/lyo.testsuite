@@ -43,7 +43,7 @@ jobs:
         working-directory: refimpl/src/
         run: |
           mvn -B clean package
-          docker-compose -f docker-compose.yml up --build --daemon
+          docker-compose -f docker-compose.yml up --build --detach
           mvn -B package --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
       - name: Run Lyo Test Suite
         working-directory: testsuite
