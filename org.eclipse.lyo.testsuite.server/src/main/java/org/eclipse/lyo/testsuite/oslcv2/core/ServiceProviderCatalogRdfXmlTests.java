@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -100,24 +101,28 @@ public class ServiceProviderCatalogRdfXmlTests extends
 
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_RDF, headers);
 
-		assertEquals("Did not successfully retrieve catalog at: "+base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
+        try {
+            assertEquals("Did not successfully retrieve catalog at: "+base, HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
 
-	    // Add ourself (base)
-    	data.add(new Object[] { base });
+            // Add ourself (base)
+            data.add(new Object[] { base });
 
-		Model rdfModel = ModelFactory.createDefaultModel();
-		rdfModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
-        RDFUtils.validateModel(rdfModel);
+            Model rdfModel = ModelFactory.createDefaultModel();
+            rdfModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
+            RDFUtils.validateModel(rdfModel);
 
-		Property catPredicate = rdfModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
-		Selector select = new SimpleSelector(null, catPredicate, (RDFNode)null);
-		StmtIterator listStatements = rdfModel.listStatements(select);
-		while (listStatements.hasNext()) {
-			data.add(new Object[] { listStatements.nextStatement().getObject().toString()} );
-		}
+            Property catPredicate = rdfModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
+            Selector select = new SimpleSelector(null, catPredicate, (RDFNode)null);
+            StmtIterator listStatements = rdfModel.listStatements(select);
+            while (listStatements.hasNext()) {
+                data.add(new Object[] { listStatements.nextStatement().getObject().toString()} );
+            }
 
-	    return data;
-	}
+            return data;
+        } finally {
+            EntityUtils.consume(resp.getEntity());
+        }
+    }
 
 	@Test
 	public void baseUrlIsValid() throws IOException

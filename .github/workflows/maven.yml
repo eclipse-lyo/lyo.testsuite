@@ -40,13 +40,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Build RefImpl
-        working-directory: refimpl/src/
         run: |
-          mvn -B clean package
-          docker-compose -f docker-compose.yml build
+          # disable basic auth
+          cp -f testsuite/config/refimpl2020/cm/web.xml refimpl/src/server-cm/src/main/webapp/WEB-INF/web.xml
+          mvn -B -f refimpl/src/server-cm/pom.xml clean package
+          docker-compose -f refimpl/src/docker-compose.yml build
       - name: Run Lyo Test Suite
         run: |
           docker-compose -f refimpl/src/docker-compose.yml up --detach
-          echo "Sleeping for 120 seconds"
-          sleep 120
+          >&2 echo "Sleeping for 20 seconds"
+          sleep 20
+          >&2 echo "Done sleeping"
           testsuite/scripts/run-suite.sh

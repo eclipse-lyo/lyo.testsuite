@@ -35,6 +35,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -43,6 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -86,59 +88,59 @@ public abstract class CoreResourceXmlTests  extends TestsBase {
 	protected static Collection<Object[]> getAllDescriptionUrls(String eval)
 		throws IOException, ParserConfigurationException, SAXException, XPathException
 	{
-		ArrayList<String> results = new ArrayList<String>();
+            ArrayList<String> results = new ArrayList<String>();
 
-		//Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
-		//to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
-		//query factories of the REST service.
+            //Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order to grab all urls
+            //to other ServiceProvidersCatalogs contained within it, recursively, in order to find the URLs of all
+            //query factories of the REST service.
 
-		String v = "//oslc_v2:QueryCapability/oslc_v2:queryBase/@rdf:resource";
+            String v = "//oslc_v2:QueryCapability/oslc_v2:queryBase/@rdf:resource";
 
-		ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
-		ArrayList<String> capabilityURLsUsingXML =
-			TestsBase.getCapabilityURLsUsingXML(v, getxpathSubStmt(), getResourceTypeQuery(), serviceUrls, true);
+            ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
+            ArrayList<String> capabilityURLsUsingXML =
+                TestsBase.getCapabilityURLsUsingXML(v, getxpathSubStmt(), getResourceTypeQuery(), serviceUrls, true);
 
-		// Once we have the query URL, look for a resource to validate
-		String where = setupProps.getProperty("changeRequestsWhere");
-		if (where == null) {
-			String queryProperty = setupProps.getProperty("queryEqualityProperty");
-			String queryPropertyValue = setupProps.getProperty("queryEqualityValue");
-			where = queryProperty + "=\"" + queryPropertyValue + "\"";
-		}
+            // Once we have the query URL, look for a resource to validate
+            String where = setupProps.getProperty("changeRequestsWhere");
+            if (where == null) {
+                String queryProperty = setupProps.getProperty("queryEqualityProperty");
+                String queryPropertyValue = setupProps.getProperty("queryEqualityValue");
+                where = queryProperty + "=\"" + queryPropertyValue + "\"";
+            }
 
-		String additionalParameters = setupProps.getProperty("queryAdditionalParameters", "");
-		String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
-		query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
+            String additionalParameters = setupProps.getProperty("queryAdditionalParameters", "");
+            String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
+            query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
 
-		for (String queryBase : capabilityURLsUsingXML) {
-			String queryUrl = OSLCUtils.addQueryStringToURL(queryBase, query);
-			HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds,
-					OSLCConstants.CT_XML, headers);
-			String respBody = EntityUtils.toString(resp.getEntity());
-			EntityUtils.consume(resp.getEntity());
-			assertTrue("Received " +resp.getStatusLine(), (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK));
+            for (String queryBase : capabilityURLsUsingXML) {
+                String queryUrl = OSLCUtils.addQueryStringToURL(queryBase, query);
+                HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds,
+                        OSLCConstants.CT_XML, headers);
+                String respBody = EntityUtils.toString(resp.getEntity());
+                EntityUtils.consume(resp.getEntity());
+                assertTrue("Received " +resp.getStatusLine(), (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK));
 
-			//Get XML Doc from response
-			Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
+                //Get XML Doc from response
+                Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
-			//Check for results by reference (rdf:resource)
-			Node result = (Node) OSLCUtils.getXPath().evaluate(
-					eval,
-					doc, XPathConstants.NODE);
+                //Check for results by reference (rdf:resource)
+                Node result = (Node) OSLCUtils.getXPath().evaluate(
+                        eval,
+                        doc, XPathConstants.NODE);
 
-			if (result == null)
-				//No results by reference. Check for inline results (rdf:about)
-				result = (Node) OSLCUtils.getXPath().evaluate(
-						"//rdfs:member/oslc_cm_v2:ChangeRequest/@rdf:about", doc,
-						XPathConstants.NODE);
-			if (result != null)
-				results.add(result.getNodeValue());
-			if (onlyOnce)
-				break;
-		}
+                if (result == null)
+                    //No results by reference. Check for inline results (rdf:about)
+                    result = (Node) OSLCUtils.getXPath().evaluate(
+                            "//rdfs:member/oslc_cm_v2:ChangeRequest/@rdf:about", doc,
+                            XPathConstants.NODE);
+                if (result != null)
+                    results.add(result.getNodeValue());
+                if (onlyOnce)
+                    break;
+            }
 
-		return toCollection(results);
-	}
+            return toCollection(results);
+    }
 
 	@Test
 	public void CoreResourceHasOneTitle() throws XPathExpressionException

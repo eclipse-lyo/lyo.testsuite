@@ -96,7 +96,7 @@ public abstract class TestsBase {
 
 	protected static String testVersion = null;
 
-	protected static Map<String, String> creationShapeMap = new HashMap<String, String>();
+	protected static Map<String, String> creationShapeMap = new HashMap<>();
 
 	public TestsBase(String thisUrl) {
 		currentUrl = thisUrl;
@@ -204,7 +204,7 @@ public abstract class TestsBase {
 	}
 
 	public static Collection<Object[]> toCollection(ArrayList<String> list) {
-		Collection<Object[]> data = new ArrayList<Object[]>();
+		Collection<Object[]> data = new ArrayList<>();
 		for (String string : list) {
 			data.add(new Object[] {string});
 		}
@@ -218,7 +218,7 @@ public abstract class TestsBase {
 		staticSetup();
 
 		// ArrayList to contain the urls from all SPCs
-	    ArrayList<String> data = new ArrayList<String>();
+	    ArrayList<String> data = new ArrayList<>();
 
 	    // If we are given a shortcut, then use it and skip the rest
 	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
@@ -315,7 +315,7 @@ public abstract class TestsBase {
 			ParserConfigurationException, SAXException,
 			XPathExpressionException {
 		// Collection to contain the creationFactory urls from all SPs
-		ArrayList<Node> data = new ArrayList<Node>();
+		ArrayList<Node> data = new ArrayList<>();
 
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
@@ -358,50 +358,60 @@ public abstract class TestsBase {
 		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
 		// Collection to contain the creationFactory urls from all SPs
-		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<>();
 		String firstUrl = null;
 
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					creds, OSLCConstants.CT_XML, headers);
 
-			String responseBody = EntityUtils.toString(resp.getEntity());
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Reading service provider document <%s>", base));
-				logger.debug(responseBody);
-			}
+            try {
+                if(resp.getStatusLine().getStatusCode() > 299) {
+                    logger.error("Failed to fetch a resource: " + resp.getStatusLine().getReasonPhrase());
+                    throw new IllegalStateException();
+                }
 
-			Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
+                String responseBody = EntityUtils.toString(resp.getEntity());
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Reading service provider document <%s>", base));
+                    logger.debug(responseBody);
+                }
 
-			NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(
-					xpathStmt,
-					baseDoc, XPathConstants.NODESET);
 
-			for (int i = 0; i < sDescs.getLength(); i++) {
-				if (firstUrl == null)
-					firstUrl = sDescs.item(i).getNodeValue();
+                Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
 
-				if (useDefaultUsage) {
-					NodeList usages = (NodeList) OSLCUtils.getXPath().evaluate(
-							xpathSubStmt,
-							sDescs.item(i), XPathConstants.NODESET);
+                NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(
+                        xpathStmt,
+                        baseDoc, XPathConstants.NODESET);
 
-					for (int u=0; u < usages.getLength(); u++) {
-						String usageValue = usages.item(u).getNodeValue();
-						//if (OSLCConstants.USAGE_DEFAULT_URI.equals(usageValue)) {
-						//if (rT.equals(usageValue) && (u ==i)) {
-						if (rT.contains(usageValue) && (u ==i)) {
-							data.add(sDescs.item(i).getNodeValue());
-							return data;
-						}
-					}
-				} else {
-					data.add(sDescs.item(i).getNodeValue());
-					if (onlyOnce)
-						return data;
-				}
-			}
-		}
+                for (int i = 0; i < sDescs.getLength(); i++) {
+                    if (firstUrl == null)
+                        firstUrl = sDescs.item(i).getNodeValue();
+
+                    if (useDefaultUsage) {
+                        NodeList usages = (NodeList) OSLCUtils.getXPath().evaluate(
+                                xpathSubStmt,
+                                sDescs.item(i), XPathConstants.NODESET);
+
+                        for (int u=0; u < usages.getLength(); u++) {
+                            String usageValue = usages.item(u).getNodeValue();
+                            //if (OSLCConstants.USAGE_DEFAULT_URI.equals(usageValue)) {
+                            //if (rT.equals(usageValue) && (u ==i)) {
+                            if (rT.contains(usageValue) && (u ==i)) {
+                                data.add(sDescs.item(i).getNodeValue());
+                                return data;
+                            }
+                        }
+                    } else {
+                        data.add(sDescs.item(i).getNodeValue());
+                        if (onlyOnce)
+                            return data;
+                    }
+                }
+            } finally {
+                EntityUtils.consume(resp.getEntity());
+            }
+        }
 		// If we didn't find the default, then just send back the first one we
 		// found.
 		if (useDefaultUsage && firstUrl != null)
@@ -414,7 +424,7 @@ public abstract class TestsBase {
 		staticSetup();
 
 	    // ArrayList to contain the urls from all SPCs
-	    ArrayList<String> data = new ArrayList<String>();
+	    ArrayList<String> data = new ArrayList<>();
 
 	    // If we are given a shortcut, then use it and skip the rest
 	    if (useThisServiceProvider != null && useThisServiceProvider.length() > 0) {
@@ -504,69 +514,76 @@ public abstract class TestsBase {
 			String prop,
 			String eval) throws IOException {
 		// Collection to contain the creationFactory urls from all SPs
-		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<>();
 		String firstUrl = null;
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 					creds, OSLCConstants.CT_RDF, headers);
 
-			Model spModel = ModelFactory.createDefaultModel();
-			spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
-			RDFUtils.validateModel(spModel);
+            try {
+                if(resp.getStatusLine().getStatusCode() > 299) {
+                    throw new IllegalStateException("Request failed: " + resp.getStatusLine().getReasonPhrase());
+                }
+                Model spModel = ModelFactory.createDefaultModel();
+                spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
+                RDFUtils.validateModel(spModel);
 
-			Property capProp = spModel.createProperty(propertyUri);
-			Property usageProp = spModel.createProperty(prop);
-			Selector select = new SimpleSelector(null, capProp, (RDFNode)null);
-			StmtIterator statements = spModel.listStatements(select);
+                Property capProp = spModel.createProperty(propertyUri);
+                Property usageProp = spModel.createProperty(prop);
+                Selector select = new SimpleSelector(null, capProp, (RDFNode)null);
+                StmtIterator statements = spModel.listStatements(select);
 
-			while (statements.hasNext()) {
-				Statement stmt = statements.nextStatement();
-				// Only cache creation factory shapes. Some providers use the same capability URI for both query and creation.
-				if (OSLCConstants.CREATION_PROP.equals(propertyUri)) {
-					Statement shape = stmt.getSubject().getProperty(spModel.createProperty(OSLCConstants.RESOURCE_SHAPE_PROP));
-					if (shape != null) {
-						if (logger.isDebugEnabled()) {
-							logger.debug(String.format("Caching shape URI <%s> for capability URI <%s>", shape.getObject().toString(), stmt.getObject().toString()));
-						}
-						creationShapeMap.put(stmt.getObject().toString(), shape.getObject().toString());
-					}
-				}
+                while (statements.hasNext()) {
+                    Statement stmt = statements.nextStatement();
+                    // Only cache creation factory shapes. Some providers use the same capability URI for both query and creation.
+                    if (OSLCConstants.CREATION_PROP.equals(propertyUri)) {
+                        Statement shape = stmt.getSubject().getProperty(spModel.createProperty(OSLCConstants.RESOURCE_SHAPE_PROP));
+                        if (shape != null) {
+                            if (logger.isDebugEnabled()) {
+                                logger.debug(String.format("Caching shape URI <%s> for capability URI <%s>", shape.getObject().toString(), stmt.getObject().toString()));
+                            }
+                            creationShapeMap.put(stmt.getObject().toString(), shape.getObject().toString());
+                        }
+                    }
 
-				if (firstUrl == null)
-					firstUrl = stmt.getObject().toString();
-				if (useDefaultUsage) {
-					StmtIterator usages = stmt.getSubject().listProperties(usageProp);
+                    if (firstUrl == null)
+                        firstUrl = stmt.getObject().toString();
+                    if (useDefaultUsage) {
+                        StmtIterator usages = stmt.getSubject().listProperties(usageProp);
 
-					while (usages.hasNext()) {
+                        while (usages.hasNext()) {
 
-						Statement usageStmt = usages.nextStatement();
+                            Statement usageStmt = usages.nextStatement();
 
-						if (eval.equals(usageStmt.getObject().toString())){
-							data.add(stmt.getObject().toString());
-							return data;
-						}
-					}
-				} else {
-					// Now if we have types, we match the capability for the given types
-					if (types != null && types.length > 0) {
-						Property typeProp = spModel.getProperty(OSLCConstants.RESOURCE_TYPE_PROP);
-						StmtIterator typeIter = stmt.getSubject().listProperties(typeProp);
-						while (typeIter.hasNext()) {
-							String typeName = typeIter.nextStatement().getObject().toString();
-							for (String t: types) {
-								if (t.equals(typeName)) {
-									data.add(stmt.getObject().toString());
-									if (onlyOnce) return data;
-								}
-							}
-						}
-					} else {
-						data.add(stmt.getObject().toString());
-						if (onlyOnce) return data;
-					}
-				}
-			}
-		}
+                            if (eval.equals(usageStmt.getObject().toString())){
+                                data.add(stmt.getObject().toString());
+                                return data;
+                            }
+                        }
+                    } else {
+                        // Now if we have types, we match the capability for the given types
+                        if (types != null && types.length > 0) {
+                            Property typeProp = spModel.getProperty(OSLCConstants.RESOURCE_TYPE_PROP);
+                            StmtIterator typeIter = stmt.getSubject().listProperties(typeProp);
+                            while (typeIter.hasNext()) {
+                                String typeName = typeIter.nextStatement().getObject().toString();
+                                for (String t: types) {
+                                    if (t.equals(typeName)) {
+                                        data.add(stmt.getObject().toString());
+                                        if (onlyOnce) return data;
+                                    }
+                                }
+                            }
+                        } else {
+                            data.add(stmt.getObject().toString());
+                            if (onlyOnce) return data;
+                        }
+                    }
+                }
+            } finally {
+                EntityUtils.consume(resp.getEntity());
+            }
+        }
 		// If no default usage was found, then just return first one
 		if (useDefaultUsage && firstUrl != null)
 			data.add(firstUrl);
@@ -614,7 +631,7 @@ public abstract class TestsBase {
 		staticSetup();
 
 	    // ArrayList to contain the urls from all SPCs
-	    ArrayList<String> data = new ArrayList<String>();
+	    ArrayList<String> data = new ArrayList<>();
 
 		String base=null;
 		if (inBaseURL == null)
@@ -659,7 +676,7 @@ public abstract class TestsBase {
 			XPathExpressionException, NullPointerException, JSONException {
 
 		// Collection to contain the creationFactory urls from all SPs
-		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<>();
 
 		for (String base : serviceUrls) {
 			HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,

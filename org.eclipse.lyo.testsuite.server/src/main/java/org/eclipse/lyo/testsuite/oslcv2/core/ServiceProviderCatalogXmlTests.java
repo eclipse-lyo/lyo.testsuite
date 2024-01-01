@@ -100,46 +100,48 @@ public class ServiceProviderCatalogXmlTests extends
 		HttpResponse resp = OSLCUtils.getResponseFromUrl(base, base,
 				creds, OSLCConstants.CT_XML, headers);
 
-		int statusCode = resp.getStatusLine().getStatusCode();
-		if (HttpStatus.SC_OK != statusCode)
-		{
-			EntityUtils.consume(resp.getEntity());
-			throw new IOException("Response code: " + statusCode + " for " + base);
-		}
+        try {
+            int statusCode = resp.getStatusLine().getStatusCode();
+            if (HttpStatus.SC_OK != statusCode) {
+                throw new IllegalStateException("Response code: " + statusCode + " for " + base + " (" + resp.getStatusLine().getReasonPhrase() + ")");
+            }
 
-		String respBody = EntityUtils.toString(resp.getEntity());
-		Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(respBody);
+            String respBody = EntityUtils.toString(resp.getEntity());
+            Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
-		// ArrayList to contain the urls from all SPCs
-		Collection<Object[]> data = new ArrayList<Object[]>();
-		Node rootElement = (Node) OSLCUtils.getXPath().evaluate("/rdf:RDF/*",
-				baseDoc, XPathConstants.NODE);
-		if (rootElement.getNamespaceURI().equals(OSLCConstants.OSLC_V2)
-				&& rootElement.getLocalName().equals("ServiceProviderCatalog")) {
-			data.add(new Object[] { base });
-		}
+            // ArrayList to contain the urls from all SPCs
+            Collection<Object[]> data = new ArrayList<Object[]>();
+            Node rootElement = (Node) OSLCUtils.getXPath().evaluate("/rdf:RDF/*",
+                    baseDoc, XPathConstants.NODE);
+            if (rootElement.getNamespaceURI().equals(OSLCConstants.OSLC_V2)
+                    && rootElement.getLocalName().equals("ServiceProviderCatalog")) {
+                data.add(new Object[] { base });
+            }
 
-		// Get all ServiceProviderCatalog urls from the base document in order
-		// to test them as well,
-		// recursively checking them for other ServiceProviderCatalogs further
-		// down.
-		NodeList spcs = (NodeList) OSLCUtils
-				.getXPath()
-				.evaluate(
-						"//oslc_v2:serviceProviderCatalog/oslc_v2:ServiceProviderCatalog/@rdf:about",
-						baseDoc, XPathConstants.NODESET);
-		for (int i = 0; i < spcs.getLength(); i++) {
-			if (!spcs.item(i).getNodeValue().equals(base)) {
-				Collection<Object[]> subCollection = getReferencedCatalogUrlsUsingXML(spcs
-						.item(i).getNodeValue());
-				Iterator<Object[]> iter = subCollection.iterator();
-				while (iter.hasNext()) {
-					data.add(iter.next());
-				}
-			}
-		}
-		return data;
-	}
+            // Get all ServiceProviderCatalog urls from the base document in order
+            // to test them as well,
+            // recursively checking them for other ServiceProviderCatalogs further
+            // down.
+            NodeList spcs = (NodeList) OSLCUtils
+                    .getXPath()
+                    .evaluate(
+                            "//oslc_v2:serviceProviderCatalog/oslc_v2:ServiceProviderCatalog/@rdf:about",
+                            baseDoc, XPathConstants.NODESET);
+            for (int i = 0; i < spcs.getLength(); i++) {
+                if (!spcs.item(i).getNodeValue().equals(base)) {
+                    Collection<Object[]> subCollection = getReferencedCatalogUrlsUsingXML(spcs
+                        .item(i).getNodeValue());
+                    Iterator<Object[]> iter = subCollection.iterator();
+                    while (iter.hasNext()) {
+                        data.add(iter.next());
+                    }
+                }
+            }
+            return data;
+        } finally {
+            EntityUtils.consume(resp.getEntity());
+        }
+    }
 
 	@Test
 	public void baseUrlIsValid() throws IOException {

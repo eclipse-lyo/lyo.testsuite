@@ -71,17 +71,21 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 
 		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType,
         		headers);
-		assertEquals("Did not successfully retrieve ServiceProvider at: "+currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        try {
+            assertEquals("Did not successfully retrieve ServiceProvider at: "+currentUrl, HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-		fRdfModel.read(response.getEntity().getContent(),
-				OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
-				OSLCConstants.JENA_RDF_XML);
-		RDFUtils.validateModel(fRdfModel);
-		fServiceProvider = (Resource) fRdfModel.getResource(currentUrl);
+            fRdfModel.read(response.getEntity().getContent(),
+                    OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
+                    OSLCConstants.JENA_RDF_XML);
+            RDFUtils.validateModel(fRdfModel);
+            fServiceProvider = (Resource) fRdfModel.getResource(currentUrl);
 
-		assertNotNull(fServiceProvider);
+            assertNotNull(fServiceProvider);
+        } finally {
+            EntityUtils.consume(response.getEntity());
+        }
 
-	}
+    }
 
 	@Parameters
 	public static Collection<Object[]> getAllDescriptionUrls() throws IOException

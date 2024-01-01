@@ -70,10 +70,18 @@ public class ServiceProviderXmlTests extends TestsBase {
 
 		response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds,
         		fContentType, headers);
-        responseBody = EntityUtils.toString(response.getEntity());
-        //Get XML Doc from response
-	    doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
-	}
+        try {
+            if (response.getStatusLine().getStatusCode() <= 299) {
+                responseBody = EntityUtils.toString(response.getEntity());
+                //Get XML Doc from response
+                doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
+            } else {
+                throw new IllegalStateException("Request failed");
+            }
+        } finally {
+            EntityUtils.consume(response.getEntity());
+        }
+    }
 
 
 	@Parameters

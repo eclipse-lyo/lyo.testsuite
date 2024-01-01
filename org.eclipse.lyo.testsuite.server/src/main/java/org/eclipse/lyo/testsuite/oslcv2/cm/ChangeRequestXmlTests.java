@@ -69,7 +69,7 @@ public class ChangeRequestXmlTests extends CoreResourceXmlTests {
 
 		setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
 		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
-		return getAllDescriptionUrls(eval);
+            return getAllDescriptionUrls(eval);
 	}
 
 	public static String ns = "oslc_cm_v2";

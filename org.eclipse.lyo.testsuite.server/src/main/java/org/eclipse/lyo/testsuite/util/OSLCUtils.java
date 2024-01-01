@@ -84,6 +84,7 @@ import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
@@ -158,7 +159,8 @@ public class OSLCUtils {
 		url = absoluteUrlFromRelative(baseUrl, url);
 		HttpGet httpget = new HttpGet(url);
         RequestConfig requestConfig = RequestConfig.custom()
-            .setConnectionRequestTimeout(TestsBase.getPropertyInt("timeoutRequest", 10000))
+            .setStaleConnectionCheckEnabled(true)
+            .setConnectionRequestTimeout(TestsBase.getPropertyInt("timeoutRequest", 1000))
             .setConnectTimeout(TestsBase.getPropertyInt("timeoutConnect", 500))
             .setSocketTimeout(TestsBase.getPropertyInt("timeoutSocket", 5000))
             .build();
@@ -182,7 +184,9 @@ public class OSLCUtils {
 			setupLazySSLSupport(httpClient);
 			if (creds != null && !(creds instanceof OAuthCredentials)) {
 				httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
-			}
+			} else {
+                throw new IllegalArgumentException();
+            }
 
 			httpClient.setRedirectStrategy(new DefaultRedirectStrategy() {
 		        @Override
@@ -197,7 +201,7 @@ public class OSLCUtils {
 		                int responseCode = response.getStatusLine().getStatusCode();
 		                if (responseCode == 301 || responseCode == 302) {
 		                    return true;
-		                }
+                        }
 		            }
 		            return isRedirect;
 		        }
@@ -207,9 +211,14 @@ public class OSLCUtils {
             ClientConnectionManager mgr = httpClient.getConnectionManager();
             HttpParams params = httpClient.getParams();
 
-            mgr.closeIdleConnections(30, TimeUnit.SECONDS);
+            mgr.closeIdleConnections(3, TimeUnit.SECONDS);
+            ThreadSafeClientConnManager conman = new ThreadSafeClientConnManager(mgr.getSchemeRegistry());
+            conman.setDefaultMaxPerRoute(6);
+            conman.setMaxTotal(256);
+            // TODO: switch to this
+//            PoolingHttpClientConnectionManager conman = new PoolingHttpClientConnectionManager();
 
-            httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()), params);
+            httpClient = new DefaultHttpClient(conman, params);
 		}
 		return httpClient;
 	}
