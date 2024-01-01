@@ -28,8 +28,15 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <skipTests>true</skipTests> <!-- run mvn with -DskipTests=false -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
   </properties>
+  <scm>
+    <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.testsuite.git</url>
+  </scm>
 
   <profiles>
     <profile>
@@ -61,9 +68,7 @@
       </releases>
     </repository>
   </repositories>
-  <scm>
-    <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.testsuite.git</url>
-  </scm>
+
   <dependencies>
     <!-- https://stackoverflow.com/questions/52502189/java-11-package-javax-xml-bind-does-not-exist -->
     <dependency>
@@ -140,6 +145,7 @@
       <version>1.5.10</version>
     </dependency>
 
+    <!-- used in SimplifiedQueryAtomTests -->
     <dependency>
       <groupId>org.apache.abdera</groupId>
       <artifactId>abdera-parser</artifactId>
@@ -161,17 +167,6 @@
 
   <build>
     <plugins>
-      <!-- Compiler Plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.12.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-
       <!-- Source Jar Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -187,46 +182,10 @@
         </executions>
       </plugin>
 
-      <!-- Javadoc Plugin -->
-      <!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<additionalparam>${javadoc.opts}</additionalparam>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>2.12</version>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <shadedArtifactAttached>true</shadedArtifactAttached>
-          <createDependencyReducedPom>false</createDependencyReducedPom>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
     <testSourceDirectory>${basedir}/src/main/java</testSourceDirectory>
