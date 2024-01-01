@@ -47,6 +47,6 @@ jobs:
       - name: Run Lyo Test Suite
         run: |
           docker-compose -f refimpl/src/docker-compose.yml up --detach
-          echo "Sleeping for 60 seconds"
-          sleep 60
+          echo "Sleeping for 120 seconds"
+          sleep 120
           testsuite/scripts/run-suite.sh
