@@ -44,7 +44,6 @@ jobs:
         run: |
           mvn -B clean package
           docker-compose -f docker-compose.yml up --build --detach
-          mvn -B package --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
       - name: Run Lyo Test Suite
         working-directory: testsuite
         run: ./scripts/run-suite.sh
