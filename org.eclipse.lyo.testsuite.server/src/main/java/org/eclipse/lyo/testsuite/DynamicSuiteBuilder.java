@@ -51,6 +51,9 @@ public class DynamicSuiteBuilder
 		final Logger log = LoggerFactory.getLogger(DynamicSuiteBuilder.class);
 		Properties setupProps = SetupProperties.setup(null);
 
+        log.info("Test");
+        log.debug("Test debug");
+
 		TestsBase.staticSetup();
 
 		//If we also want to run v1 tests (assuming this is a v2 provider)
