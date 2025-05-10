@@ -8,9 +8,9 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- * 
+ *
  * Contributors:
- * 
+ *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *******************************************************************************/
 
@@ -20,17 +20,17 @@ package org.eclipse.lyo.testsuite.server.trsutils;
  * A exception that is thrown when fetching a resource encounters an exception
  */
 public class FetchException extends Exception {
-	private static final long serialVersionUID = -5064491774183615219L;
+    private static final long serialVersionUID = -5064491774183615219L;
 
-	public FetchException(String message) {
-		super(message);
-	}
+    public FetchException(String message) {
+        super(message);
+    }
 
-	public FetchException(Throwable th) {
-		super(th);
-	}
+    public FetchException(Throwable th) {
+        super(th);
+    }
 
-	public FetchException(String message, Throwable th) {
-		super(message, th);
-	}
+    public FetchException(String message, Throwable th) {
+        super(message, th);
+    }
 }

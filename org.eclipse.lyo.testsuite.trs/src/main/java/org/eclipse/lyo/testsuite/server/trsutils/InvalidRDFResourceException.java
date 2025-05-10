@@ -8,9 +8,9 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- * 
+ *
  * Contributors:
- * 
+ *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *******************************************************************************/
 
@@ -19,22 +19,21 @@ package org.eclipse.lyo.testsuite.server.trsutils;
 import org.apache.http.client.ClientProtocolException;
 
 public class InvalidRDFResourceException extends ClientProtocolException {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public InvalidRDFResourceException() {
-		super();
-	}
+    public InvalidRDFResourceException() {
+        super();
+    }
 
-	public InvalidRDFResourceException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public InvalidRDFResourceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public InvalidRDFResourceException(String message) {
-		super(message);
-	}
+    public InvalidRDFResourceException(String message) {
+        super(message);
+    }
 
-	public InvalidRDFResourceException(Throwable cause) {
-		super(cause);
-	}
-
+    public InvalidRDFResourceException(Throwable cause) {
+        super(cause);
+    }
 }

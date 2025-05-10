@@ -18,14 +18,12 @@
 package org.eclipse.lyo.testsuite.util;
 
 import java.util.Iterator;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
-
 public class OSLCNamespaceContext implements NamespaceContext {
-	public String getNamespaceURI(String prefix) {
-		if (prefix == null) throw new NullPointerException("Null prefix");
+    public String getNamespaceURI(String prefix) {
+        if (prefix == null) throw new NullPointerException("Null prefix");
         else if ("jfs".equals(prefix)) return OSLCConstants.JFS;
         else if ("rdfs".equals(prefix)) return OSLCConstants.RDFS;
         else if ("rdf".equals(prefix)) return OSLCConstants.RDF;
@@ -45,9 +43,14 @@ public class OSLCNamespaceContext implements NamespaceContext {
         else if ("oslc_rm_v2".equals(prefix)) return OSLCConstants.OSLC_RM_V2;
         else if ("oslc_auto_v2".equals(prefix)) return OSLCConstants.OSLC_AUTO_V2;
         return XMLConstants.NULL_NS_URI;
-	}
-    public String getPrefix(String uri) { return null; }
+    }
 
-	@SuppressWarnings("rawtypes")
-	public Iterator getPrefixes(String uri) { return null; }
+    public String getPrefix(String uri) {
+        return null;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public Iterator getPrefixes(String uri) {
+        return null;
+    }
 }

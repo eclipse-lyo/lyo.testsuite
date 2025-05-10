@@ -21,27 +21,30 @@ import java.util.Properties;
 
 public class SetupProperties {
 
-	static final String setupProps = "setup.properties";
-	static final String setupParam = "props";
+    static final String setupProps = "setup.properties";
+    static final String setupParam = "props";
 
-	public static Properties setup(String propFile) {
-		String propFileName = propFile;
-		if (propFileName == null) {
-			propFileName = System.getProperty(setupParam);
-			if (propFileName == null)
-				propFileName = setupProps;
-		}
-		try {
-			InputStream is = new FileInputStream(propFileName);
-			Properties props = new Properties();
-			props.load(is);
-			return props;
-		} catch (java.io.FileNotFoundException e) {
-			System.err.println("Specify property file via -Dprops= or provide one at " + System.getProperty("user.dir") + "/" + propFileName);
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-	    }
-	}
+    public static Properties setup(String propFile) {
+        String propFileName = propFile;
+        if (propFileName == null) {
+            propFileName = System.getProperty(setupParam);
+            if (propFileName == null) propFileName = setupProps;
+        }
+        try {
+            InputStream is = new FileInputStream(propFileName);
+            Properties props = new Properties();
+            props.load(is);
+            return props;
+        } catch (java.io.FileNotFoundException e) {
+            System.err.println(
+                    "Specify property file via -Dprops= or provide one at "
+                            + System.getProperty("user.dir")
+                            + "/"
+                            + propFileName);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

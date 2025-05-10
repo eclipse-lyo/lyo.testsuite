@@ -8,9 +8,9 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- * 
+ *
  * Contributors:
- * 
+ *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *******************************************************************************/
 
@@ -20,18 +20,18 @@ package org.eclipse.lyo.testsuite.server.trsutils;
  * A exception that is thrown when creating/updating a resource encounters an exception
  */
 public class SendException extends Exception {
-	
-	private static final long serialVersionUID = -7111348864477190261L;
 
-	public SendException(String message) {
-		super(message);
-	}
+    private static final long serialVersionUID = -7111348864477190261L;
 
-	public SendException(Throwable th) {
-		super(th);
-	}
+    public SendException(String message) {
+        super(message);
+    }
 
-	public SendException(String message, Throwable th) {
-		super(message, th);
-	}
+    public SendException(Throwable th) {
+        super(th);
+    }
+
+    public SendException(String message, Throwable th) {
+        super(message, th);
+    }
 }

@@ -22,14 +22,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-
-import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
+import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -42,91 +40,96 @@ import org.xml.sax.SAXException;
  * result URL directly. It runs the equality query from the properties file and grabs the first result
  * to test against, checking the relationship of elements in the XML representation of the automation result.
  */
-//@RunWith(Parameterized.class)
+// @RunWith(Parameterized.class)
 public class AutomationResultXmlTests extends CoreResourceXmlTests {
 
-	public AutomationResultXmlTests(String thisUrl) throws IOException,
-			ParserConfigurationException, SAXException,
-			XPathExpressionException {
+    public AutomationResultXmlTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException {
 
-		super(thisUrl);
-		setNode(ns, resource);
-	}
+        super(thisUrl);
+        setNode(ns, resource);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls()
-		throws IOException, ParserConfigurationException, SAXException, XPathException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls()
+            throws IOException, ParserConfigurationException, SAXException, XPathException {
 
-		TestsBase.staticSetup();
+        TestsBase.staticSetup();
 
-		String useThisAutoResult = setupProps.getProperty("useThisAutoResult");
-		if ( useThisAutoResult != null ) {
-			ArrayList<String> results = new ArrayList<String>();
-			results.add(useThisAutoResult);
-			return toCollection(results);
-		}
+        String useThisAutoResult = setupProps.getProperty("useThisAutoResult");
+        if (useThisAutoResult != null) {
+            ArrayList<String> results = new ArrayList<String>();
+            results.add(useThisAutoResult);
+            return toCollection(results);
+        }
 
-		setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
-		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
-		return getAllDescriptionUrls(eval);
-	}
+        setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
+        setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
+        return getAllDescriptionUrls(eval);
+    }
 
-	public static String ns = "oslc_auto_v2";
-	public static String resource = "AutomationResult";
-	public static String eval = "//rdfs:member/@rdf:resource";
+    public static String ns = "oslc_auto_v2";
+    public static String resource = "AutomationResult";
+    public static String eval = "//rdfs:member/@rdf:resource";
 
-	@Test
-	public void autoResultHasAtLeastOneState() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_auto_v2:state";
+    @Test
+    public void autoResultHasAtLeastOneState() throws XPathExpressionException {
+        String eval = "//" + getNode() + "/" + "oslc_auto_v2:state";
 
-		NodeList states = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);
+        NodeList states =
+                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-		assertTrue("oslc_auto_v2:state"+getFailureMessage(), (states.getLength()>=1));
-	}
+        assertTrue("oslc_auto_v2:state" + getFailureMessage(), (states.getLength() >= 1));
+    }
 
-	@Test
-	public void autoResultHasAtLeastOneVerdict() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_auto_v2:verdict";
+    @Test
+    public void autoResultHasAtLeastOneVerdict() throws XPathExpressionException {
+        String eval = "//" + getNode() + "/" + "oslc_auto_v2:verdict";
 
-		NodeList states = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);
+        NodeList states =
+                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-		assertTrue("oslc_auto_v2:verdict"+getFailureMessage(), (states.getLength()>=1));
-	}
+        assertTrue("oslc_auto_v2:verdict" + getFailureMessage(), (states.getLength() >= 1));
+    }
 
-	@Test
-	public void autoResultHasAtMostOneDesiredState() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_auto_v2:desiredState";
+    @Test
+    public void autoResultHasAtMostOneDesiredState() throws XPathExpressionException {
+        String eval = "//" + getNode() + "/" + "oslc_auto_v2:desiredState";
 
-		NodeList desiredStates = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);
+        NodeList desiredStates =
+                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-		assertTrue("oslc_auto_v2:desiredState"+getFailureMessage(), (desiredStates.getLength()<=1));
-	}
+        assertTrue(
+                "oslc_auto_v2:desiredState" + getFailureMessage(),
+                (desiredStates.getLength() <= 1));
+    }
 
-	@Test
-	public void autoResultHasOneReportsOnLink() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_auto_v2:reportsOnAutomationPlan";
+    @Test
+    public void autoResultHasOneReportsOnLink() throws XPathExpressionException {
+        String eval = "//" + getNode() + "/" + "oslc_auto_v2:reportsOnAutomationPlan";
 
-		NodeList executes = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);
+        NodeList executes =
+                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-		assertEquals("oslc_auto_v2:reportsOnAutomationPlan"+getFailureMessage(),1, executes.getLength());
-	}
+        assertEquals(
+                "oslc_auto_v2:reportsOnAutomationPlan" + getFailureMessage(),
+                1,
+                executes.getLength());
+    }
 
-	@Test
-	public void autoResultHasOneProducedByLink() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_auto_v2:producedByAutomationRequest";
+    @Test
+    public void autoResultHasOneProducedByLink() throws XPathExpressionException {
+        String eval = "//" + getNode() + "/" + "oslc_auto_v2:producedByAutomationRequest";
 
-		NodeList executes = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);
+        NodeList executes =
+                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-		assertEquals("oslc_auto_v2:producedByAutomationRequest"+getFailureMessage(),1, executes.getLength());
-	}
+        assertEquals(
+                "oslc_auto_v2:producedByAutomationRequest" + getFailureMessage(),
+                1,
+                executes.getLength());
+    }
 }

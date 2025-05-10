@@ -19,13 +19,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -45,245 +43,289 @@ import org.xml.sax.SAXException;
 
 @RunWith(Parameterized.class)
 public class GetAndUpdateXmlTests extends GetAndUpdateBase {
-	private Document hasDocument;
+    private Document hasDocument;
 
-	public GetAndUpdateXmlTests(String thisUrl) throws IOException, ParserConfigurationException, SAXException {
-		super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
+    public GetAndUpdateXmlTests(String thisUrl)
+            throws IOException, ParserConfigurationException, SAXException {
+        super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
 
-		assetUrl = createAsset(xmlCreateTemplate);
-		assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+        assetUrl = createAsset(xmlCreateTemplate);
+        assertTrue(
+                "The location of the asset after it was create was not returned", assetUrl != null);
 
-		String resp = getAssetAsString();
-		hasDocument = OSLCUtils.createXMLDocFromResponseBody(resp);
-	}
+        String resp = getAssetAsString();
+        hasDocument = OSLCUtils.createXMLDocFromResponseBody(resp);
+    }
 
-	@Test
-	public void assetHasAtMostOneModel() {
-		assertTrue(isOneOrNone(hasDocument, "oslc_asset:model"));
-	}
+    @Test
+    public void assetHasAtMostOneModel() {
+        assertTrue(isOneOrNone(hasDocument, "oslc_asset:model"));
+    }
 
-	@Test
-	public void assetHasAtMostOneSerialNumber() {
-		assertTrue(isOneOrNone(hasDocument, "oslc_asset:serialNumber"));
-	}
+    @Test
+    public void assetHasAtMostOneSerialNumber() {
+        assertTrue(isOneOrNone(hasDocument, "oslc_asset:serialNumber"));
+    }
 
-	@Test
-	public void assetHasArtifactFactory() {
-		assertTrue("Artifact Factory was not found", hasNode(hasDocument, "oslc_asset:artifactFactory"));
-	}
+    @Test
+    public void assetHasArtifactFactory() {
+        assertTrue(
+                "Artifact Factory was not found",
+                hasNode(hasDocument, "oslc_asset:artifactFactory"));
+    }
 
-	@Test
-	public void assetHasAtMostOneGuid() {
-		assertTrue("Multiple guids returned", isOneOrNone(hasDocument, "oslc_asset:guid"));
-	}
+    @Test
+    public void assetHasAtMostOneGuid() {
+        assertTrue("Multiple guids returned", isOneOrNone(hasDocument, "oslc_asset:guid"));
+    }
 
-	@Test
-	public void assetHasAtMostOneVersion() {
-		assertTrue("Multiple versions returned", isOneOrNone(hasDocument, "oslc_asset:version"));
-	}
+    @Test
+    public void assetHasAtMostOneVersion() {
+        assertTrue("Multiple versions returned", isOneOrNone(hasDocument, "oslc_asset:version"));
+    }
 
-	@Test
-	public void assetHasAtMostOneAbstract() {
-		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ABSTRACT));
-	}
+    @Test
+    public void assetHasAtMostOneAbstract() {
+        assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ABSTRACT));
+    }
 
+    @Test
+    public void assetHasAtMostOneType() {
+        assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_TYPE));
+    }
 
-	@Test
-	public void assetHasAtMostOneType() {
-		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_TYPE));
-	}
+    @Test
+    public void assetHasAtMostOneState() {
+        assertTrue(isOneOrNone(hasDocument, "oslc_asset:state"));
+    }
 
-	@Test
-	public void assetHasAtMostOneState() {
-		assertTrue(isOneOrNone(hasDocument, "oslc_asset:state"));
-	}
+    @Test
+    public void assetHasAtMostOneManufacturer() {
+        assertTrue(isOneOrNone(hasDocument, "oslc_asset:manufacturer"));
+    }
 
-	@Test
-	public void assetHasAtMostOneManufacturer() {
-		assertTrue(isOneOrNone(hasDocument, "oslc_asset:manufacturer"));
-	}
+    @Test
+    public void assetHasAtMostOneIdentifier() {
+        assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ID));
+    }
 
-	@Test
-	public void assetHasAtMostOneIdentifier(){
-		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ID));
-	}
+    @Test
+    public void assetHasAtMostOneDescription() {
+        assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_DESC));
+    }
 
-	@Test
-	public void assetHasAtMostOneDescription() {
-		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_DESC));
-	}
+    @Test
+    public void assetHasTitle() {
+        assertTrue("Title was not found", hasNode(hasDocument, OSLCConstants.DCTERMS_TITLE));
+    }
 
-	@Test
-	public void assetHasTitle() {
-		assertTrue("Title was not found", hasNode(hasDocument, OSLCConstants.DCTERMS_TITLE));
-	}
+    @Test
+    public void assetHasAtMostOneCreatedDate() {
+        assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_CREATED));
+    }
 
-	@Test
-	public void assetHasAtMostOneCreatedDate() {
-		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_CREATED));
-	}
+    @Test
+    public void assetHasAtMostOneModifiedDate() {
+        assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_MODIFIED));
+    }
 
-	@Test
-	public void assetHasAtMostOneModifiedDate() {
-		assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_MODIFIED));
-	}
+    @Test
+    public void assetHasAtMostOneInstanceShape() {
+        assertTrue(isOneOrNone(hasDocument, "oslc:instanceShape"));
+    }
 
-	@Test
-	public void assetHasAtMostOneInstanceShape() {
-		assertTrue(isOneOrNone(hasDocument, "oslc:instanceShape"));
-	}
+    @Test
+    public void updateAnAssetProperty()
+            throws IOException,
+                    ParseException,
+                    ParserConfigurationException,
+                    SAXException,
+                    TransformerException,
+                    XPathExpressionException {
+        // Get the asset
+        String resp = getAssetAsString();
+        Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
 
-	@Test
-	public void updateAnAssetProperty()
-			throws IOException, ParseException, ParserConfigurationException, SAXException,
-			TransformerException, XPathExpressionException {
-		// Get the asset
-		String resp = getAssetAsString();
-		Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
+        // Updates the title
+        String name = "updated asset";
+        NodeList nodes = getAssetNodeChildren(document);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeName().equals("dcterms:title")) {
+                node.setTextContent(name);
+            }
+        }
+        String content = OSLCUtils.createStringFromXMLDoc(document);
+        // Update the asset
+        putAsset(content);
 
-		// Updates the title
-		String name = "updated asset";
-		NodeList nodes = getAssetNodeChildren(document);
-		for(int i = 0; i < nodes.getLength(); i++) {
-			Node node = nodes.item(i);
-			if(node.getNodeName().equals("dcterms:title")) {
-				node.setTextContent(name);
-			}
-		}
-		String content = OSLCUtils.createStringFromXMLDoc(document);
-		// Update the asset
-		putAsset(content);
+        // Get the asset again to verify it the asset was updated
+        resp = getAssetAsString();
+        document = OSLCUtils.createXMLDocFromResponseBody(resp);
 
-		// Get the asset again to verify it the asset was updated
-		resp = getAssetAsString();
-		document = OSLCUtils.createXMLDocFromResponseBody(resp);
+        NodeList children = getAssetNodeChildren(document);
+        String actualName = getNodeText(children, "dcterms:title");
+        assertTrue("Expected " + name + ", received " + actualName, name.equals(actualName));
+    }
 
-		NodeList children = getAssetNodeChildren(document);
-		String actualName = getNodeText(children, "dcterms:title");
-		assertTrue("Expected " + name + ", received " + actualName, name.equals(actualName));
-	}
+    @Test
+    public void addArtifactToAsset()
+            throws IOException,
+                    ParseException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException {
+        String artifactFactory = getArtifactFactory();
+        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
 
-	@Test
-	public void addArtifactToAsset()
-			throws IOException, ParseException, ParserConfigurationException, SAXException, XPathExpressionException {
-		String artifactFactory = getArtifactFactory();
-		Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+        assertTrue("There needs to be an artifact template file", fileName != null);
+        String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-		String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
-		assertTrue("There needs to be an artifact template file", fileName != null);
-		String artifact = OSLCUtils.readFileByNameAsString(fileName);
+        HttpResponse response =
+                OSLCUtils.postDataToUrl(
+                        artifactFactory,
+                        creds,
+                        OSLCConstants.CT_XML,
+                        OSLCConstants.CT_XML,
+                        artifact,
+                        header);
+        EntityUtils.consume(response.getEntity());
+        assertTrue(
+                "Expected "
+                        + HttpStatus.SC_CREATED
+                        + ", received "
+                        + response.getStatusLine().getStatusCode(),
+                response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
+    }
 
-		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  creds,
-					OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
-		EntityUtils.consume(response.getEntity());
-		assertTrue("Expected "+HttpStatus.SC_CREATED + ", received " + response.getStatusLine().getStatusCode(),
-				response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
-	}
+    @Test
+    public void uploadArtifact()
+            throws XPathExpressionException,
+                    IOException,
+                    ParserConfigurationException,
+                    SAXException {
+        String artifactFactory = getArtifactFactory();
+        uploadArtifact(artifactFactory);
+    }
 
-	@Test
-	public void uploadArtifact()
-			throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
-		String artifactFactory = getArtifactFactory();
-		uploadArtifact(artifactFactory);
-	}
+    @Test
+    public void downloadArtifact()
+            throws XPathExpressionException,
+                    IOException,
+                    ParserConfigurationException,
+                    SAXException {
+        String artifactFactory = getArtifactFactory();
+        String location = uploadArtifact(artifactFactory);
+        downloadArtifact(location);
+    }
 
-	@Test
-	public void downloadArtifact() throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
-		String artifactFactory = getArtifactFactory();
-		String location = uploadArtifact(artifactFactory);
-		downloadArtifact(location);
-	}
+    @Test
+    public void removeArtifactFromAsset()
+            throws IOException,
+                    TransformerException,
+                    ParseException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException {
+        String artifactFactory = getArtifactFactory();
 
-	@Test
-	public void removeArtifactFromAsset()
-			throws IOException, TransformerException, ParseException, ParserConfigurationException, SAXException, XPathExpressionException
-	{
-		String artifactFactory = getArtifactFactory();
+        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
 
-		Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
+        assertTrue("There needs to be an artifact template file", fileName != null);
+        String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-		String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
-		assertTrue("There needs to be an artifact template file", fileName != null);
-		String artifact = OSLCUtils.readFileByNameAsString(fileName);
+        // Adds the artifact to the asset
+        HttpResponse response =
+                OSLCUtils.postDataToUrl(
+                        artifactFactory,
+                        creds,
+                        OSLCConstants.CT_XML,
+                        OSLCConstants.CT_XML,
+                        artifact,
+                        header);
+        EntityUtils.consume(response.getEntity());
 
-		// Adds the artifact to the asset
-		HttpResponse response = OSLCUtils.postDataToUrl(artifactFactory,  creds,
-				OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
-		EntityUtils.consume(response.getEntity());
+        // Gets the asset with the artifact added to it
+        String resp = getAssetAsString();
+        Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
 
-		// Gets the asset with the artifact added to it
-		String resp = getAssetAsString();
-		Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
+        // Removes the artifact from the asset
+        NodeList nodes = getAssetNodeChildren(document);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeName().equals("oslc_asset:artifact")) {
+                node.getParentNode().removeChild(node);
+            }
+        }
 
-		// Removes the artifact from the asset
-		NodeList nodes = getAssetNodeChildren(document);
-		for(int i = 0; i < nodes.getLength(); i++) {
-			Node node = nodes.item(i);
-			if(node.getNodeName().equals("oslc_asset:artifact")) {
-				node.getParentNode().removeChild(node);
-			}
-		}
+        String content = OSLCUtils.createStringFromXMLDoc(document);
+        putAsset(content);
+        resp = getAssetAsString();
+        document = OSLCUtils.createXMLDocFromResponseBody(resp);
 
-		String content = OSLCUtils.createStringFromXMLDoc(document);
-		putAsset(content);
-		resp = getAssetAsString();
-		document = OSLCUtils.createXMLDocFromResponseBody(resp);
+        // Tests to verify that the artifact was removed
+        nodes = getAssetNodeChildren(document);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeName().equals("oslc_asset:artifact")) {
+                fail("The artifact was not removed");
+            }
+        }
+    }
 
-		// Tests to verify that the artifact was removed
-		nodes = getAssetNodeChildren(document);
-		for(int i = 0; i < nodes.getLength(); i++) {
-			Node node = nodes.item(i);
-			if(node.getNodeName().equals("oslc_asset:artifact")) {
-				fail("The artifact was not removed");
-			}
-		}
-	}
+    private boolean hasNode(Document document, String tagName) {
+        return document.getElementsByTagName(tagName).getLength() == 1;
+    }
 
-	private boolean hasNode(Document document, String tagName){
-		return document.getElementsByTagName(tagName).getLength() == 1;
-	}
+    private boolean isOneOrNone(Document document, String tagName) {
+        return document.getElementsByTagName(tagName).getLength() <= 1;
+    }
 
-	private boolean isOneOrNone(Document document, String tagName) {
-		return document.getElementsByTagName(tagName).getLength() <= 1;
-	}
+    private NodeList getAssetNodeChildren(Document document) throws XPathExpressionException {
+        String path = "/rdf:RDF/oslc_asset:Asset";
+        XPath xpath = OSLCUtils.getXPath();
+        Node asset = (Node) xpath.evaluate(path, document, XPathConstants.NODE);
+        return asset.getChildNodes();
+    }
 
-	private NodeList getAssetNodeChildren(Document document) throws XPathExpressionException {
-		String path = "/rdf:RDF/oslc_asset:Asset";
-		XPath xpath = OSLCUtils.getXPath();
-		Node asset = (Node) xpath.evaluate(path, document, XPathConstants.NODE);
-		return asset.getChildNodes();
-	}
+    private String getNodeText(NodeList nodes, String nodeName) {
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeName().equals(nodeName)) {
+                return node.getTextContent();
+            }
+        }
+        return null;
+    }
 
-	private String getNodeText(NodeList nodes, String nodeName) {
-		for(int i = 0; i < nodes.getLength(); i++) {
-			Node node = nodes.item(i);
-			if(node.getNodeName().equals(nodeName)) {
-				return node.getTextContent();
-			}
-		}
-		return null;
-	}
+    private String getNodeAttribute(NodeList nodes, String nodeName, String attr) {
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeName().equals(nodeName)) {
+                NamedNodeMap attributes = node.getAttributes();
+                return attributes.getNamedItem(attr).getNodeValue();
+            }
+        }
+        return null;
+    }
 
-	private String getNodeAttribute(NodeList nodes, String nodeName, String attr) {
-		for(int i = 0; i < nodes.getLength(); i++) {
-			Node node = nodes.item(i);
-			if(node.getNodeName().equals(nodeName)) {
-				NamedNodeMap attributes = node.getAttributes();
-				return attributes.getNamedItem(attr).getNodeValue();
-			}
-		}
-		return null;
-	}
+    private String getArtifactFactory()
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException {
+        String resp = getAssetAsString();
+        Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
 
-	private String getArtifactFactory() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-		String resp = getAssetAsString();
-		Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
-
-		// Gets the artifact factory from the asset
-		NodeList nodes = getAssetNodeChildren(document);
-		String artifactFactory = getNodeAttribute(nodes, "oslc_asset:artifactFactory", "rdf:resource");
-		assertTrue("There needs to be an artifact factory",
-				artifactFactory != null && artifactFactory.length() > 0);
-		return artifactFactory;
-	}
+        // Gets the artifact factory from the asset
+        NodeList nodes = getAssetNodeChildren(document);
+        String artifactFactory =
+                getNodeAttribute(nodes, "oslc_asset:artifactFactory", "rdf:resource");
+        assertTrue(
+                "There needs to be an artifact factory",
+                artifactFactory != null && artifactFactory.length() > 0);
+        return artifactFactory;
+    }
 }

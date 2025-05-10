@@ -20,13 +20,11 @@ package org.eclipse.lyo.testsuite.oslcv2.auto;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-
-import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
+import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
@@ -36,38 +34,38 @@ import org.xml.sax.SAXException;
  * plan's URL directly. It runs the equality query from the properties file and grabs the first result
  * to test against, checking the relationship of elements in the XML representation of the automation plan.
  */
-//@RunWith(Parameterized.class)
+// @RunWith(Parameterized.class)
 public class AutomationPlanXmlTests extends CoreResourceXmlTests {
 
-	public AutomationPlanXmlTests(String thisUrl) throws IOException,
-			ParserConfigurationException, SAXException,
-			XPathExpressionException {
+    public AutomationPlanXmlTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException {
 
-		super(thisUrl);
-		setNode(ns, resource);
-	}
+        super(thisUrl);
+        setNode(ns, resource);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls()
-		throws IOException, ParserConfigurationException, SAXException, XPathException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls()
+            throws IOException, ParserConfigurationException, SAXException, XPathException {
 
-		TestsBase.staticSetup();
+        TestsBase.staticSetup();
 
-		String useThisAutoPlan = setupProps.getProperty("useThisAutoPlan");
-		if ( useThisAutoPlan != null ) {
-			ArrayList<String> results = new ArrayList<String>();
-			results.add(useThisAutoPlan);
-			return toCollection(results);
-		}
+        String useThisAutoPlan = setupProps.getProperty("useThisAutoPlan");
+        if (useThisAutoPlan != null) {
+            ArrayList<String> results = new ArrayList<String>();
+            results.add(useThisAutoPlan);
+            return toCollection(results);
+        }
 
-		setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
-		setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
-		return getAllDescriptionUrls(eval);
-	}
+        setResourceTypeQuery(OSLCConstants.CORE_DEFAULT);
+        setxpathSubStmt("//oslc_v2:usage/@rdf:resource");
+        return getAllDescriptionUrls(eval);
+    }
 
-	public static String ns = "oslc_auto_v2";
-	public static String resource = "AutomationPlan";
-	public static String eval = "//rdfs:member/@rdf:resource";
-
-
+    public static String ns = "oslc_auto_v2";
+    public static String resource = "AutomationPlan";
+    public static String eval = "//rdfs:member/@rdf:resource";
 }

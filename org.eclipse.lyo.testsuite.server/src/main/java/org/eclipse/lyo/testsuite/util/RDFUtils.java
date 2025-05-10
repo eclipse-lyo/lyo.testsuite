@@ -15,27 +15,25 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.util;
 
-import java.util.Iterator;
-
-import org.junit.Assert;
-
 import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.reasoner.ValidityReport;
+import java.util.Iterator;
+import org.junit.Assert;
 
 public class RDFUtils {
 
-	public static void printModel(Model rdfModel) {
-		StmtIterator listProperties = rdfModel.listStatements();
-		System.out.println("Dumping triples....");
-		while (listProperties.hasNext()) {
-			System.out.println(listProperties.nextStatement().toString());
-		}
-	}
+    public static void printModel(Model rdfModel) {
+        StmtIterator listProperties = rdfModel.listStatements();
+        System.out.println("Dumping triples....");
+        while (listProperties.hasNext()) {
+            System.out.println(listProperties.nextStatement().toString());
+        }
+    }
 
-	public static void validateModel(Model model) {
+    public static void validateModel(Model model) {
 
         InfModel infmodel = ModelFactory.createRDFSModel(model);
         ValidityReport validityReport = infmodel.validate();
@@ -43,11 +41,11 @@ public class RDFUtils {
         if (!validityReport.isClean()) {
 
             StringBuffer errorMessage = new StringBuffer();
-            errorMessage.append("Invalid model:"); //$NON-NLS-1$
+            errorMessage.append("Invalid model:"); // $NON-NLS-1$
 
             Iterator<ValidityReport.Report> reports = validityReport.getReports();
 
-            while(reports.hasNext()){
+            while (reports.hasNext()) {
 
                 errorMessage.append('\n');
                 errorMessage.append(reports.next().toString());

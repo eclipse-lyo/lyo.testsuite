@@ -16,96 +16,95 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Scanner;
-
 import org.apache.http.client.HttpClient;
 import org.apache.http.protocol.HttpContext;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 public class TestCore {
 
     protected static final String FileSep = File.separator;
 
-	protected static final String RESOURCES =
-			"src" + FileSep + "main" + FileSep + "resources";
-	private static final String CONFIG_PROPERTIES =
-			RESOURCES + FileSep + "config.properties";
+    protected static final String RESOURCES = "src" + FileSep + "main" + FileSep + "resources";
+    private static final String CONFIG_PROPERTIES = RESOURCES + FileSep + "config.properties";
 
-	protected static void printResource(Resource resource) {
-		for(Statement stmt : resource.listProperties().toList()) {
-			System.out.println(stmt.getSubject().getLocalName() + " " + stmt.getPredicate().getLocalName() + " " + stmt.getObject().toString());
-		}
-	}
+    protected static void printResource(Resource resource) {
+        for (Statement stmt : resource.listProperties().toList()) {
+            System.out.println(
+                    stmt.getSubject().getLocalName()
+                            + " "
+                            + stmt.getPredicate().getLocalName()
+                            + " "
+                            + stmt.getObject().toString());
+        }
+    }
 
-	protected static Resource getResource(String uri, HttpClient httpClient, HttpContext httpContext, String acceptType)
-	throws  InterruptedException, FetchException
-	{
-		Model model = FetchUtil.fetchResource(uri, httpClient, httpContext, acceptType);
+    protected static Resource getResource(
+            String uri, HttpClient httpClient, HttpContext httpContext, String acceptType)
+            throws InterruptedException, FetchException {
+        Model model = FetchUtil.fetchResource(uri, httpClient, httpContext, acceptType);
 
-		return model.createResource(uri);
-	}
+        return model.createResource(uri);
+    }
 
-	protected static Properties getConfigPropertiesInstance()
-	throws FileNotFoundException, IOException
-	{
-		Properties prop = new Properties();
+    protected static Properties getConfigPropertiesInstance()
+            throws FileNotFoundException, IOException {
+        Properties prop = new Properties();
 
-		prop.load(new FileInputStream(CONFIG_PROPERTIES));
+        prop.load(new FileInputStream(CONFIG_PROPERTIES));
 
-		return prop;
-	}
+        return prop;
+    }
 
-	protected static void terminateTest(String addlMsg, Exception e) {
-		String errorMsg = Messages.getServerString("tests.core.error");
+    protected static void terminateTest(String addlMsg, Exception e) {
+        String errorMsg = Messages.getServerString("tests.core.error");
 
-		if(addlMsg != null) {
-			errorMsg += addlMsg;
-		}
+        if (addlMsg != null) {
+            errorMsg += addlMsg;
+        }
 
-		System.out.println(errorMsg);
-		e.printStackTrace();
+        System.out.println(errorMsg);
+        e.printStackTrace();
 
-		System.exit(1);
-	}
+        System.exit(1);
+    }
 
-	protected StmtIterator getStatementsForProp(Resource res, Property prop) {
-		return res.listProperties(prop);
-	}
+    protected StmtIterator getStatementsForProp(Resource res, Property prop) {
+        return res.listProperties(prop);
+    }
 
-	/**
-	 * This method is used to read the contents
-	 * of a file as a String
-	 * @param f
-	 * @return
-	 */
-	protected static String readFileAsString(File f) {
+    /**
+     * This method is used to read the contents
+     * of a file as a String
+     * @param f
+     * @return
+     */
+    protected static String readFileAsString(File f) {
 
-		StringBuilder stringBuilder = new StringBuilder();
-		Scanner scanner = null;
-		try {
-			scanner = new Scanner(f);
-		} catch (FileNotFoundException e) {
-			return null;
-		}
+        StringBuilder stringBuilder = new StringBuilder();
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(f);
+        } catch (FileNotFoundException e) {
+            return null;
+        }
 
-		try {
-			while (scanner.hasNextLine()) {
-				stringBuilder.append(scanner.nextLine() + "\n");
-			}
-		} finally {
-			scanner.close();
-		}
-		return stringBuilder.toString();
-	}
+        try {
+            while (scanner.hasNextLine()) {
+                stringBuilder.append(scanner.nextLine() + "\n");
+            }
+        } finally {
+            scanner.close();
+        }
+        return stringBuilder.toString();
+    }
 }

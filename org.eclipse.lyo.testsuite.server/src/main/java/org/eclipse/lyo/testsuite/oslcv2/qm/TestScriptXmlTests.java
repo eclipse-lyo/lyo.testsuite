@@ -15,45 +15,47 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
+import static org.junit.Assume.assumeTrue;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
-import static org.junit.Assume.assumeTrue;
-
 public class TestScriptXmlTests extends CoreResourceXmlTests {
 
-	public TestScriptXmlTests(String thisUrl)
-		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, NullPointerException {
+    public TestScriptXmlTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException,
+                    NullPointerException {
 
-		super(thisUrl);
-		setNode(ns, resource);
-	}
+        super(thisUrl);
+        setNode(ns, resource);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls()
-			throws IOException, ParserConfigurationException, SAXException, XPathException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls()
+            throws IOException, ParserConfigurationException, SAXException, XPathException {
 
-		staticSetup();
+        staticSetup();
 
-		// If a particular TestScript asset is specified, use it
-		String useThis = setupProps.getProperty("useThisTestScript");
-		assumeTrue(useThis != null && !"".equals(useThis));
-		ArrayList<String> results = new ArrayList<String>();
-		results.add(useThis);
+        // If a particular TestScript asset is specified, use it
+        String useThis = setupProps.getProperty("useThisTestScript");
+        assumeTrue(useThis != null && !"".equals(useThis));
+        ArrayList<String> results = new ArrayList<String>();
+        results.add(useThis);
 
-		return toCollection(results);
-	}
+        return toCollection(results);
+    }
 
-	public static String ns = "oslc_qm_v2";
-	public static String resource = "TestScript";
-	public static String eval = "//" + ns + ":" + resource + "/@rdf:about";
+    public static String ns = "oslc_qm_v2";
+    public static String resource = "TestScript";
+    public static String eval = "//" + ns + ":" + resource + "/@rdf:about";
 }

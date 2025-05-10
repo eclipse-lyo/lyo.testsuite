@@ -19,39 +19,34 @@ import java.security.Principal;
 
 public class OAuthConsumerPrincipal implements Principal {
 
-	private String key;
+    private String key;
 
-	public OAuthConsumerPrincipal(String key) {
-		this.key = key;
-	}
+    public OAuthConsumerPrincipal(String key) {
+        this.key = key;
+    }
 
-	@Override
-	public String getName() {
-		return key;
-	}
+    @Override
+    public String getName() {
+        return key;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((key == null) ? 0 : key.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OAuthConsumerPrincipal other = (OAuthConsumerPrincipal) obj;
-		if (key == null) {
-			if (other.key != null)
-				return false;
-		} else if (!key.equals(other.key))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        OAuthConsumerPrincipal other = (OAuthConsumerPrincipal) obj;
+        if (key == null) {
+            if (other.key != null) return false;
+        } else if (!key.equals(other.key)) return false;
+        return true;
+    }
 }
