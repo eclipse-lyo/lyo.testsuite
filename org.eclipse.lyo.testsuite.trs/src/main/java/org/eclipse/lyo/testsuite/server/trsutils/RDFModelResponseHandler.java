@@ -8,9 +8,9 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- * 
+ *
  * Contributors:
- * 
+ *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *******************************************************************************/
 
@@ -28,7 +28,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.lyo.core.trs.HttpConstants;
 import org.openjena.riot.ContentType;
 import org.openjena.riot.Lang;
 import org.openjena.riot.WebContent;
@@ -65,11 +64,11 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
 			}
 
 			if (entity == null)
-				
+
 				throw new InvalidRDFResourceException(
 						MessageFormat.format(
 								Messages.getServerString("rdf.model.response.helper.missing.rdf"), //$NON-NLS-1$
-								base.getURI())); 
+								base.getURI()));
 
 			String rdfFormat = null;
 			final Header contentTypeHeader = response.getFirstHeader(HttpConstants.CONTENT_TYPE);
@@ -91,7 +90,7 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
 						MessageFormat.format(
 								Messages.getServerString("rdf.model.response.helper.bad.content.type"), //$NON-NLS-1$
 								base.getURI()));
-			
+
 			String content = EntityUtils.toString(entity, HTTP.UTF_8);
 			try {
 				model.read(new StringReader(content), base.getURI(), rdfFormat);
@@ -101,12 +100,12 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
 					Thread.currentThread().interrupt();
 					throw (IOException) new IOException().initCause(e);
 				}
-				
+
 				throw new InvalidRDFResourceException(
 						MessageFormat.format(
 								Messages.getServerString("rdf.model.response.helper.unparseable.rdf"), //$NON-NLS-1$
-								base.getURI(), 
-								content), e); 
+								base.getURI(),
+								content), e);
 			}
 
 			HttpResponseUtil.finalize(response);
@@ -132,7 +131,7 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
 
 	/**
 	 * Return the supported authentication types of the server.
-	 * 
+	 *
 	 * @return authTypes - The value of the server's WWW-Authenticate header
 	 */
 	public Header[] getAuthTypes() {

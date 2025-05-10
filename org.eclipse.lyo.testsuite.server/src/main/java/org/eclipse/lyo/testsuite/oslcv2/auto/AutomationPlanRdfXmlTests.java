@@ -16,8 +16,6 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
