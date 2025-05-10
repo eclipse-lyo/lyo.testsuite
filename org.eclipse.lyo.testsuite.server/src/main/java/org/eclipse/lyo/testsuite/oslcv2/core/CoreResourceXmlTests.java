@@ -35,7 +35,6 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -44,7 +43,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

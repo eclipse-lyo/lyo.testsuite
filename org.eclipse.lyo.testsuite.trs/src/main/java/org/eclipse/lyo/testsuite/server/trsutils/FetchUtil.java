@@ -8,9 +8,9 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- * 
+ *
  * Contributors:
- * 
+ *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *******************************************************************************/
 
@@ -39,7 +39,6 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HttpContext;
 import org.apache.xerces.impl.dv.util.Base64;
-import org.eclipse.lyo.core.trs.HttpConstants;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -50,15 +49,15 @@ import com.hp.hpl.jena.rdf.model.Model;
 public class FetchUtil {
 	/**
 	 * Fetches a resource. In case of success, this method
-	 * returns an instance of the {@link Model}. 
-	 * 
+	 * returns an instance of the {@link Model}.
+	 *
 	 * @param uri
 	 *            resource uri to fetch
 	 * @param httpClient
 	 *            client used to fetch the resource
 	 * @param httpContext
 	 *            http context to use for the call
-	 * @param acceptType 
+	 * @param acceptType
 	 * 			  value to use in the accept header
 	 * @throws InterruptedException
 	 *             if the thread is interrupted
@@ -68,8 +67,8 @@ public class FetchUtil {
 	 *             if an error occurs while updating the retryable error
 	 *             information into the error handler
 	 */
-	public static Model fetchResource(String uri, HttpClient httpClient, HttpContext httpContext, String acceptType) 
-	throws InterruptedException, FetchException 
+	public static Model fetchResource(String uri, HttpClient httpClient, HttpContext httpContext, String acceptType)
+	throws InterruptedException, FetchException
 	{
 		if (uri == null)
 			throw new IllegalArgumentException(
@@ -77,14 +76,14 @@ public class FetchUtil {
 		if (httpClient == null)
 			throw new IllegalArgumentException(
 					Messages.getServerString("fetch.util.httpclient.null")); //$NON-NLS-1$
-		
+
 		Model model = null;
-		
+
 		try {
 			new URL(uri); // Make sure URL is valid
-			
+
 			HttpGet get = new HttpGet(uri);
-			
+
 			get.setHeader(HttpConstants.ACCEPT, acceptType);
 
 			// Caches must revalidate with origin server. This is to prevent a cache
@@ -93,9 +92,9 @@ public class FetchUtil {
 			// See Unspecified end-to-end revalidation:
 			// http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.4
 			get.addHeader(HttpConstants.CACHE_CONTROL, "max-age=0"); //$NON-NLS-1$
-			
+
 			RDFModelResponseHandler handler = new RDFModelResponseHandler(uri);
-			
+
 			// Try to access the uri directly.  If this fails attempt to retry
 			// using authentication.
 			try {
@@ -107,24 +106,24 @@ public class FetchUtil {
 			}
 		} catch (Exception e) {
 			String uriLocation = Messages.getServerString("fetch.util.uri.unidentifiable"); //$NON-NLS-1$
-			
+
 			if(uri != null && !uri.isEmpty())
 			{
 				uriLocation = uri;
 			}
-				
+
 			throw new FetchException(MessageFormat.format(
 					Messages.getServerString("fetch.util.retrieve.error"), //$NON-NLS-1$
-					uriLocation), e); 
+					uriLocation), e);
 		}
 
 		return model;
 	}
 
 	/**
-	 * This method performs authentication based on the config.properties' 
+	 * This method performs authentication based on the config.properties'
 	 * AuthType setting.
-	 * 
+	 *
 	 * @param uri
 	 * @param httpClient
 	 * @param httpContext
@@ -146,17 +145,17 @@ public class FetchUtil {
 		// the WWW-Authenticate header.
 		String override = TestCore.getConfigPropertiesInstance().getProperty("AuthType");
 		AuthenticationTypes overrideType = AuthenticationTypes.valueOf(override.toUpperCase());
-		
-		switch (overrideType) {				
+
+		switch (overrideType) {
 			case OAUTH:
 				return perform2LeggedOauth(httpClient, httpContext, get, uri);
-			
+
 			case BASIC:
 				return performBasicAuthentication(httpClient, httpContext, get, uri);
-				
-			case HEADER: 
+
+			case HEADER:
 				Header authTypes[] = handler.getAuthTypes();
-			
+
 				// Determine the authentication type to attempt based on the
 				// server's response. Attempt the first type encountered that
 				// both the server and the tests support.
@@ -168,14 +167,14 @@ public class FetchUtil {
 					}
 				}
 		}
-		
+
 		throw new InvalidRDFResourceException(Messages.getServerString("fetch.util.authentication.unknown"));
 	}
 
 	/**
 	 * This method uses the username and password specified in config.properties
 	 * to attempt basic authentication against a resource server.
-	 * 
+	 *
 	 * @param httpClient
 	 * @param httpContext
 	 * @param get
@@ -189,33 +188,33 @@ public class FetchUtil {
 		Properties prop = TestCore.getConfigPropertiesInstance();
 		String username = prop.getProperty("username");
 		String password = prop.getProperty("password");
-		
+
 		// Construct the authentication header by using Base64 encoding on the
 		// supplied username and password
 		String authString = username + ":" + password;
 		authString = new String(Base64.encode(authString.getBytes(HttpConstants.DEFAULT_ENCODING)));
 		authString = "Basic " + authString;
-		
+
 		get.setHeader("Authorization", authString);
 		get.setHeader("OSLC-Core-Version", "2.0");
-		
+
 		Model model = null;
-		
+
 		try {
 			model = httpClient.execute(get, new RDFModelResponseHandler(uri), httpContext);
 		} catch (Exception e) {
 			TestCore.terminateTest(Messages.getServerString("fetch.util.authentication.failure"), e);
 		}
-	
+
 		return model;
 	}
 
 	/**
-	 * This method attempts to authenticate with a server using OAuth two 
+	 * This method attempts to authenticate with a server using OAuth two
 	 * legged authentication.  A functional user with a consumer key and secret
 	 * must have already been created on the resource server and specified in
 	 * the config.properties file.
-	 * 
+	 *
 	 * @param httpClient
 	 * @param httpContext
 	 * @param get
@@ -232,7 +231,7 @@ public class FetchUtil {
 		String consumerSecret = prop.getProperty("consumerSecret");
 		String authorizationTokenURL = prop.getProperty("OAuthURL");
 		String oAuthRealm = prop.getProperty("OAuthRealm");
-		
+
 		// Using the information from the config.properties file
 		// construct the authentication header to use in our GET request
 		OAuthServiceProvider provider = new OAuthServiceProvider(null, authorizationTokenURL, null);
@@ -241,22 +240,22 @@ public class FetchUtil {
 		accessor.accessToken = "";
 
 		Model model = null;
-		
+
 		try {
 			OAuthMessage message = accessor.newRequestMessage(HttpMethod.GET, uri, null);
 			String authHeader = message.getAuthorizationHeader(oAuthRealm);
-			
+
 			get.setHeader("Authorization",authHeader);
 			get.setHeader("OSLC-Core-Version", "2.0");
-			
+
 			model = httpClient.execute(get, new RDFModelResponseHandler(uri), httpContext);
 		} catch (OAuthException e) {
 			TestCore.terminateTest(Messages.getServerString("fetch.util.authentication.failure"), e);
 		}
-		
+
 		return model;
 	}
-	
+
 	/**
 	 * A list of the currently supported authentication types.  The user specifies
 	 * the desired type in the config.properties' AuthType property.

@@ -8,15 +8,14 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- * 
+ *
  * Contributors:
- * 
+ *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *******************************************************************************/
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-import static org.eclipse.lyo.core.trs.TRSConstants.FileSep;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,9 +24,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Scanner;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HttpContext;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -37,53 +34,55 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 public class TestCore {
-	
-	protected static final String RESOURCES = 
+
+    protected static final String FileSep = File.separator;
+
+	protected static final String RESOURCES =
 			"src" + FileSep + "main" + FileSep + "resources";
-	private static final String CONFIG_PROPERTIES = 
+	private static final String CONFIG_PROPERTIES =
 			RESOURCES + FileSep + "config.properties";
-	
+
 	protected static void printResource(Resource resource) {
 		for(Statement stmt : resource.listProperties().toList()) {
 			System.out.println(stmt.getSubject().getLocalName() + " " + stmt.getPredicate().getLocalName() + " " + stmt.getObject().toString());
 		}
 	}
-	
-	protected static Resource getResource(String uri, HttpClient httpClient, HttpContext httpContext, String acceptType) 
+
+	protected static Resource getResource(String uri, HttpClient httpClient, HttpContext httpContext, String acceptType)
 	throws  InterruptedException, FetchException
 	{
 		Model model = FetchUtil.fetchResource(uri, httpClient, httpContext, acceptType);
-			
+
 		return model.createResource(uri);
 	}
 
-	protected static Properties getConfigPropertiesInstance() 
-	throws FileNotFoundException, IOException 
+	protected static Properties getConfigPropertiesInstance()
+	throws FileNotFoundException, IOException
 	{
 		Properties prop = new Properties();
-		
+
 		prop.load(new FileInputStream(CONFIG_PROPERTIES));
-		
+
 		return prop;
 	}
-	
+
 	protected static void terminateTest(String addlMsg, Exception e) {
 		String errorMsg = Messages.getServerString("tests.core.error");
-		
+
 		if(addlMsg != null) {
 			errorMsg += addlMsg;
 		}
-		
+
 		System.out.println(errorMsg);
 		e.printStackTrace();
-		
+
 		System.exit(1);
 	}
-	
+
 	protected StmtIterator getStatementsForProp(Resource res, Property prop) {
 		return res.listProperties(prop);
 	}
-	
+
 	/**
 	 * This method is used to read the contents
 	 * of a file as a String

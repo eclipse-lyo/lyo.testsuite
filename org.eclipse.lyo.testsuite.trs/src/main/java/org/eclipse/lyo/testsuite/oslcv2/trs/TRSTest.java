@@ -8,9 +8,9 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- * 
+ *
  * Contributors:
- * 
+ *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *******************************************************************************/
 
@@ -22,7 +22,6 @@ import java.text.MessageFormat;
 import java.util.Properties;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.DefaultedHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -50,16 +49,16 @@ public class TRSTest extends TestCore{
 	public static void setupOnce() {
 		try {
 			prop = getConfigPropertiesInstance();
-			
+
 			String trsEndpoint = prop.getProperty("configTrsEndpoint");
 			String acceptType = prop.getProperty("acceptType");
-			
+
 			httpClient = new EasySSLClient().getClient();
-				
-			httpContext = 
+
+			httpContext =
 					new DefaultedHttpContext(new BasicHttpContext(), new SyncBasicHttpContext(null));
-				
-			trsResource = getResource(trsEndpoint, httpClient, httpContext, acceptType);	
+
+			trsResource = getResource(trsEndpoint, httpClient, httpContext, acceptType);
 		} catch (FileNotFoundException e) {
 			terminateTest(Messages.getServerString("tests.general.config.properties.missing"), e);
 		} catch (InterruptedException e) {
@@ -74,7 +73,7 @@ public class TRSTest extends TestCore{
 	}
 
 	@Test
-	public void testTRSHasType() {	
+	public void testTRSHasType() {
 		try {
 			if(!trsResource.hasProperty(RDF.type, ITRSVocabulary.TRS_RESOURCE)) {
 				throw new InvalidTRSException(
@@ -88,9 +87,9 @@ public class TRSTest extends TestCore{
 			Assert.fail(MessageFormat.format(
 					Messages.getServerString("tests.general.error"),
 					e.getLocalizedMessage()));
-		}  
+		}
 	}
-	
+
 	@Test
 	public void testTRSHasBaseProperty() {
 		try {
@@ -106,16 +105,16 @@ public class TRSTest extends TestCore{
 			Assert.fail(MessageFormat.format(
 					Messages.getServerString("tests.general.error"),
 					e.getLocalizedMessage()));
-		} 
+		}
 	}
-	
+
 	@Test
 	public void testTRSBasePropertyIsResource() {
 		try {
 			if (trsResource.hasProperty(ITRSVocabulary.BASE_PROPERTY) && !trsResource.getProperty(ITRSVocabulary.BASE_PROPERTY).getObject().isResource()) {
 				throw new InvalidTRSException(
 					Messages.getServerString("validators.invalid.trs.base.property")); //$NON-NLS-1$
-			}	
+			}
 		} catch (InvalidTRSException e) {
 			e.printStackTrace();
 			Assert.fail(e.getLocalizedMessage());
@@ -124,16 +123,16 @@ public class TRSTest extends TestCore{
 			Assert.fail(MessageFormat.format(
 					Messages.getServerString("tests.general.error"),
 					e.getLocalizedMessage()));
-		} 
+		}
 	}
-	
+
 	@Test
 	public void testTRSHasExactlyOneBaseProperty() {
 		try {
 			if (trsResource.hasProperty(ITRSVocabulary.BASE_PROPERTY) && getStatementsForProp(trsResource,ITRSVocabulary.BASE_PROPERTY).toList().size()!=1) {
 				throw new InvalidTRSException(
 					Messages.getServerString("validators.invalid.trs.base.property")); //$NON-NLS-1$
-			}	
+			}
 		} catch (InvalidTRSException e) {
 			e.printStackTrace();
 			Assert.fail(e.getLocalizedMessage());
@@ -142,9 +141,9 @@ public class TRSTest extends TestCore{
 			Assert.fail(MessageFormat.format(
 					Messages.getServerString("tests.general.error"),
 					e.getLocalizedMessage()));
-		} 
+		}
 	}
-	
+
 	@Test
 	public void testTRSHasChangeLogProperty() {
 		try {
@@ -160,16 +159,16 @@ public class TRSTest extends TestCore{
 			Assert.fail(MessageFormat.format(
 					Messages.getServerString("tests.general.error"),
 					e.getLocalizedMessage()));
-		} 
+		}
 	}
-	
+
 	@Test
 	public void testTRSChangeLogPropertyIsResource() {
-		try {			
+		try {
 			if (trsResource.hasProperty(ITRSVocabulary.CHANGELOG_PROPERTY) && !trsResource.getProperty(ITRSVocabulary.CHANGELOG_PROPERTY).getObject().isResource()) {
 				throw new InvalidTRSException(
 					Messages.getServerString("validators.invalid.trs.changelog.property")); //$NON-NLS-1$
-			}	
+			}
 		} catch (InvalidTRSException e) {
 			e.printStackTrace();
 			Assert.fail(e.getLocalizedMessage());
@@ -178,16 +177,16 @@ public class TRSTest extends TestCore{
 			Assert.fail(MessageFormat.format(
 					Messages.getServerString("tests.general.error"),
 					e.getLocalizedMessage()));
-		} 
+		}
 	}
-	
+
 	@Test
 	public void testTRSHasExactlyOneChangeLogProperty() {
 		try {
 			if (trsResource.hasProperty(ITRSVocabulary.CHANGELOG_PROPERTY) && getStatementsForProp(trsResource,ITRSVocabulary.CHANGELOG_PROPERTY).toList().size()!=1) {
 				throw new InvalidTRSException(
 					Messages.getServerString("validators.invalid.trs.changelog.property")); //$NON-NLS-1$
-			}	
+			}
 		} catch (InvalidTRSException e) {
 			e.printStackTrace();
 			Assert.fail(e.getLocalizedMessage());
@@ -196,6 +195,6 @@ public class TRSTest extends TestCore{
 			Assert.fail(MessageFormat.format(
 					Messages.getServerString("tests.general.error"),
 					e.getLocalizedMessage()));
-		} 
+		}
 	}
 }
