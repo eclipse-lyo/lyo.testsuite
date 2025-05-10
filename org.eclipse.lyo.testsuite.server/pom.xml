@@ -98,8 +98,8 @@
 
     <dependency>
       <groupId>net.oauth.core</groupId>
-      <artifactId>oauth-httpclient4</artifactId>
-      <version>20090913</version>
+      <artifactId>oauth-httpclient3</artifactId>
+      <version>20090617</version>
     </dependency>
 
     <dependency>
