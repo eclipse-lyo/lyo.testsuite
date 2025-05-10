@@ -18,7 +18,6 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -26,15 +25,19 @@ import org.eclipse.lyo.testsuite.util.OSLCUtils;
 
 public class CreateAssetBase extends AssetTestBase {
 
-	public CreateAssetBase(String url, String acceptType, String contentType) {
-		super(url, acceptType, contentType);
-	}
+    public CreateAssetBase(String url, String acceptType, String contentType) {
+        super(url, acceptType, contentType);
+    }
 
-	protected void deletingAsset(String initialAsset) throws IOException {
-		assetUrl = createAsset(initialAsset);
-		HttpResponse resp = OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
-		EntityUtils.consume(resp.getEntity());
-		assertTrue("Expected "+HttpStatus.SC_OK + ", received " + resp.getStatusLine().getStatusCode(),
-				resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
-	}
+    protected void deletingAsset(String initialAsset) throws IOException {
+        assetUrl = createAsset(initialAsset);
+        HttpResponse resp = OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
+        EntityUtils.consume(resp.getEntity());
+        assertTrue(
+                "Expected "
+                        + HttpStatus.SC_OK
+                        + ", received "
+                        + resp.getStatusLine().getStatusCode(),
+                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+    }
 }

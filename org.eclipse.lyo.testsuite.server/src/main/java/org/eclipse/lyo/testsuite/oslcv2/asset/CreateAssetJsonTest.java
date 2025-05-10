@@ -18,7 +18,6 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.apache.wink.json4j.JSONException;
@@ -32,42 +31,43 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class CreateAssetJsonTest extends CreateAssetBase {
 
-	public CreateAssetJsonTest(String url) {
-		super(url, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
-	}
+    public CreateAssetJsonTest(String url) {
+        super(url, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
+    }
 
-	@Test
-	public void createSimpleAsset() throws IOException {
-		assetUrl = createAsset(jsonCreateTemplate);
-	}
+    @Test
+    public void createSimpleAsset() throws IOException {
+        assetUrl = createAsset(jsonCreateTemplate);
+    }
 
-	@Test
-	public void createAssetWithCategory() throws IOException, JSONException {
-		assetUrl = createAsset(readFileFromProperty("createWithCategoryTemplateJsonFile"));
-		String resp = getAssetAsString();
-		JSONObject asset = new JSONObject(resp);
-		assertTrue("The category was not set", asset.containsKey("oslc_asset:categorization"));
-	}
+    @Test
+    public void createAssetWithCategory() throws IOException, JSONException {
+        assetUrl = createAsset(readFileFromProperty("createWithCategoryTemplateJsonFile"));
+        String resp = getAssetAsString();
+        JSONObject asset = new JSONObject(resp);
+        assertTrue("The category was not set", asset.containsKey("oslc_asset:categorization"));
+    }
 
-	@Test
-	public void createAssetWithRelationship() throws IOException, JSONException {
-		String otherUrl = null;
-		try {
-			otherUrl = createAsset(jsonCreateTemplate);
-			String assetString = readFileFromProperty("createWithRelationshipTemplateJsonFile").replace("%s", otherUrl);
-			assetUrl = createAsset(assetString);
-			String resp = getAssetAsString();
-			JSONObject asset = new JSONObject(resp);
-			assertTrue("The category was not set", asset.get("dcterms:relation") != null);
-		} finally {
-			HttpResponse resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
-			EntityUtils.consume(resp.getEntity());
-		}
-	}
+    @Test
+    public void createAssetWithRelationship() throws IOException, JSONException {
+        String otherUrl = null;
+        try {
+            otherUrl = createAsset(jsonCreateTemplate);
+            String assetString =
+                    readFileFromProperty("createWithRelationshipTemplateJsonFile")
+                            .replace("%s", otherUrl);
+            assetUrl = createAsset(assetString);
+            String resp = getAssetAsString();
+            JSONObject asset = new JSONObject(resp);
+            assertTrue("The category was not set", asset.get("dcterms:relation") != null);
+        } finally {
+            HttpResponse resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
+            EntityUtils.consume(resp.getEntity());
+        }
+    }
 
-	@Test
-	public void deletingAsset() throws IOException
-	{
-		deletingAsset(jsonCreateTemplate);
-	}
+    @Test
+    public void deletingAsset() throws IOException {
+        deletingAsset(jsonCreateTemplate);
+    }
 }

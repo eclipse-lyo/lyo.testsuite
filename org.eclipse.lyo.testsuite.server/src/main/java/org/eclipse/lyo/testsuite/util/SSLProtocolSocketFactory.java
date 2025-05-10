@@ -21,90 +21,77 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-
+import javax.net.ssl.X509TrustManager;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.X509TrustManager;
-
-
-
 public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
 
-	public static final ProtocolSocketFactory INSTANCE = new SSLProtocolSocketFactory();
+    public static final ProtocolSocketFactory INSTANCE = new SSLProtocolSocketFactory();
 
-	private SSLContext ctx = null ;
+    private SSLContext ctx = null;
 
     private SSLProtocolSocketFactory() {
         super();
     }
 
-
     private class AcceptAllTrustManager implements X509TrustManager {
 
-            public void checkClientTrusted(X509Certificate[] arg0, String arg1)
-                            throws CertificateException {
-            }
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1)
+                throws CertificateException {}
 
-            public void checkServerTrusted(X509Certificate[] arg0, String arg1)
-                            throws CertificateException {
-            }
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1)
+                throws CertificateException {}
 
-            public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-            }
-
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
     }
 
-
-
-    public Socket createSocket(String host,int port,InetAddress cHost, int cPort) throws IOException, UnknownHostException {
-        return getSSLContext().getSocketFactory().createSocket(host,port,cHost,cPort
-        );
+    public Socket createSocket(String host, int port, InetAddress cHost, int cPort)
+            throws IOException, UnknownHostException {
+        return getSSLContext().getSocketFactory().createSocket(host, port, cHost, cPort);
     }
 
-    public Socket createSocket(String host,int port,InetAddress lAddress,int lPort,HttpConnectionParams parms)
-    		throws IOException, UnknownHostException, ConnectTimeoutException {
+    public Socket createSocket(
+            String host, int port, InetAddress lAddress, int lPort, HttpConnectionParams parms)
+            throws IOException, UnknownHostException, ConnectTimeoutException {
 
         return createSocket(host, port, lAddress, lPort);
     }
 
     public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-    	SSLContext ctx = getSSLContext();
-    	SSLSocketFactory sf = ctx.getSocketFactory();
-    	Socket socket = sf.createSocket(host, port);
+        SSLContext ctx = getSSLContext();
+        SSLSocketFactory sf = ctx.getSocketFactory();
+        Socket socket = sf.createSocket(host, port);
         return socket;
     }
 
-    public Socket createSocket(Socket socket,String host,int port,boolean autoclose) throws IOException, UnknownHostException {
-    	SSLContext ctx = getSSLContext();
-    	SSLSocketFactory sf = ctx.getSocketFactory();
-    	Socket newSocket = sf.createSocket(socket, host, port, autoclose);
+    public Socket createSocket(Socket socket, String host, int port, boolean autoclose)
+            throws IOException, UnknownHostException {
+        SSLContext ctx = getSSLContext();
+        SSLSocketFactory sf = ctx.getSocketFactory();
+        Socket newSocket = sf.createSocket(socket, host, port, autoclose);
         return newSocket;
     }
 
-    private SSLContext getSSLContext(){
-    	if(ctx == null)
-    	{
-    		try {
-				ctx = SSLContext.getInstance("SSL");
-				TrustManager[] tm = new TrustManager[] { new AcceptAllTrustManager() };
-	    		ctx.init(null, tm, null);
-    		} catch (Exception e)
-    		{
-    			e.printStackTrace();
-    		}
-    	}
-    	return ctx;
+    private SSLContext getSSLContext() {
+        if (ctx == null) {
+            try {
+                ctx = SSLContext.getInstance("SSL");
+                TrustManager[] tm = new TrustManager[] {new AcceptAllTrustManager()};
+                ctx.init(null, tm, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return ctx;
     }
-
-
 }

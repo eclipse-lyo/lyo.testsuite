@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,66 +29,63 @@ import org.junit.runners.Parameterized.Parameters;
 
 public class UsageCaseBase extends AssetTestBase {
 
-	protected static String queryProperty;
-	protected static String queryPropertyValue;
-	protected static String queryComparisonProperty;
-	protected static String queryComparisonValue;
-	protected static String fullTextSearchTerm;
-	protected static String additionalParameters;
+    protected static String queryProperty;
+    protected static String queryPropertyValue;
+    protected static String queryComparisonProperty;
+    protected static String queryComparisonValue;
+    protected static String fullTextSearchTerm;
+    protected static String additionalParameters;
 
-	public UsageCaseBase(String thisUrl, String acceptType, String contentType) {
-		super(thisUrl, acceptType, contentType);
-	}
+    public UsageCaseBase(String thisUrl, String acceptType, String contentType) {
+        super(thisUrl, acceptType, contentType);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls()
-			throws IOException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
-		staticSetup();
+        staticSetup();
 
-		String useThisAsset = setupProps.getProperty("useThisAsset");
-		if ( useThisAsset != null ) {
-			ArrayList<String> results = new ArrayList<String>();
-			results.add(useThisAsset);
-			return toCollection(results);
-		}
+        String useThisAsset = setupProps.getProperty("useThisAsset");
+        if (useThisAsset != null) {
+            ArrayList<String> results = new ArrayList<String>();
+            results.add(useThisAsset);
+            return toCollection(results);
+        }
 
-		queryProperty = setupProps.getProperty("queryEqualityProperty");
-		queryPropertyValue = setupProps.getProperty("queryEqualityValue");
-		queryComparisonProperty = setupProps
-				.getProperty("queryComparisonProperty");
-		queryComparisonValue = setupProps.getProperty("queryComparisonValue");
-		fullTextSearchTerm = setupProps.getProperty("fullTextSearchTerm");
-		additionalParameters = setupProps
-				.getProperty("queryAdditionalParameters");
-		if (additionalParameters == null)
-			additionalParameters = "";
+        queryProperty = setupProps.getProperty("queryEqualityProperty");
+        queryPropertyValue = setupProps.getProperty("queryEqualityValue");
+        queryComparisonProperty = setupProps.getProperty("queryComparisonProperty");
+        queryComparisonValue = setupProps.getProperty("queryComparisonValue");
+        fullTextSearchTerm = setupProps.getProperty("fullTextSearchTerm");
+        additionalParameters = setupProps.getProperty("queryAdditionalParameters");
+        if (additionalParameters == null) additionalParameters = "";
 
+        ArrayList<String> serviceUrls =
+                getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
+        ArrayList<String> capabilityURLsUsingRdfXml =
+                TestsBase.getCapabilityURLsUsingRdfXml(
+                        OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
+        return toCollection(capabilityURLsUsingRdfXml);
+    }
 
-		ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"),
-				onlyOnce);
-		ArrayList<String> capabilityURLsUsingRdfXml = TestsBase
-				.getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP,
-						serviceUrls, true);
-		return toCollection(capabilityURLsUsingRdfXml);
-	}
+    protected HttpResponse executeQuery() throws ClientProtocolException, IOException {
+        String query =
+                "?oslc.select="
+                        + URLEncoder.encode("oslc_asset:version", "UTF-8")
+                        + "&oslc.where="
+                        + URLEncoder.encode(
+                                queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8");
+        String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
+        return OSLCUtils.getDataFromUrl(queryUrl, creds, acceptType, contentType, headers);
+    }
 
-	protected HttpResponse executeQuery() throws ClientProtocolException, IOException {
-		String query =  "?oslc.select=" + URLEncoder.encode("oslc_asset:version", "UTF-8") +
-						"&oslc.where=" +
-						URLEncoder.encode(queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8");
-		String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
-		return OSLCUtils.getDataFromUrl(queryUrl, creds, acceptType, contentType, headers);
-	}
-
-	protected Header[] addHeader(Header header) {
-		Header[] newHeaders = new Header[headers.length + 1];
-		int i = 0;
-		for(; i < headers.length; i++)
-		{
-			newHeaders[i] = headers[i];
-		}
-		newHeaders[i] = header;
-		return newHeaders;
-	}
+    protected Header[] addHeader(Header header) {
+        Header[] newHeaders = new Header[headers.length + 1];
+        int i = 0;
+        for (; i < headers.length; i++) {
+            newHeaders[i] = headers[i];
+        }
+        newHeaders[i] = header;
+        return newHeaders;
+    }
 }

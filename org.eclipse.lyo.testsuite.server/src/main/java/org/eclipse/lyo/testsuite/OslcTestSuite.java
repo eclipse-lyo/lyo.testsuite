@@ -18,7 +18,6 @@
 package org.eclipse.lyo.testsuite;
 
 import java.io.IOException;
-
 import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 
@@ -30,10 +29,8 @@ import org.junit.runners.model.InitializationError;
  * @author Matthew Brown
  *
  */
-public class OslcTestSuite extends Suite
-{
-	public OslcTestSuite(Class<?> setupClass) throws InitializationError, IOException
-	{
-		super(setupClass, DynamicSuiteBuilder.suitesArray());
-	}
+public class OslcTestSuite extends Suite {
+    public OslcTestSuite(Class<?> setupClass) throws InitializationError, IOException {
+        super(setupClass, DynamicSuiteBuilder.suitesArray());
+    }
 }

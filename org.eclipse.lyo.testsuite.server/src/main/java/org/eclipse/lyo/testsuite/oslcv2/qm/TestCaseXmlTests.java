@@ -15,44 +15,46 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
+import static org.junit.Assume.assumeTrue;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
-import static org.junit.Assume.assumeTrue;
-
 public class TestCaseXmlTests extends CoreResourceXmlTests {
 
-	public TestCaseXmlTests(String thisUrl)
-		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, NullPointerException {
+    public TestCaseXmlTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException,
+                    NullPointerException {
 
-		super(thisUrl);
-		setNode(ns, resource);
-	}
+        super(thisUrl);
+        setNode(ns, resource);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls()
-			throws IOException, ParserConfigurationException, SAXException, XPathException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls()
+            throws IOException, ParserConfigurationException, SAXException, XPathException {
 
-		staticSetup();
+        staticSetup();
 
-		// If a particular TestCase asset is specified, use it
-		String useThis = setupProps.getProperty("useThisTestCase");
-		assumeTrue(useThis != null && !"".equals(useThis));
-		ArrayList<String> results = new ArrayList<String>();
-		results.add(useThis);
-		return toCollection(results);
-	}
+        // If a particular TestCase asset is specified, use it
+        String useThis = setupProps.getProperty("useThisTestCase");
+        assumeTrue(useThis != null && !"".equals(useThis));
+        ArrayList<String> results = new ArrayList<String>();
+        results.add(useThis);
+        return toCollection(results);
+    }
 
-	public static String ns = "oslc_qm_v2";
-	public static String resource = "TestCase";
-	public static String eval = "//" + ns + ":" + resource + "/@rdf:about";
+    public static String ns = "oslc_qm_v2";
+    public static String resource = "TestCase";
+    public static String eval = "//" + ns + ":" + resource + "/@rdf:about";
 }

@@ -15,15 +15,16 @@
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -31,45 +32,45 @@ import org.junit.runners.Parameterized.Parameters;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
-
 public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 
-	public TestExecutionRecordXmlTests(String thisUrl)
-		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, NullPointerException {
+    public TestExecutionRecordXmlTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException,
+                    NullPointerException {
 
-		super(thisUrl);
-		setNode(ns, resource);
-	}
+        super(thisUrl);
+        setNode(ns, resource);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls()
-		throws IOException, ParserConfigurationException, SAXException, XPathException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls()
+            throws IOException, ParserConfigurationException, SAXException, XPathException {
 
-		staticSetup();
+        staticSetup();
 
-		// If a particular TestExecutionRecord asset is specified, use it
-		String useThis = setupProps.getProperty("useThisTestExecutionRecord");
-		assumeTrue(useThis != null && !"".equals(useThis));
-		ArrayList<String> results = new ArrayList<String>();
-		results.add(useThis);
+        // If a particular TestExecutionRecord asset is specified, use it
+        String useThis = setupProps.getProperty("useThisTestExecutionRecord");
+        assumeTrue(useThis != null && !"".equals(useThis));
+        ArrayList<String> results = new ArrayList<String>();
+        results.add(useThis);
 
-		return toCollection(results);
-	}
+        return toCollection(results);
+    }
 
-	@Test
-	public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException
-	{
-		String eval = "//" + getNode() + "/" + "oslc_qm_v2:runsTestCase";
+    @Test
+    public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException {
+        String eval = "//" + getNode() + "/" + "oslc_qm_v2:runsTestCase";
 
-		NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval,
-	    		doc, XPathConstants.NODESET);
+        NodeList results =
+                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-		assertEquals("oslc_qm_v2:runsTestCase"+getFailureMessage(), 1, results.getLength());
-	}
+        assertEquals("oslc_qm_v2:runsTestCase" + getFailureMessage(), 1, results.getLength());
+    }
 
-	public static String ns = "oslc_qm_v2";
-	public static String resource = "TestExecutionRecord";
-	public static String eval = "//" + ns + ":" + resource + "/@rdf:about";
+    public static String ns = "oslc_qm_v2";
+    public static String resource = "TestExecutionRecord";
+    public static String eval = "//" + ns + ":" + resource + "/@rdf:about";
 }

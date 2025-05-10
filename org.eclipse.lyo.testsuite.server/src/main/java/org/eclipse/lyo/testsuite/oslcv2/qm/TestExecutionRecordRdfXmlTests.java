@@ -18,52 +18,53 @@ package org.eclipse.lyo.testsuite.oslcv2.qm;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-
 public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 
-	public TestExecutionRecordRdfXmlTests(String thisUrl)
-		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, NullPointerException {
+    public TestExecutionRecordRdfXmlTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException,
+                    NullPointerException {
 
-		super(thisUrl);
-	}
+        super(thisUrl);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
-		staticSetup();
+        staticSetup();
 
-		// If a particular TestExecutionRecord asset is specified, use it
-		String useThis = setupProps.getProperty("useThisTestExecutionRecord");
-		assumeTrue(useThis != null && !"".equals(useThis));
+        // If a particular TestExecutionRecord asset is specified, use it
+        String useThis = setupProps.getProperty("useThisTestExecutionRecord");
+        assumeTrue(useThis != null && !"".equals(useThis));
 
-		ArrayList<String> results = new ArrayList<String>();
-		results.add(useThis);
-		return toCollection(results);
-	}
+        ArrayList<String> results = new ArrayList<String>();
+        results.add(useThis);
+        return toCollection(results);
+    }
 
-	@Test
-	public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException
-	{
-		StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "runsTestCase");
-		int size=listStatements.toList().size();
-		assertTrue("TestExecutionRecord has one oslc_qm:runsTestCase, found "+size, size == 1);
-	}
+    @Test
+    public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException {
+        StmtIterator listStatements =
+                getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "runsTestCase");
+        int size = listStatements.toList().size();
+        assertTrue("TestExecutionRecord has one oslc_qm:runsTestCase, found " + size, size == 1);
+    }
 
-	public static String ns = "oslc_qm_v2";
-	public static String resource = "TestExecutionRecord";
-	public static String eval = OSLCConstants.QM_TEST_EXECUTION_RECORD;
+    public static String ns = "oslc_qm_v2";
+    public static String resource = "TestExecutionRecord";
+    public static String eval = OSLCConstants.QM_TEST_EXECUTION_RECORD;
 }

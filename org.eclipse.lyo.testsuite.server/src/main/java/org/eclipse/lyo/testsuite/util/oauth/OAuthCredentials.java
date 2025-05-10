@@ -16,27 +16,25 @@
 package org.eclipse.lyo.testsuite.util.oauth;
 
 import java.security.Principal;
-
 import org.apache.http.auth.Credentials;
 
 public class OAuthCredentials implements Credentials {
 
-	private Principal principal;
-	private String secret;
+    private Principal principal;
+    private String secret;
 
-	public OAuthCredentials(OAuthConsumerPrincipal principal, String secret) {
-		this.principal = principal;
-		this.secret = secret;
-	}
+    public OAuthCredentials(OAuthConsumerPrincipal principal, String secret) {
+        this.principal = principal;
+        this.secret = secret;
+    }
 
-	@Override
-	public Principal getUserPrincipal() {
-		return principal;
-	}
+    @Override
+    public Principal getUserPrincipal() {
+        return principal;
+    }
 
-	@Override
-	public String getPassword() {
-		return secret;
-	}
-
+    @Override
+    public String getPassword() {
+        return secret;
+    }
 }

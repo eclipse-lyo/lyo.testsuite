@@ -19,10 +19,8 @@ package org.eclipse.lyo.testsuite.oslcv2.auto;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.runner.RunWith;
@@ -38,32 +36,34 @@ import org.xml.sax.SAXException;
 @RunWith(Parameterized.class)
 public class AutomationPlanRdfXmlTests extends CoreResourceRdfXmlTests {
 
-	public AutomationPlanRdfXmlTests(String thisUrl)
-		throws IOException, ParserConfigurationException, SAXException,	XPathExpressionException, NullPointerException {
-		super(thisUrl);
-	}
+    public AutomationPlanRdfXmlTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException,
+                    NullPointerException {
+        super(thisUrl);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
-		staticSetup();
+        staticSetup();
 
-		setResourceType(OSLCConstants.AUTO_AUTOMATION_PLAN_TYPE);
+        setResourceType(OSLCConstants.AUTO_AUTOMATION_PLAN_TYPE);
 
-		String useThisAutoPlan = setupProps.getProperty("useThisAutoPlan");
-		if ( useThisAutoPlan != null ) {
-			ArrayList<String> results = new ArrayList<String>();
-			results.add(useThisAutoPlan);
-			return toCollection(results);
-		}
+        String useThisAutoPlan = setupProps.getProperty("useThisAutoPlan");
+        if (useThisAutoPlan != null) {
+            ArrayList<String> results = new ArrayList<String>();
+            results.add(useThisAutoPlan);
+            return toCollection(results);
+        }
 
-		setResourceTypeQuery(OSLCConstants.USAGE_PROP);
-		setxpathSubStmt("//oslc_v2:QueryCapability/oslc:resourceType/@rdf:resource");
+        setResourceTypeQuery(OSLCConstants.USAGE_PROP);
+        setxpathSubStmt("//oslc_v2:QueryCapability/oslc:resourceType/@rdf:resource");
 
-		return getAllDescriptionUrls(eval);
-	}
+        return getAllDescriptionUrls(eval);
+    }
 
-	public static String eval = OSLCConstants.RDFS_MEMBER;
-
-
+    public static String eval = OSLCConstants.RDFS_MEMBER;
 }

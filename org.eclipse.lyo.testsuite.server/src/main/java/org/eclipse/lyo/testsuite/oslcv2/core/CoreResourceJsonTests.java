@@ -21,10 +21,8 @@ import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -46,102 +44,100 @@ import org.xml.sax.SAXException;
  */
 @RunWith(Parameterized.class)
 public abstract class CoreResourceJsonTests extends TestsBase {
-	private HttpResponse response;
-	private String responseBody;
-	protected JSONObject doc;
+    private HttpResponse response;
+    private String responseBody;
+    protected JSONObject doc;
 
-	public CoreResourceJsonTests(String thisUrl)
-		throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, NullPointerException, JSONException
-	{
-		super(thisUrl);
+    public CoreResourceJsonTests(String thisUrl)
+            throws IOException,
+                    ParserConfigurationException,
+                    SAXException,
+                    XPathExpressionException,
+                    NullPointerException,
+                    JSONException {
+        super(thisUrl);
 
-		// If currentUrl is null, it means that the query didn't match any
-		// records. This isn't exactly a failure, but there's nothing more we
-		// can test.
-		assumeNotNull(currentUrl);
-        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds,
-        		                                OSLCConstants.CT_JSON, headers);
+        // If currentUrl is null, it means that the query didn't match any
+        // records. This isn't exactly a failure, but there's nothing more we
+        // can test.
+        assumeNotNull(currentUrl);
+        response =
+                OSLCUtils.getResponseFromUrl(
+                        setupBaseUrl, currentUrl, creds, OSLCConstants.CT_JSON, headers);
         responseBody = EntityUtils.toString(response.getEntity());
         int sc = response.getStatusLine().getStatusCode();
 
-		// Some records in the system might not be accessible to this user. This
-		// isn't a failure, but there's nothing more we can test.
+        // Some records in the system might not be accessible to this user. This
+        // isn't a failure, but there's nothing more we can test.
         assumeTrue(sc != HttpStatus.SC_FORBIDDEN && sc != HttpStatus.SC_UNAUTHORIZED);
 
         // Make sure the request succeeded before continuing.
         assertEquals(HttpStatus.SC_OK, sc);
 
-        //Get JSON doc from response
-		JSONArtifact userData = JSON.parse(responseBody);
+        // Get JSON doc from response
+        JSONArtifact userData = JSON.parse(responseBody);
 
-		if (userData instanceof JSONArtifact) {
-			doc = (JSONObject)userData;
-		}
-	}
+        if (userData instanceof JSONArtifact) {
+            doc = (JSONObject) userData;
+        }
+    }
 
-	@Test
-	//
-	// Verify that the OSLC Core Resource has one and only one dcterms:title
-	//
-	public void CoreResourceHasOneTitle() throws JSONException
-	{
-		assertTrue(doc.get(OSLCConstants.DCTERMS_TITLE) instanceof String);
-	}
+    @Test
+    //
+    // Verify that the OSLC Core Resource has one and only one dcterms:title
+    //
+    public void CoreResourceHasOneTitle() throws JSONException {
+        assertTrue(doc.get(OSLCConstants.DCTERMS_TITLE) instanceof String);
+    }
 
-	@Test
-	public void CoreResourceHasAtMostOneDescription() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_DESC) ) {
-			assertTrue(doc.get(OSLCConstants.DCTERMS_DESC) instanceof String);
-		}
-	}
+    @Test
+    public void CoreResourceHasAtMostOneDescription() throws JSONException {
+        if (doc.containsKey(OSLCConstants.DCTERMS_DESC)) {
+            assertTrue(doc.get(OSLCConstants.DCTERMS_DESC) instanceof String);
+        }
+    }
 
-	@Test
-	public void CoreResourceHasAtMostOneIdentifier() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_ID) ) {
-			assertTrue( (doc.get(OSLCConstants.DCTERMS_ID) instanceof String) ||
-					(doc.get(OSLCConstants.DCTERMS_ID) instanceof Integer));
-		}
-	}
+    @Test
+    public void CoreResourceHasAtMostOneIdentifier() throws JSONException {
+        if (doc.containsKey(OSLCConstants.DCTERMS_ID)) {
+            assertTrue(
+                    (doc.get(OSLCConstants.DCTERMS_ID) instanceof String)
+                            || (doc.get(OSLCConstants.DCTERMS_ID) instanceof Integer));
+        }
+    }
 
-	@Test
-	public void CoreResourceHasAtMostOneName() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_NAME) ) {
-			assertTrue(doc.get(OSLCConstants.DCTERMS_NAME) instanceof String);
-		}
-	}
+    @Test
+    public void CoreResourceHasAtMostOneName() throws JSONException {
+        if (doc.containsKey(OSLCConstants.DCTERMS_NAME)) {
+            assertTrue(doc.get(OSLCConstants.DCTERMS_NAME) instanceof String);
+        }
+    }
 
-	@Test
-	public void CoreResourceHasAtMostOneCreatedDate() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_CREATED) ) {
-			assertTrue(doc.get(OSLCConstants.DCTERMS_CREATED) instanceof String);
-		}
-	}
+    @Test
+    public void CoreResourceHasAtMostOneCreatedDate() throws JSONException {
+        if (doc.containsKey(OSLCConstants.DCTERMS_CREATED)) {
+            assertTrue(doc.get(OSLCConstants.DCTERMS_CREATED) instanceof String);
+        }
+    }
 
-	@Test
-	public void CoreResourceHasAtMostOneModifiedDate() throws JSONException
-	{
-		if ( doc.containsKey(OSLCConstants.DCTERMS_MODIFIED) ) {
-			assertTrue(doc.get(OSLCConstants.DCTERMS_MODIFIED) instanceof String);
-		}
-	}
+    @Test
+    public void CoreResourceHasAtMostOneModifiedDate() throws JSONException {
+        if (doc.containsKey(OSLCConstants.DCTERMS_MODIFIED)) {
+            assertTrue(doc.get(OSLCConstants.DCTERMS_MODIFIED) instanceof String);
+        }
+    }
 
-	@Test
-	public void CoreResourceHasAtMostOneDiscussion() throws JSONException
-	{
-		if ( doc.containsKey("oslc:discussion") ) {
-			assertTrue(doc.get("oslc:discussion") instanceof JSONObject);
-		}
-	}
+    @Test
+    public void CoreResourceHasAtMostOneDiscussion() throws JSONException {
+        if (doc.containsKey("oslc:discussion")) {
+            assertTrue(doc.get("oslc:discussion") instanceof JSONObject);
+        }
+    }
 
-	@Test
-	public void CoreResourceHasAtMostOneInstanceShape() throws JSONException
-	{
-		if ( doc.containsKey("oslc:instanceShape") ) {
-			assertTrue(doc.get("oslc:instanceShape") instanceof JSONObject);
-		}
-	}
+    @Test
+    public void CoreResourceHasAtMostOneInstanceShape() throws JSONException {
+        if (doc.containsKey("oslc:instanceShape")) {
+            assertTrue(doc.get("oslc:instanceShape") instanceof JSONObject);
+        }
+    }
 }

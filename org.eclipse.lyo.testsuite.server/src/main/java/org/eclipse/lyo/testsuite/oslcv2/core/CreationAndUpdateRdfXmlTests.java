@@ -20,7 +20,6 @@ package org.eclipse.lyo.testsuite.oslcv2.core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.runner.RunWith;
@@ -40,54 +39,56 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @RunWith(Parameterized.class)
 public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTests {
-	private static Logger logger = Logger.getLogger(CreationAndUpdateRdfXmlTests.class);
+    private static Logger logger = Logger.getLogger(CreationAndUpdateRdfXmlTests.class);
 
-	public CreationAndUpdateRdfXmlTests(String url) {
-		super(url);
-	}
+    public CreationAndUpdateRdfXmlTests(String url) {
+        super(url);
+    }
 
-	@Parameters
-	public static Collection<Object[]> getAllDescriptionUrls()
-			throws IOException {
+    @Parameters
+    public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
-		staticSetup();
+        staticSetup();
 
-		ArrayList<String> capabilityURLsUsingRdfXml = new ArrayList<String>();
-		String useThisCapability = setupProps.getProperty("useThisCapability");
+        ArrayList<String> capabilityURLsUsingRdfXml = new ArrayList<String>();
+        String useThisCapability = setupProps.getProperty("useThisCapability");
 
-		if ( useThisCapability != null ) {
-			capabilityURLsUsingRdfXml.add(useThisCapability);
-		}
-		else {
-			ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"),
-				onlyOnce);
-			String [] types = getCreateTemplateTypes();
-			capabilityURLsUsingRdfXml = getCapabilityURLsUsingRdfXml(OSLCConstants.CREATION_PROP,
-						serviceUrls, useDefaultUsageForCreation, types);
-		}
+        if (useThisCapability != null) {
+            capabilityURLsUsingRdfXml.add(useThisCapability);
+        } else {
+            ArrayList<String> serviceUrls =
+                    getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
+            String[] types = getCreateTemplateTypes();
+            capabilityURLsUsingRdfXml =
+                    getCapabilityURLsUsingRdfXml(
+                            OSLCConstants.CREATION_PROP,
+                            serviceUrls,
+                            useDefaultUsageForCreation,
+                            types);
+        }
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Running RDF/XML creation tests on the following creation factories:");
-			for (String capability : capabilityURLsUsingRdfXml) {
-				logger.debug(capability);
-			}
-		}
+        if (logger.isDebugEnabled()) {
+            logger.debug("Running RDF/XML creation tests on the following creation factories:");
+            for (String capability : capabilityURLsUsingRdfXml) {
+                logger.debug(capability);
+            }
+        }
 
-		return toCollection(capabilityURLsUsingRdfXml);
-	}
+        return toCollection(capabilityURLsUsingRdfXml);
+    }
 
-	@Override
+    @Override
     public String getContentType() {
-	    return OSLCConstants.CT_RDF;
+        return OSLCConstants.CT_RDF;
     }
 
-	@Override
+    @Override
     public String getCreateContent() throws IOException {
-	    return getCreateContent(rdfXmlCreateTemplate);
+        return getCreateContent(rdfXmlCreateTemplate);
     }
 
-	@Override
+    @Override
     public String getUpdateContent(String resourceUri) throws IOException {
-	    return getUpdateContent(resourceUri, rdfXmlUpdateTemplate);
+        return getUpdateContent(resourceUri, rdfXmlUpdateTemplate);
     }
 }
