@@ -16,8 +16,6 @@
 
 package org.eclipse.lyo.testsuite.oslcv2.trs;
 
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -27,6 +25,8 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.DefaultedHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
 import org.eclipse.lyo.testsuite.server.trsutils.EasySSLClient;
 import org.eclipse.lyo.testsuite.server.trsutils.FetchException;
 import org.eclipse.lyo.testsuite.server.trsutils.ITRSVocabulary;

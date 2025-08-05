@@ -46,8 +46,8 @@ public class Messages {
         try {
             Messages.RESOURCE_BUNDLE.getString(newKey);
             String error =
-                    "The message key \"%s\" is wrong.  It should be \"%s\".".formatted(
-                            key, newKey); // $NON-NLS-1$
+                    "The message key \"%s\" is wrong.  It should be \"%s\"."
+                            .formatted(key, newKey); // $NON-NLS-1$
             System.err.println(error);
             throw new RuntimeException(error);
         } catch (MissingResourceException e) {

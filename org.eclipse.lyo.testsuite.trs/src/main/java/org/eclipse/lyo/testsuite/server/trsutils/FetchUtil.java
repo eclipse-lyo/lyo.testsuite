@@ -16,7 +16,6 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-import org.apache.jena.rdf.model.Model;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -36,32 +35,25 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HttpContext;
+import org.apache.jena.rdf.model.Model;
 import org.apache.xerces.impl.dv.util.Base64;
 
 /**
- * A class that provides a utility methods to fetch HTTP resources as well as
- * process fetch responses
+ * A class that provides a utility methods to fetch HTTP resources as well as process fetch
+ * responses
  */
 public class FetchUtil {
     /**
-     * Fetches a resource. In case of success, this method
-     * returns an instance of the {@link Model}.
+     * Fetches a resource. In case of success, this method returns an instance of the {@link Model}.
      *
-     * @param uri
-     *            resource uri to fetch
-     * @param httpClient
-     *            client used to fetch the resource
-     * @param httpContext
-     *            http context to use for the call
-     * @param acceptType
-     * 			  value to use in the accept header
-     * @throws InterruptedException
-     *             if the thread is interrupted
-     * @throws FetchException
-     *             if an error occurs while fetching the resource.
-     * @throws IOException
-     *             if an error occurs while updating the retryable error
-     *             information into the error handler
+     * @param uri resource uri to fetch
+     * @param httpClient client used to fetch the resource
+     * @param httpContext http context to use for the call
+     * @param acceptType value to use in the accept header
+     * @throws InterruptedException if the thread is interrupted
+     * @throws FetchException if an error occurs while fetching the resource.
+     * @throws IOException if an error occurs while updating the retryable error information into
+     *     the error handler
      */
     public static Model fetchResource(
             String uri, HttpClient httpClient, HttpContext httpContext, String acceptType)
@@ -121,8 +113,7 @@ public class FetchUtil {
     }
 
     /**
-     * This method performs authentication based on the config.properties'
-     * AuthType setting.
+     * This method performs authentication based on the config.properties' AuthType setting.
      *
      * @param uri
      * @param httpClient
@@ -176,8 +167,8 @@ public class FetchUtil {
     }
 
     /**
-     * This method uses the username and password specified in config.properties
-     * to attempt basic authentication against a resource server.
+     * This method uses the username and password specified in config.properties to attempt basic
+     * authentication against a resource server.
      *
      * @param httpClient
      * @param httpContext
@@ -217,10 +208,9 @@ public class FetchUtil {
     }
 
     /**
-     * This method attempts to authenticate with a server using OAuth two
-     * legged authentication.  A functional user with a consumer key and secret
-     * must have already been created on the resource server and specified in
-     * the config.properties file.
+     * This method attempts to authenticate with a server using OAuth two legged authentication. A
+     * functional user with a consumer key and secret must have already been created on the resource
+     * server and specified in the config.properties file.
      *
      * @param httpClient
      * @param httpContext
@@ -267,8 +257,8 @@ public class FetchUtil {
     }
 
     /**
-     * A list of the currently supported authentication types.  The user specifies
-     * the desired type in the config.properties' AuthType property.
+     * A list of the currently supported authentication types. The user specifies the desired type
+     * in the config.properties' AuthType property.
      */
     private enum AuthenticationTypes {
         HEADER,

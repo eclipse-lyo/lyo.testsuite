@@ -27,10 +27,8 @@ public class HttpErrorHandler {
     /**
      * Handle a possible HTTP error response.
      *
-     * @param response
-     *            The HTTP response to handle; must not be <code>null</code>
-     * @throws HttpResponseException
-     *             if the response status code maps to an exception class
+     * @param response The HTTP response to handle; must not be <code>null</code>
+     * @throws HttpResponseException if the response status code maps to an exception class
      */
     public static void responseToException(HttpResponse response) throws HttpResponseException {
         if (response == null)

@@ -16,10 +16,6 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-import org.apache.jena.atlas.web.ContentType;
-import org.apache.jena.graph.Node;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ResourceFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.MessageFormat;
@@ -31,6 +27,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.apache.jena.atlas.web.ContentType;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.WebContent;
@@ -83,7 +83,6 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
                     }
                 }
             }
-
 
             if (rdfFormat == null)
                 throw new ClientProtocolException(

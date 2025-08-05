@@ -29,19 +29,17 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 /**
- * This Class contains methods to send data to the server
- * in the form of HTTP POST or HTTP PUT calls
+ * This Class contains methods to send data to the server in the form of HTTP POST or HTTP PUT calls
  */
 public class SendUtil {
 
     /**
-     *
-     * @param uri             resource uri for creation factory
-     * @param httpClient      client used to post to the uri
-     * @param httpContext     http context to use for the call
-     * @param contentType     content type to be used in the creation
-     * @param content         content to be used in the creation
-     * @throws SendException  if an error occurs in posting to the uri
+     * @param uri resource uri for creation factory
+     * @param httpClient client used to post to the uri
+     * @param httpContext http context to use for the call
+     * @param contentType content type to be used in the creation
+     * @param content content to be used in the creation
+     * @throws SendException if an error occurs in posting to the uri
      */
     public static String createResource(
             String uri,
@@ -102,12 +100,11 @@ public class SendUtil {
     }
 
     /**
-     *
-     * @param uri             resource uri for update
-     * @param httpClient      client used to put data to the uri
-     * @param httpContext     http context to use for the call
-     * @param content         content to be used in the updation
-     * @throws SendException  if an error occurs in putting data to the uri
+     * @param uri resource uri for update
+     * @param httpClient client used to put data to the uri
+     * @param httpContext http context to use for the call
+     * @param content content to be used in the updation
+     * @throws SendException if an error occurs in putting data to the uri
      */
     public static boolean updateResource(
             String uri,

@@ -23,16 +23,15 @@ import org.apache.http.HttpResponse;
 
 public class HttpResponseUtil {
     /**
-     * Marks an HTTP response as final and disposes of any system resources
-     * referenced by the response.
-     * <p>
-     * Clients should aggressively call this method as soon as they no longer need the response to
-     * reduce contention over possibly scarce system resources.
-     * </p>
-     * <p>
-     * Clients should <strong>not</strong> attempt to access the HTTP response after calling this
+     * Marks an HTTP response as final and disposes of any system resources referenced by the
+     * response.
+     *
+     * <p>Clients should aggressively call this method as soon as they no longer need the response
+     * to reduce contention over possibly scarce system resources.
+     *
+     * <p>Clients should <strong>not</strong> attempt to access the HTTP response after calling this
      * method.
-     * </p>
+     *
      * @param response the HTTP response to finalize
      */
     public static void finalize(final HttpResponse response) {

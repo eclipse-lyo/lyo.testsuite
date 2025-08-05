@@ -16,11 +16,6 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +24,11 @@ import java.util.Properties;
 import java.util.Scanner;
 import org.apache.http.client.HttpClient;
 import org.apache.http.protocol.HttpContext;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 
 public class TestCore {
 
@@ -83,8 +83,8 @@ public class TestCore {
     }
 
     /**
-     * This method is used to read the contents
-     * of a file as a String
+     * This method is used to read the contents of a file as a String
+     *
      * @param f
      * @return
      */

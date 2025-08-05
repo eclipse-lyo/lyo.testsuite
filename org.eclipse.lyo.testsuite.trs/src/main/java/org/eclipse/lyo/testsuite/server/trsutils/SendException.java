@@ -18,13 +18,10 @@ package org.eclipse.lyo.testsuite.server.trsutils;
 
 import java.io.Serial;
 
-/**
- * A exception that is thrown when creating/updating a resource encounters an exception
- */
+/** A exception that is thrown when creating/updating a resource encounters an exception */
 public class SendException extends Exception {
 
-    @Serial
-    private static final long serialVersionUID = -7111348864477190261L;
+    @Serial private static final long serialVersionUID = -7111348864477190261L;
 
     public SendException(String message) {
         super(message);
