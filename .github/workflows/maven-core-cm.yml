@@ -10,6 +10,7 @@ on:
     branches: [master, main]
   # schedule:
   #   - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
+  merge_group:
   workflow_dispatch:
 
 jobs:
@@ -27,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: oslc-op/refimpl
-          ref: master
+          ref: main
           path: refimpl
       - name: Set up JDK
         uses: actions/setup-java@v4
