@@ -16,14 +16,14 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.JenaException;
-import com.hp.hpl.jena.util.FileUtils;
-import com.hp.hpl.jena.vocabulary.DC;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.JenaException;
+import org.apache.jena.util.FileUtils;
+import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDFS;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -50,7 +50,7 @@ public class ModelUtil {
      *            Serialized RDF/XML model
      * @param lang
      *            See
-     *            {@link com.hp.hpl.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
+     *            {@link org.apache.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
      * @return Deserialized RDF model
      * @throws JenaException
      */
@@ -77,7 +77,7 @@ public class ModelUtil {
      *            Serialized RDF model
      * @param lang
      *            See
-     *            {@link com.hp.hpl.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
+     *            {@link org.apache.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
      * @return Deserialized RDF model
      * @throws JenaException
      */
@@ -113,7 +113,7 @@ public class ModelUtil {
      *            Input Model
      * @param lang
      *            See
-     *            {@link com.hp.hpl.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
+     *            {@link org.apache.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
      * @return Serialized model
      * @throws JenaException
      */
@@ -139,7 +139,7 @@ public class ModelUtil {
      *            Input Model
      * @param lang
      *            See
-     *            {@link com.hp.hpl.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
+     *            {@link org.apache.jena.rdf.model.Model#read(java.io.InputStream, String, String)}
      * @param out
      *            Serialized model
      * @throws JenaException

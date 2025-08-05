@@ -23,13 +23,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Statement;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
@@ -79,8 +77,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(m);
         Property rdfType = m.getProperty(OSLCConstants.RDF_TYPE_PROP);
-        Selector select = new SimpleSelector(null, rdfType, (RDFNode) null);
-        List l = m.listStatements(select).toList();
+        List l = m.listStatements(null, rdfType, (RDFNode) null).toList();
         String[] types = new String[l.size()];
         for (int i = 0; i < l.size(); i++) {
             types[i] = ((Statement) l.get(i)).getObject().toString();

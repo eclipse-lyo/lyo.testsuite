@@ -16,7 +16,7 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;

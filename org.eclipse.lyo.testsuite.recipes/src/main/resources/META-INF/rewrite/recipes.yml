@@ -1,0 +1,13 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: org.eclipse.lyo.testsuite.JenaUpgrade
+displayName: Jena Library Upgrade
+description: Upgrades code from com.hp.hpl.jena to org.apache.jena packages and simplifies patterns
+recipeList:
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: com.hp.hpl.jena
+      newPackageName: org.apache.jena
+      recursive: true
+  - org.eclipse.lyo.testsuite.refactor.SimplifySelectorPattern
+  - org.eclipse.lyo.testsuite.refactor.MigrateOpenJenaToApacheJena
+  - org.openrewrite.java.RemoveUnusedImports
+  # - org.openrewrite.java.cleanup.RemoveUnusedLocalVariables

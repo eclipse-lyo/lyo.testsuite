@@ -1,0 +1,39 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: org.eclipse.lyo.testsuite.JenaUpgrade
+displayName: Jena Library Upgrade
+description: Upgrades code from com.hp.hpl.jena to org.apache.jena packages and simplifies patterns
+recipeList:
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: com.hp.hpl.jena
+      newPackageName: org.apache.jena
+  - org.eclipse.lyo.testsuite.refactor.SimplifySelectorPattern
+  - org.openrewrite.java.RemoveUnusedImports
+  - org.openrewrite.java.cleanup.RemoveUnusedLocalVariables
+
+  # 2. Remove unused imports (this will clean up Selector/SimpleSelector after manual changes)
+  - org.openrewrite.java.RemoveUnusedImports
+
+  # 3. Remove unused local variables
+  - org.openrewrite.java.RemoveUnusedLocalVariables
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.eclipse.lyo.testsuite.SimpleSelectorCleanup
+displayName: Clean up after SimpleSelector refactoring
+description: Remove unused SimpleSelector imports and variables after manual refactoring
+recipeList:
+  # Remove any remaining Selector-related imports that are no longer used
+  - org.openrewrite.java.RemoveImport:
+      packageName: "org.apache.jena.rdf.model.Selector"
+  - org.openrewrite.java.RemoveImport:
+      packageName: "org.apache.jena.rdf.model.SimpleSelector"
+  - org.openrewrite.java.RemoveImport:
+      packageName: "com.hp.hpl.jena.rdf.model.Selector"
+  - org.openrewrite.java.RemoveImport:
+      packageName: "com.hp.hpl.jena.rdf.model.SimpleSelector"
+
+  # Remove unused local variables
+  - org.openrewrite.java.RemoveUnusedLocalVariables
+
+  # General cleanup
+  - org.openrewrite.java.RemoveUnusedImports

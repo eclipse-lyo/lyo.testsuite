@@ -21,15 +21,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.vocabulary.RDF;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URLEncoder;
@@ -159,8 +157,7 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
             Property member = queryModel.createProperty(eval);
 
             Resource queryBase = queryModel.getResource(queryBaseUri);
-            Selector select = new SimpleSelector(queryBase, member, (RDFNode) null);
-            StmtIterator statements = queryModel.listStatements(select);
+            StmtIterator statements = queryModel.listStatements(queryBase, member, (RDFNode) null);
 
             while (statements.hasNext()) {
                 results.add(statements.nextStatement().getObject().toString());
@@ -229,8 +226,7 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
 
     protected StmtIterator getStatementsForProp(String propUri) {
         Property prop = fRdfModel.getProperty(propUri);
-        Selector select = new SimpleSelector(fResource, prop, (RDFNode) null);
-        return fRdfModel.listStatements(select);
+        return fRdfModel.listStatements(fResource, prop, (RDFNode) null);
     }
 
     protected static void setResourceTypeQuery(String rT) {
