@@ -16,9 +16,10 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.atlas.web.ContentType;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ResourceFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.MessageFormat;
@@ -30,9 +31,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.openjena.riot.ContentType;
-import org.openjena.riot.Lang;
-import org.openjena.riot.WebContent;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.riot.WebContent;
 
 public class RDFModelResponseHandler implements ResponseHandler<Model> {
     final Node base;
@@ -71,17 +72,18 @@ public class RDFModelResponseHandler implements ResponseHandler<Model> {
             String rdfFormat = null;
             final Header contentTypeHeader = response.getFirstHeader(HttpConstants.CONTENT_TYPE);
             if (contentTypeHeader != null) {
-                final ContentType contentType = ContentType.parse(contentTypeHeader.getValue());
+                ContentType contentType = ContentType.create(contentTypeHeader.getValue());
+
                 if (contentType != null) {
-                    Lang lang = WebContent.contentTypeToLang(contentType.getContentType());
+                    Lang lang = RDFLanguages.contentTypeToLang(contentType);
                     if (lang != null) {
                         rdfFormat = lang.getName();
-                    } else if (HttpConstants.CT_TEXT_XML.equals(contentType.getContentType())) {
-                        rdfFormat = Lang.RDFXML.getName(); // attempt RDF
-                        // parsing anyway
+                    } else if (WebContent.contentTypeXML.equals(contentType.getContentTypeStr())) {
+                        rdfFormat = Lang.RDFXML.getName(); // try parsing as RDF/XML
                     }
                 }
             }
+
 
             if (rdfFormat == null)
                 throw new ClientProtocolException(

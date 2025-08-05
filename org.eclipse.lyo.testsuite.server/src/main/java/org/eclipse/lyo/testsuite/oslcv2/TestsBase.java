@@ -20,15 +20,13 @@ package org.eclipse.lyo.testsuite.oslcv2;
 
 import static org.junit.Assert.assertEquals;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -466,8 +464,7 @@ public abstract class TestsBase {
         // all subjects whose rdf:type = oslc:ServiceProvider
         Property rdfType = spModel.createProperty(OSLCConstants.RDF_TYPE_PROP);
         Resource spTypeRes = spModel.getResource(OSLCConstants.SERVICE_PROVIDER_TYPE);
-        Selector select = new SimpleSelector(null, rdfType, spTypeRes);
-        StmtIterator statements = spModel.listStatements(select);
+        StmtIterator statements = spModel.listStatements(null, rdfType, spTypeRes);
         // Since resources can have multiple types, iterate over all
         while (statements.hasNext()) {
             Statement st = statements.nextStatement();
@@ -478,8 +475,7 @@ public abstract class TestsBase {
         // Get all the "referenced" definitions for Service Providers, namely
         // of form: <oslc:serviceProvider rdf:resource="url" />
         Property spProp = spModel.createProperty(OSLCConstants.SERVICE_PROVIDER_PROP);
-        select = new SimpleSelector(null, spProp, (RDFNode) null);
-        statements = spModel.listStatements(select);
+        statements = spModel.listStatements(null, spProp, (RDFNode) null);
         // Since resources can have multiple types, iterate over all
         while (statements.hasNext()) {
             Statement st = statements.nextStatement();
@@ -489,8 +485,7 @@ public abstract class TestsBase {
 
         // Chase any ServiceProviderCatalogs, looking for ServiceProviders definitions.
         Property spcPredicate = spModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
-        select = new SimpleSelector(null, spcPredicate, (RDFNode) null);
-        statements = spModel.listStatements(select);
+        statements = spModel.listStatements(null, spcPredicate, (RDFNode) null);
         while (statements.hasNext()) {
             ArrayList<String> results =
                     getServiceProviderURLsUsingRdfXml(
@@ -555,8 +550,7 @@ public abstract class TestsBase {
 
                 Property capProp = spModel.createProperty(propertyUri);
                 Property usageProp = spModel.createProperty(prop);
-                Selector select = new SimpleSelector(null, capProp, (RDFNode) null);
-                StmtIterator statements = spModel.listStatements(select);
+                StmtIterator statements = spModel.listStatements(null, capProp, (RDFNode) null);
 
                 while (statements.hasNext()) {
                     Statement stmt = statements.nextStatement();

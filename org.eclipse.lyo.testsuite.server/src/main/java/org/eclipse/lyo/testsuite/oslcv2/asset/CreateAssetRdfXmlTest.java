@@ -17,13 +17,11 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -59,8 +57,7 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
         EntityUtils.consume(resp.getEntity());
 
         Property property = model.getProperty(OSLCConstants.ASSET_CATEGORIZATION_PROP);
-        Selector select = new SimpleSelector(null, property, (RDFNode) null);
-        StmtIterator statements = model.listStatements(select);
+        StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
         assertTrue("The category was not set", statements.hasNext());
     }
 
@@ -83,8 +80,7 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
             EntityUtils.consume(resp.getEntity());
 
             Property property = model.getProperty(OSLCConstants.DC_RELATION_PROP);
-            Selector select = new SimpleSelector(null, property, (RDFNode) null);
-            StmtIterator statements = model.listStatements(select);
+            StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
 
             assertTrue("The relation was not created", statements.hasNext());
         } finally {

@@ -20,15 +20,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,8 +113,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
 
             Property catPredicate =
                     rdfModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
-            Selector select = new SimpleSelector(null, catPredicate, (RDFNode) null);
-            StmtIterator listStatements = rdfModel.listStatements(select);
+            StmtIterator listStatements = rdfModel.listStatements(null, catPredicate, (RDFNode) null);
             while (listStatements.hasNext()) {
                 data.add(new Object[] {listStatements.nextStatement().getObject().toString()});
             }
@@ -157,8 +154,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         Property dcTitle = rdfModel.createProperty(OSLCConstants.DC_TITLE_PROP);
         Property catPredicate =
                 rdfModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
-        Selector select = new SimpleSelector(null, catPredicate, (RDFNode) null);
-        StmtIterator listStatements = rdfModel.listStatements(select);
+        StmtIterator listStatements = rdfModel.listStatements(null, catPredicate, (RDFNode) null);
         if (!listStatements.hasNext()) logger.debug("Catalog does not contain other catalogs");
         while (listStatements.hasNext()) {
             Resource cat = (Resource) listStatements.nextStatement().getObject();
@@ -169,8 +165,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     @Test
     public void serviceProviderCatalogHaveAtMostOneTitle() throws XPathException {
         Property dcTitle = rdfModel.createProperty(OSLCConstants.DC_TITLE_PROP);
-        Selector select = new SimpleSelector(catalog, dcTitle, (RDFNode) null);
-        StmtIterator listStatements = rdfModel.listStatements(select);
+        StmtIterator listStatements = rdfModel.listStatements(catalog, dcTitle, (RDFNode) null);
         assertTrue(listStatements.toList().size() <= 1);
     }
 
@@ -178,8 +173,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
      */
     protected StmtIterator getServiceProvidersFromModel() {
         Property spPredicate = rdfModel.createProperty(OSLCConstants.SERVICE_PROVIDER_PROP);
-        Selector select = new SimpleSelector(null, spPredicate, (RDFNode) null);
-        return rdfModel.listStatements(select);
+        return rdfModel.listStatements(null, spPredicate, (RDFNode) null);
     }
 
     @Test
@@ -198,8 +192,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     @Test
     public void serviceProviderCatalogsHaveAtMostOnePublisher() throws XPathExpressionException {
         Property dcPublisher = rdfModel.createProperty(OSLCConstants.DC_PUBLISHER_PROP);
-        Selector select = new SimpleSelector(catalog, dcPublisher, (RDFNode) null);
-        StmtIterator listStatements = rdfModel.listStatements(select);
+        StmtIterator listStatements = rdfModel.listStatements(catalog, dcPublisher, (RDFNode) null);
         assertTrue(
                 "ServiceProviderCatalogs have at most 1 oslc:publisher",
                 listStatements.toList().size() <= 1);
@@ -222,8 +215,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     public void publisherElementsAreValid() throws XPathExpressionException {
         Property dcPublisher = rdfModel.createProperty(OSLCConstants.DC_PUBLISHER_PROP);
         Property dcTitle = rdfModel.createProperty(OSLCConstants.DC_TITLE_PROP);
-        Selector select = new SimpleSelector(null, dcPublisher, (RDFNode) null);
-        StmtIterator listStatements = rdfModel.listStatements(select);
+        StmtIterator listStatements = rdfModel.listStatements(null, dcPublisher, (RDFNode) null);
         if (!listStatements.hasNext())
             logger.debug("Catalog does not contain any Publishers resources");
 

@@ -18,14 +18,12 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -232,14 +230,11 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
         // Removes the artifact from the asset
         Property property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
-        Selector select = new SimpleSelector(null, property, (RDFNode) null);
-        StmtIterator statements = model.listStatements(select);
+        StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
         List<Statement> statementList = statements.toList();
         for (int i = 0; i < statementList.size(); i++) {
             Statement statement = statementList.get(i);
-            Selector selectChildren =
-                    new SimpleSelector(statement.getObject().asResource(), null, (RDFNode) null);
-            StmtIterator childrenStatements = model.listStatements(selectChildren);
+            StmtIterator childrenStatements = model.listStatements(statement.getObject().asResource(), null, (RDFNode) null);
             model.remove(childrenStatements);
         }
         model.remove(statementList);
@@ -253,15 +248,13 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         model.read(resp.getEntity().getContent(), baseUrl);
         EntityUtils.consume(resp.getEntity());
         property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
-        select = new SimpleSelector(null, property, (RDFNode) null);
-        statements = model.listStatements(select);
+        statements = model.listStatements(null, property, (RDFNode) null);
         assertFalse("The artifact was no removed", statements.hasNext());
     }
 
     private String getPropertyValue(Model model, String uri) {
         Property property = model.getProperty(uri);
-        Selector select = new SimpleSelector(null, property, (RDFNode) null);
-        StmtIterator statements = model.listStatements(select);
+        StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
         while (statements.hasNext()) {
             Statement statement = statements.next();
             return statement.getObject().toString();
@@ -275,15 +268,13 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
      */
     private boolean isOneOrNone(Model model, String uri) {
         Property property = model.getProperty(uri);
-        Selector select = new SimpleSelector(null, property, (RDFNode) null);
-        StmtIterator statements = model.listStatements(select);
+        StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
         return statements.toList().size() <= 1;
     }
 
     private void setPropertyValue(Model model, String uri, String newValue) {
         Property property = model.getProperty(uri);
-        Selector select = new SimpleSelector(null, property, (RDFNode) null);
-        StmtIterator statements = model.listStatements(select);
+        StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
         ArrayList<Statement> statementList = new ArrayList<Statement>();
         // Converts the iterator into an array list so that the statement(s) can be modified
         while (statements.hasNext()) {
