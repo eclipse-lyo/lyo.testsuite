@@ -17,7 +17,7 @@ package org.eclipse.lyo.testsuite.oslcv2.cm;
 
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

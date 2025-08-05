@@ -18,16 +18,14 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,7 +88,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         ArrayList<String> capabilityURLsUsingRdfXml =
                 TestsBase.getCapabilityURLsUsingRdfXml(
                         OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
-        currentUrl = capabilityURLsUsingRdfXml.get(0);
+        currentUrl = capabilityURLsUsingRdfXml.getFirst();
 
         // Creates the asset
         assetUrl = createAsset(rdfXmlCreateTemplate);
@@ -141,8 +139,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         // TODO make this so that if the label is not there it is added
         Property artifactProp = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
         String labelValue = "this subject has been changed";
-        Selector selectArtifact = new SimpleSelector(null, artifactProp, (RDFNode) null);
-        StmtIterator artifactStatements = model.listStatements(selectArtifact);
+        StmtIterator artifactStatements = model.listStatements(null, artifactProp, (RDFNode) null);
         List<Statement> statementList = artifactStatements.toList();
         for (int i = 0; i < statementList.size(); i++) {
             Statement artifactStatement = statementList.get(i);
@@ -160,9 +157,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         model = ModelFactory.createDefaultModel();
         model.read(resp.getEntity().getContent(), baseUrl);
         EntityUtils.consume(resp.getEntity());
-
-        selectArtifact = new SimpleSelector(null, artifactProp, (RDFNode) null);
-        artifactStatements = model.listStatements(selectArtifact);
+        artifactStatements = model.listStatements(null, artifactProp, (RDFNode) null);
         statementList = artifactStatements.toList();
         for (int i = 0; i < statementList.size(); i++) {
             Statement artifactStatement = statementList.get(i);
@@ -217,16 +212,13 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
                 resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
 
         Property property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
-        Selector select = new SimpleSelector(null, property, (RDFNode) null);
-        StmtIterator statements = model.listStatements(select);
+        StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
         String artifactUrl = null;
         while (statements.hasNext()) {
             Statement artifactStatement = statements.nextStatement();
             Property content = model.createProperty(OSLCConstants.OSLC_ASSET_V2, "content");
-            Selector selectContent =
-                    new SimpleSelector(
+            StmtIterator contentStatements = model.listStatements(
                             artifactStatement.getObject().asResource(), content, (RDFNode) null);
-            StmtIterator contentStatements = model.listStatements(selectContent);
             while (contentStatements.hasNext()) {
                 Statement contentStatement = contentStatements.nextStatement();
                 artifactUrl = contentStatement.getObject().toString();
@@ -248,8 +240,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 
     private String getPropertyValue(Model model, String uri) {
         Property property = model.getProperty(uri);
-        Selector select = new SimpleSelector(null, property, (RDFNode) null);
-        StmtIterator statements = model.listStatements(select);
+        StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
         while (statements.hasNext()) {
             Statement statement = statements.next();
             return statement.getObject().toString();

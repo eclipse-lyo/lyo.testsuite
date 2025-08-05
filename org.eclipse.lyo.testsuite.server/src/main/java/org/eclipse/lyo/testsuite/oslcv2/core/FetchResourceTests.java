@@ -20,14 +20,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -111,8 +109,7 @@ public class FetchResourceTests extends TestsBase {
 
             Property member = queryModel.createProperty(OSLCConstants.RDFS_MEMBER);
             Resource queryBase = queryModel.getResource(queryBaseUri);
-            Selector select = new SimpleSelector(queryBase, member, (RDFNode) null);
-            StmtIterator statements = queryModel.listStatements(select);
+            StmtIterator statements = queryModel.listStatements(queryBase, member, (RDFNode) null);
             while (statements.hasNext()) {
                 results.add(statements.nextStatement().getObject().toString());
                 if (onlyOnce) return toCollection(results);

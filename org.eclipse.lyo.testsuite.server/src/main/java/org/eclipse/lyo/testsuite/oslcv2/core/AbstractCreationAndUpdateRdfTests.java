@@ -19,16 +19,16 @@ package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.*;
 
-import com.hp.hpl.jena.datatypes.xsd.impl.XMLLiteralType;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.datatypes.xsd.impl.XMLLiteralType;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.vocabulary.RDF;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Calendar;
@@ -54,7 +54,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
     }
 
     public String createResourceFromShape(String shapeUri) throws IOException {
-        logger.debug(String.format("Creating resource from shape <%s>", shapeUri));
+        logger.debug("Creating resource from shape <%s>".formatted(shapeUri));
         Model m = ModelFactory.createDefaultModel();
         createResourceFromShape(m, shapeUri, 1);
 
@@ -191,7 +191,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
         }
 
         if (allowedValues.size() == 1) {
-            return allowedValues.get(0).getObject();
+            return allowedValues.getFirst().getObject();
         }
 
         if (allowedValues.size() == 2) {

@@ -23,13 +23,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Statement;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
@@ -79,8 +77,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(m);
         Property rdfType = m.getProperty(OSLCConstants.RDF_TYPE_PROP);
-        Selector select = new SimpleSelector(null, rdfType, (RDFNode) null);
-        List l = m.listStatements(select).toList();
+        List l = m.listStatements(null, rdfType, (RDFNode) null).toList();
         String[] types = new String[l.size()];
         for (int i = 0; i < l.size(); i++) {
             types[i] = ((Statement) l.get(i)).getObject().toString();
@@ -322,7 +319,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         // Assert that an invalid PUT resulted in a 4xx status
         final int status = resp.getStatusLine().getStatusCode();
         assertTrue(
-                String.format("Expected a 4xx status code, but got %s.%n", resp.getStatusLine()),
+                "Expected a 4xx status code, but got %s.%n".formatted(resp.getStatusLine()),
                 status >= 400 && status <= 499);
 
         // Clean up after the test by attempting to delete the created resource
@@ -382,7 +379,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         HttpResponse resp = doPost(contentType, accept, createContent);
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("HTTP Response: %s", resp.getStatusLine()));
+            logger.debug("HTTP Response: %s".formatted(resp.getStatusLine()));
             byte[] content = IOUtils.getStreamAsByteArray(resp.getEntity().getContent());
             logger.debug(new String(content, "UTF-8"));
         } else {

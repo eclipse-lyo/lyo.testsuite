@@ -21,18 +21,20 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.eclipse.lyo.testsuite</groupId>
+    <artifactId>lyo-testsuite-build</artifactId>
+    <version>5.0.1-SNAPSHOT</version>
+    <relativePath>../org.eclipse.lyo.testsuite.build/pom.xml</relativePath>
+  </parent>
+
   <artifactId>testsuite-server</artifactId>
   <name>OSLC Implementation Assessment Test</name>
-  <groupId>org.eclipse.lyo.testsuite</groupId>
-  <version>3.0.0-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <skipTests>true</skipTests> <!-- run mvn with -DskipTests=false -->
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <maven.compiler.release>17</maven.compiler.release>
   </properties>
   <scm>
     <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.testsuite.git</url>
@@ -72,9 +74,9 @@
   <dependencies>
     <!-- https://stackoverflow.com/questions/52502189/java-11-package-javax-xml-bind-does-not-exist -->
     <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.3.1</version>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>2.3.3</version>
     </dependency>
 
     <dependency>
@@ -111,7 +113,8 @@
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
-      <version>2.13.0</version>
+     <!-- <version>2.13.0</version> -->
+      <version>5.5.0</version>
     </dependency>
 
     <dependency>
@@ -124,6 +127,12 @@
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
       <version>2.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>2.3.9</version>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- Added undeclared dependencies -->
@@ -159,6 +168,12 @@
       <artifactId>commons-codec</artifactId>
       <version>1.18.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -182,6 +197,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>3.5.3</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.openrewrite.maven</groupId>
+        <artifactId>rewrite-maven-plugin</artifactId>
       </plugin>
 
       <plugin>

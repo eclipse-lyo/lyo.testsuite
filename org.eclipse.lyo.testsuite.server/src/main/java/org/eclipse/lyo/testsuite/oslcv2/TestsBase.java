@@ -20,15 +20,13 @@ package org.eclipse.lyo.testsuite.oslcv2;
 
 import static org.junit.Assert.assertEquals;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Selector;
-import com.hp.hpl.jena.rdf.model.SimpleSelector;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -228,7 +226,7 @@ public abstract class TestsBase {
 
         String responseBody = EntityUtils.toString(resp.getEntity());
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Reading service catalog <%s>", base));
+            logger.debug("Reading service catalog <%s>".formatted(base));
             logger.debug(responseBody);
         }
         Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
@@ -385,7 +383,7 @@ public abstract class TestsBase {
 
                 String responseBody = EntityUtils.toString(resp.getEntity());
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Reading service provider document <%s>", base));
+                    logger.debug("Reading service provider document <%s>".formatted(base));
                     logger.debug(responseBody);
                 }
 
@@ -466,8 +464,7 @@ public abstract class TestsBase {
         // all subjects whose rdf:type = oslc:ServiceProvider
         Property rdfType = spModel.createProperty(OSLCConstants.RDF_TYPE_PROP);
         Resource spTypeRes = spModel.getResource(OSLCConstants.SERVICE_PROVIDER_TYPE);
-        Selector select = new SimpleSelector(null, rdfType, spTypeRes);
-        StmtIterator statements = spModel.listStatements(select);
+        StmtIterator statements = spModel.listStatements(null, rdfType, spTypeRes);
         // Since resources can have multiple types, iterate over all
         while (statements.hasNext()) {
             Statement st = statements.nextStatement();
@@ -478,8 +475,7 @@ public abstract class TestsBase {
         // Get all the "referenced" definitions for Service Providers, namely
         // of form: <oslc:serviceProvider rdf:resource="url" />
         Property spProp = spModel.createProperty(OSLCConstants.SERVICE_PROVIDER_PROP);
-        select = new SimpleSelector(null, spProp, (RDFNode) null);
-        statements = spModel.listStatements(select);
+        statements = spModel.listStatements(null, spProp, (RDFNode) null);
         // Since resources can have multiple types, iterate over all
         while (statements.hasNext()) {
             Statement st = statements.nextStatement();
@@ -489,8 +485,7 @@ public abstract class TestsBase {
 
         // Chase any ServiceProviderCatalogs, looking for ServiceProviders definitions.
         Property spcPredicate = spModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
-        select = new SimpleSelector(null, spcPredicate, (RDFNode) null);
-        statements = spModel.listStatements(select);
+        statements = spModel.listStatements(null, spcPredicate, (RDFNode) null);
         while (statements.hasNext()) {
             ArrayList<String> results =
                     getServiceProviderURLsUsingRdfXml(
@@ -555,8 +550,7 @@ public abstract class TestsBase {
 
                 Property capProp = spModel.createProperty(propertyUri);
                 Property usageProp = spModel.createProperty(prop);
-                Selector select = new SimpleSelector(null, capProp, (RDFNode) null);
-                StmtIterator statements = spModel.listStatements(select);
+                StmtIterator statements = spModel.listStatements(null, capProp, (RDFNode) null);
 
                 while (statements.hasNext()) {
                     Statement stmt = statements.nextStatement();
@@ -571,8 +565,7 @@ public abstract class TestsBase {
                         if (shape != null) {
                             if (logger.isDebugEnabled()) {
                                 logger.debug(
-                                        String.format(
-                                                "Caching shape URI <%s> for capability URI <%s>",
+                                        "Caching shape URI <%s> for capability URI <%s>".formatted(
                                                 shape.getObject().toString(),
                                                 stmt.getObject().toString()));
                             }
@@ -756,7 +749,7 @@ public abstract class TestsBase {
                 JSONObject serviceProviderJson = (JSONObject) s.get(i);
                 try {
                     JSONArray u = (JSONArray) serviceProviderJson.get("oslc:queryCapability");
-                    JSONObject u1 = (JSONObject) u.get(0);
+                    JSONObject u1 = (JSONObject) u.getFirst();
 
                     JSONObject q = (JSONObject) u1.get("oslc:queryBase");
                     String queryBase = q.getString("rdf:resource");
