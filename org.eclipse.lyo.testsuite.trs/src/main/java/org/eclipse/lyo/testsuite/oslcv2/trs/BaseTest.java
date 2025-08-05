@@ -17,10 +17,6 @@
 
 package org.eclipse.lyo.testsuite.oslcv2.trs;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ResIterator;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -30,6 +26,10 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.DefaultedHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
 import org.eclipse.lyo.testsuite.server.trsutils.EasySSLClient;
 import org.eclipse.lyo.testsuite.server.trsutils.FetchException;
 import org.eclipse.lyo.testsuite.server.trsutils.ITRSVocabulary;
@@ -146,8 +146,8 @@ public class BaseTest extends TestCore {
     }
 
     /**
-     * Validates that the RDF graph contains a ldp:Page resource with the appropriate
-     * properties when the base resource is requested.
+     * Validates that the RDF graph contains a ldp:Page resource with the appropriate properties
+     * when the base resource is requested.
      */
     @Test
     public void testBaseHasLdpPage() {
@@ -204,10 +204,7 @@ public class BaseTest extends TestCore {
         }
     }
 
-    /**
-     * Determine if the base resource contains the rdf:type ldp:Container
-     * property.
-     */
+    /** Determine if the base resource contains the rdf:type ldp:Container property. */
     @Test
     public void testBaseHasType() {
         try {

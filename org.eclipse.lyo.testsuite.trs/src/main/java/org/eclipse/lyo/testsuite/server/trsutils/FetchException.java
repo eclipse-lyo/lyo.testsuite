@@ -18,12 +18,9 @@ package org.eclipse.lyo.testsuite.server.trsutils;
 
 import java.io.Serial;
 
-/**
- * A exception that is thrown when fetching a resource encounters an exception
- */
+/** A exception that is thrown when fetching a resource encounters an exception */
 public class FetchException extends Exception {
-    @Serial
-    private static final long serialVersionUID = -5064491774183615219L;
+    @Serial private static final long serialVersionUID = -5064491774183615219L;
 
     public FetchException(String message) {
         super(message);
