@@ -749,7 +749,7 @@ public abstract class TestsBase {
                 JSONObject serviceProviderJson = (JSONObject) s.get(i);
                 try {
                     JSONArray u = (JSONArray) serviceProviderJson.get("oslc:queryCapability");
-                    JSONObject u1 = (JSONObject) u.get(0);
+                    JSONObject u1 = (JSONObject) u.getFirst();
 
                     JSONObject q = (JSONObject) u1.get("oslc:queryBase");
                     String queryBase = q.getString("rdf:resource");

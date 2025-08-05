@@ -229,9 +229,9 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
             // Make sure each service has one domain
             assertEquals(1, domains.size());
             // Make sure the domain is a resource with a URI
-            assertTrue(domains.get(0).getObject().isURIResource());
+            assertTrue(domains.getFirst().getObject().isURIResource());
             // Make sure one of the domains found in the services matches the test version
-            if (domains.get(0).getResource().getNameSpace().equals(testVersion)) {
+            if (domains.getFirst().getResource().getNameSpace().equals(testVersion)) {
                 domainFound = true;
             }
         }

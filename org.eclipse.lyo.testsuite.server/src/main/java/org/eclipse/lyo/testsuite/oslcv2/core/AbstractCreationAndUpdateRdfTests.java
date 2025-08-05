@@ -191,7 +191,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
         }
 
         if (allowedValues.size() == 1) {
-            return allowedValues.get(0).getObject();
+            return allowedValues.getFirst().getObject();
         }
 
         if (allowedValues.size() == 2) {

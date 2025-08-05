@@ -34,9 +34,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <skipTests>true</skipTests> <!-- run mvn with -DskipTests=false -->
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <maven.compiler.release>17</maven.compiler.release>
     <version-jetty>9.4.6.v20170531</version-jetty>
     <version.lyo.core>2.2.0</version.lyo.core>
     <version.lyo.server>2.2.0</version.lyo.server>

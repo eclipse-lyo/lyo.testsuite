@@ -99,7 +99,7 @@ public class UsageCaseXmlTests extends UsageCaseBase {
         ArrayList<String> capabilityURLsUsingRdfXml =
                 TestsBase.getCapabilityURLsUsingRdfXml(
                         OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
-        currentUrl = capabilityURLsUsingRdfXml.get(0);
+        currentUrl = capabilityURLsUsingRdfXml.getFirst();
 
         // Create the asset
         assetUrl = createAsset(xmlCreateTemplate);
