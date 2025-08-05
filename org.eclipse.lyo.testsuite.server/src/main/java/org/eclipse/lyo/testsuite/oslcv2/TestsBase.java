@@ -226,7 +226,7 @@ public abstract class TestsBase {
 
         String responseBody = EntityUtils.toString(resp.getEntity());
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Reading service catalog <%s>", base));
+            logger.debug("Reading service catalog <%s>".formatted(base));
             logger.debug(responseBody);
         }
         Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
@@ -383,7 +383,7 @@ public abstract class TestsBase {
 
                 String responseBody = EntityUtils.toString(resp.getEntity());
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Reading service provider document <%s>", base));
+                    logger.debug("Reading service provider document <%s>".formatted(base));
                     logger.debug(responseBody);
                 }
 
@@ -565,8 +565,7 @@ public abstract class TestsBase {
                         if (shape != null) {
                             if (logger.isDebugEnabled()) {
                                 logger.debug(
-                                        String.format(
-                                                "Caching shape URI <%s> for capability URI <%s>",
+                                        "Caching shape URI <%s> for capability URI <%s>".formatted(
                                                 shape.getObject().toString(),
                                                 stmt.getObject().toString()));
                             }

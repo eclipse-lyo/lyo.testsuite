@@ -16,9 +16,11 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
+import java.io.Serial;
 import org.apache.http.client.ClientProtocolException;
 
 public class InvalidRDFResourceException extends ClientProtocolException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public InvalidRDFResourceException() {

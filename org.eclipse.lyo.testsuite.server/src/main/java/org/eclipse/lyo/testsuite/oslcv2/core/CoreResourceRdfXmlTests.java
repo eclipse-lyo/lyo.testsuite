@@ -98,8 +98,7 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
             StringWriter w = new StringWriter();
             fRdfModel.write(w, "TURTLE");
             logger.debug(
-                    String.format(
-                            "Testing Resource <%s> with type <%s>", currentUrl, getResourceType()));
+                    "Testing Resource <%s> with type <%s>".formatted(currentUrl, getResourceType()));
             logger.debug(w.toString());
         }
 

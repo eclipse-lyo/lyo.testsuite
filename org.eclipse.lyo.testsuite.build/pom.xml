@@ -66,8 +66,9 @@
 
 
   <modules>
-<!--    Tests failing due to openrewrite LSP trying to classload class signatures across different major versions of Jena - will need to stub everything out -->
-<!--    <module>../org.eclipse.lyo.testsuite.recipes</module>-->
+    <!--    Tests failing due to openrewrite LSP trying to classload class signatures across different
+    major versions of Jena - will need to stub everything out -->
+    <!--    <module>../org.eclipse.lyo.testsuite.recipes</module>-->
     <module>../org.eclipse.lyo.testsuite.server</module>
     <module>../org.eclipse.lyo.testsuite.trs</module>
   </modules>
@@ -78,13 +79,13 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.13.0</version>
+          <version>3.14.0</version>
         </plugin>
         <plugin>
           <groupId>org.openrewrite.maven</groupId>
           <artifactId>rewrite-maven-plugin</artifactId>
           <version>6.15.0</version>
-          <configuration>
+          <!-- <configuration>
             <skipMavenParsing>true</skipMavenParsing>
             <activeRecipes>
               <recipe>org.eclipse.lyo.testsuite.JenaUpgrade</recipe>
@@ -102,6 +103,18 @@
               <groupId>org.eclipse.lyo.testsuite</groupId>
               <artifactId>org.eclipse.lyo.testsuite.recipes</artifactId>
               <version>5.0.1-SNAPSHOT</version>
+            </dependency>
+          </dependencies> -->
+          <configuration>
+            <activeRecipes>
+              <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
+            </activeRecipes>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.openrewrite.recipe</groupId>
+              <artifactId>rewrite-migrate-java</artifactId>
+              <version>3.14.1</version>
             </dependency>
           </dependencies>
         </plugin>

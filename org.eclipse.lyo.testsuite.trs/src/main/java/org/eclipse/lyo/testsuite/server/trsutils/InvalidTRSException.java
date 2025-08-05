@@ -16,10 +16,13 @@
 
 package org.eclipse.lyo.testsuite.server.trsutils;
 
+import java.io.Serial;
+
 /**
  * A exception that is thrown when an invalid TRS, TRS Base or Change Log segment is encountered.
  */
 public class InvalidTRSException extends Exception {
+    @Serial
     private static final long serialVersionUID = -5064491774183615219L;
 
     public InvalidTRSException(String message) {

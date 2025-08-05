@@ -54,7 +54,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
     }
 
     public String createResourceFromShape(String shapeUri) throws IOException {
-        logger.debug(String.format("Creating resource from shape <%s>", shapeUri));
+        logger.debug("Creating resource from shape <%s>".formatted(shapeUri));
         Model m = ModelFactory.createDefaultModel();
         createResourceFromShape(m, shapeUri, 1);
 
