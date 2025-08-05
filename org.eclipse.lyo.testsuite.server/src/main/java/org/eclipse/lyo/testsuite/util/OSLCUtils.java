@@ -114,7 +114,7 @@ public class OSLCUtils {
         try {
             return db.parse(is);
         } catch (SAXException e) {
-            logger.error(String.format("Exception parsing XML response body:%n%s%n", respBody), e);
+            logger.error("Exception parsing XML response body:%n%s%n".formatted(respBody), e);
             throw e;
         }
     }

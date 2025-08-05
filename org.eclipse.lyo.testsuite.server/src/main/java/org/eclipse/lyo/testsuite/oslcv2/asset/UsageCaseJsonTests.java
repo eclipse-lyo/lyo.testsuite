@@ -81,7 +81,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         ArrayList<String> creationUrls =
                 TestsBase.getCapabilityURLsUsingRdfXml(
                         OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
-        currentUrl = creationUrls.get(0);
+        currentUrl = creationUrls.getFirst();
 
         // Creates the asset
         assetUrl = createAsset(jsonCreateTemplate);

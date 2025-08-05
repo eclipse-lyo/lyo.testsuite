@@ -134,7 +134,7 @@ public class AutomationResultJsonTests extends CoreResourceJsonTests {
                 s = (JSONArray) resultJson.getJSONArray("rdfs:member");
             }
 
-            JSONObject r = (JSONObject) s.get(0);
+            JSONObject r = (JSONObject) s.getFirst();
             String one = null;
 
             if (r.containsKey("rdf:resource")) {

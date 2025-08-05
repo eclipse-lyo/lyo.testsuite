@@ -111,7 +111,7 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
             StmtIterator stmts = responseInfoRes.listProperties(countMember);
             List<?> stmtsList = stmts.toList();
             if (!stmtsList.isEmpty()) {
-                Statement stmt = (Statement) stmtsList.get(0);
+                Statement stmt = (Statement) stmtsList.getFirst();
                 assertTrue("Expected oslc:totalCount property", stmtsList.size() == 1);
 
                 Literal nodeLiteral = stmt.getObject().asLiteral();
