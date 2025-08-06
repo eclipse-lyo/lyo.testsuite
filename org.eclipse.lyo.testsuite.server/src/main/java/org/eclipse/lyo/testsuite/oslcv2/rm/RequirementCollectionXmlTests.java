@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.abdera.xpath.XPathException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.runner.RunWith;
@@ -30,7 +29,6 @@ public class RequirementCollectionXmlTests extends CoreResourceXmlTests {
             throws IOException,
                     ParserConfigurationException,
                     SAXException,
-                    XPathException,
                     javax.xml.xpath.XPathException {
 
         staticSetup();

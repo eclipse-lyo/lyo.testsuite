@@ -27,7 +27,6 @@ public interface OSLCConstants {
     static String EMS = "http://open-services.net/ns/ems#";
     static String RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     static String RDFS = "http://www.w3.org/2000/01/rdf-schema#";
-    static String ATOM = "http://www.w3.org/2005/Atom";
     static String OSLC_V2 = "http://open-services.net/ns/core#";
     static String CORE_DEFAULT = "http://open-services.net/ns/core#default";
     static String OSLC_CM_V2 = "http://open-services.net/ns/cm#";
@@ -57,7 +56,6 @@ public interface OSLCConstants {
     static String CT_RDF = "application/rdf+xml";
     static String CT_JSON = "application/json";
     static String CT_COMPACT = "application/x-oslc-compact+xml";
-    static String CT_ATOM = "application/atom+xml";
 
     // Version 1 headers:
     static String CT_CR_XML = "application/x-oslc-cm-change-request+xml";

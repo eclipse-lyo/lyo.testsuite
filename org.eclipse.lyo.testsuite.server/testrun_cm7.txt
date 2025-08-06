@@ -1,0 +1,2 @@
+POM file org.eclipse.lyo.testsuite.server/pom.xml specified with the -f/--file command line argument does not exist
+POM file org.eclipse.lyo.testsuite.server/pom.xml specified with the -f/--file command line argument does not exist

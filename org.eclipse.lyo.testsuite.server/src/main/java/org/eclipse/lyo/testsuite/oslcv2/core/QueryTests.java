@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * expected values from the properties file.
  *
  * Tests XML responses only
- * TODO: Add RDF/XML, ATOM and JSON tests
+ * TODO: Add RDF/XML and JSON tests
  */
 @RunWith(Parameterized.class)
 public class QueryTests extends SimplifiedQueryBaseTests {
