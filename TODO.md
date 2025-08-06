@@ -1,0 +1,11 @@
+- need to update the script to take the suiteconfig.properties as an input
+    - the script shall run the junit
+    - copy the surefire reports
+    - build the HTML report
+- the reports should be output into /reports/public/
+- the /reports/public/ dir shall be deployed to GH Pages
+- the /reports/public/index.xml and /reports/public/index.xsl shall serve as a catalog of all reports
+- the CM report fixes shall be scaled to AM and QM
+- the RM report dir shall be created
+- org.eclipse.lyo.testsuite.server/assessment and org.eclipse.lyo.testsuite.server/config dirs shall be unified
+- org.eclipse.lyo.testsuite.server/config/refimpl2020/cm shall be scaled to cover Refimpl AM, QM, RM as well

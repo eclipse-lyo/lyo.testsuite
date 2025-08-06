@@ -42,7 +42,7 @@
 		<xsl:with-param name="delimiter" select="'/'" />
 	</xsl:call-template>
 </xsl:variable>
-<xsl:variable name="propsFileFolderPath" select="substring-before(/testsuites/testsuite/properties/property[@name='props']/@value,$propsFileName)" />
+<xsl:variable name="propsFileFolderPath" select="concat('../../', substring-before(/testsuites/testsuite/properties/property[@name='props']/@value,$propsFileName))" />
 <xsl:variable name="propsFile" select="file:new(string($propsFileFolderPath),string($propsFileName))"/>
 <xsl:variable name="file_reader" select="FR:new(string($propsFile))" />
 <xsl:variable name="scanner" select="scan:new($file_reader)"/>

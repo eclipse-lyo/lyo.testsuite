@@ -1,0 +1,438 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:svg="http://www.w3.org/2000/svg" xmlns:lxslt="http://xml.apache.org/xslt" xmlns:file="xalan://java.io.File" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:exslt="http://exslt.org/common" xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+        <title>OSLC Unit Test Report</title>
+        <style type="text/css">
+      body {
+        font:normal 68% verdana,arial,helvetica;
+        color:#000000;
+      }
+      table tr td, table tr th {
+          font-size: 68%;
+      }
+      table.details tr th{
+        font-weight: bold;
+        text-align:left;
+        background:#a6caf0;
+      }
+      table.details tr td{
+        background:#eeeee0;
+      }
+
+      p {
+        line-height:1.5em;
+        margin-top:0.5em; margin-bottom:1.0em;
+      }
+      h1 {
+        margin: 0px 0px 5px; font: 165% verdana,arial,helvetica
+      }
+      h2 {
+        margin-top: 1em; margin-bottom: 0.5em; font: bold 125% verdana,arial,helvetica
+      }
+      h3 {
+        margin-bottom: 0.5em; font: bold 115% verdana,arial,helvetica
+      }
+      h4 {
+        margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
+      }
+      h5 {
+        margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
+      }
+      h6 {
+        margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica
+      }
+      .Error {
+        font-weight:bold; color:red;
+      }
+      .Failure {
+        font-weight:bold; color:purple;
+      }
+      .Properties {
+        text-align:right;
+      }
+      
+      img.OSLCLogo {
+      	width: 72px;
+      	height:91px;
+      	background:url(./oslc_sprite.png) 0px 0px;
+      }
+      img.troubleshoot {
+      	width: 15px;
+      	height:15px;
+      	background:url(./oslc_sprite.png) -102px 0px;
+      }
+      
+      </style>
+        <script type="text/javascript" language="JavaScript">
+        var TestCases = new Array();
+        var SysOutMessages = new Array();
+        var SysErrMessages = new Array();
+        var cur;
+        var curSysOut;
+        var curSysErr;
+        
+    cur = TestCases['.merged'] = new Array();
+    
+        cur['apple.awt.application.name'] = 'ForkedBooter';
+    
+        cur['basedir'] = '/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server';
+    
+        cur['file.encoding'] = 'UTF-8';
+    
+        cur['file.separator'] = '/';
+    
+        cur['java.class.path'] = '/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server/target/test-classes:/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server/target/classes:/Users/ezandbe/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3.jar:/Users/ezandbe/.m2/repository/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar:/Users/ezandbe/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/ezandbe/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/ezandbe/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:/Users/ezandbe/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/ezandbe/.m2/repository/net/oauth/core/oauth/20090617/oauth-20090617.jar:/Users/ezandbe/.m2/repository/net/oauth/core/oauth-httpclient3/20090617/oauth-httpclient3-20090617.jar:/Users/ezandbe/.m2/repository/net/oauth/core/oauth-consumer/20090617/oauth-consumer-20090617.jar:/Users/ezandbe/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar:/Users/ezandbe/.m2/repository/org/apache/wink/wink-json4j/1.4/wink-json4j-1.4.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-core/5.5.0/jena-core-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-base/5.5.0/jena-base-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-csv/1.14.0/commons-csv-1.14.0.jar:/Users/ezandbe/.m2/repository/commons-io/commons-io/2.19.0/commons-io-2.19.0.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-compress/1.27.1/commons-compress-1.27.1.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-collections4/4.5.0/commons-collections4-4.5.0.jar:/Users/ezandbe/.m2/repository/com/github/ben-manes/caffeine/caffeine/3.2.2/caffeine-3.2.2.jar:/Users/ezandbe/.m2/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar:/Users/ezandbe/.m2/repository/com/github/andrewoma/dexx/collection/0.7/collection-0.7.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-iri3986/5.5.0/jena-iri3986-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-iri/5.5.0/jena-iri-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-langtag/5.5.0/jena-langtag-5.5.0.jar:/Users/ezandbe/.m2/repository/org/roaringbitmap/RoaringBitmap/1.3.0/RoaringBitmap-1.3.0.jar:/Users/ezandbe/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/Users/ezandbe/.m2/repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar:/Users/ezandbe/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.9/jaxb-runtime-2.3.9.jar:/Users/ezandbe/.m2/repository/org/glassfish/jaxb/txw2/2.3.9/txw2-2.3.9.jar:/Users/ezandbe/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.12/istack-commons-runtime-3.0.12.jar:/Users/ezandbe/.m2/repository/com/sun/activation/jakarta.activation/1.2.2/jakarta.activation-1.2.2.jar:/Users/ezandbe/.m2/repository/org/apache/abdera/abdera-core/1.1.3/abdera-core-1.1.3.jar:/Users/ezandbe/.m2/repository/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.1/geronimo-activation_1.1_spec-1.1.jar:/Users/ezandbe/.m2/repository/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.jar:/Users/ezandbe/.m2/repository/ch/qos/reload4j/reload4j/1.2.26/reload4j-1.2.26.jar:/Users/ezandbe/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:/Users/ezandbe/.m2/repository/org/apache/abdera/abdera-i18n/1.1.3/abdera-i18n-1.1.3.jar:/Users/ezandbe/.m2/repository/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter/5.13.4/junit-jupiter-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.13.4/junit-jupiter-api-5.13.4.jar:/Users/ezandbe/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/ezandbe/.m2/repository/org/junit/platform/junit-platform-commons/1.13.4/junit-platform-commons-1.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.13.4/junit-jupiter-params-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.13.4/junit-jupiter-engine-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/vintage/junit-vintage-engine/5.13.4/junit-vintage-engine-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/platform/junit-platform-engine/1.13.4/junit-platform-engine-1.13.4.jar:/Users/ezandbe/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:';
+    
+        cur['java.class.version'] = '68.0';
+    
+        cur['java.home'] = '/Users/ezandbe/.local/share/mise/installs/java/24.0.1';
+    
+        cur['java.io.tmpdir'] = '/var/folders/r9/143d49d142xd1tyyvhtp5kp80000gp/T/';
+    
+        cur['java.library.path'] = '/Users/ezandbe/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.';
+    
+        cur['java.runtime.name'] = 'OpenJDK Runtime Environment';
+    
+        cur['java.runtime.version'] = '24.0.1+9-30';
+    
+        cur['java.specification.name'] = 'Java Platform API Specification';
+    
+        cur['java.specification.vendor'] = 'Oracle Corporation';
+    
+        cur['java.specification.version'] = '24';
+    
+        cur['java.vendor'] = 'Oracle Corporation';
+    
+        cur['java.vendor.url'] = 'https://java.oracle.com/';
+    
+        cur['java.vendor.url.bug'] = 'https://bugreport.java.com/bugreport/';
+    
+        cur['java.version'] = '24.0.1';
+    
+        cur['java.version.date'] = '2025-04-15';
+    
+        cur['java.vm.compressedOopsMode'] = 'Zero based';
+    
+        cur['java.vm.info'] = 'mixed mode, sharing';
+    
+        cur['java.vm.name'] = 'OpenJDK 64-Bit Server VM';
+    
+        cur['java.vm.specification.name'] = 'Java Virtual Machine Specification';
+    
+        cur['java.vm.specification.vendor'] = 'Oracle Corporation';
+    
+        cur['java.vm.specification.version'] = '24';
+    
+        cur['java.vm.vendor'] = 'Oracle Corporation';
+    
+        cur['java.vm.version'] = '24.0.1+9-30';
+    
+        cur['jdk.debug'] = 'release';
+    
+        cur['line.separator'] = '\n';
+    
+        cur['localRepository'] = '/Users/ezandbe/.m2/repository';
+    
+        cur['native.encoding'] = 'UTF-8';
+    
+        cur['os.arch'] = 'aarch64';
+    
+        cur['os.name'] = 'Mac OS X';
+    
+        cur['os.version'] = '15.6';
+    
+        cur['path.separator'] = ':';
+    
+        cur['props'] = 'config/refimpl2020/cm/suiteconfig.properties';
+    
+        cur['skipTests'] = 'false';
+    
+        cur['stderr.encoding'] = 'UTF-8';
+    
+        cur['stdout.encoding'] = 'UTF-8';
+    
+        cur['sun.arch.data.model'] = '64';
+    
+        cur['sun.boot.library.path'] = '/Users/ezandbe/.local/share/mise/installs/java/24.0.1/lib';
+    
+        cur['sun.cpu.endian'] = 'little';
+    
+        cur['sun.io.unicode.encoding'] = 'UnicodeBig';
+    
+        cur['sun.java.command'] = '/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server/target/surefire/surefirebooter-20250806023027190_3.jar /Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server/target/surefire 2025-08-06T02-30-27_146-jvmRun1 surefire-20250806023027190_1tmp surefire_0-20250806023027190_2tmp';
+    
+        cur['sun.java.launcher'] = 'SUN_STANDARD';
+    
+        cur['sun.jnu.encoding'] = 'UTF-8';
+    
+        cur['sun.management.compiler'] = 'HotSpot 64-Bit Tiered Compilers';
+    
+        cur['surefire.real.class.path'] = '/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server/target/surefire/surefirebooter-20250806023027190_3.jar';
+    
+        cur['surefire.test.class.path'] = '/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server/target/test-classes:/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server/target/classes:/Users/ezandbe/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3.jar:/Users/ezandbe/.m2/repository/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar:/Users/ezandbe/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/ezandbe/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/ezandbe/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:/Users/ezandbe/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/ezandbe/.m2/repository/net/oauth/core/oauth/20090617/oauth-20090617.jar:/Users/ezandbe/.m2/repository/net/oauth/core/oauth-httpclient3/20090617/oauth-httpclient3-20090617.jar:/Users/ezandbe/.m2/repository/net/oauth/core/oauth-consumer/20090617/oauth-consumer-20090617.jar:/Users/ezandbe/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar:/Users/ezandbe/.m2/repository/org/apache/wink/wink-json4j/1.4/wink-json4j-1.4.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-core/5.5.0/jena-core-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-base/5.5.0/jena-base-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-csv/1.14.0/commons-csv-1.14.0.jar:/Users/ezandbe/.m2/repository/commons-io/commons-io/2.19.0/commons-io-2.19.0.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-compress/1.27.1/commons-compress-1.27.1.jar:/Users/ezandbe/.m2/repository/org/apache/commons/commons-collections4/4.5.0/commons-collections4-4.5.0.jar:/Users/ezandbe/.m2/repository/com/github/ben-manes/caffeine/caffeine/3.2.2/caffeine-3.2.2.jar:/Users/ezandbe/.m2/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar:/Users/ezandbe/.m2/repository/com/github/andrewoma/dexx/collection/0.7/collection-0.7.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-iri3986/5.5.0/jena-iri3986-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-iri/5.5.0/jena-iri-5.5.0.jar:/Users/ezandbe/.m2/repository/org/apache/jena/jena-langtag/5.5.0/jena-langtag-5.5.0.jar:/Users/ezandbe/.m2/repository/org/roaringbitmap/RoaringBitmap/1.3.0/RoaringBitmap-1.3.0.jar:/Users/ezandbe/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/Users/ezandbe/.m2/repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar:/Users/ezandbe/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.9/jaxb-runtime-2.3.9.jar:/Users/ezandbe/.m2/repository/org/glassfish/jaxb/txw2/2.3.9/txw2-2.3.9.jar:/Users/ezandbe/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.12/istack-commons-runtime-3.0.12.jar:/Users/ezandbe/.m2/repository/com/sun/activation/jakarta.activation/1.2.2/jakarta.activation-1.2.2.jar:/Users/ezandbe/.m2/repository/org/apache/abdera/abdera-core/1.1.3/abdera-core-1.1.3.jar:/Users/ezandbe/.m2/repository/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.1/geronimo-activation_1.1_spec-1.1.jar:/Users/ezandbe/.m2/repository/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.jar:/Users/ezandbe/.m2/repository/ch/qos/reload4j/reload4j/1.2.26/reload4j-1.2.26.jar:/Users/ezandbe/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:/Users/ezandbe/.m2/repository/org/apache/abdera/abdera-i18n/1.1.3/abdera-i18n-1.1.3.jar:/Users/ezandbe/.m2/repository/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter/5.13.4/junit-jupiter-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.13.4/junit-jupiter-api-5.13.4.jar:/Users/ezandbe/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/ezandbe/.m2/repository/org/junit/platform/junit-platform-commons/1.13.4/junit-platform-commons-1.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.13.4/junit-jupiter-params-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.13.4/junit-jupiter-engine-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/vintage/junit-vintage-engine/5.13.4/junit-vintage-engine-5.13.4.jar:/Users/ezandbe/.m2/repository/org/junit/platform/junit-platform-engine/1.13.4/junit-platform-engine-1.13.4.jar:/Users/ezandbe/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:';
+    
+        cur['test'] = 'org.eclipse.lyo.testsuite.DynamicSuiteBuilder';
+    
+        cur['user.country'] = 'GB';
+    
+        cur['user.dir'] = '/Users/ezandbe/code/a/oslc/lyo-misc/lyo.testsuite/org.eclipse.lyo.testsuite.server';
+    
+        cur['user.home'] = '/Users/ezandbe';
+    
+        cur['user.language'] = 'en';
+    
+        cur['user.name'] = 'ezandbe';
+    
+  
+  	
+	cur = TestCases['config/refimpl2020/cm/suiteconfig.properties'] = new Array();
+	cur['baseUri'] = '<a href="http://localhost:8801/services/catalog/singleton" target="_new">http://localhost:8801/services/catalog/singleton</a>';
+	cur['useThisServiceProvider'] = 'http://localhost:8801/services/serviceProviders/sp_single';
+	cur['implName'] = 'OSLC RefImpl 2020 CM';
+	cur['authMethod'] = 'BASIC';
+	cur['formUri'] = '<a href="https://quagmire.rtp.raleigh.ibm.com:9443/ccm/authenticated/j_security_check" target="_new"><span style="color:gray;"># https://quagmire.rtp.raleigh.ibm.com:9443/ccm/authenticated/j_security_check</span></a>';
+	cur['userId'] = 'admin';
+	cur['pw'] = 'admin';
+	cur['testVersions'] = 'http://open-services.net/ns/cm#';
+	cur['runOnlyOnce'] = '';
+	cur['queryEqualityProperty'] = 'dcterms:title';
+	cur['queryEqualityValue'] = 'templatedResource';
+	cur['queryComparisonProperty'] = 'dcterms:identifier';
+	cur['queryComparisonValue'] = '2';
+	cur['queryAdditionalParameters'] = '';
+	cur['fullTextSearchTerm'] = 'templatedResource';
+	cur['createTemplateXmlFile'] = 'config/refimpl2020/cm/create.xml';
+	cur['createTemplateRdfXmlFile'] = '';
+	cur['createTemplateJsonFile'] = '<span style="color:gray;"># config/oslc4j-cm/json-template.json</span>';
+	cur['updateTemplateXmlFile'] = '';
+	cur['updateTemplateRdfXmlFile'] = '';
+	cur['updateTemplateJsonFile'] = '<span style="color:gray;"># config/oslc4j-cm/json-update.json</span>';
+	cur['updateParams'] = '';
+	cur['OAuthRequestTokenUrl'] = '';
+	cur['OAuthAuthorizationUrl'] = '';
+	cur['OAuthAuthorizationParameters'] = '';
+	cur['OAuthAccessTokenUrl'] = '';
+	cur['OAuthConsumerToken'] = '';
+	cur['OAuthConsumerSecret'] = '';
+  
+  	curSysOut = SysOutMessages['SystemOut'] = new Array();
+   		
+  	curSysErr = SysErrMessages['SystemErr'] = new Array();
+   		</script><script type="text/javascript" language="JavaScript">
+       var W3CDOM = (document.createElement && document.getElementsByTagName);
+       window.onload 	= init;
+       
+        function displayProperties (name) {
+
+          var win = window.open('','JUnitSystemProperties','scrollbars=1,resizable=1');
+          var doc = win.document;
+          doc.open();
+          doc.write("<html><head><title>Properties of " + name + "</title>");
+          doc.write("\x3Cscript src='http://platform.twitter.com/widgets.js' type='text/javascript'>\x3C/script>");
+          doc.write("<style>")
+          doc.write("body {font:normal 68% verdana,arial,helvetica; color:#000000; }");
+          doc.write("table tr td, table tr th { font-size: 68%; }");
+          doc.write("table.properties { border-collapse:collapse; border-left:solid 1 #cccccc; border-top:solid 1 #cccccc; padding:5px; }");
+          doc.write("table.properties th { text-align:left; border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc; background-color:#eeeeee; }");
+          doc.write("table.properties td { font:normal; text-align:left; border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc; background-color:#fffffff; }");
+          doc.write("h3 { margin-bottom: 0.5em; font: bold 115% verdana,arial,helvetica }");
+          doc.write("img.OSLCLogo {width: 72px;height:91px;background:url(./oslc_sprite.png) 0px 0px;}");
+          doc.write("img.info {width: 9px; height:12px;background:url(./oslc_sprite.png) -74px 0px;}");
+      	  doc.write("img.debug {width: 16px;height:15px;background:url(./oslc_sprite.png) -86px 0px;}");
+          doc.write("</style>");
+          doc.write("</head><body>");
+          doc.write("<div width='100%' style='background-color:#687C97;'>");
+    	  doc.write("<img class='OSLCLogo' valign='bottom' src='./1px.gif'/>");
+    	  doc.write("<h1 style='display:inline;color:#FFFFFF;'>OSLC JUnit Properties</h1>");
+    	  doc.write("<table width='100%'>");
+    	  doc.write("<tr>");
+          doc.write("<td align='left'></td>");
+          doc.write("<td align='right'><a style='color:#FFFFFF' href='javascript:window.close();'>Close</a></td>");
+    	  doc.write("</tr>");
+    	  doc.write("</table>");
+		  doc.write("</div>");  
+          doc.write("<h3>Properties of " + name + "</h3>");
+          doc.write("<table><tr><td>");
+          doc.write("<table class='properties'>");
+          doc.write("<tr><th>Name</th><th>Value</th></tr>");
+          for (prop in TestCases[name]) {
+            doc.write("<tr><th>" + prop + "</th><td>" + TestCases[name][prop] + "</td></tr>");
+          }
+          doc.write("</table></td>");
+          doc.write("<td valign='top' align='right'><table width='70%' class='properties'>");
+          doc.write("<tr><th width='50%'>Useful Resources</th><th>Description</th></tr>");
+          doc.write("<tr><th><a title='OSLC Community Website' href='http://www.oslc.co/'>Open Services for Lifecycle Collaboration (OSLC)</a></th><td>An open community dedicated to making it easier to use lifecycle tools in combination</td></tr>");
+		  doc.write("<tr><th><a title='Eclipse Lyo' href='http://eclipse.org/lyo/'>Eclipse Lyo</a></th><td>The Eclipse Lyo project focuses on providing an SDK to help the Eclipse community to adopt OSLC specifications and build OSLC-compliant tools. The source code is available <a href='http://git.eclipse.org/c/?q=lyo'>in a Git repository</a>.</td></tr>");
+		  doc.write("<tr><th><a title='Eclipse Lyo Wiki' href='http://wiki.eclipse.org/Lyo'>Eclipse Lyo Wiki</a></th><td>The Eclipse Lyo Wiki focuses on providing documentation and plans that compliment the use of the Eclipse Lyo SDK</td></tr>");
+		  doc.write("<tr><th><a title='OSLC Primer' href='http://open-services.net/primer/#primer_main'>OSLC Primer</a></th><td>A primer for technical leaders who want to understand the concepts and goals of OSLC and its relationship to other standards for evaluation, as well as potential OSLC implementers who want a general overview of the OSLC concepts and an understanding of the thinking and use-cases that led to their definition.</td></tr>");
+		  doc.write("<tr><th><a title='OSLC Tutorial' href='http://open-services.net/tutorial/#tutorial_main'>OSLC Tutorial</a></th><td>This tutorial explains how to integrate tools with OSLC. The tutorial uses examples, starting with simple ones and building to more advanced topics like implementing an OSLC Provider.</td></tr>");
+          doc.write("<tr><th>OSLC Social Media</th><td><a href='http://twitter.com/#!/oslcnews' class='twitter-follow-button'>Follow @oslcNews</a>\x3Cbr/>\x3Cbr/><a href='http://www.linkedin.com/groups/OSLC-Open-Services-Lifecycle-Collaboration-3957829'><img style='vertical-align:bottom;' src='http://open-services.net/images/LinkedIn_IN_Icon_35px.png' alt='OSLC on LinkedIn' height='16' width='16'>&#160;LinkedIn OSLC Discussion</a></td></tr>");
+          doc.write("</table></td></tr></table>");
+          doc.write("<br/>");
+          doc.write("<h3>System Out Trace</h3>");
+          doc.write("<table style='border: thin black solid;'>");
+          for (prop in SysOutMessages['SystemOut']) {
+            doc.write("<tr>" + SysOutMessages['SystemOut'][prop] + "</tr>");
+          }
+          doc.write("</table>");
+          doc.write("<br/>");
+          doc.write("<h3>System Err Trace</h3>");
+          doc.write("<table style='border: thin black solid;'>");
+          for (prop in SysErrMessages['SystemErr']) {
+            doc.write("<tr>" + SysErrMessages['SystemErr'][prop] + "</tr>");
+          }
+          doc.write("</table>");
+          doc.write("</body></html>");
+          doc.close();
+          win.focus();
+        }
+        
+		function init(evt) {
+			SVGscale(0.5);
+		}
+        
+        function SVGscale(scale) {
+			window.SVGsetDimension(1600*scale,1200*scale);
+			window.SVGsetScale(scale,scale);	
+       		if (!W3CDOM) return;
+			var box 	= document.getElementById('svgid');
+			box.width  	= 1600*scale;
+			box.height 	= 1200*scale;
+		}
+      </script>
+    </head>
+    <body>
+        <a name="top"></a>
+        <div width="100%" style="background-color:#687C97;">
+            <img class="OSLCLogo" valign="bottom" src="./1px.gif">
+            <h1 style="display:inline;color:#FFFFFF;">OSLC Unit Test Report</h1>
+            <table width="100%">
+                <tr>
+                    <td align="left"></td><td align="right" style="color:#FFFFFF;">Designed for use with <a style="color:#FFFFFF" href="http://www.junit.org">JUnit</a> and <a style="color:#FFFFFF" href="http://ant.apache.org/ant">Ant</a>.</td>
+                </tr>
+            </table>
+        </div>
+        <hr size="1">
+        <span style="text-align:center;display:block;margin: 0 auto;"><object id="svgid" type="image/svg+xml" name="SVGContainer" data="barchartSVG.svg" width="1100" height="350"><param name="src" value="barchartSVG.svg"><param name="wmode" value="transparent">
+                <embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="350" wmode="transparent"></embed>
+            </object></span>
+        <h2>OSLC Assessment</h2>
+        <table border="0" cellpadding="5" cellspacing="2" width="40%">
+            <tr bgcolor="a6caf0" valign="top">
+                <th>Report Date</th><th>OSLC Domain</th><th>Version</th><th>OSLC Service Provider</th><th>Assessment Level</th><th>Test Coverage Statement</th><th>Test Development Statement</th>
+            </tr>
+            <tr valign="top" style="text-align:center;">
+                <td bgcolor="eeeee0">Wed Aug 06 02:49:59 CEST 2025</td><td bgcolor="eeeee0">OSLC-CM</td><td bgcolor="eeeee0">2.0</td><td bgcolor="eeeee0">OSLC RefImpl 2020 CM</td><td bgcolor="#ff0000">Level 0</td><td>
+                    <div style="color:blue;">
+                        <b>75.1%</b> (136/181)
+                    </div>
+                    136 of the 181 OSLC-CM 2.0 MUST requirements are currently testable via the Lyo OSLC testsuite.</td><td>
+                    <div style="color:blue;">
+                        <b>89%</b> (121/136)
+                    </div>
+                    121 of the 136 testable MUST requirements currently have JUnit test case coverage within the Lyo OSLC testsuite</td>
+            </tr>
+        </table>
+        <table border="0" width="95%">
+            <tr>
+                <td style="text-align: justify;"><span style="background-color:#ff0000;">Level 0</span>: One or more attempted tests covering a MUST requirement has encountered a failure or error
+                    <br>
+                    <span style="background-color:#ffff00;">Level 1</span>: All Attempted Tests covering a MUST requirement are Passing and free of failure or error
+                    <br>
+                    <span style="background-color:#00ff00;">Level 2</span>: All Attempted Tests covering a MUST and SHOULD requirement are Passing and free of failure or error
+                    <br>
+                    <span style="background-color:#0000ff;color:#ffff00;">Level 3</span>: All Attempted Tests covering a MUST, SHOULD and MAY requirement are Passing and free of failure or error
+                    <br>
+                            Note: This testsuite will continue to evolve and expand.  Requirements may have one or more associated test(s) for coverage to address positive and negative input behaviors.
+        </td>
+            </tr>
+        </table>
+        <br>
+        <h2>OSLC TestSuite Execution Summary</h2>
+        <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+            <tr valign="top">
+                <th>Spec Type</th><th>Attempted</th><th>Passed</th><th>Failed</th><th>Error</th>
+            </tr>
+            <tr valign="top" style="align:center;">
+                <td>MUSTs</td><td>123</td><td>0</td><td>0</td><td>123</td>
+            </tr>
+        </table>
+        <table border="0" width="95%">
+            <tr>
+                <td style="text-align: justify;">
+        Attempted = Pass + Fail + Error.  # of Tests Executed for a Specification Type
+                    <br>
+                            Pass: # of Test(s) achieving the respective test design's expected result
+                    <br>
+                            Fail: # of Test(s) deviating from the respective test design's expected result.
+                    <br>
+                            Error: # of Inconclusive Results.  Test executions encountering error due to poor test design, faulty environment or invalid configuration.  Test results could not be assessed.
+        </td>
+            </tr>
+        </table>
+        <div class="Properties">
+            <a href="javascript:displayProperties('config/refimpl2020/cm/suiteconfig.properties');">
+                    OSLC Configuration Properties &raquo;
+                </a>
+        </div>
+        <hr size="1" width="95%" align="left">
+        <h2>Unit Test Summary</h2>
+        <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+            <tr valign="top">
+                <th>Tests</th><th>Failures</th><th>Errors</th><th>Success rate</th><th>Time</th>
+            </tr>
+            <tr valign="top" class="">
+                <td>NaN</td><td>NaN</td><td>NaN</td><td>NaN</td><td>NaN</td>
+            </tr>
+        </table>
+        <table border="0" width="95%">
+            <tr>
+                <td style="text-align: justify;">
+        Note: <i>failures</i> are anticipated and checked for with assertions while <i>errors</i> are unanticipated.
+        </td>
+            </tr>
+        </table>
+        <hr size="1" width="95%" align="left">
+        <h2>Packages</h2>
+                Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.
+        
+        <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+            <tr valign="top">
+                <th width="80%">Name</th><th>Tests</th><th>Errors</th><th>Failures</th><th nowrap>Time(s)</th><th nowrap>Time Stamp</th><th>Host</th>
+            </tr>
+            <tr valign="top" class="">
+                <td><a href="#">OSLC JUnit TestSuite</a></td><td>NaN</td><td>NaN</td><td>NaN</td><td>NaN</td><td></td><td></td>
+            </tr>
+        </table>
+        <hr size="1" width="95%" align="left">
+        <a name=""></a>
+        <h3>Package </h3>
+        <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+            <tr valign="top">
+                <th width="80%">Name</th><th>Tests</th><th>Errors</th><th>Failures</th><th nowrap>Time(s)</th><th nowrap>Time Stamp</th><th>Host</th>
+            </tr>
+            <tr valign="top" class="">
+                <td><a href="#merged">merged</a></td><td></td><td></td><td></td><td>NaN</td><td></td><td></td>
+            </tr>
+        </table>
+        <a href="#top">Back to top</a>
+        <p></p>
+        <p></p>
+        <hr size="1" width="95%" align="left">
+        <a name="merged"></a>
+        <h3>TestCase merged</h3>
+        <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
+            <tr valign="top">
+                <th>Name</th><th>Status</th><th>Spec</th><th width="80%">Type</th><th nowrap>Time(s)</th>
+            </tr>
+        </table>
+        <div class="Properties">
+            <a href="javascript:displayProperties('.merged');">
+                    Properties &raquo;
+                </a>
+        </div>
+        <p></p>
+        <a href="#top">Back to top</a>
+    </body>
+</html>

@@ -6,6 +6,11 @@
               as the first entry and export the buildfile again. -->
 
 <project basedir="." default="build" name="org.eclipse.lyo.testsuite.server">
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <pathelement location="../../../reports/lib/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>
 
   <echo message="basedir = ${basedir}" />
   <property name="assessment.props" value="${basedir}/assessment.props" />
@@ -13,7 +18,6 @@
   <echo message="top = ${top}" />
   <echo message="eclipse_home = ${eclipse_home}" />
 
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
   <property environment="env" />
   <property name="ECLIPSE_HOME" value="${eclipse_home}" />
   <property name="junit.output.dir" value="junit" />
@@ -40,14 +44,7 @@
     <pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-parser/1.1.2/abdera-parser-1.1.jar" />
     <pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-core/1.1.2/abdera-core-1.1.jar" />
     <pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-i18n/1.1.2/abdera-i18n-1.1.jar" />
-    <pathelement location="${top}/.m2/repository/org/apache/ws/commons/axiom/axiom-api/1.2.10/axiom-api-1.2.10.jar" />
-    <pathelement location="${top}/.m2/repository/org/apache/ws/commons/axiom/axiom-impl/1.2.10/axiom-impl-1.2.10.jar" />
   </path>
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-    <classpath>
-      <pathelement location="${top}/.m2/repository/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar" />
-    </classpath>
-  </taskdef>
   <path id="org.eclipse.lyo.testsuite.server.classpath">
     <pathelement location="../../target/classes" />
     <path refid="Maven Dependencies.libraryclasspath" />
@@ -102,10 +99,6 @@
     <antcall target="build" />
   </target>
 
-  <property name="todir" value="${junit.output.dir}/${provider}" />
-  <mkdir dir="${junit.output.dir}" />
-  <mkdir dir="${junit.output.dir}/${provider}" />
-
   <target name="provider-test">
     <mkdir dir="${junit.output.dir}" />
     <junit fork="no" printsummary="withOutAndErr">
@@ -151,6 +144,9 @@
   </target>
 
   <target name="append-oslc-spec-info" depends="merge-results">
+    <property name="todir" value="${junit.output.dir}/${provider}" />
+    <mkdir dir="${junit.output.dir}" />
+    <mkdir dir="${todir}" />
     <echo message="Detecting A Previous TESTS-TestSuitesOSLC.xml Result File ..." />
     <if>
       <available file="${junit.output.dir}/TESTS-TestSuitesOSLC.xml" />
@@ -171,6 +167,7 @@
   </target>
 
   <target name="junitreport" depends="append-oslc-spec-info">
+    <property name="todir" value="${junit.output.dir}/${provider}" />
     <property name="reportdir" value="./report/${provider}" />
     <echo message="Detecting A Previous OSLCAssessmentReport.html file within the report directory ..." />
     <if>

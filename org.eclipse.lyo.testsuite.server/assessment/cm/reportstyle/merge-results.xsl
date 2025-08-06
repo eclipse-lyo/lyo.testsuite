@@ -13,6 +13,13 @@
 
 <xsl:template match="/">
 	<xsl:element name="testsuites">
+		<!-- Include properties from the first available test file -->
+		<xsl:variable name="sampleTestFile" select="document('../junit/TEST-org.eclipse.lyo.testsuite.DynamicSuiteBuilder.xml')"/>
+		<xsl:if test="$sampleTestFile">
+			<testsuite name="merged">
+				<xsl:copy-of select="$sampleTestFile//properties"/>
+			</testsuite>
+		</xsl:if>
 		<xsl:apply-templates/>
 	</xsl:element>
 </xsl:template>
