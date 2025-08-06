@@ -75,14 +75,7 @@ public class DynamicSuiteBuilder {
             supportQuery = !setupProps.getProperty("supportQuery").equalsIgnoreCase("false");
         }
 
-        // Does the provider support ATOM query
-        boolean supportATOMQuery = true;
-        if (setupProps.getProperty("supportATOMQuery") != null) {
-            supportATOMQuery =
-                    !setupProps.getProperty("supportATOMQuery").equalsIgnoreCase("false");
-        }
-
-        // Does the provider support ATOM query
+        // Does the provider support RDF/XML abbreviated format?
         boolean supportRdfXmlAbbrev = true;
         if (setupProps.getProperty("supportXmlAbbrev") != null) {
             supportRdfXmlAbbrev =
@@ -131,10 +124,6 @@ public class DynamicSuiteBuilder {
                     testsToRun.add(SimplifiedQueryRdfXmlTests.class);
                     if (supportRdfXmlAbbrev) {
                         testsToRun.add(SimplifiedQueryXmlTests.class);
-                    }
-
-                    if (supportATOMQuery) {
-                        testsToRun.add(SimplifiedQueryAtomTests.class);
                     }
                 }
 

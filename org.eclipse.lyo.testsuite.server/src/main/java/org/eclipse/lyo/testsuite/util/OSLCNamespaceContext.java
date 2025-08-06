@@ -37,7 +37,6 @@ public class OSLCNamespaceContext implements NamespaceContext {
         else if ("oslc_cm".equals(prefix)) return OSLCConstants.OSLC_CM;
         else if ("oslc_asset".equals(prefix)) return OSLCConstants.OSLC_ASSET_V2;
         else if ("rtc_cm".equals(prefix)) return OSLCConstants.RTC_CM;
-        else if ("atom".equals(prefix)) return OSLCConstants.ATOM;
         else if ("oslc_cm_v2".equals(prefix)) return OSLCConstants.OSLC_CM_V2;
         else if ("oslc_qm_v2".equals(prefix)) return OSLCConstants.OSLC_QM_V2;
         else if ("oslc_rm_v2".equals(prefix)) return OSLCConstants.OSLC_RM_V2;

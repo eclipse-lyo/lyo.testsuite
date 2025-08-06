@@ -40,9 +40,6 @@
 	        <pathelement location="${top}/.m2/repository/org/apache/wink/wink-json4j/1.2.1-incubating/wink-json4j-1.2.1-incubating.jar"/>
 	        <pathelement location="${top}/.m2/repository/org/slf4j/slf4j-simple/1.5.10/slf4j-simple-1.5.10.jar"/>
 	        <pathelement location="${top}/.m2/repository/org/slf4j/slf4j-api/1.5.10/slf4j-api-1.5.10.jar"/>
-	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-parser/1.1.2/abdera-parser-1.1.jar"/>
-	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-core/1.1.2/abdera-core-1.1.jar"/>
-	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-i18n/1.1.2/abdera-i18n-1.1.jar"/>
 	    </path>
     <path id="provider-test.classpath">
         <pathelement location="../../target/classes"/>

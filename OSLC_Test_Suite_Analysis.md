@@ -196,7 +196,6 @@ The test suite validates multiple content types:
 - **RDF/XML Abbreviated** - Shortened RDF/XML syntax
 - **JSON-LD** - JSON-based RDF format
 - **Turtle** - Text-based RDF format
-- **ATOM** - For query results
 
 ## Test Execution Patterns
 
