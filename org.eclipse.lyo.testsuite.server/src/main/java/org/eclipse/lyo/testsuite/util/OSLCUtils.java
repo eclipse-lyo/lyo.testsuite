@@ -145,12 +145,6 @@ public class OSLCUtils {
         if (acceptTypes != null && !acceptTypes.isEmpty()) {
             requestHeaders.put("Accept", acceptTypes);
         }
-        //
-        //        // Add Basic Auth header
-        //        String authHeader = "Basic " +
-        // java.util.Base64.getEncoder().encodeToString((userCredentials.getPrincipal() + ":" +
-        // userCredentials.getSecret()).getBytes());
-        //        requestHeaders.put("Authorization", authHeader);
 
         // Execute the request
         Response response = client.getResource(url, requestHeaders);

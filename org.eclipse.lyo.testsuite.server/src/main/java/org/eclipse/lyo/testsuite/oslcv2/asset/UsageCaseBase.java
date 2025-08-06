@@ -77,9 +77,9 @@ public class UsageCaseBase extends AssetTestBase {
     protected Map<String, String> addHeader(Map<String, String> headers, Map.Entry<String, String> header) {
         // handle immutable and mutable maps
         if (headers == null) {
-            var map = new HashMap<>();
+            var map = new HashMap<String, String>();
             map.put(header.getKey(), header.getValue());
-            return headers;
+            return map;
         } else {
             headers.put(header.getKey(), header.getValue());
             return headers;
