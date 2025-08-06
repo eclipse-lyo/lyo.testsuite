@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Samuel Padgett - add support for creating and updating resource using shapes
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.assertEquals;

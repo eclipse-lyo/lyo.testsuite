@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Yuhong Yin
  *    Michael Fiedler - updated for OSLC Automation V2 spec
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
 import static org.junit.Assert.assertEquals;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +14,7 @@
  *    Steve Speicher
  *    Yuhong Yin
  *    Samuel Padgett
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import java.io.IOException;

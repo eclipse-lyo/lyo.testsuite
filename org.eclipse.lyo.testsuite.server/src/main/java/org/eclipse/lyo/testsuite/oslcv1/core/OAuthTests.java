@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Matthew Brown
  *    Michael Fiedler
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv1.core;
 
 import static org.junit.Assert.assertFalse;

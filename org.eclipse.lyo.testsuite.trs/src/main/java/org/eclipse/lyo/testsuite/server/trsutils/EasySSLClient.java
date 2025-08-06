@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  * Contributors:
  *
  *    Joseph Leong - Initial implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.server.trsutils;
 
 import java.security.KeyManagementException;

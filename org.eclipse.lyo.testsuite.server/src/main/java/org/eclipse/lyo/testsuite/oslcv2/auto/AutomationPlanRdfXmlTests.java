@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Michael Fiedler - updated for OSLC Automation V2 spec
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
 import java.io.IOException;

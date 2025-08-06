@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2012 IBM Corporation1
  *
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Tim Eck II     - asset management test cases
  *    Yuhong Yin
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.util;
 
 import java.util.Iterator;

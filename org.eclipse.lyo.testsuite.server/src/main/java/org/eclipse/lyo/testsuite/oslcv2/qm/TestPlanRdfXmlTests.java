@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  * Contributors:
  *
  *    Yuhong Yin    - initial API and implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
 import static org.junit.Assume.assumeTrue;

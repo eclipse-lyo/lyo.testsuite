@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  * Contributors:
  *
  *    Samuel Padgett - initial API and implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.util.oauth;
 
 import java.security.Principal;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Yuhong Yin
  *    Tori Santonil  - validate oslc:domain property on oslc:Service resource
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.assertEquals;

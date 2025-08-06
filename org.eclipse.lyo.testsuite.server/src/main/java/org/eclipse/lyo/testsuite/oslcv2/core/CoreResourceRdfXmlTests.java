@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2012, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -13,7 +13,7 @@
  *
  *    Yuhong Yin - initial API and implementation
  *    Samuel Padgett - don't fail if queryAdditionalParameters is not defined
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.assertEquals;

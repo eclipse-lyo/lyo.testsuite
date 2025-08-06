@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -13,7 +13,7 @@
  *
  *    Joseph Leong, Sujeet Mishra - Initial implementation
  *    David Terry - TRS 2.0 Specification Tests
- *******************************************************************************/
+ */
 
 package org.eclipse.lyo.testsuite.oslcv2.trs;
 

@@ -1,4 +1,4 @@
-/*-******************************************************************************
+/*
  * Copyright (c) 2021 Contributors to the Eclipse Foundation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -18,7 +18,7 @@
  *    Tim Eck II     - asset management test cases
  *    Julie Bielski  - performance management test cases
  *    Samuel Padgett - fix suite error when using Ant
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite;
 
 import java.util.ArrayList;
