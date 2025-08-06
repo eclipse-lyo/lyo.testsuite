@@ -33,7 +33,6 @@
  -->
 
 <xsl:param name="TITLE">OSLC Unit Test Report</xsl:param>
-<xsl:message>DEBUG: props property from XML is: '<xsl:value-of select="/testsuites/testsuite/properties/property[@name='props']/@value"/>'</xsl:message>
 <xsl:variable name="spec" select="document('../oslc-spec-mapping/oslc-am-v2.xml')"/>
 <xsl:variable name="troubleshoot" select="document('../support/troubleshooting.xml')"/>
 <xsl:variable name="date" select="date:new()"/>
