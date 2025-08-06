@@ -9,9 +9,9 @@ updates:
     directory: "/org.eclipse.lyo.testsuite.build" # Location of package manifests
     open-pull-requests-limit: 30
     schedule:
-      interval: "monthly"
+      interval: "daily"
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     open-pull-requests-limit: 30
     schedule:
-      interval: "monthly"
+      interval: "daily"
