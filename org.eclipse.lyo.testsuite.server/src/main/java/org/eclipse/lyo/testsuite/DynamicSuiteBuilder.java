@@ -77,9 +77,8 @@ public class DynamicSuiteBuilder {
 
         // Does the provider support RDF/XML abbreviated format?
         boolean supportRdfXmlAbbrev = true;
-        if (setupProps.getProperty("supportXmlAbbrev") != null) {
-            supportRdfXmlAbbrev =
-                    !setupProps.getProperty("supportRdfXmlAbbrev").equalsIgnoreCase("false");
+        if (setupProps.getProperty("supportRdfXmlAbbrev") != null) {
+            supportRdfXmlAbbrev = Boolean.parseBoolean(setupProps.getProperty("supportRdfXmlAbbrev"));
         }
 
         ArrayList<Class<?>> testsToRun = new ArrayList<>();
