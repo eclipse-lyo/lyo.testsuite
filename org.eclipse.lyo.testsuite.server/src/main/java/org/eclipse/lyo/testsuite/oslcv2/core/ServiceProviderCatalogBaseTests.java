@@ -47,7 +47,7 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
             + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
     public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
         Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
-        if (resp.getEntity() != null) {
+        if (resp.hasEntity()) {
             String respType = "";
             if (resp.getHeaderString("Content-Type") != null) {
                 respType = resp.getHeaderString("Content-Type");
