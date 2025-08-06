@@ -23,20 +23,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Statement;
+import jakarta.ws.rs.core.Response;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import java.util.HashMap;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -48,15 +48,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 /**
- * This class provides JUnit tests for the validation of the OSLCv2 creation and
- * updating of change requests. It uses the template files specified in
- * setup.properties as the entity to be POST or PUT, for creation and updating
- * respectively. If these files are not defined, it uses the creation factory
- * resource shape for creation and instance shape for update.
+ * This class provides JUnit tests for the validation of the OSLCv2 creation and updating of change requests. It uses
+ * the template files specified in setup.properties as the entity to be POST or PUT, for creation and updating
+ * respectively. If these files are not defined, it uses the creation factory resource shape for creation and instance
+ * shape for update.
  *
- * After each test, it attempts to perform a DELETE call on the resource that
- * was presumably created, but this DELETE call is not technically required in
- * the OSLC spec, so the created change request may still exist for some service
+ * <p>After each test, it attempts to perform a DELETE call on the resource that was presumably created, but this DELETE
+ * call is not technically required in the OSLC spec, so the created change request may still exist for some service
  * providers.
  */
 @RunWith(Parameterized.class)
@@ -70,10 +68,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         }
 
         Model m = ModelFactory.createDefaultModel();
-        m.read(
-                new StringReader(rdfXmlCreateTemplate),
-                "http://base.url",
-                OSLCConstants.JENA_RDF_XML);
+        m.read(new StringReader(rdfXmlCreateTemplate), "http://base.url", OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(m);
         Property rdfType = m.getProperty(OSLCConstants.RDF_TYPE_PROP);
         List l = m.listStatements(null, rdfType, (RDFNode) null).toList();
@@ -89,33 +84,28 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
     }
 
     /**
-     * Gets the content type for these tests. The type will be used for both the
-     * Accept header and the Content-Type header in POST and PUT requests.
+     * Gets the content type for these tests. The type will be used for both the Accept header and the Content-Type
+     * header in POST and PUT requests.
      *
      * @return the content type
      */
     public abstract String getContentType();
 
     /**
-     * Gets the valid post content for creating resources. Must be in the
-     * content type returned by
+     * Gets the valid post content for creating resources. Must be in the content type returned by
      * {@link CreationAndUpdateBaseTests#getContentType()}.
      *
      * @return the request body to POST to the creation factory
-     * @throws Exception
-     *             on errors
+     * @throws Exception on errors
      */
     public abstract String getCreateContent() throws Exception;
 
     /**
      * Gets the content to update a resource with (using a PUT request).
      *
-     * @param resourceUri
-     *            the URI of the resource to modify
-     * @return valid request body content for a PUT request using
-     *         {@link CreationAndUpdateBaseTests#getContentType()}
-     * @throws Exception
-     *             on errors
+     * @param resourceUri the URI of the resource to modify
+     * @return valid request body content for a PUT request using {@link CreationAndUpdateBaseTests#getContentType()}
+     * @throws Exception on errors
      */
     public abstract String getUpdateContent(String resourceUri) throws Exception;
 
@@ -123,35 +113,25 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
     public void createResourceWithInvalidContentType() throws Exception {
         // Issue post request using the provided template and an invalid
         // contentType
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl, creds, "*/*", "weird/type", getCreateContent(), headers);
+        Response resp = OSLCUtils.postDataToUrl(currentUrl, creds, "*/*", "weird/type", getCreateContent(), headers);
         resp.close();
         assertEquals(415, resp.getStatus());
     }
 
-    private Response doPost(String contentType, String accept, String content)
-            throws IOException {
+    private Response doPost(String contentType, String accept, String content) throws IOException {
 
         // issue the POST call
-        Response resp =
-                OSLCUtils.postDataToUrl(currentUrl, creds, accept, contentType, content, headers);
+        Response resp = OSLCUtils.postDataToUrl(currentUrl, creds, accept, contentType, content, headers);
 
         if (resp.getStatus() == 415) { // Unsupported Media Type
             resp.close();
             String knownIssue = "";
             if (implName.equalsIgnoreCase("RQM")) {
-                knownIssue =
-                        "Reported as Defect: PUT and POST requests with Content-Type:"
-                                + " application/xml should be allowed (72920)";
+                knownIssue = "Reported as Defect: PUT and POST requests with Content-Type:"
+                        + " application/xml should be allowed (72920)";
             }
             throw new AssertionError(
-                    "Provider "
-                            + implName
-                            + " does not support POST with "
-                            + contentType
-                            + ". "
-                            + knownIssue);
+                    "Provider " + implName + " does not support POST with " + contentType + ". " + knownIssue);
         }
 
         return resp;
@@ -183,25 +163,15 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
     @Test
     public void createResourceWithInvalidContent() throws IOException {
         // Issue post request using valid content type but invalid content
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        creds,
-                        getContentType(),
-                        getContentType(),
-                        "invalid content",
-                        headers);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, creds, getContentType(), getContentType(), "invalid content", headers);
         resp.close();
 
         // An error status code should be at least 400.
-        assertTrue(
-                "Expecting error but received successful status code",
-                resp.getStatus() >= 400);
+        assertTrue("Expecting error but received successful status code", resp.getStatus() >= 400);
 
         // Malformed content should not result in a 500 internal server error.
-        assertFalse(
-                "Server should not return an internal server error",
-                resp.getStatus() == 500);
+        assertFalse("Server should not return an internal server error", resp.getStatus() == 500);
     }
 
     @Test
@@ -255,21 +225,11 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         // We may need to add something to update URL to match the template
         if (updateParams != null && !updateParams.isEmpty()) updateUrl = updateUrl + updateParams;
 
-        resp =
-                OSLCUtils.putDataToUrl(
-                        updateUrl,
-                        creds,
-                        getContentType(),
-                        getContentType(),
-                        updateContent,
-                        putHeaders);
+        resp = OSLCUtils.putDataToUrl(updateUrl, creds, getContentType(), getContentType(), updateContent, putHeaders);
         String responseBody = resp.readEntity(String.class);
         if (resp.getEntity() != null) resp.close();
         // Assert that a proper PUT resulted in a 200 OK
-        assertEquals(
-                "HTTP Response body: \n " + responseBody,
-                Response.Status.OK.getStatusCode(),
-                resp.getStatus());
+        assertEquals("HTTP Response body: \n " + responseBody, Response.Status.OK.getStatusCode(), resp.getStatus());
 
         // Clean up after the test by attempting to delete the created resource
         if (location != null) {
@@ -301,14 +261,8 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         }
 
         // Now, go to the url of the new change request and update it.
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location,
-                        creds,
-                        getContentType(),
-                        getContentType(),
-                        "invalid content",
-                        putHeaders);
+        resp = OSLCUtils.putDataToUrl(
+                location, creds, getContentType(), getContentType(), "invalid content", putHeaders);
         if (resp.getEntity() != null) {
             resp.close();
         }
@@ -350,14 +304,8 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
         // Now, go to the url of the new change request and update it.
         // resp = OSLCUtils.putDataToUrl(location.getValue(), creds, "*/*",
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location,
-                        creds,
-                        "application/xml",
-                        "application/invalid",
-                        updateContent,
-                        putHeaders);
+        resp = OSLCUtils.putDataToUrl(
+                location, creds, "application/xml", "application/invalid", updateContent, putHeaders);
         if (resp != null && resp.getEntity() != null) resp.close();
 
         assertEquals(415, resp.getStatus()); // Unsupported Media Type
@@ -368,8 +316,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         if (resp != null && resp.getEntity() != null) resp.close();
     }
 
-    private Response createResource(String contentType, String accept, String createContent)
-            throws IOException {
+    private Response createResource(String contentType, String accept, String createContent) throws IOException {
 
         Response resp = doPost(contentType, accept, createContent);
 
@@ -419,11 +366,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
         if (hasPayLoad) {
             assertTrue(
-                    "Either ETag("
-                            + eTag
-                            + ") or Last-Modified("
-                            + lastModified
-                            + ") must not be null",
+                    "Either ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null",
                     eTag != null || lastModified != null);
         }
 
@@ -442,22 +385,14 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         String updateContent = getUpdateContent(location);
 
         // Now, go to the url of the new change request and update it.
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location,
-                        creds,
-                        getContentType(),
-                        getContentType(),
-                        updateContent,
-                        putHeaders);
+        resp = OSLCUtils.putDataToUrl(location, creds, getContentType(), getContentType(), updateContent, putHeaders);
         if (resp != null && resp.getEntity() != null) resp.close();
 
         if (resp.getStatus() == 500) { // Internal Server Error
             String knownIssue = "";
             if (implName.equalsIgnoreCase("RQM")) {
-                knownIssue =
-                        "Reported as Defect: Updating (PUT) with a failed precondition should"
-                            + " result in http status 412 instead of server internal error (73374)";
+                knownIssue = "Reported as Defect: Updating (PUT) with a failed precondition should"
+                        + " result in http status 412 instead of server internal error (73374)";
             }
 
             throw new AssertionError("Known issue for provider " + implName + ". " + knownIssue);
@@ -494,11 +429,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
         if (hasPayLoad) {
             assertTrue(
-                    "Either ETag("
-                            + eTag
-                            + ") or Last-Modified("
-                            + lastModified
-                            + ") must not be null",
+                    "Either ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null",
                     eTag != null || lastModified != null);
         }
 
@@ -510,14 +441,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
         // Now, go to the url of the new change request and update it.
         String updateContent = getUpdateContent(location);
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location,
-                        creds,
-                        getContentType(),
-                        getContentType(),
-                        updateContent,
-                        putHeaders);
+        resp = OSLCUtils.putDataToUrl(location, creds, getContentType(), getContentType(), updateContent, putHeaders);
         if (resp != null && resp.getEntity() != null) resp.close();
 
         assertEquals(400, resp.getStatus()); // Bad Request
@@ -539,7 +463,6 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
     }
 
     protected boolean isPropertyRequired(String occursValue) {
-        return OSLCConstants.EXACTLY_ONE.equals(occursValue)
-                || OSLCConstants.ONE_OR_MANY.equals(occursValue);
+        return OSLCConstants.EXACTLY_ONE.equals(occursValue) || OSLCConstants.ONE_OR_MANY.equals(occursValue);
     }
 }

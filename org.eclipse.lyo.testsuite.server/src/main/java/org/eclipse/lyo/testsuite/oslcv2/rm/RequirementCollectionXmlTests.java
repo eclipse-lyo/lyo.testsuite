@@ -16,20 +16,14 @@ import org.xml.sax.SAXException;
 public class RequirementCollectionXmlTests extends CoreResourceXmlTests {
 
     public RequirementCollectionXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         super(thisUrl);
         setNode(ns, resource);
     }
 
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    javax.xml.xpath.XPathException {
+            throws IOException, ParserConfigurationException, SAXException, javax.xml.xpath.XPathException {
 
         staticSetup();
 

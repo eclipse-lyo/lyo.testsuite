@@ -35,10 +35,7 @@ import org.xml.sax.SAXException;
 public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 
     public TestExecutionRecordXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);
@@ -64,8 +61,7 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
     public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "oslc_qm_v2:runsTestCase";
 
-        NodeList results =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
         assertEquals("oslc_qm_v2:runsTestCase" + getFailureMessage(), 1, results.getLength());
     }

@@ -17,15 +17,14 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.StmtIterator;
-import java.io.IOException;
-import java.io.InputStream;
-
-import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;

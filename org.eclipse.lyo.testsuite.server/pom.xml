@@ -17,7 +17,9 @@
 	   Samuel Padgett - created shaded JAR with dependencies during build
 	   Samuel Padgett - update Maven group ID and artifact ID
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -49,32 +51,6 @@
       <properties>
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
       </properties>
-    </profile>
-
-    <profile>
-      <id>spotless</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.diffplug.spotless</groupId>
-            <artifactId>spotless-maven-plugin</artifactId>
-            <version>2.46.1</version>
-            <executions>
-              <execution>
-                <id>auto-style</id>
-                <goals>
-                  <goal>apply</goal>
-                </goals>
-                <!-- Using validate phase, so this happens before enforce-style -->
-                <phase>validate</phase>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 
@@ -176,9 +152,9 @@
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
-     <!-- <version>2.13.0</version> -->
+      <!-- <version>2.13.0</version> -->
       <!-- <version>5.5.0</version> -->
-       <!-- Lyo not ready yet -->
+      <!-- Lyo not ready yet -->
       <version>4.10.0</version>
     </dependency>
 
@@ -261,6 +237,16 @@
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <version>2.46.1</version>
+        <executions>
+          <execution>
+            <id>auto-style</id>
+            <goals>
+              <goal>apply</goal>
+            </goals>
+            <!-- Using validate phase, so this happens before enforce-style -->
+            <phase>validate</phase>
+          </execution>
+        </executions>
         <configuration>
           <!-- optional: limit format enforcement to just the files changed by this feature branch -->
           <!--                    <ratchetFrom>origin/main</ratchetFrom>-->
@@ -273,8 +259,8 @@
                 <include>.gitignore</include>
               </includes>
               <!-- define the steps to apply to those files -->
-              <trimTrailingWhitespace/>
-              <endWithNewline/>
+              <trimTrailingWhitespace />
+              <endWithNewline />
               <indent>
                 <tabs>true</tabs>
                 <spacesPerTab>4</spacesPerTab>
@@ -291,11 +277,16 @@
               <formatJavadoc>true</formatJavadoc>
             </googleJavaFormat> -->
             <palantirJavaFormat>
-  <version>2.73.0</version>                     <!-- optional -->
-  <style>PALANTIR</style>                       <!-- or AOSP/GOOGLE (optional) -->
-  <formatJavadoc>true</formatJavadoc>          <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
-</palantirJavaFormat>
-
+              <version>2.73.0</version>                     <!-- optional -->
+              <style>PALANTIR</style>                       <!-- or AOSP/GOOGLE (optional) -->
+              <formatJavadoc>true</formatJavadoc>          <!-- defaults to false (optional, requires at least
+              Palantir 2.39.0) -->
+            </palantirJavaFormat>
+            <removeUnusedImports>
+              <engine>google-java-format</engine>    <!-- optional. Defaults to `google-java-format`.
+              Can be switched to `cleanthat-javaparser-unnecessaryimport` (e.g. to process JDK17
+              source files with a JDK8+ Runtime) -->
+            </removeUnusedImports>
           </java>
         </configuration>
       </plugin>

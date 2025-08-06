@@ -26,11 +26,10 @@ import org.junit.BeforeClass;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the basic validation of query factories
- * as specified in the OSLC version 2 spec. This version of the query tests only
- * tests the basic status code and form of the query responses, as without
- * shapes implemented it is difficult to represent the needed various templates
- * of different change request types and to query for the templates.
+ * This class provides JUnit tests for the basic validation of query factories as specified in the OSLC version 2 spec.
+ * This version of the query tests only tests the basic status code and form of the query responses, as without shapes
+ * implemented it is difficult to represent the needed various templates of different change request types and to query
+ * for the templates.
  */
 public abstract class SimplifiedQueryBaseTests extends TestsBase {
 
@@ -47,8 +46,7 @@ public abstract class SimplifiedQueryBaseTests extends TestsBase {
     }
 
     @BeforeClass
-    public static void mysetup()
-            throws IOException, ParserConfigurationException, SAXException, XPathException {
+    public static void mysetup() throws IOException, ParserConfigurationException, SAXException, XPathException {
 
         staticSetup();
 
@@ -66,25 +64,20 @@ public abstract class SimplifiedQueryBaseTests extends TestsBase {
     }
 
     protected String getQueryBase() {
-        String query =
-                (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
+        String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
         return query;
     }
 
-    protected String getQueryUrlForValidEqualsQueryContainsExpectedResources()
-            throws UnsupportedEncodingException {
-        String query =
-                getQueryBase()
-                        + "oslc.where="
-                        + URLEncoder.encode(
-                                queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8")
-                        + "&oslc.select="
-                        + URLEncoder.encode(queryProperty, "UTF-8");
+    protected String getQueryUrlForValidEqualsQueryContainsExpectedResources() throws UnsupportedEncodingException {
+        String query = getQueryBase()
+                + "oslc.where="
+                + URLEncoder.encode(queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8")
+                + "&oslc.select="
+                + URLEncoder.encode(queryProperty, "UTF-8");
         return query;
     }
 
-    protected String getQueryUrlForValidNotEqualQueryContainsExpectedResources()
-            throws UnsupportedEncodingException {
+    protected String getQueryUrlForValidNotEqualQueryContainsExpectedResources() throws UnsupportedEncodingException {
         return getQueryBase()
                 + "oslc.where="
                 + URLEncoder.encode(queryProperty + "!=\"" + queryPropertyValue + "\"", "UTF-8")
@@ -92,12 +85,10 @@ public abstract class SimplifiedQueryBaseTests extends TestsBase {
                 + URLEncoder.encode(queryProperty, "UTF-8");
     }
 
-    protected String getQueryUrlForValidLessThanQueryContainsExpectedResources()
-            throws UnsupportedEncodingException {
+    protected String getQueryUrlForValidLessThanQueryContainsExpectedResources() throws UnsupportedEncodingException {
         return getQueryBase()
                 + "oslc.where="
-                + URLEncoder.encode(
-                        queryComparisonProperty + "<\"" + queryComparisonValue + "\"", "UTF-8")
+                + URLEncoder.encode(queryComparisonProperty + "<\"" + queryComparisonValue + "\"", "UTF-8")
                 + "&oslc.select="
                 + URLEncoder.encode(queryComparisonProperty, "UTF-8");
     }
@@ -106,14 +97,12 @@ public abstract class SimplifiedQueryBaseTests extends TestsBase {
             throws UnsupportedEncodingException {
         return getQueryBase()
                 + "oslc.where="
-                + URLEncoder.encode(
-                        queryComparisonProperty + ">=\"" + queryComparisonValue + "\"", "UTF-8")
+                + URLEncoder.encode(queryComparisonProperty + ">=\"" + queryComparisonValue + "\"", "UTF-8")
                 + "&oslc.select="
                 + URLEncoder.encode(queryComparisonProperty, "UTF-8");
     }
 
-    protected String getQueryUrlForValidCompoundQueryContainsExpectedResources()
-            throws UnsupportedEncodingException {
+    protected String getQueryUrlForValidCompoundQueryContainsExpectedResources() throws UnsupportedEncodingException {
         return getQueryBase()
                 + "oslc.where="
                 + URLEncoder.encode(
@@ -130,11 +119,8 @@ public abstract class SimplifiedQueryBaseTests extends TestsBase {
                 + URLEncoder.encode(queryProperty + "," + queryComparisonProperty, "UTF-8");
     }
 
-    protected String getQueryUrlForFullTextSearchContainsExpectedResults()
-            throws UnsupportedEncodingException {
-        return getQueryBase()
-                + "oslc.searchTerms="
-                + URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
+    protected String getQueryUrlForFullTextSearchContainsExpectedResults() throws UnsupportedEncodingException {
+        return getQueryBase() + "oslc.searchTerms=" + URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
     }
 
     protected boolean getFullTextSearch() {

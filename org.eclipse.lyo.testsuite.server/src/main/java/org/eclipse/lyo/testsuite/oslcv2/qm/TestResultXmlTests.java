@@ -36,10 +36,7 @@ import org.xml.sax.SAXException;
 public class TestResultXmlTests extends CoreResourceXmlTests {
 
     public TestResultXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);
@@ -66,8 +63,7 @@ public class TestResultXmlTests extends CoreResourceXmlTests {
     public void TestResultHasOneStatus() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "oslc_qm_v2:status";
 
-        NodeList statuses =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList statuses = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
         int size = statuses.getLength();
         assertTrue("TestResult has zero or one oslc_qm_v2:status, found " + size, size <= 1);
@@ -77,8 +73,7 @@ public class TestResultXmlTests extends CoreResourceXmlTests {
     public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "oslc_qm_v2:reportsOnTestCase";
 
-        NodeList results =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
         assertEquals(getFailureMessage(), 1, results.getLength());
     }

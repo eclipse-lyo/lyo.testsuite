@@ -19,6 +19,13 @@ package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.*;
 
+import jakarta.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
 import org.apache.jena.datatypes.xsd.impl.XMLLiteralType;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
@@ -29,23 +36,13 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import jakarta.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
-import org.junit.Test;
 
-/**
- * Common class for testing creation and update using RDF media types.
- */
+/** Common class for testing creation and update using RDF media types. */
 public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdateBaseTests {
 
     private static Logger logger = Logger.getLogger(AbstractCreationAndUpdateRdfTests.class);
@@ -72,15 +69,10 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
 
     // Max depth is used to detect cycles.
     private static final int MAX_DEPTH =
-            Integer.parseInt(
-                    System.getProperty(
-                            "org.eclipse.lyo.testsuite.oslcv2.createResource.maxDepth", "10"));
+            Integer.parseInt(System.getProperty("org.eclipse.lyo.testsuite.oslcv2.createResource.maxDepth", "10"));
 
-    protected Resource createResourceFromShape(Model requestModel, String shapeUri, int depth)
-            throws IOException {
-        assertTrue(
-                "Detected possible circular reference in shape while creating resource.",
-                depth < MAX_DEPTH);
+    protected Resource createResourceFromShape(Model requestModel, String shapeUri, int depth) throws IOException {
+        assertTrue("Detected possible circular reference in shape while creating resource.", depth < MAX_DEPTH);
 
         // Get the shape.
         Model shapeModel = getModel(shapeUri);
@@ -91,8 +83,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
         Resource toCreate = requestModel.createResource();
 
         Resource shapeResource = shapeModel.getResource(shapeUri);
-        StmtIterator typeIter =
-                shapeResource.listProperties(shapeModel.createProperty(OSLCConstants.DESCRIBES));
+        StmtIterator typeIter = shapeResource.listProperties(shapeModel.createProperty(OSLCConstants.DESCRIBES));
 
         // Use the first rdf:type if defined.
         if (typeIter.hasNext()) {
@@ -116,16 +107,16 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
         return toCreate;
     }
 
-    private void fillInProperty(
-            Model shapeModel, Resource toCreate, Resource propertyToFill, int depth)
+    private void fillInProperty(Model shapeModel, Resource toCreate, Resource propertyToFill, int depth)
             throws IOException {
-        final Property propertyDefinitionProp =
-                shapeModel.createProperty(OSLCConstants.PROPERTY_DEFINITION);
+        final Property propertyDefinitionProp = shapeModel.createProperty(OSLCConstants.PROPERTY_DEFINITION);
         final Property allowedValueProp = shapeModel.createProperty(OSLCConstants.ALLOWED_VALUE);
         final Property allowedValuesProp = shapeModel.createProperty(OSLCConstants.ALLOWED_VALUES);
 
-        String propertyDefinition =
-                propertyToFill.getRequiredProperty(propertyDefinitionProp).getResource().getURI();
+        String propertyDefinition = propertyToFill
+                .getRequiredProperty(propertyDefinitionProp)
+                .getResource()
+                .getURI();
         Property requestProp = toCreate.getModel().createProperty(propertyDefinition);
 
         /*
@@ -208,16 +199,14 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
      * Attempt to add a value for this property using its value type.
      */
     private void fillInPropertyFromValueType(
-            Resource toCreate, Resource propertyResource, Property requestProp, int depth)
-            throws IOException {
+            Resource toCreate, Resource propertyResource, Property requestProp, int depth) throws IOException {
         Model requestModel = toCreate.getModel();
         Model shapeModel = propertyResource.getModel();
         final Property valueTypeProp = shapeModel.createProperty(OSLCConstants.VALUE_TYPE);
 
         if (propertyResource.hasProperty(valueTypeProp)) {
             final Property rangeProp = shapeModel.createProperty(OSLCConstants.RANGE);
-            final Property valueShapeProp =
-                    shapeModel.createProperty(OSLCConstants.VALUE_SHAPE_PROP);
+            final Property valueShapeProp = shapeModel.createProperty(OSLCConstants.VALUE_SHAPE_PROP);
             HashSet<String> valueTypes = new HashSet<>();
             StmtIterator valueTypeIter = propertyResource.listProperties(valueTypeProp);
             while (valueTypeIter.hasNext()) {
@@ -233,8 +222,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
                 toCreate.addProperty(requestProp, string);
             } else if (valueTypes.contains(OSLCConstants.XML_LITERAL_TYPE)) {
                 String string = generateStringValue(getMaxSize(propertyResource));
-                Literal literal =
-                        requestModel.createTypedLiteral(string, XMLLiteralType.theXMLLiteralType);
+                Literal literal = requestModel.createTypedLiteral(string, XMLLiteralType.theXMLLiteralType);
                 toCreate.addLiteral(requestProp, literal);
             } else if (valueTypes.contains(OSLCConstants.BOOLEAN_TYPE)) {
                 toCreate.addLiteral(requestProp, true);
@@ -248,8 +236,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
                 Literal literal = requestModel.createTypedLiteral(1, OSLCConstants.DECIMAL_TYPE);
                 toCreate.addLiteral(requestProp, literal);
             } else if (valueTypes.contains(OSLCConstants.DATE_TIME_TYPE)) {
-                toCreate.addLiteral(
-                        requestProp, requestModel.createTypedLiteral(Calendar.getInstance()));
+                toCreate.addLiteral(requestProp, requestModel.createTypedLiteral(Calendar.getInstance()));
             } else {
                 // It appears to be a resource.
                 Statement valueShapeStatement = propertyResource.getProperty(valueShapeProp);
@@ -263,11 +250,8 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
                     }
                     toCreate.addProperty(requestProp, valueResource);
                 } else {
-                    Resource nested =
-                            createResourceFromShape(
-                                    requestModel,
-                                    valueShapeStatement.getResource().getURI(),
-                                    depth + 1);
+                    Resource nested = createResourceFromShape(
+                            requestModel, valueShapeStatement.getResource().getURI(), depth + 1);
                     toCreate.addProperty(requestProp, nested);
                 }
             }
@@ -279,8 +263,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
     }
 
     protected String toString(Model model) {
-        String lang =
-                (OSLCConstants.CT_XML.equals(getHeaderString("Content-Type"))) ? "RDF/XML-ABBREV" : "RDF/XML";
+        String lang = (OSLCConstants.CT_XML.equals(getHeaderString("Content-Type"))) ? "RDF/XML-ABBREV" : "RDF/XML";
         StringWriter writer = new StringWriter();
         model.write(writer, lang, "");
 
@@ -293,9 +276,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
      * Is this property from a resource shape required?
      */
     private boolean isPropertyRequired(Resource property) {
-        Statement statement =
-                property.getRequiredProperty(
-                        property.getModel().createProperty(OSLCConstants.OCCURS));
+        Statement statement = property.getRequiredProperty(property.getModel().createProperty(OSLCConstants.OCCURS));
         String occursValue = statement.getResource().getURI();
 
         return isPropertyRequired(occursValue);
@@ -305,8 +286,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
      * Is this property from a resource shape read only?
      */
     private boolean isPropertyReadOnly(Resource property) {
-        Statement statement =
-                property.getProperty(property.getModel().createProperty(OSLCConstants.READ_ONLY));
+        Statement statement = property.getProperty(property.getModel().createProperty(OSLCConstants.READ_ONLY));
         if (statement == null) {
             return false;
         }
@@ -350,13 +330,10 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
 
     private Model getModel(String uri) throws IOException {
         Response resp =
-            OSLCUtils.getResponseFromUrl(uri, uri, TestsBase.creds, OSLCConstants.CT_RDF, TestsBase.headers);
-
-
+                OSLCUtils.getResponseFromUrl(uri, uri, TestsBase.creds, OSLCConstants.CT_RDF, TestsBase.headers);
 
         try {
-            assertEquals(
-                    "Failed to get resource at " + uri, 200, resp.getStatus());
+            assertEquals("Failed to get resource at " + uri, 200, resp.getStatus());
             Model model = ModelFactory.createDefaultModel();
             model.read(resp.readEntity(InputStream.class), uri, OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(model);
@@ -368,14 +345,11 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
     }
 
     /**
-     * Change a resource using its instance shape. Will only attempt to change
-     * one property to limit the chance of errors.
+     * Change a resource using its instance shape. Will only attempt to change one property to limit the chance of
+     * errors.
      *
-     * @param uri
-     *            the resource to modify
-     *
-     * @throws IOException
-     *             on errors requesting the instance shape
+     * @param uri the resource to modify
+     * @throws IOException on errors requesting the instance shape
      */
     protected String updateResourceFromShape(String uri, String contentType) throws IOException {
         Model resourceModel = getModel(uri);
@@ -388,8 +362,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
         Model shapeModel = getModel(shapeUri);
 
         Property propertyProp = shapeModel.createProperty(OSLCConstants.PROPERTY);
-        Property propertyDefinitionProp =
-                shapeModel.createProperty(OSLCConstants.PROPERTY_DEFINITION);
+        Property propertyDefinitionProp = shapeModel.createProperty(OSLCConstants.PROPERTY_DEFINITION);
         Resource shape = shapeModel.getResource(shapeUri);
         StmtIterator propertyIterator = shape.listProperties(propertyProp);
 
@@ -410,12 +383,12 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
              * sophisticated and look for any type that might be modifiable.
              */
             if (isStringType(property)) {
-                String propertyDefinition =
-                        property.getRequiredProperty(propertyDefinitionProp).getResource().getURI();
+                String propertyDefinition = property.getRequiredProperty(propertyDefinitionProp)
+                        .getResource()
+                        .getURI();
                 Property propertyToChange = resourceModel.createProperty(propertyDefinition);
                 resource.removeAll(propertyToChange);
-                resource.addLiteral(
-                        propertyToChange, generateStringValue(getMaxSize(propertyToChange)));
+                resource.addLiteral(propertyToChange, generateStringValue(getMaxSize(propertyToChange)));
 
                 // Updating one field should be good enough.
                 break;

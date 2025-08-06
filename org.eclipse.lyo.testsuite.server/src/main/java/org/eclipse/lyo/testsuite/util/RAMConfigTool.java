@@ -27,9 +27,7 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-/**
- * This tool generates configurations to be used to run the lyo test suite against Rational Asset Manager.
- */
+/** This tool generates configurations to be used to run the lyo test suite against Rational Asset Manager. */
 public class RAMConfigTool {
     private static Properties properties;
 
@@ -54,14 +52,14 @@ public class RAMConfigTool {
 
     /**
      * first arg is file name, if second is -z then a zip file is created
+     *
      * @param args
      */
     public static void main(String[] args) {
         // Verify the file arg might exist
         if (args.length < 1) {
-            System.out.println(
-                    "No file name was specified. The first argument needs to the file path to the"
-                            + " properties file.");
+            System.out.println("No file name was specified. The first argument needs to the file path to the"
+                    + " properties file.");
             return;
         }
 
@@ -69,9 +67,8 @@ public class RAMConfigTool {
         try {
             setupProperties(args[0]);
         } catch (IOException e) {
-            System.out.println(
-                    "The specified file passed could no be read. Please verify that the file exists"
-                            + " and is properly formatted");
+            System.out.println("The specified file passed could no be read. Please verify that the file exists"
+                    + " and is properly formatted");
             return;
         }
 
@@ -92,9 +89,8 @@ public class RAMConfigTool {
             testArtifactTemplate = readFile(TEMPLATE_DIR + "testArtifact.txt");
             setupPropertyTemplate = readFile(TEMPLATE_DIR + "setup.properties");
         } catch (IOException e) {
-            System.out.println(
-                    "Could not read the template files. Please verify that they are where they"
-                            + " should be and can be read");
+            System.out.println("Could not read the template files. Please verify that they are where they"
+                    + " should be and can be read");
             return;
         }
 
@@ -102,9 +98,8 @@ public class RAMConfigTool {
         try {
             fillInTemplates();
         } catch (NullPointerException e) {
-            System.out.println(
-                    "There where properties settings not found in the the properties file. Could"
-                            + " not generate configuration.");
+            System.out.println("There where properties settings not found in the the properties file. Could"
+                    + " not generate configuration.");
             return;
         }
 
@@ -176,22 +171,18 @@ public class RAMConfigTool {
 
         String queryAssetName = properties.getProperty("queryAssetName");
         String queryAssetModificationDate = properties.getProperty("queryAssetModificationDate");
-        if (queryAssetName == null || queryAssetModificationDate == null)
-            throw new NullPointerException();
+        if (queryAssetName == null || queryAssetModificationDate == null) throw new NullPointerException();
         setupPropertyTemplate = setupPropertyTemplate.replace("*queryAssetName*", queryAssetName);
         setupPropertyTemplate =
-                setupPropertyTemplate.replace(
-                        "*queryAssetModificationDate*", queryAssetModificationDate);
+                setupPropertyTemplate.replace("*queryAssetModificationDate*", queryAssetModificationDate);
 
         // Set up the property values for the xml/json file templates
         String assetType = properties.getProperty("assetType");
         String assetCommunity = properties.getProperty("assetCommunity");
         String assetCategory = properties.getProperty("assetCategory");
         String assetRelationship = properties.getProperty("assetRelationship");
-        if (assetType == null
-                || assetCommunity == null
-                || assetCategory == null
-                || assetRelationship == null) throw new NullPointerException();
+        if (assetType == null || assetCommunity == null || assetCategory == null || assetRelationship == null)
+            throw new NullPointerException();
 
         // Update the xml file templates
         xmlCreateTemplate = xmlCreateTemplate.replace("*ramUrl*", ramUrl);
@@ -205,10 +196,8 @@ public class RAMConfigTool {
 
         xmlRelationshipTemplate = xmlRelationshipTemplate.replace("*ramUrl*", ramUrl);
         xmlRelationshipTemplate = xmlRelationshipTemplate.replace("*assetType*", assetType);
-        xmlRelationshipTemplate =
-                xmlRelationshipTemplate.replace("*assetCommunity*", assetCommunity);
-        xmlRelationshipTemplate =
-                xmlRelationshipTemplate.replace("*assetRelationship*", assetRelationship);
+        xmlRelationshipTemplate = xmlRelationshipTemplate.replace("*assetCommunity*", assetCommunity);
+        xmlRelationshipTemplate = xmlRelationshipTemplate.replace("*assetRelationship*", assetRelationship);
 
         xmlUpdateTemplate = xmlUpdateTemplate.replace("*ramUrl*", ramUrl);
         xmlUpdateTemplate = xmlUpdateTemplate.replace("*assetType*", assetType);
@@ -226,10 +215,8 @@ public class RAMConfigTool {
 
         jsonRelationshipTemplate = jsonRelationshipTemplate.replace("*ramUrl*", ramUrl);
         jsonRelationshipTemplate = jsonRelationshipTemplate.replace("*assetType*", assetType);
-        jsonRelationshipTemplate =
-                jsonRelationshipTemplate.replace("*assetCommunity*", assetCommunity);
-        jsonRelationshipTemplate =
-                jsonRelationshipTemplate.replace("*assetRelationship", assetRelationship);
+        jsonRelationshipTemplate = jsonRelationshipTemplate.replace("*assetCommunity*", assetCommunity);
+        jsonRelationshipTemplate = jsonRelationshipTemplate.replace("*assetRelationship", assetRelationship);
 
         jsonUpdateTemplate = jsonUpdateTemplate.replace("*ramUrl*", ramUrl);
         jsonUpdateTemplate = jsonUpdateTemplate.replace("*assetType*", assetType);
@@ -293,11 +280,7 @@ public class RAMConfigTool {
     }
 
     private static void addToZip(
-            ZipOutputStream zip,
-            String directory,
-            String fileName,
-            String extention,
-            String content)
+            ZipOutputStream zip, String directory, String fileName, String extention, String content)
             throws IOException {
         zip.putNextEntry(new ZipEntry(directory + fileName + "." + extention));
         File temp = File.createTempFile(fileName, extention);

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -32,8 +33,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response;
-import org.apache.http.auth.Credentials;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
@@ -54,8 +53,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of OSLC Simply Query services,
- * currently focusing on the validation of the OSLC_CM definition of Queries.
+ * This class provides JUnit tests for the validation of OSLC Simply Query services, currently focusing on the
+ * validation of the OSLC_CM definition of Queries.
  */
 @RunWith(Parameterized.class)
 public class QueryTests {
@@ -76,8 +75,7 @@ public class QueryTests {
     }
 
     @Before
-    public void setup()
-            throws IOException, ParserConfigurationException, SAXException, XPathException {
+    public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException {
         Properties setupProps = SetupProperties.setup(null);
         if (setupProps.getProperty("testBackwardsCompatability") != null
                 && Boolean.parseBoolean(setupProps.getProperty("testBackwardsCompatability"))) {
@@ -114,24 +112,17 @@ public class QueryTests {
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
 
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        base,
-                        base,
-                        new TestsBase.UserPassword(userId, pw),
-                        OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
+        Response resp = OSLCUtils.getResponseFromUrl(
+                base,
+                base,
+                new TestsBase.UserPassword(userId, pw),
+                OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
 
         // If our 'base' is a ServiceDescription, find and add the simpleQuery service url
         if (resp.getHeaderString("Content-Type").contains(OSLCConstants.CT_DISC_DESC_XML)) {
-            Document baseDoc =
-                    OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
-            Node simpleQueryUrl =
-                    (Node)
-                            OSLCUtils.getXPath()
-                                    .evaluate(
-                                            "//oslc_cm:simpleQuery/oslc_cm:url",
-                                            baseDoc,
-                                            XPathConstants.NODE);
+            Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
+            Node simpleQueryUrl = (Node)
+                    OSLCUtils.getXPath().evaluate("//oslc_cm:simpleQuery/oslc_cm:url", baseDoc, XPathConstants.NODE);
             Collection<Object[]> data = new ArrayList<Object[]>();
             data.add(new Object[] {simpleQueryUrl.getTextContent()});
             return data;
@@ -144,13 +135,8 @@ public class QueryTests {
         Collection<Object[]> data = new ArrayList<Object[]>();
 
         // Get all the ServiceDescriptionDocuments from this ServiceProviderCatalog
-        NodeList sDescs =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_disc:services/@rdf:resource",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        NodeList sDescs = (NodeList)
+                OSLCUtils.getXPath().evaluate("//oslc_disc:services/@rdf:resource", baseDoc, XPathConstants.NODESET);
         for (int i = 0; i < sDescs.getLength(); i++) {
             String serviceUrl =
                     OSLCUtils.absoluteUrlFromRelative(base, sDescs.item(i).getNodeValue());
@@ -164,13 +150,11 @@ public class QueryTests {
         // Get all ServiceProviderCatalog urls from the base document in order to recursively add
         // all the
         // simple query services from the eventual service description documents from them as well.
-        NodeList spcs =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_disc:entry/oslc_disc:ServiceProviderCatalog/@rdf:about",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        NodeList spcs = (NodeList) OSLCUtils.getXPath()
+                .evaluate(
+                        "//oslc_disc:entry/oslc_disc:ServiceProviderCatalog/@rdf:about",
+                        baseDoc,
+                        XPathConstants.NODESET);
         for (int i = 0; i < spcs.getLength(); i++) {
             String uri = spcs.item(i).getNodeValue();
             uri = OSLCUtils.absoluteUrlFromRelative(base, uri);
@@ -187,22 +171,16 @@ public class QueryTests {
 
     @Test
     public void validEqualsTypeQueryContainsExpectedDefect()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryProperty
-                        + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
-                        + "&oslc_cm.properties="
-                        + queryProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryProperty
+                + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
+                + "&oslc_cm.properties="
+                + queryProperty;
         // Get the response
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml", null);
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml", null);
         String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
         // Check for the expected result
@@ -220,34 +198,26 @@ public class QueryTests {
 
     @Test
     public void validTypeQueryReturnsCorrectType()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryProperty
-                        + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryProperty
+                + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryProperty;
 
         // Get response
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, OSLCConstants.CT_XML);
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, OSLCConstants.CT_XML);
         String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // Make sure each entry has a matching property element with a value that matches the query
         NodeList propertyEntries = doc.getElementsByTagNameNS("*", queryProperty);
         propertyEntries =
-                (propertyEntries.getLength() == 0)
-                        ? doc.getElementsByTagName(queryProperty)
-                        : propertyEntries;
+                (propertyEntries.getLength() == 0) ? doc.getElementsByTagName(queryProperty) : propertyEntries;
         assertTrue(propertyEntries.getLength() > 0);
         for (int i = 0; i < propertyEntries.getLength(); i++) {
             assertTrue(propertyEntries.item(i).getTextContent().equals(queryPropertyValue));
@@ -256,35 +226,29 @@ public class QueryTests {
 
     @Test
     public void validCompoundQueryContainsExpectedDefect()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + URLEncoder.encode(
-                                queryProperty
-                                        + "=\""
-                                        + queryPropertyValue
-                                        + "\" and "
-                                        + queryComparisonProperty
-                                        + ">=\""
-                                        + queryComparisonValue
-                                        + "\"",
-                                "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryProperty
-                        + ","
-                        + queryComparisonProperty;
+        query = query
+                + "oslc_cm.query="
+                + URLEncoder.encode(
+                        queryProperty
+                                + "=\""
+                                + queryPropertyValue
+                                + "\" and "
+                                + queryComparisonProperty
+                                + ">=\""
+                                + queryComparisonValue
+                                + "\"",
+                        "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryProperty
+                + ","
+                + queryComparisonProperty;
 
         // Get response
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml");
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml");
         String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
@@ -305,23 +269,17 @@ public class QueryTests {
 
     @Test
     public void validNotEqualQueryContainsExpectedDefect()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryProperty
-                        + URLEncoder.encode("!=\"" + queryPropertyValue + "\"", "UTF-8")
-                        + "&oslc_cm.properties="
-                        + queryProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryProperty
+                + URLEncoder.encode("!=\"" + queryPropertyValue + "\"", "UTF-8")
+                + "&oslc_cm.properties="
+                + queryProperty;
 
         // Get response
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml");
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml");
         String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
@@ -334,26 +292,19 @@ public class QueryTests {
 
     @Test
     public void validLessThanQueryContainsExpectedDefects()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    ParseException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryComparisonProperty
-                        + URLEncoder.encode("<=\"" + queryComparisonValue + "\"", "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryComparisonProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryComparisonProperty
+                + URLEncoder.encode("<=\"" + queryComparisonValue + "\"", "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryComparisonProperty;
 
         // Get response
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml");
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml");
         String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
@@ -366,26 +317,19 @@ public class QueryTests {
 
     @Test
     public void validGreaterThanQueriesContainExpectedDefects()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    ParseException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryComparisonProperty
-                        + URLEncoder.encode(">=\"" + queryComparisonValue + "\"", "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryComparisonProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryComparisonProperty
+                + URLEncoder.encode(">=\"" + queryComparisonValue + "\"", "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryComparisonProperty;
 
         // Get response
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml");
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml");
         String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
@@ -400,15 +344,10 @@ public class QueryTests {
 
     @Test
     public void invalidQueryReturnsErrorCode()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryBase();
         query = query + "oslc_cm.query=notrealthing" + URLEncoder.encode("=\"defect\"", "UTF-8");
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml");
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml");
         resp.close();
         // Make sure we get a 400 (BAD REQUEST) for an invalid field
         assertTrue(resp.getStatus() == 400);
@@ -416,27 +355,18 @@ public class QueryTests {
 
     @Test
     public void fulltextSearchReturnsScoreValueInResults()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query=oslc_cm:searchTerms="
-                        + URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
+        query = query
+                + "oslc_cm.query=oslc_cm:searchTerms="
+                + URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
         // Get response
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml");
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml");
         String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // Verify that each score element is non-negative
-        NodeList scores =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate("//oslc_cm:score", doc, XPathConstants.NODESET);
+        NodeList scores = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_cm:score", doc, XPathConstants.NODESET);
         assertTrue(scores.getLength() > 0);
         for (int i = 0; i < scores.getLength(); i++) {
             Node score = scores.item(i);
@@ -448,20 +378,15 @@ public class QueryTests {
     @SuppressWarnings("unchecked")
     @Test
     public void validEqualsTypeQueryContainsExpectedDefectJson()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    JSONException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
         // Form the query
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryProperty
-                        + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
-                        + "&oslc_cm.properties="
-                        + queryProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryProperty
+                + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
+                + "&oslc_cm.properties="
+                + queryProperty;
         // Get the response in Json
         Iterator<HashMap<String, String>> iter = processJSONQuery(query).iterator();
         while (iter.hasNext()) {
@@ -471,29 +396,23 @@ public class QueryTests {
     }
 
     private String getQueryBase() {
-        String query =
-                (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
+        String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
         return query;
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void validTypeQueryReturnsOnlyTypeJson()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    JSONException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryProperty
-                        + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryProperty
+                + URLEncoder.encode("=\"" + queryPropertyValue + "\"", "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryProperty;
 
         Iterator<HashMap<String, String>> iter = processJSONQuery(query).iterator();
         while (iter.hasNext()) {
@@ -506,31 +425,26 @@ public class QueryTests {
     @SuppressWarnings("unchecked")
     @Test
     public void validCompoundQueryContainsExpectedDefectJson()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    JSONException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + URLEncoder.encode(
-                                queryProperty
-                                        + "=\""
-                                        + queryPropertyValue
-                                        + "\" and "
-                                        + queryComparisonProperty
-                                        + ">=\""
-                                        + queryComparisonValue
-                                        + "\"",
-                                "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryProperty
-                        + ","
-                        + queryComparisonProperty;
+        query = query
+                + "oslc_cm.query="
+                + URLEncoder.encode(
+                        queryProperty
+                                + "=\""
+                                + queryPropertyValue
+                                + "\" and "
+                                + queryComparisonProperty
+                                + ">=\""
+                                + queryComparisonValue
+                                + "\"",
+                        "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryProperty
+                + ","
+                + queryComparisonProperty;
 
         Iterator<HashMap<String, String>> iter = processJSONQuery(query).iterator();
         while (iter.hasNext()) {
@@ -545,19 +459,14 @@ public class QueryTests {
     @SuppressWarnings("unchecked")
     @Test
     public void validNotEqualQueryContainsExpectedDefectJson()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    JSONException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryProperty
-                        + URLEncoder.encode("!=\"" + queryPropertyValue + "\"", "UTF-8")
-                        + "&oslc_cm.properties="
-                        + queryProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryProperty
+                + URLEncoder.encode("!=\"" + queryPropertyValue + "\"", "UTF-8")
+                + "&oslc_cm.properties="
+                + queryProperty;
 
         Iterator<HashMap<String, String>> iter = processJSONQuery(query).iterator();
         while (iter.hasNext()) {
@@ -570,15 +479,14 @@ public class QueryTests {
     @Test
     public void validLessThanQueryContainsExpectedDefectsJson() throws IOException, JSONException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryComparisonProperty
-                        + URLEncoder.encode("<=\"" + queryComparisonValue + "\"", "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryComparisonProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryComparisonProperty
+                + URLEncoder.encode("<=\"" + queryComparisonValue + "\"", "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryComparisonProperty;
 
         // Get response in json
         Iterator<HashMap<String, String>> iter = processJSONQuery(query).iterator();
@@ -590,9 +498,7 @@ public class QueryTests {
     }
 
     private JSONArray processJSONQuery(String query) throws IOException, JSONException {
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/json");
+        Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/json");
         String respBody = resp.readEntity(String.class);
         // Create mapping of json variables
         JSONArtifact userData = JSON.parse(respBody);
@@ -610,22 +516,17 @@ public class QueryTests {
     @SuppressWarnings("unchecked")
     @Test
     public void validGreaterThanQueriesContainExpectedDefectsJson()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    ParseException,
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException,
                     JSONException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query="
-                        + queryComparisonProperty
-                        + URLEncoder.encode(">=\"" + queryComparisonValue + "\"", "UTF-8")
-                        + "&"
-                        + URLEncoder.encode("oslc_cm.properties", "UTF-8")
-                        + "="
-                        + queryComparisonProperty;
+        query = query
+                + "oslc_cm.query="
+                + queryComparisonProperty
+                + URLEncoder.encode(">=\"" + queryComparisonValue + "\"", "UTF-8")
+                + "&"
+                + URLEncoder.encode("oslc_cm.properties", "UTF-8")
+                + "="
+                + queryComparisonProperty;
 
         // Get response in json
         Iterator<HashMap<String, String>> iter = processJSONQuery(query).iterator();
@@ -639,16 +540,11 @@ public class QueryTests {
     @SuppressWarnings("unchecked")
     @Test
     public void fulltextSearchReturnsScoreValueInResultsJson()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    JSONException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
         String query = getQueryBase();
-        query =
-                query
-                        + "oslc_cm.query=oslc_cm:searchTerms="
-                        + URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
+        query = query
+                + "oslc_cm.query=oslc_cm:searchTerms="
+                + URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
 
         // Get response in json
         Iterator<HashMap<String, Object>> iter = processJSONQuery(query).iterator();

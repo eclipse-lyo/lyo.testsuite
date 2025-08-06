@@ -36,11 +36,10 @@ public class SetupProperties {
             props.load(is);
             return props;
         } catch (java.io.FileNotFoundException e) {
-            System.err.println(
-                    "Specify property file via -Dprops= or provide one at "
-                            + System.getProperty("user.dir")
-                            + "/"
-                            + propFileName);
+            System.err.println("Specify property file via -Dprops= or provide one at "
+                    + System.getProperty("user.dir")
+                    + "/"
+                    + propFileName);
             throw new RuntimeException("Property file not found", e);
         } catch (Exception e) {
             throw new RuntimeException("Error loading properties", e);

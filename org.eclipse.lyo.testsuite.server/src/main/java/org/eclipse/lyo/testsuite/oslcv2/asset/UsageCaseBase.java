@@ -15,13 +15,13 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
 import org.apache.http.client.ClientProtocolException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -61,21 +61,17 @@ public class UsageCaseBase extends AssetTestBase {
         additionalParameters = setupProps.getProperty("queryAdditionalParameters");
         if (additionalParameters == null) additionalParameters = "";
 
-        ArrayList<String> serviceUrls =
-                getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
+        ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
         ArrayList<String> capabilityURLsUsingRdfXml =
-                TestsBase.getCapabilityURLsUsingRdfXml(
-                        OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
+                TestsBase.getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
         return toCollection(capabilityURLsUsingRdfXml);
     }
 
     protected Response executeQuery() throws ClientProtocolException, IOException {
-        String query =
-                "?oslc.select="
-                        + URLEncoder.encode("oslc_asset:version", "UTF-8")
-                        + "&oslc.where="
-                        + URLEncoder.encode(
-                                queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8");
+        String query = "?oslc.select="
+                + URLEncoder.encode("oslc_asset:version", "UTF-8")
+                + "&oslc.where="
+                + URLEncoder.encode(queryProperty + "=\"" + queryPropertyValue + "\"", "UTF-8");
         String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
         return OSLCUtils.getDataFromUrl(queryUrl, creds, acceptType, contentType, headers);
     }

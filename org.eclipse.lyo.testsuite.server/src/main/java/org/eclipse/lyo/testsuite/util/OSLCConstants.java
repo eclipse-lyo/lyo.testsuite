@@ -117,8 +117,7 @@ public interface OSLCConstants {
     public static final String FLOAT_TYPE = "http://www.w3.org/2001/XMLSchema#float";
     public static final String INTEGER_TYPE = "http://www.w3.org/2001/XMLSchema#integer";
     public static final String STRING_TYPE = "http://www.w3.org/2001/XMLSchema#string";
-    public static final String XML_LITERAL_TYPE =
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral";
+    public static final String XML_LITERAL_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral";
 
     // OSLC CM 2.0
     public static final String CM_CHANGE_REQUEST_TYPE = OSLC_CM_V2 + "ChangeRequest";
@@ -153,14 +152,12 @@ public interface OSLCConstants {
     public static final String QM_TEST_CASE_QUERY = OSLC_QM_V2 + "TestCaseQuery";
     public static final String QM_TEST_SCRIPT_QUERY = OSLC_QM_V2 + "TestScriptQuery";
     public static final String QM_TEST_RESULT_QUERY = OSLC_QM_V2 + "TestResultQuery";
-    public static final String QM_TEST_EXECUTION_RECORD_QUERY =
-            OSLC_QM_V2 + "TestExecutionRecordQuery";
+    public static final String QM_TEST_EXECUTION_RECORD_QUERY = OSLC_QM_V2 + "TestExecutionRecordQuery";
 
     // OSLC RM 2.0
 
     public static final String RM_REQUIREMENT_TYPE = OSLC_RM_V2 + "Requirement";
-    public static final String RM_REQUIREMENT_COLLECTION_TYPE =
-            OSLC_RM_V2 + "RequirementCollection";
+    public static final String RM_REQUIREMENT_COLLECTION_TYPE = OSLC_RM_V2 + "RequirementCollection";
 
     // OSLC Automation 2.0
     public static final String AUTO_OSLC_AUTO = "oslc_auto:";
@@ -173,18 +170,12 @@ public interface OSLCConstants {
     public static final String AUTO_OSLC_AUTO_DESIRED_STATE = AUTO_OSLC_AUTO + "desriedState";
     public static final String AUTO_AUTOMATION_VERDICT = OSLC_AUTO_V2 + "verdict";
     public static final String AUTO_OSLC_AUTO_VERDICT = AUTO_OSLC_AUTO + "verdict";
-    public static final String AUTO_AUTOMATION_EXECUTES_AUTO_PLAN =
-            OSLC_AUTO_V2 + "executesAutomationPlan";
-    public static final String AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN =
-            AUTO_OSLC_AUTO + "executesAutomationPlan";
-    public static final String AUTO_AUTOMATION_REPORTS_AUTO_PLAN =
-            OSLC_AUTO_V2 + "reportsOnAutomationPlan";
-    public static final String AUTO_OSLC_AUTO_REPORTS_AUTO_PLAN =
-            AUTO_OSLC_AUTO + "reportsOnAutomationPlan";
-    public static final String AUTO_AUTOMATION_PRODUCED_AUTO_REQUEST =
-            OSLC_AUTO_V2 + "producedByAutomationRequest";
-    public static final String AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST =
-            AUTO_OSLC_AUTO + "producedByAutomationRequest";
+    public static final String AUTO_AUTOMATION_EXECUTES_AUTO_PLAN = OSLC_AUTO_V2 + "executesAutomationPlan";
+    public static final String AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN = AUTO_OSLC_AUTO + "executesAutomationPlan";
+    public static final String AUTO_AUTOMATION_REPORTS_AUTO_PLAN = OSLC_AUTO_V2 + "reportsOnAutomationPlan";
+    public static final String AUTO_OSLC_AUTO_REPORTS_AUTO_PLAN = AUTO_OSLC_AUTO + "reportsOnAutomationPlan";
+    public static final String AUTO_AUTOMATION_PRODUCED_AUTO_REQUEST = OSLC_AUTO_V2 + "producedByAutomationRequest";
+    public static final String AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST = AUTO_OSLC_AUTO + "producedByAutomationRequest";
 
     // OSLC Performance Monitoring 2.0
     public static String PM_PMR_ISPARTOF = DC + "isPartOf";

@@ -20,11 +20,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -37,10 +37,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
 
-/**
- * This class provides JUnit tests with JSON format for the validation of an OSLC core resource.
- *
- */
+/** This class provides JUnit tests with JSON format for the validation of an OSLC core resource. */
 @RunWith(Parameterized.class)
 public abstract class CoreResourceJsonTests extends TestsBase {
     private Response response;
@@ -48,21 +45,15 @@ public abstract class CoreResourceJsonTests extends TestsBase {
     protected JSONObject doc;
 
     public CoreResourceJsonTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
-                    NullPointerException,
-                    JSONException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
+                    NullPointerException, JSONException {
         super(thisUrl);
 
         // If currentUrl is null, it means that the query didn't match any
         // records. This isn't exactly a failure, but there's nothing more we
         // can test.
         assumeNotNull(currentUrl);
-        response =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, OSLCConstants.CT_JSON, headers);
+        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, OSLCConstants.CT_JSON, headers);
         responseBody = response.readEntity(String.class);
         int sc = response.getStatus();
 
@@ -99,9 +90,8 @@ public abstract class CoreResourceJsonTests extends TestsBase {
     @Test
     public void CoreResourceHasAtMostOneIdentifier() throws JSONException {
         if (doc.containsKey(OSLCConstants.DCTERMS_ID)) {
-            assertTrue(
-                    (doc.get(OSLCConstants.DCTERMS_ID) instanceof String)
-                            || (doc.get(OSLCConstants.DCTERMS_ID) instanceof Integer));
+            assertTrue((doc.get(OSLCConstants.DCTERMS_ID) instanceof String)
+                    || (doc.get(OSLCConstants.DCTERMS_ID) instanceof Integer));
         }
     }
 

@@ -22,6 +22,8 @@ import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -31,8 +33,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -55,19 +55,14 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     protected static String xpathSubStmt = "";
 
     public CoreResourceXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         super(thisUrl);
 
         // If currentUrl is null, it means that the query didn't match any
         // records. This isn't exactly a failure, but there's nothing more we
         // can test.
         assumeNotNull(currentUrl);
-        response =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, OSLCConstants.CT_XML, headers);
+        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, OSLCConstants.CT_XML, headers);
         responseBody = response.readEntity(String.class);
         int sc = response.getStatus();
 
@@ -97,8 +92,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
 
         ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(null);
         ArrayList<String> capabilityURLsUsingXML =
-                TestsBase.getCapabilityURLsUsingXML(
-                        v, getxpathSubStmt(), getResourceTypeQuery(), serviceUrls, true);
+                TestsBase.getCapabilityURLsUsingXML(v, getxpathSubStmt(), getResourceTypeQuery(), serviceUrls, true);
 
         // Once we have the query URL, look for a resource to validate
         String where = setupProps.getProperty("changeRequestsWhere");
@@ -109,20 +103,15 @@ public abstract class CoreResourceXmlTests extends TestsBase {
         }
 
         String additionalParameters = setupProps.getProperty("queryAdditionalParameters", "");
-        String query =
-                (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
+        String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
         query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
 
         for (String queryBase : capabilityURLsUsingXML) {
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBase, query);
-            Response resp =
-                    OSLCUtils.getResponseFromUrl(
-                            setupBaseUrl, queryUrl, creds, OSLCConstants.CT_XML, headers);
+            Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, OSLCConstants.CT_XML, headers);
             String respBody = resp.readEntity(String.class);
             resp.close();
-            assertTrue(
-                    "Received " + resp.getStatus(),
-                    (resp.getStatus() == Response.Status.OK.getStatusCode()));
+            assertTrue("Received " + resp.getStatus(), (resp.getStatus() == Response.Status.OK.getStatusCode()));
 
             // Get XML Doc from response
             Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
@@ -132,13 +121,8 @@ public abstract class CoreResourceXmlTests extends TestsBase {
 
             if (result == null)
                 // No results by reference. Check for inline results (rdf:about)
-                result =
-                        (Node)
-                                OSLCUtils.getXPath()
-                                        .evaluate(
-                                                "//rdfs:member/oslc_cm_v2:ChangeRequest/@rdf:about",
-                                                doc,
-                                                XPathConstants.NODE);
+                result = (Node) OSLCUtils.getXPath()
+                        .evaluate("//rdfs:member/oslc_cm_v2:ChangeRequest/@rdf:about", doc, XPathConstants.NODE);
             if (result != null) results.add(result.getNodeValue());
             if (onlyOnce) break;
         }
@@ -150,8 +134,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     public void CoreResourceHasOneTitle() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "dc:title";
 
-        NodeList titles =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList titles = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
         assertEquals("dc:title" + getFailureMessage(), 1, titles.getLength());
     }
@@ -160,8 +143,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     public void CoreResourceHasAtMostOneDescription() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "dc:description";
 
-        NodeList descriptions =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList descriptions = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
         assertTrue("dc:description" + getFailureMessage(), descriptions.getLength() <= 1);
     }
@@ -178,8 +160,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     public void CoreResourceHasAtMostOneName() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "dc:name";
 
-        NodeList names =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList names = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
         assertTrue(getFailureMessage(), names.getLength() <= 1);
     }
 
@@ -187,8 +168,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     public void CoreResourceHasAtMostOneCreatedDate() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "dc:created";
 
-        NodeList createdDates =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList createdDates = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
         assertTrue(getFailureMessage(), createdDates.getLength() <= 1);
         // If there is a created date, verify the format.
         if (createdDates.getLength() > 0) {
@@ -204,8 +184,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     public void CoreResourceHasAtMostOneModifiedDate() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "dc:modified";
 
-        NodeList modifiedDates =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList modifiedDates = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
         assertTrue(getFailureMessage(), modifiedDates.getLength() <= 1);
 
         // If there is a modified date, verify the format.
@@ -223,8 +202,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     public void CoreResourceHasAtMostOneDiscussion() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "oslc:discussion";
 
-        NodeList discussions =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList discussions = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
         assertTrue(getFailureMessage(), discussions.getLength() <= 1);
     }
 
@@ -232,8 +210,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
     public void CoreResourceHasAtMostOneInstanceShape() throws XPathExpressionException {
         String eval = "//" + getNode() + "/" + "oslc:instanceShape";
 
-        NodeList instances =
-                (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
+        NodeList instances = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
         assertTrue(getFailureMessage(), instances.getLength() <= 1);
     }
 

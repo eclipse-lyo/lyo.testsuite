@@ -21,13 +21,7 @@ package org.eclipse.lyo.testsuite.oslcv2;
 import static org.junit.Assert.assertEquals;
 
 import com.sun.net.httpserver.HttpPrincipal;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -40,8 +34,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-
-import jakarta.ws.rs.core.Response;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.log4j.Logger;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
@@ -53,13 +53,11 @@ import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
 import org.eclipse.lyo.testsuite.util.oauth.OAuthConsumerPrincipal;
-import org.eclipse.lyo.testsuite.util.oauth.OAuthCredentials;
 import org.junit.BeforeClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.apache.http.client.ClientProtocolException;
 
 public abstract class TestsBase {
     private static Logger logger = Logger.getLogger(TestsBase.class);
@@ -99,6 +97,7 @@ public abstract class TestsBase {
             return password;
         }
     }
+
     public record Oauth1UserCredentials(Principal principal, String secret) implements UserCredentials {
         @Override
         public Principal getPrincipal() {
@@ -114,6 +113,7 @@ public abstract class TestsBase {
     public record NoCredentials() implements UserCredentials {
 
         public static final NoCredentials INSTANCE = new NoCredentials();
+
         @Override
         public Principal getPrincipal() {
             return null;
@@ -191,8 +191,8 @@ public abstract class TestsBase {
             if (authType.equalsIgnoreCase("OAUTH")) {
                 authMethod = AuthMethods.OAUTH;
             } else if (authType.equalsIgnoreCase("FORM")) {
-//                authMethod = AuthMethods.FORM;
-//                formLogin(userId, pw);
+                //                authMethod = AuthMethods.FORM;
+                //                formLogin(userId, pw);
                 throw new IllegalStateException("FORM login not supported any more");
             }
 
@@ -226,18 +226,17 @@ public abstract class TestsBase {
         return setupProps.get(propName);
     }
 
-//    public static int getPropertyInt(String propName, int defaultValue) {
-//        Object property = getProperty(propName);
-//        if (property == null) {
-//            return defaultValue;
-//        } else {
-//            return Integer.parseInt((String) property);
-//        }
-//    }
+    //    public static int getPropertyInt(String propName, int defaultValue) {
+    //        Object property = getProperty(propName);
+    //        if (property == null) {
+    //            return defaultValue;
+    //        } else {
+    //            return Integer.parseInt((String) property);
+    //        }
+    //    }
 
     @BeforeClass
-    public static void setup()
-            throws IOException, ParserConfigurationException, SAXException, XPathException {
+    public static void setup() throws IOException, ParserConfigurationException, SAXException, XPathException {
         staticSetup();
     }
 
@@ -254,8 +253,7 @@ public abstract class TestsBase {
         return data;
     }
 
-    public static ArrayList<String> getServiceProviderURLsUsingXML(
-            String inBaseURL, boolean dontGoDeep)
+    public static ArrayList<String> getServiceProviderURLsUsingXML(String inBaseURL, boolean dontGoDeep)
             throws IOException, XPathException, ParserConfigurationException, SAXException {
 
         staticSetup();
@@ -283,7 +281,8 @@ public abstract class TestsBase {
             logger.warn("Using no credentials");
             resp = OSLCUtils.getResponseFromUrl(base, base, NoCredentials.INSTANCE, OSLCConstants.CT_XML, headers);
         } else {
-            throw new IllegalStateException("Unknown credentials type: " + creds.getClass().getName());
+            throw new IllegalStateException(
+                    "Unknown credentials type: " + creds.getClass().getName());
         }
 
         Document baseDoc;
@@ -300,7 +299,8 @@ public abstract class TestsBase {
 
             baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
         } else if (statusCode >= 400 && statusCode < 500) {
-            throw new ClientProtocolException("Client error: " + resp.getStatusInfo().getReasonPhrase());
+            throw new ClientProtocolException(
+                    "Client error: " + resp.getStatusInfo().getReasonPhrase());
         } else if (statusCode >= 500) {
             throw new IOException("Server error: " + resp.getStatusInfo().getReasonPhrase());
         } else {
@@ -310,13 +310,8 @@ public abstract class TestsBase {
         // Get all ServiceProvider urls from the base document in order to
         // recursively add all the capability urls from them as well.
         //   Inlined using oslc:ServiceProvider/@rdf:about
-        NodeList sps =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_v2:ServiceProvider/@rdf:about",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        NodeList sps = (NodeList)
+                OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider/@rdf:about", baseDoc, XPathConstants.NODESET);
         for (int i = 0; i < sps.getLength(); i++) {
             if (!sps.item(i).getNodeValue().equals(base) || sps.getLength() == 1) {
                 data.add(sps.item(i).getNodeValue());
@@ -329,13 +324,8 @@ public abstract class TestsBase {
         // Get all ServiceProvider urls from the base document in order to
         // recursively add all the capability urls from them as well.
         //   Referenced using oslc:serviceProvider/@rdf:resource
-        sps =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_v2:serviceProvider/@rdf:resource",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        sps = (NodeList) OSLCUtils.getXPath()
+                .evaluate("//oslc_v2:serviceProvider/@rdf:resource", baseDoc, XPathConstants.NODESET);
         for (int i = 0; i < sps.getLength(); i++) {
             if (!sps.item(i).getNodeValue().equals(base) || sps.getLength() == 1) {
                 data.add(sps.item(i).getNodeValue());
@@ -346,13 +336,8 @@ public abstract class TestsBase {
         // Get all ServiceProviderCatalog urls from the base document in order
         // to recursively add all the capability from ServiceProviders within them as well.
         //   Inlined using oslc:ServiceProviderCatalog/@rdf:about
-        NodeList spcs =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_v2:ServiceProviderCatalog/@rdf:about",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        NodeList spcs = (NodeList) OSLCUtils.getXPath()
+                .evaluate("//oslc_v2:ServiceProviderCatalog/@rdf:about", baseDoc, XPathConstants.NODESET);
         for (int i = 0; i < spcs.getLength(); i++) {
             if (!spcs.item(i).getNodeValue().equals(base)) {
                 ArrayList<String> subCollection =
@@ -366,13 +351,8 @@ public abstract class TestsBase {
         // Get all ServiceProviderCatalog urls from the base document in order
         // to recursively add all the capability from ServiceProviders within them as well.
         //   Referenced using oslc:serviceProviderCatalog/@rdf:resource
-        spcs =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_v2:serviceProviderCatalog/@rdf:resource",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        spcs = (NodeList) OSLCUtils.getXPath()
+                .evaluate("//oslc_v2:serviceProviderCatalog/@rdf:resource", baseDoc, XPathConstants.NODESET);
         for (int i = 0; i < spcs.getLength(); i++) {
             if (!spcs.item(i).getNodeValue().equals(base)) {
                 ArrayList<String> subCollection =
@@ -387,12 +367,8 @@ public abstract class TestsBase {
         return data;
     }
 
-    public static ArrayList<Node> getCapabilityDOMNodesUsingXML(
-            String xpathStmt, ArrayList<String> serviceUrls)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+    public static ArrayList<Node> getCapabilityDOMNodesUsingXML(String xpathStmt, ArrayList<String> serviceUrls)
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         // Collection to contain the creationFactory urls from all SPs
         ArrayList<Node> data = new ArrayList<>();
 
@@ -401,16 +377,13 @@ public abstract class TestsBase {
             if (creds instanceof UserPassword userCredentials) {
                 resp = OSLCUtils.getResponseFromUrl(base, null, userCredentials, OSLCConstants.CT_XML, headers);
             } else {
-                resp = OSLCUtils.getResponseFromUrl(base, null, (Oauth1UserCredentials) creds, OSLCConstants.CT_XML, headers);
+                resp = OSLCUtils.getResponseFromUrl(
+                        base, null, (Oauth1UserCredentials) creds, OSLCConstants.CT_XML, headers);
             }
 
-            Document baseDoc =
-                    OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
+            Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
 
-            NodeList sDescs =
-                    (NodeList)
-                            OSLCUtils.getXPath()
-                                    .evaluate(xpathStmt, baseDoc, XPathConstants.NODESET);
+            NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(xpathStmt, baseDoc, XPathConstants.NODESET);
             for (int i = 0; i < sDescs.getLength(); i++) {
                 data.add(sDescs.item(i));
                 if (onlyOnce) return data;
@@ -421,10 +394,7 @@ public abstract class TestsBase {
 
     public static ArrayList<String> getCapabilityURLsUsingXML(
             String xpathStmt, ArrayList<String> serviceUrls, boolean useDefaultUsage)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
         return getCapabilityURLsUsingXML(
                 xpathStmt,
@@ -435,30 +405,21 @@ public abstract class TestsBase {
     }
 
     public static ArrayList<String> getCapabilityURLsUsingXML(
-            String xpathStmt,
-            String xpathSubStmt,
-            String rT,
-            ArrayList<String> serviceUrls,
-            boolean useDefaultUsage)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            String xpathStmt, String xpathSubStmt, String rT, ArrayList<String> serviceUrls, boolean useDefaultUsage)
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
         // Collection to contain the creationFactory urls from all SPs
         ArrayList<String> data = new ArrayList<>();
         String firstUrl = null;
 
         for (String base : serviceUrls) {
-            Response resp =
-                    OSLCUtils.getResponseFromUrl(base, null, creds, OSLCConstants.CT_XML, headers);
+            Response resp = OSLCUtils.getResponseFromUrl(base, null, creds, OSLCConstants.CT_XML, headers);
 
             try {
                 int statusCode = resp.getStatus();
                 if (statusCode > 299) {
-                    logger.error(
-                            "Failed to fetch a resource: "
-                                    + Response.Status.fromStatusCode(statusCode).getReasonPhrase());
+                    logger.error("Failed to fetch a resource: "
+                            + Response.Status.fromStatusCode(statusCode).getReasonPhrase());
                     throw new IllegalStateException();
                 }
 
@@ -470,22 +431,14 @@ public abstract class TestsBase {
 
                 Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
 
-                NodeList sDescs =
-                        (NodeList)
-                                OSLCUtils.getXPath()
-                                        .evaluate(xpathStmt, baseDoc, XPathConstants.NODESET);
+                NodeList sDescs = (NodeList) OSLCUtils.getXPath().evaluate(xpathStmt, baseDoc, XPathConstants.NODESET);
 
                 for (int i = 0; i < sDescs.getLength(); i++) {
                     if (firstUrl == null) firstUrl = sDescs.item(i).getNodeValue();
 
                     if (useDefaultUsage) {
-                        NodeList usages =
-                                (NodeList)
-                                        OSLCUtils.getXPath()
-                                                .evaluate(
-                                                        xpathSubStmt,
-                                                        sDescs.item(i),
-                                                        XPathConstants.NODESET);
+                        NodeList usages = (NodeList)
+                                OSLCUtils.getXPath().evaluate(xpathSubStmt, sDescs.item(i), XPathConstants.NODESET);
 
                         for (int u = 0; u < usages.getLength(); u++) {
                             String usageValue = usages.item(u).getNodeValue();
@@ -511,8 +464,8 @@ public abstract class TestsBase {
         return data;
     }
 
-    public static ArrayList<String> getServiceProviderURLsUsingRdfXml(
-            String inBaseURL, boolean dontGoDeep) throws IOException {
+    public static ArrayList<String> getServiceProviderURLsUsingRdfXml(String inBaseURL, boolean dontGoDeep)
+            throws IOException {
         staticSetup();
 
         // ArrayList to contain the urls from all SPCs
@@ -524,7 +477,7 @@ public abstract class TestsBase {
             return data;
         }
 
-            Response resp;
+        Response resp;
         resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, inBaseURL, creds, OSLCConstants.CT_RDF, headers);
         assertEquals(
                 "Did not successfully retrieve ServiceProviders at: " + inBaseURL,
@@ -567,9 +520,8 @@ public abstract class TestsBase {
         Property spcPredicate = spModel.createProperty(OSLCConstants.SERVICE_PROVIDER_CATALOG_PROP);
         statements = spModel.listStatements(null, spcPredicate, (RDFNode) null);
         while (statements.hasNext()) {
-            ArrayList<String> results =
-                    getServiceProviderURLsUsingRdfXml(
-                            statements.nextStatement().getObject().toString(), dontGoDeep);
+            ArrayList<String> results = getServiceProviderURLsUsingRdfXml(
+                    statements.nextStatement().getObject().toString(), dontGoDeep);
             data.addAll(results);
             if (dontGoDeep) return data;
         }
@@ -578,8 +530,7 @@ public abstract class TestsBase {
     }
 
     public static ArrayList<String> getCapabilityURLsUsingRdfXml(
-            String propertyUri, ArrayList<String> serviceUrls, boolean useDefaultUsage)
-            throws IOException {
+            String propertyUri, ArrayList<String> serviceUrls, boolean useDefaultUsage) throws IOException {
         return getCapabilityURLsUsingRdfXml(
                 propertyUri,
                 serviceUrls,
@@ -590,10 +541,7 @@ public abstract class TestsBase {
     }
 
     public static ArrayList<String> getCapabilityURLsUsingRdfXml(
-            String propertyUri,
-            ArrayList<String> serviceUrls,
-            boolean useDefaultUsage,
-            String[] types)
+            String propertyUri, ArrayList<String> serviceUrls, boolean useDefaultUsage, String[] types)
             throws IOException {
         return getCapabilityURLsUsingRdfXml(
                 propertyUri,
@@ -622,8 +570,8 @@ public abstract class TestsBase {
             try {
                 int statusCode = resp.getStatus();
                 if (statusCode > 299) {
-                    throw new IllegalStateException(
-                            "Request failed: " + Response.Status.fromStatusCode(statusCode).getReasonPhrase());
+                    throw new IllegalStateException("Request failed: "
+                            + Response.Status.fromStatusCode(statusCode).getReasonPhrase());
                 }
                 Model spModel = ModelFactory.createDefaultModel();
                 spModel.read(resp.readEntity(InputStream.class), base, OSLCConstants.JENA_RDF_XML);
@@ -638,20 +586,18 @@ public abstract class TestsBase {
                     // Only cache creation factory shapes. Some providers use the same capability
                     // URI for both query and creation.
                     if (OSLCConstants.CREATION_PROP.equals(propertyUri)) {
-                        Statement shape =
-                                stmt.getSubject()
-                                        .getProperty(
-                                                spModel.createProperty(
-                                                        OSLCConstants.RESOURCE_SHAPE_PROP));
+                        Statement shape = stmt.getSubject()
+                                .getProperty(spModel.createProperty(OSLCConstants.RESOURCE_SHAPE_PROP));
                         if (shape != null) {
                             if (logger.isDebugEnabled()) {
-                                logger.debug(
-                                        "Caching shape URI <%s> for capability URI <%s>".formatted(
+                                logger.debug("Caching shape URI <%s> for capability URI <%s>"
+                                        .formatted(
                                                 shape.getObject().toString(),
                                                 stmt.getObject().toString()));
                             }
                             creationShapeMap.put(
-                                    stmt.getObject().toString(), shape.getObject().toString());
+                                    stmt.getObject().toString(),
+                                    shape.getObject().toString());
                         }
                     }
 
@@ -671,11 +617,11 @@ public abstract class TestsBase {
                     } else {
                         // Now if we have types, we match the capability for the given types
                         if (types != null && types.length > 0) {
-                            Property typeProp =
-                                    spModel.getProperty(OSLCConstants.RESOURCE_TYPE_PROP);
+                            Property typeProp = spModel.getProperty(OSLCConstants.RESOURCE_TYPE_PROP);
                             StmtIterator typeIter = stmt.getSubject().listProperties(typeProp);
                             while (typeIter.hasNext()) {
-                                String typeName = typeIter.nextStatement().getObject().toString();
+                                String typeName =
+                                        typeIter.nextStatement().getObject().toString();
                                 for (String t : types) {
                                     if (t.equals(typeName)) {
                                         data.add(stmt.getObject().toString());
@@ -706,42 +652,33 @@ public abstract class TestsBase {
         return creationShapeMap.get(creationFactoryUri);
     }
 
-//    public static boolean formLogin(String userId, String pw) {
-//        String formUri = setupProps.getProperty("formUri");
-//        // Get cookies for forms login procedure (ie: get redirected to login
-//        // page.
-//        Response resp;
-//        try {
-//            resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, setupBaseUrl, null, "*/*");
-//            if (resp.getEntity() != null) {
-//                resp.close();
-//            }
-//            // Post info to forms auth page
-//            OSLCUtils.setupFormsAuth(formUri, userId, pw);
-//        } catch (ClientProtocolException e) {
-//            return false;
-//        } catch (IOException e) {
-//            return false;
-//        }
-//        return true;
-//    }
+    //    public static boolean formLogin(String userId, String pw) {
+    //        String formUri = setupProps.getProperty("formUri");
+    //        // Get cookies for forms login procedure (ie: get redirected to login
+    //        // page.
+    //        Response resp;
+    //        try {
+    //            resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, setupBaseUrl, null, "*/*");
+    //            if (resp.getEntity() != null) {
+    //                resp.close();
+    //            }
+    //            // Post info to forms auth page
+    //            OSLCUtils.setupFormsAuth(formUri, userId, pw);
+    //        } catch (ClientProtocolException e) {
+    //            return false;
+    //        } catch (IOException e) {
+    //            return false;
+    //        }
+    //        return true;
+    //    }
 
     public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL)
-            throws IOException,
-                    XPathException,
-                    ParserConfigurationException,
-                    SAXException,
-                    JSONException {
+            throws IOException, XPathException, ParserConfigurationException, SAXException, JSONException {
         return getServiceProviderURLsUsingJson(inBaseURL, onlyOnce);
     }
 
-    public static ArrayList<String> getServiceProviderURLsUsingJson(
-            String inBaseURL, boolean dontGoDeep)
-            throws IOException,
-                    XPathException,
-                    ParserConfigurationException,
-                    SAXException,
-                    JSONException {
+    public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL, boolean dontGoDeep)
+            throws IOException, XPathException, ParserConfigurationException, SAXException, JSONException {
 
         staticSetup();
 
@@ -758,8 +695,7 @@ public abstract class TestsBase {
             return data;
         }
 
-        Response resp =
-                OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_JSON, headers);
+        Response resp = OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_JSON, headers);
         assertEquals(
                 "Failed to retrieve ServiceProviders at: " + inBaseURL,
                 Response.Status.OK.getStatusCode(),
@@ -788,12 +724,8 @@ public abstract class TestsBase {
 
     public static ArrayList<String> getCapabilityURLsUsingJson(
             String xpathStmt, ArrayList<String> serviceUrls, boolean useDefaultUsage)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
-                    NullPointerException,
-                    JSONException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
+                    NullPointerException, JSONException {
 
         // Collection to contain the creationFactory urls from all SPs
         ArrayList<String> data = new ArrayList<>();
@@ -813,10 +745,7 @@ public abstract class TestsBase {
             String contentType = OSLCUtils.getContentType(resp);
 
             assertEquals(
-                    "Expected content-type "
-                            + OSLCConstants.CT_JSON
-                            + " but received "
-                            + contentType,
+                    "Expected content-type " + OSLCConstants.CT_JSON + " but received " + contentType,
                     OSLCConstants.CT_JSON,
                     contentType);
 

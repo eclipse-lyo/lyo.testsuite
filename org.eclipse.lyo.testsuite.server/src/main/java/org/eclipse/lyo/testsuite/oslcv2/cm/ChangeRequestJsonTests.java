@@ -18,6 +18,7 @@ package org.eclipse.lyo.testsuite.oslcv2.cm;
 
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
@@ -41,31 +41,23 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of a change request returned by accessing the change
- * request's URL directly. It runs the equality query from the properties file and grabs the first result
- * to test against, checking the relationship of elements in the JSON representation of the change request.
+ * This class provides JUnit tests for the validation of a change request returned by accessing the change request's URL
+ * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
+ * the relationship of elements in the JSON representation of the change request.
  */
 @RunWith(Parameterized.class)
 public class ChangeRequestJsonTests extends CoreResourceJsonTests {
 
     public ChangeRequestJsonTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
-                    NullPointerException,
-                    JSONException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
+                    NullPointerException, JSONException {
 
         super(thisUrl);
     }
 
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
-            throws IOException,
-                    NullPointerException,
-                    XPathException,
-                    ParserConfigurationException,
-                    SAXException,
+            throws IOException, NullPointerException, XPathException, ParserConfigurationException, SAXException,
                     JSONException {
         ArrayList<String> results = new ArrayList<String>();
 
@@ -84,8 +76,7 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
         // URLs of all
         // query factories of the REST service.
 
-        ArrayList<String> serviceUrls =
-                getServiceProviderURLsUsingJson(setupProps.getProperty("baseUri"), onlyOnce);
+        ArrayList<String> serviceUrls = getServiceProviderURLsUsingJson(setupProps.getProperty("baseUri"), onlyOnce);
 
         ArrayList<String> capabilityURLsUsingJson =
                 getCapabilityURLsUsingJson(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
@@ -98,17 +89,14 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
         }
 
         String additionalParameters = setupProps.getProperty("queryAdditionalParameters", "");
-        String query =
-                (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
+        String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
         query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
 
         for (String queryBaseUri : capabilityURLsUsingJson) {
 
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
 
-            Response resp =
-                    OSLCUtils.getResponseFromUrl(
-                            setupBaseUrl, queryUrl, creds, OSLCConstants.CT_JSON, headers);
+            Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, OSLCConstants.CT_JSON, headers);
 
             String respBody = resp.readEntity(String.class);
 
@@ -167,54 +155,46 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
     @Test
     public void changeRequestHasAtMostOneClosedElement() throws JSONException {
         if (doc.containsKey("oslc_cm:closed")) {
-            assertTrue(
-                    (doc.get("oslc_cm:closed") instanceof Boolean)
-                            || (doc.get("oslc_cm:closed") instanceof String));
+            assertTrue((doc.get("oslc_cm:closed") instanceof Boolean) || (doc.get("oslc_cm:closed") instanceof String));
         }
     }
 
     @Test
     public void changeRequestHasAtMostInProgressElement() throws JSONException {
         if (doc.containsKey("oslc_cm:inprogress")) {
-            assertTrue(
-                    (doc.get("oslc_cm:inprogress") instanceof Boolean)
-                            || (doc.get("oslc_cm:inprogress") instanceof String));
+            assertTrue((doc.get("oslc_cm:inprogress") instanceof Boolean)
+                    || (doc.get("oslc_cm:inprogress") instanceof String));
         }
     }
 
     @Test
     public void changeRequestHasAtMostOneFixedElement() throws JSONException {
         if (doc.containsKey("oslc_cm:fixed")) {
-            assertTrue(
-                    (doc.get("oslc_cm:fixed") instanceof Boolean)
-                            || (doc.get("oslc_cm:fixed") instanceof String));
+            assertTrue((doc.get("oslc_cm:fixed") instanceof Boolean) || (doc.get("oslc_cm:fixed") instanceof String));
         }
     }
 
     @Test
     public void changeRequestHasAtMostOneApprovedElement() throws JSONException {
         if (doc.containsKey("oslc_cm:approved")) {
-            assertTrue(
-                    (doc.get("oslc_cm:approved") instanceof Boolean)
-                            || (doc.get("oslc_cm:approved") instanceof String));
+            assertTrue((doc.get("oslc_cm:approved") instanceof Boolean)
+                    || (doc.get("oslc_cm:approved") instanceof String));
         }
     }
 
     @Test
     public void changeRequestHasAtMostOneReviewedElement() throws JSONException {
         if (doc.containsKey("oslc_cm:reviewed")) {
-            assertTrue(
-                    (doc.get("oslc_cm:reviewed") instanceof Boolean)
-                            || (doc.get("oslc_cm:reviewed") instanceof String));
+            assertTrue((doc.get("oslc_cm:reviewed") instanceof Boolean)
+                    || (doc.get("oslc_cm:reviewed") instanceof String));
         }
     }
 
     @Test
     public void changeRequestHasAtMostOneVerifiedElement() throws JSONException {
         if (doc.containsKey("oslc_cm:verified")) {
-            assertTrue(
-                    (doc.get("oslc_cm:verified") instanceof Boolean)
-                            || (doc.get("oslc_cm:verified") instanceof String));
+            assertTrue((doc.get("oslc_cm:verified") instanceof Boolean)
+                    || (doc.get("oslc_cm:verified") instanceof String));
         }
     }
 }

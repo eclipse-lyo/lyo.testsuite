@@ -17,8 +17,8 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import jakarta.ws.rs.core.Response;
+import java.io.IOException;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -52,9 +52,8 @@ public class CreateAssetJsonTest extends CreateAssetBase {
         String otherUrl = null;
         try {
             otherUrl = createAsset(jsonCreateTemplate);
-            String assetString =
-                    readFileFromProperty("createWithRelationshipTemplateJsonFile")
-                            .replace("%s", otherUrl);
+            String assetString = readFileFromProperty("createWithRelationshipTemplateJsonFile")
+                    .replace("%s", otherUrl);
             assetUrl = createAsset(assetString);
             String resp = getAssetAsString();
             JSONObject asset = new JSONObject(resp);

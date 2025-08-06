@@ -11,9 +11,9 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of a change request returned by accessing the change
- * request's URL directly. It runs the equality query from the properties file and grabs the first result
- * to test against, checking the relationship of elements in the XML representation of the change request.
+ * This class provides JUnit tests for the validation of a change request returned by accessing the change request's URL
+ * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
+ * the relationship of elements in the XML representation of the change request.
  */
 // @RunWith(Parameterized.class)
 public class RequirementXmlTests extends CoreResourceXmlTests {
@@ -23,10 +23,7 @@ public class RequirementXmlTests extends CoreResourceXmlTests {
     public static String resource = "Requirement";
 
     public RequirementXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
         super(thisUrl);
         setNode(ns, resource);
@@ -34,10 +31,7 @@ public class RequirementXmlTests extends CoreResourceXmlTests {
 
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    javax.xml.xpath.XPathException {
+            throws IOException, ParserConfigurationException, SAXException, javax.xml.xpath.XPathException {
 
         staticSetup();
 

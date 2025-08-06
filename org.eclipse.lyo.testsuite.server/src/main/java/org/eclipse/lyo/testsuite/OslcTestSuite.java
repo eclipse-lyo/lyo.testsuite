@@ -22,12 +22,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 
 /**
- * An extension to JUnit's Suite, this class's job
- * is to allow DynamicSuiteBuilder to properly create
- * the test suite for the correct version of OSLC.
+ * An extension to JUnit's Suite, this class's job is to allow DynamicSuiteBuilder to properly create the test suite for
+ * the correct version of OSLC.
  *
  * @author Matthew Brown
- *
  */
 public class OslcTestSuite extends Suite {
     public OslcTestSuite(Class<?> setupClass) throws InitializationError, IOException {

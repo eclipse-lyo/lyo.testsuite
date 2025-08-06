@@ -17,15 +17,14 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import jakarta.ws.rs.core.Response.Status;
-import java.util.Map;
-import jakarta.ws.rs.core.Response;
 import org.apache.http.ParseException;
-import java.util.HashMap;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -43,8 +42,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
 
         assetUrl = createAsset(jsonCreateTemplate);
-        assertTrue(
-                "The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 
         String resp = getAssetAsString();
         hasJson = new JSONObject(resp);
@@ -62,11 +60,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
     @Test
     public void updateAnAssetProperty()
-            throws IOException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    TransformerException,
+            throws IOException, ParseException, ParserConfigurationException, SAXException, TransformerException,
                     JSONException {
         // Get the asset
         String resp = getAssetAsString();
@@ -91,11 +85,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
     @Test
     public void addArtifactToAsset()
-            throws IOException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    IllegalStateException,
+            throws IOException, ParseException, ParserConfigurationException, SAXException, IllegalStateException,
                     JSONException {
         // Get the asset to add the artifact too
         String resp = getAssetAsString();
@@ -104,8 +94,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
         String artifactFactory = factory.getString("rdf:resource");
         assertTrue(
-                "There needs to be an artifact factory url",
-                artifactFactory != null && artifactFactory.length() > 0);
+                "There needs to be an artifact factory url", artifactFactory != null && artifactFactory.length() > 0);
 
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
@@ -113,20 +102,11 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        Response response =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory,
-                        creds,
-                        OSLCConstants.CT_JSON,
-                        OSLCConstants.CT_JSON,
-                        artifact,
-                        header);
+        Response response = OSLCUtils.postDataToUrl(
+                artifactFactory, creds, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON, artifact, header);
         response.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + response.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus(),
                 response.getStatus() == Status.CREATED.getStatusCode());
     }
 
@@ -145,13 +125,8 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
     @Test
     public void removeArtifactFromAsset()
-            throws IOException,
-                    TransformerException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    IllegalStateException,
-                    JSONException {
+            throws IOException, TransformerException, ParseException, ParserConfigurationException, SAXException,
+                    IllegalStateException, JSONException {
         String artifactFactory = getArtifactFactory();
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
@@ -160,14 +135,8 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         // Adds the artifact to the asset
-        Response response =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory,
-                        creds,
-                        OSLCConstants.CT_JSON,
-                        OSLCConstants.CT_JSON,
-                        artifact,
-                        header);
+        Response response = OSLCUtils.postDataToUrl(
+                artifactFactory, creds, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON, artifact, header);
         response.close();
 
         // Gets the asset with the artifact added to it
@@ -196,9 +165,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         // Gets the artifact factory from the asset
         JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
         String artifactFactory = factory.getString("rdf:resource");
-        assertTrue(
-                "There needs to be an artifact factory",
-                artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
         return artifactFactory;
     }
 }

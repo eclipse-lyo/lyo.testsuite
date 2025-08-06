@@ -30,10 +30,7 @@ import org.xml.sax.SAXException;
 public class TestScriptXmlTests extends CoreResourceXmlTests {
 
     public TestScriptXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);

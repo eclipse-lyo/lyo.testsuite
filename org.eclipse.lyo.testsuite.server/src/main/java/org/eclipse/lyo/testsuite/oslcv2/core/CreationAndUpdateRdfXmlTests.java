@@ -27,14 +27,12 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * This class provides JUnit tests for the validation of the OSLCv2 creation and
- * updating of change requests. It uses the template files specified in
- * setup.properties as the entity to be POST or PUT, for creation and updating
+ * This class provides JUnit tests for the validation of the OSLCv2 creation and updating of change requests. It uses
+ * the template files specified in setup.properties as the entity to be POST or PUT, for creation and updating
  * respectively.
  *
- * After each test, it attempts to perform a DELETE call on the resource that
- * was presumably created, but this DELETE call is not technically required in
- * the OSLC spec, so the created change request may still exist for some service
+ * <p>After each test, it attempts to perform a DELETE call on the resource that was presumably created, but this DELETE
+ * call is not technically required in the OSLC spec, so the created change request may still exist for some service
  * providers.
  */
 @RunWith(Parameterized.class)
@@ -44,7 +42,6 @@ public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTe
     public CreationAndUpdateRdfXmlTests(String url) {
         super(url);
     }
-
 
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
@@ -60,12 +57,8 @@ public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTe
             ArrayList<String> serviceUrls =
                     getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
             String[] types = getCreateTemplateTypes();
-            capabilityURLsUsingRdfXml =
-                    getCapabilityURLsUsingRdfXml(
-                            OSLCConstants.CREATION_PROP,
-                            serviceUrls,
-                            useDefaultUsageForCreation,
-                            types);
+            capabilityURLsUsingRdfXml = getCapabilityURLsUsingRdfXml(
+                    OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, types);
         }
 
         if (logger.isDebugEnabled()) {

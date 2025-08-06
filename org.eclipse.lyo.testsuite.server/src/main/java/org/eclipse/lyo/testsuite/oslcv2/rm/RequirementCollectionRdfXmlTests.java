@@ -18,10 +18,7 @@ public class RequirementCollectionRdfXmlTests extends CoreResourceRdfXmlTests {
     public static String eval = OSLCConstants.RDFS_MEMBER;
 
     public RequirementCollectionRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);

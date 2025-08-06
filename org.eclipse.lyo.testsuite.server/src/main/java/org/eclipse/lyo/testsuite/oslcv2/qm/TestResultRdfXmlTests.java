@@ -19,12 +19,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
-import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.Test;
@@ -34,10 +34,7 @@ import org.xml.sax.SAXException;
 public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public TestResultRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);
@@ -59,8 +56,7 @@ public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
 
     @Test
     public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException {
-        StmtIterator listStatements =
-                getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "reportsOnTestCase");
+        StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "reportsOnTestCase");
         int size = listStatements.toList().size();
         assertEquals("TestResult has exactly one oslc_qm:reportsOnTestCase", 1, size);
     }

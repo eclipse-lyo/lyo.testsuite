@@ -18,8 +18,11 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
@@ -27,11 +30,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response.Status;
-import java.util.Map;
-import jakarta.ws.rs.core.Response;
 import org.apache.http.ParseException;
-import java.util.HashMap;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -54,11 +53,7 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 
     @Test
     public void queryUsageCase()
-            throws IOException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    TransformerException,
+            throws IOException, ParseException, ParserConfigurationException, SAXException, TransformerException,
                     XPathExpressionException {
         // Runs a query to get a bunch of assets by their name
         Document document = runQuery();
@@ -69,11 +64,7 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 
     @Test
     public void retrieveUsageCase()
-            throws IOException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParseException, ParserConfigurationException, SAXException, XPathExpressionException {
         assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
 
         // Once the best asset is determined then the full asset is retrieved
@@ -86,24 +77,17 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 
     @Test
     public void publishUsageCase()
-            throws IOException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    TransformerException,
+            throws IOException, ParseException, ParserConfigurationException, SAXException, TransformerException,
                     XPathException {
         // Get url
-        ArrayList<String> serviceUrls =
-                getServiceProviderURLsUsingXML(setupProps.getProperty("baseUri"));
-        ArrayList<String> capabilityURLsUsingRdfXml =
-                TestsBase.getCapabilityURLsUsingRdfXml(
-                        OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
+        ArrayList<String> serviceUrls = getServiceProviderURLsUsingXML(setupProps.getProperty("baseUri"));
+        ArrayList<String> capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(
+                OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
         currentUrl = capabilityURLsUsingRdfXml.getFirst();
 
         // Create the asset
         assetUrl = createAsset(xmlCreateTemplate);
-        assertTrue(
-                "The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 
         // Add the artifact to the asset
         String artifactFactory = getArtifactFactory();
@@ -115,20 +99,11 @@ public class UsageCaseXmlTests extends UsageCaseBase {
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        Response response =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory,
-                        creds,
-                        OSLCConstants.CT_XML,
-                        OSLCConstants.CT_XML,
-                        artifact,
-                        header);
+        Response response = OSLCUtils.postDataToUrl(
+                artifactFactory, creds, OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
         response.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + response.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus(),
                 response.getStatus() == Status.CREATED.getStatusCode());
 
         // Get updated asset and update the artifact
@@ -176,14 +151,10 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 
     private Document runQuery() throws IOException, ParserConfigurationException, SAXException {
         Response resp = executeQuery();
-        Document document =
-                OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
+        Document document = OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
         return document;
     }
@@ -215,13 +186,9 @@ public class UsageCaseXmlTests extends UsageCaseBase {
     }
 
     private void retrieveArtifact(String asset)
-            throws ParserConfigurationException,
-                    IOException,
-                    SAXException,
-                    XPathExpressionException {
+            throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
         Document document = OSLCUtils.createXMLDocFromResponseBody(asset);
-        String path =
-                "/rdf:RDF/oslc_asset:Asset/oslc_asset:artifact[1]/oslc_asset:Artifact/oslc_asset:content";
+        String path = "/rdf:RDF/oslc_asset:Asset/oslc_asset:artifact[1]/oslc_asset:Artifact/oslc_asset:content";
         XPath xpath = OSLCUtils.getXPath();
         Node content = (Node) xpath.evaluate(path, document, XPathConstants.NODE);
         assertTrue("Could not find the artifact", content != null);
@@ -230,32 +197,22 @@ public class UsageCaseXmlTests extends UsageCaseBase {
         String artifactUrl = attributes.getNamedItem("rdf:resource").getNodeValue();
         assertTrue("No artifact could be found in the asset", artifactUrl != null);
 
-        Response resp =
-                OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
+        Response resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 
     private String getArtifactFactory()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         String resp = getAssetAsString();
         Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
 
         // Gets the artifact factory from the asset
         NodeList nodes = getAssetNodeChildren(document);
-        String artifactFactory =
-                getNodeAttribute(nodes, "oslc_asset:artifactFactory", "rdf:resource");
-        assertTrue(
-                "There needs to be an artifact factory",
-                artifactFactory != null && artifactFactory.length() > 0);
+        String artifactFactory = getNodeAttribute(nodes, "oslc_asset:artifactFactory", "rdf:resource");
+        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
         return artifactFactory;
     }
 

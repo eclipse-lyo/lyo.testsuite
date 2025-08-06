@@ -18,17 +18,16 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response.Status;
-import java.util.Map;
-import jakarta.ws.rs.core.Response;
 import org.apache.http.ParseException;
-import java.util.HashMap;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -44,13 +43,11 @@ import org.xml.sax.SAXException;
 public class GetAndUpdateXmlTests extends GetAndUpdateBase {
     private Document hasDocument;
 
-    public GetAndUpdateXmlTests(String thisUrl)
-            throws IOException, ParserConfigurationException, SAXException {
+    public GetAndUpdateXmlTests(String thisUrl) throws IOException, ParserConfigurationException, SAXException {
         super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
 
         assetUrl = createAsset(xmlCreateTemplate);
-        assertTrue(
-                "The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 
         String resp = getAssetAsString();
         hasDocument = OSLCUtils.createXMLDocFromResponseBody(resp);
@@ -68,9 +65,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
     @Test
     public void assetHasArtifactFactory() {
-        assertTrue(
-                "Artifact Factory was not found",
-                hasNode(hasDocument, "oslc_asset:artifactFactory"));
+        assertTrue("Artifact Factory was not found", hasNode(hasDocument, "oslc_asset:artifactFactory"));
     }
 
     @Test
@@ -135,11 +130,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
     @Test
     public void updateAnAssetProperty()
-            throws IOException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    TransformerException,
+            throws IOException, ParseException, ParserConfigurationException, SAXException, TransformerException,
                     XPathExpressionException {
         // Get the asset
         String resp = getAssetAsString();
@@ -169,11 +160,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
     @Test
     public void addArtifactToAsset()
-            throws IOException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParseException, ParserConfigurationException, SAXException, XPathExpressionException {
         String artifactFactory = getArtifactFactory();
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
@@ -181,39 +168,24 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        Response response =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory,
-                        creds,
-                        OSLCConstants.CT_XML,
-                        OSLCConstants.CT_XML,
-                        artifact,
-                        header);
+        Response response = OSLCUtils.postDataToUrl(
+                artifactFactory, creds, OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
         response.close();
         assertTrue(
-                "Expected "
-                        + Status.CREATED.getStatusCode()
-                        + ", received "
-                        + response.getStatus(),
+                "Expected " + Status.CREATED.getStatusCode() + ", received " + response.getStatus(),
                 response.getStatus() == Status.CREATED.getStatusCode());
     }
 
     @Test
     public void uploadArtifact()
-            throws XPathExpressionException,
-                    IOException,
-                    ParserConfigurationException,
-                    SAXException {
+            throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
         String artifactFactory = getArtifactFactory();
         uploadArtifact(artifactFactory);
     }
 
     @Test
     public void downloadArtifact()
-            throws XPathExpressionException,
-                    IOException,
-                    ParserConfigurationException,
-                    SAXException {
+            throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
         String artifactFactory = getArtifactFactory();
         String location = uploadArtifact(artifactFactory);
         downloadArtifact(location);
@@ -221,11 +193,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
     @Test
     public void removeArtifactFromAsset()
-            throws IOException,
-                    TransformerException,
-                    ParseException,
-                    ParserConfigurationException,
-                    SAXException,
+            throws IOException, TransformerException, ParseException, ParserConfigurationException, SAXException,
                     XPathExpressionException {
         String artifactFactory = getArtifactFactory();
 
@@ -236,14 +204,8 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         // Adds the artifact to the asset
-        Response response =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory,
-                        creds,
-                        OSLCConstants.CT_XML,
-                        OSLCConstants.CT_XML,
-                        artifact,
-                        header);
+        Response response = OSLCUtils.postDataToUrl(
+                artifactFactory, creds, OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
         response.close();
 
         // Gets the asset with the artifact added to it
@@ -311,20 +273,14 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
     }
 
     private String getArtifactFactory()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         String resp = getAssetAsString();
         Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
 
         // Gets the artifact factory from the asset
         NodeList nodes = getAssetNodeChildren(document);
-        String artifactFactory =
-                getNodeAttribute(nodes, "oslc_asset:artifactFactory", "rdf:resource");
-        assertTrue(
-                "There needs to be an artifact factory",
-                artifactFactory != null && artifactFactory.length() > 0);
+        String artifactFactory = getNodeAttribute(nodes, "oslc_asset:artifactFactory", "rdf:resource");
+        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
         return artifactFactory;
     }
 }

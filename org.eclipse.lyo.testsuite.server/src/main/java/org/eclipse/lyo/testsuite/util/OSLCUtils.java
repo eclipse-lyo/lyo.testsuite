@@ -18,6 +18,8 @@
  */
 package org.eclipse.lyo.testsuite.util;
 
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,19 +44,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-
-import org.eclipse.lyo.client.OslcClient;
-import org.eclipse.lyo.client.OslcClientFactory;
-import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.util.oauth.OAuthCredentials;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.core.Response;
-import org.apache.log4j.Logger;
-import org.apache.http.auth.Credentials;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthMessage;
 import net.oauth.OAuthServiceProvider;
+import org.apache.log4j.Logger;
+import org.eclipse.lyo.client.OslcClient;
+import org.eclipse.lyo.client.OslcClientFactory;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Assert;
 import org.w3c.dom.Document;
@@ -76,7 +73,8 @@ public class OSLCUtils {
             if (creds instanceof TestsBase.Oauth1UserCredentials oauth1UserCredentials) {
                 var builder = OslcClientFactory.oslcOAuthClientBuilder();
                 // FIXME callback
-                builder.setOAuthConsumer(null, oauth1UserCredentials.principal().getName(), oauth1UserCredentials.secret());
+                builder.setOAuthConsumer(
+                        null, oauth1UserCredentials.principal().getName(), oauth1UserCredentials.secret());
                 builder.setClientBuilder(clientBuilder);
             } else {
                 if (creds instanceof TestsBase.UserPassword(String login, String password)) {
@@ -122,17 +120,21 @@ public class OSLCUtils {
     }
 
     public static Response getResponseFromUrl(
-        String baseUrl, String url, TestsBase.Oauth1UserCredentials creds, String acceptTypes) throws IOException {
+            String baseUrl, String url, TestsBase.Oauth1UserCredentials creds, String acceptTypes) throws IOException {
         return getResponseFromUrl(baseUrl, url, creds, acceptTypes, null);
     }
 
     public static Response getResponseFromUrl(
-        String baseUrl, String url, TestsBase.UserPassword userCredentials, String acceptTypes) throws IOException {
+            String baseUrl, String url, TestsBase.UserPassword userCredentials, String acceptTypes) throws IOException {
         return getResponseFromUrl(baseUrl, url, userCredentials, acceptTypes, null);
     }
 
     public static Response getResponseFromUrl(
-        String baseUrl, String url, TestsBase.UserPassword userCredentials, String acceptTypes, Map<String, String> headers)
+            String baseUrl,
+            String url,
+            TestsBase.UserPassword userCredentials,
+            String acceptTypes,
+            Map<String, String> headers)
             throws IOException {
         OslcClient client = getOslcClient(userCredentials);
 
@@ -148,19 +150,19 @@ public class OSLCUtils {
         if (acceptTypes != null && !acceptTypes.isEmpty()) {
             requestHeaders.put("Accept", acceptTypes);
         }
-//
-//        // Add Basic Auth header
-//        String authHeader = "Basic " + java.util.Base64.getEncoder().encodeToString((userCredentials.getPrincipal() + ":" + userCredentials.getSecret()).getBytes());
-//        requestHeaders.put("Authorization", authHeader);
-
+        //
+        //        // Add Basic Auth header
+        //        String authHeader = "Basic " +
+        // java.util.Base64.getEncoder().encodeToString((userCredentials.getPrincipal() + ":" +
+        // userCredentials.getSecret()).getBytes());
+        //        requestHeaders.put("Authorization", authHeader);
 
         // Execute the request
         Response response = client.getResource(url, requestHeaders);
         return response;
     }
 
-    public static String absoluteUrlFromRelative(String baseUrl, String url)
-            throws MalformedURLException {
+    public static String absoluteUrlFromRelative(String baseUrl, String url) throws MalformedURLException {
         URL base = new URL(baseUrl);
         URL result = base;
         if (url != null) result = new URL(base, url);
@@ -169,7 +171,11 @@ public class OSLCUtils {
     }
 
     public static Response getResponseFromUrl(
-        String baseUrl, String url, TestsBase.Oauth1UserCredentials creds, String acceptTypes, Map<String, String> headers)
+            String baseUrl,
+            String url,
+            TestsBase.Oauth1UserCredentials creds,
+            String acceptTypes,
+            Map<String, String> headers)
             throws IOException {
 
         OslcClient client = getOslcClient(creds);
@@ -198,12 +204,15 @@ public class OSLCUtils {
     }
 
     // Sign the request using 2-legged OAuth if necessary for Lyo Client.
-    private static void oAuthSignLyo(OslcClient client, String url, String method, TestsBase.Oauth1UserCredentials creds, Map<String, String> headers) {
+    private static void oAuthSignLyo(
+            OslcClient client,
+            String url,
+            String method,
+            TestsBase.Oauth1UserCredentials creds,
+            Map<String, String> headers) {
         if (creds != null) {
             OAuthServiceProvider provider = new OAuthServiceProvider(null, null, null);
-            OAuthConsumer consumer =
-                    new OAuthConsumer(
-                            "", creds.getPrincipal().getName(), creds.getSecret(), provider);
+            OAuthConsumer consumer = new OAuthConsumer("", creds.getPrincipal().getName(), creds.getSecret(), provider);
             OAuthAccessor accessor = new OAuthAccessor(consumer);
             accessor.accessToken = "";
             OAuthMessage message;
@@ -218,40 +227,40 @@ public class OSLCUtils {
         }
     }
 
-//    public static int checkOslcVersion(String url, TestsBase.UserCredentials creds, String acceptTypes)
-//            throws IOException {
-//        OslcClient client = getOslcClient(creds);
-//
-//        // Prepare request headers
-//        Map<String, String> requestHeaders = new HashMap<>();
-//        if (acceptTypes != null && !acceptTypes.isEmpty()) {
-//            requestHeaders.put("Accept", acceptTypes);
-//        }
-//        requestHeaders.put("OSLC-Core-Version", "2.0");
-//
-//        // Handle OAuth signing if needed
-//        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
-//            oAuthSignLyo(client, url, "GET", creds, requestHeaders);
-//        }
-//
-//        // Execute the request
-//        Response response = client.getResource(url, requestHeaders);
-//
-//        // Consume the entity (we don't need the body)
-//        response.readEntity(String.class);
-//
-//        // Check for OSLC-Core-Version header
-//        if (response.getHeaders().containsKey("OSLC-Core-Version")) {
-//            String version = response.getHeaderString("OSLC-Core-Version");
-//            if ("2.0".equals(version)) {
-//                return 2;
-//            }
-//        }
-//        return 1;
-//    }
+    //    public static int checkOslcVersion(String url, TestsBase.UserCredentials creds, String acceptTypes)
+    //            throws IOException {
+    //        OslcClient client = getOslcClient(creds);
+    //
+    //        // Prepare request headers
+    //        Map<String, String> requestHeaders = new HashMap<>();
+    //        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+    //            requestHeaders.put("Accept", acceptTypes);
+    //        }
+    //        requestHeaders.put("OSLC-Core-Version", "2.0");
+    //
+    //        // Handle OAuth signing if needed
+    //        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+    //            oAuthSignLyo(client, url, "GET", creds, requestHeaders);
+    //        }
+    //
+    //        // Execute the request
+    //        Response response = client.getResource(url, requestHeaders);
+    //
+    //        // Consume the entity (we don't need the body)
+    //        response.readEntity(String.class);
+    //
+    //        // Check for OSLC-Core-Version header
+    //        if (response.getHeaders().containsKey("OSLC-Core-Version")) {
+    //            String version = response.getHeaderString("OSLC-Core-Version");
+    //            if ("2.0".equals(version)) {
+    //                return 2;
+    //            }
+    //        }
+    //        return 1;
+    //    }
 
     public static Response postDataToUrl(
-        String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType, String content)
+            String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType, String content)
             throws IOException {
         return postDataToUrl(url, creds, acceptTypes, contentType, content, null);
     }
@@ -347,13 +356,16 @@ public class OSLCUtils {
     }
 
     public static Response getDataFromUrl(
-            String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType)
-            throws IOException {
+            String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType) throws IOException {
         return getDataFromUrl(url, creds, acceptTypes, contentType, null);
     }
 
     public static Response getDataFromUrl(
-            String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType, Map<String, String> headers)
+            String url,
+            TestsBase.UserCredentials creds,
+            String acceptTypes,
+            String contentType,
+            Map<String, String> headers)
             throws IOException {
         OslcClient client = getOslcClient(creds);
 
@@ -414,8 +426,7 @@ public class OSLCUtils {
         return stringBuilder.toString();
     }
 
-    public static void setupFormsAuth(String url, String username, String password)
-            throws IOException {
+    public static void setupFormsAuth(String url, String username, String password) throws IOException {
         // parse the old style of properties file baseUrl so users don't have to modify properties
         // files
         String[] tmpUrls = url.split("/authenticated");
@@ -456,12 +467,7 @@ public class OSLCUtils {
         if (jazzAuthMessage != null && jazzAuthMessage.equalsIgnoreCase(JAZZ_AUTH_FAILED)) {
             resp.readEntity(String.class);
             Assert.fail(
-                    "Could not login to Jazz server.  URL: "
-                            + url
-                            + " user: "
-                            + username
-                            + "password: "
-                            + password);
+                    "Could not login to Jazz server.  URL: " + url + " user: " + username + "password: " + password);
         } else if (statusCode != 200 && statusCode != 302) {
             resp.readEntity(String.class);
             Assert.fail("Unknown error logging in to Jazz Server.  Status code: " + statusCode);
@@ -473,7 +479,8 @@ public class OSLCUtils {
 
             // Final request to get initialization data
             resp = client.getResource(
-                    url + "/service/com.ibm.team.repository.service.internal.webuiInitializer.IWebUIInitializerRestService/initializationData",
+                    url
+                            + "/service/com.ibm.team.repository.service.internal.webuiInitializer.IWebUIInitializerRestService/initializationData",
                     headers);
             statusCode = resp.getStatus();
             location = getHeader(resp, "Location");
@@ -501,16 +508,11 @@ public class OSLCUtils {
     }
 
     /**
-     * Adds a query string to the end of a URL, handling the case where the URL
-     * already has query parameters.
+     * Adds a query string to the end of a URL, handling the case where the URL already has query parameters.
      *
-     * @param url
-     *            the URL to modify. It may or may not already have query
-     *            parameters.
-     * @param queryString
-     *            the query string, starting with a '?'. For instance,
-     *            "?oslc.properties=dcterms%3Aidentifier". Parameter values must
-     *            already be encoded.
+     * @param url the URL to modify. It may or may not already have query parameters.
+     * @param queryString the query string, starting with a '?'. For instance, "?oslc.properties=dcterms%3Aidentifier".
+     *     Parameter values must already be encoded.
      * @return the new URL
      */
     public static String addQueryStringToURL(String url, String queryString) {
@@ -525,13 +527,10 @@ public class OSLCUtils {
     /**
      * Adds query parameter values to a URL.
      *
-     * @param url
-     *            the URL to modify
-     * @param queryParameters
-     *            a map of query parameters as name/value pairs
+     * @param url the URL to modify
+     * @param queryParameters a map of query parameters as name/value pairs
      * @return the new URL
-     * @throws UnsupportedEncodingException
-     *             on errors encoding the values
+     * @throws UnsupportedEncodingException on errors encoding the values
      */
     public static String addParametersToURL(String url, Map<String, String> queryParameters)
             throws UnsupportedEncodingException {
@@ -559,18 +558,13 @@ public class OSLCUtils {
     /**
      * Adds a single query parameter to a URL.
      *
-     * @param url
-     *            the URL to modify
-     * @param name
-     *            the parameter name
-     * @param value
-     *            the parameter value
+     * @param url the URL to modify
+     * @param name the parameter name
+     * @param value the parameter value
      * @return the new URL
-     * @throws UnsupportedEncodingException
-     *             on errors encoding the values
+     * @throws UnsupportedEncodingException on errors encoding the values
      */
-    public static String addParameterToURL(String url, String name, String value)
-            throws UnsupportedEncodingException {
+    public static String addParameterToURL(String url, String name, String value) throws UnsupportedEncodingException {
         StringBuffer updatedUrl = new StringBuffer(url);
         if (url.indexOf('?') == -1) {
             updatedUrl.append('?');
@@ -596,17 +590,21 @@ public class OSLCUtils {
         return contentTypeSplit[0];
     }
 
-    public static Response getResponseFromUrl(String base, String url, TestsBase.UserCredentials creds, String contentType) throws IOException {
+    public static Response getResponseFromUrl(
+            String base, String url, TestsBase.UserCredentials creds, String contentType) throws IOException {
         return getResponseFromUrl(base, url, creds, contentType, null);
     }
 
-    public static Response getResponseFromUrl(String base, String url, TestsBase.UserCredentials creds, String contentType, Map<String, String> headers) throws IOException {
+    public static Response getResponseFromUrl(
+            String base, String url, TestsBase.UserCredentials creds, String contentType, Map<String, String> headers)
+            throws IOException {
         if (creds instanceof TestsBase.UserPassword userPassword) {
             return getResponseFromUrl(base, url, userPassword, contentType, headers);
         } else if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
             return getResponseFromUrl(base, url, oAuthCredentials, contentType, headers);
         } else {
-            throw new IllegalArgumentException("Unknown credentials type: " + creds.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Unknown credentials type: " + creds.getClass().getName());
         }
     }
 }
