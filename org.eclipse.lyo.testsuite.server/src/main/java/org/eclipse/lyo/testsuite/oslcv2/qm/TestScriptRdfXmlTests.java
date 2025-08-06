@@ -30,10 +30,7 @@ import org.xml.sax.SAXException;
 public class TestScriptRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public TestScriptRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);

@@ -18,6 +18,15 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -26,16 +35,6 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
-import jakarta.ws.rs.core.Response.Status;
-import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import java.util.HashMap;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -83,17 +82,14 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
     @Test
     public void publishUsageCase() throws IllegalStateException, IOException {
         // Get url
-        ArrayList<String> serviceUrls =
-                getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
-        ArrayList<String> capabilityURLsUsingRdfXml =
-                TestsBase.getCapabilityURLsUsingRdfXml(
-                        OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
+        ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
+        ArrayList<String> capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(
+                OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
         currentUrl = capabilityURLsUsingRdfXml.getFirst();
 
         // Creates the asset
         assetUrl = createAsset(rdfXmlCreateTemplate);
-        assertTrue(
-                "The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
         baseUrl = setupProps.getProperty("baseUrl");
 
         Response resp = getAssetResponse();
@@ -104,9 +100,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 
         // Gets the artifact factory from the asset
         String artifactFactory = getPropertyValue(model, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP);
-        assertTrue(
-                "There needs to be an artifact factory",
-                artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         // Creates the artifact
@@ -118,15 +112,10 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        resp =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory, creds, OSLCConstants.CT_RDF, null, artifact, header);
+        resp = OSLCUtils.postDataToUrl(artifactFactory, creds, OSLCConstants.CT_RDF, null, artifact, header);
         resp.close();
         assertTrue(
-                "Expected: "
-                        + Status.CREATED.getStatusCode()
-                        + ", received: "
-                        + resp.getStatus(),
+                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus(),
                 Status.CREATED.getStatusCode() == resp.getStatus());
 
         // Get and updates the artifacts subject
@@ -175,10 +164,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         model.read(resp.readEntity(InputStream.class), baseUrl);
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
         return model;
     }
@@ -205,10 +191,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         model.read(resp.readEntity(InputStream.class), baseUrl);
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
 
         Property property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
@@ -217,8 +200,8 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         while (statements.hasNext()) {
             Statement artifactStatement = statements.nextStatement();
             Property content = model.createProperty(OSLCConstants.OSLC_ASSET_V2, "content");
-            StmtIterator contentStatements = model.listStatements(
-                            artifactStatement.getObject().asResource(), content, (RDFNode) null);
+            StmtIterator contentStatements =
+                    model.listStatements(artifactStatement.getObject().asResource(), content, (RDFNode) null);
             while (contentStatements.hasNext()) {
                 Statement contentStatement = contentStatements.nextStatement();
                 artifactUrl = contentStatement.getObject().toString();
@@ -231,10 +214,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 

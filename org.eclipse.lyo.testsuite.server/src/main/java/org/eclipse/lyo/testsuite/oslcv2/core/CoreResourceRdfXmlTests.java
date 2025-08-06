@@ -21,13 +21,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.vocabulary.RDF;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -36,8 +31,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.Response;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -49,10 +49,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
-/**
- * This class provides JUnit tests with JSON format for the validation of an OSLC core resource.
- *
- */
+/** This class provides JUnit tests with JSON format for the validation of an OSLC core resource. */
 @RunWith(Parameterized.class)
 public abstract class CoreResourceRdfXmlTests extends TestsBase {
     private static Logger logger = Logger.getLogger(CoreResourceRdfXmlTests.class);
@@ -66,10 +63,7 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
     protected static String resourceType = "";
 
     public CoreResourceRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);
@@ -78,9 +72,7 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
         // records. This isn't exactly a failure, but there's nothing more we
         // can test.
         assumeNotNull(currentUrl);
-        response =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, OSLCConstants.CT_RDF, headers);
+        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, OSLCConstants.CT_RDF, headers);
         // Some records in the system might not be accessible to this user. This
         // isn't a failure, but there's nothing more we can test.
         int sc = response.getStatus();
@@ -98,16 +90,13 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
         if (logger.isDebugEnabled()) {
             StringWriter w = new StringWriter();
             fRdfModel.write(w, "TURTLE");
-            logger.debug(
-                    "Testing Resource <%s> with type <%s>".formatted(currentUrl, getResourceType()));
+            logger.debug("Testing Resource <%s> with type <%s>".formatted(currentUrl, getResourceType()));
             logger.debug(w.toString());
         }
 
         String resourceType = getResourceType();
         if (resourceType != null && !"".equals(resourceType)) {
-            assumeTrue(
-                    fRdfModel.contains(
-                            fResource, RDF.type, fRdfModel.createResource(getResourceType())));
+            assumeTrue(fRdfModel.contains(fResource, RDF.type, fRdfModel.createResource(getResourceType())));
         }
     }
 
@@ -120,17 +109,10 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
         // to other ServiceProvidersCatalogs contained within it, recursively, in order to find the
         // URLs of all
         // query factories of the REST service.
-        ArrayList<String> serviceUrls =
-                getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
+        ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
 
-        ArrayList<String> capabilityURLsUsingRdfXml =
-                TestsBase.getCapabilityURLsUsingRdfXml(
-                        OSLCConstants.QUERY_BASE_PROP,
-                        serviceUrls,
-                        true,
-                        null,
-                        getResourceTypeQuery(),
-                        getxpathSubStmt());
+        ArrayList<String> capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(
+                OSLCConstants.QUERY_BASE_PROP, serviceUrls, true, null, getResourceTypeQuery(), getxpathSubStmt());
 
         String where = setupProps.getProperty("changeRequestsWhere");
         if (where == null) {
@@ -140,18 +122,14 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
         }
 
         String additionalParameters = setupProps.getProperty("queryAdditionalParameters", "");
-        String query =
-                (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
+        String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
         query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
 
         for (String queryBaseUri : capabilityURLsUsingRdfXml) {
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
-            Response resp =
-                    OSLCUtils.getResponseFromUrl(
-                            setupBaseUrl, queryUrl, creds, OSLCConstants.CT_RDF, headers);
+            Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, OSLCConstants.CT_RDF, headers);
             Model queryModel = ModelFactory.createDefaultModel();
-            queryModel.read(
-                    resp.readEntity(InputStream.class), queryBaseUri, OSLCConstants.JENA_RDF_XML);
+            queryModel.read(resp.readEntity(InputStream.class), queryBaseUri, OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(queryModel);
 
             Property member = queryModel.createProperty(eval);

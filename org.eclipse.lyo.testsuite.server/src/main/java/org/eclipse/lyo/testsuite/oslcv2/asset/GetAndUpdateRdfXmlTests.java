@@ -18,21 +18,20 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import jakarta.ws.rs.core.Response.Status;
-import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import java.util.HashMap;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -48,8 +47,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
 
         assetUrl = createAsset(rdfXmlCreateTemplate);
-        assertTrue(
-                "The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
         baseUrl = setupProps.getProperty("baseUrl");
 
         Response resp = getAssetResponse();
@@ -83,9 +81,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
     @Test
     public void assetHasAtMostOneVersion() {
-        assertTrue(
-                "Multiple versions returned",
-                isOneOrNone(hasModel, OSLCConstants.ASSET_VERSION_PROP));
+        assertTrue("Multiple versions returned", isOneOrNone(hasModel, OSLCConstants.ASSET_VERSION_PROP));
     }
 
     @Test
@@ -120,9 +116,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
     @Test
     public void assetHasTitle() {
-        assertTrue(
-                "Title was not found",
-                getPropertyValue(hasModel, OSLCConstants.DC_TITLE_PROP) != null);
+        assertTrue("Title was not found", getPropertyValue(hasModel, OSLCConstants.DC_TITLE_PROP) != null);
     }
 
     @Test
@@ -176,15 +170,10 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory, creds, OSLCConstants.CT_RDF, null, artifact, header);
+        Response resp = OSLCUtils.postDataToUrl(artifactFactory, creds, OSLCConstants.CT_RDF, null, artifact, header);
         resp.close();
         assertTrue(
-                "Expected: "
-                        + Status.CREATED.getStatusCode()
-                        + ", received: "
-                        + resp.getStatus(),
+                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus(),
                 Status.CREATED.getStatusCode() == resp.getStatus());
     }
 
@@ -217,8 +206,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
         // Adds the artifact to the asset
         Response resp =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory, creds, OSLCConstants.CT_RDF, "text/xml", artifact, header);
+                OSLCUtils.postDataToUrl(artifactFactory, creds, OSLCConstants.CT_RDF, "text/xml", artifact, header);
         resp.close();
 
         // Gets the asset with the artifact added to it
@@ -234,7 +222,8 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         List<Statement> statementList = statements.toList();
         for (int i = 0; i < statementList.size(); i++) {
             Statement statement = statementList.get(i);
-            StmtIterator childrenStatements = model.listStatements(statement.getObject().asResource(), null, (RDFNode) null);
+            StmtIterator childrenStatements =
+                    model.listStatements(statement.getObject().asResource(), null, (RDFNode) null);
             model.remove(childrenStatements);
         }
         model.remove(statementList);
@@ -264,6 +253,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
     /**
      * Determines if there is at most one of the properties found
+     *
      * @return true is properties count <= 1, else false
      */
     private boolean isOneOrNone(Model model, String uri) {
@@ -297,9 +287,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
         // Gets the artifact factory from the asset
         String artifactFactory = getPropertyValue(model, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP);
-        assertTrue(
-                "There needs to be an artifact factory",
-                artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
         return artifactFactory;
     }
 }

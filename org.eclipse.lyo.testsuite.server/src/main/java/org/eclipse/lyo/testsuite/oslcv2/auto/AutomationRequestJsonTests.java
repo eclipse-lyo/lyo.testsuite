@@ -18,6 +18,7 @@ package org.eclipse.lyo.testsuite.oslcv2.auto;
 
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
@@ -41,31 +41,23 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of a automation request returned by accessing the auto
- * request's URL directly. It runs the equality query from the properties file and grabs the first result
- * to test against, checking the relationship of elements in the JSON representation of the auto request
+ * This class provides JUnit tests for the validation of a automation request returned by accessing the auto request's
+ * URL directly. It runs the equality query from the properties file and grabs the first result to test against,
+ * checking the relationship of elements in the JSON representation of the auto request
  */
 @RunWith(Parameterized.class)
 public class AutomationRequestJsonTests extends CoreResourceJsonTests {
 
     public AutomationRequestJsonTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
-                    NullPointerException,
-                    JSONException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
+                    NullPointerException, JSONException {
 
         super(thisUrl);
     }
 
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
-            throws IOException,
-                    NullPointerException,
-                    XPathException,
-                    ParserConfigurationException,
-                    SAXException,
+            throws IOException, NullPointerException, XPathException, ParserConfigurationException, SAXException,
                     JSONException {
         ArrayList<String> results = new ArrayList<String>();
 
@@ -84,8 +76,7 @@ public class AutomationRequestJsonTests extends CoreResourceJsonTests {
         // URLs of all
         // query factories of the REST service.
 
-        ArrayList<String> serviceUrls =
-                getServiceProviderURLsUsingJson(setupProps.getProperty("baseUri"), onlyOnce);
+        ArrayList<String> serviceUrls = getServiceProviderURLsUsingJson(setupProps.getProperty("baseUri"), onlyOnce);
 
         ArrayList<String> capabilityURLsUsingJson =
                 getCapabilityURLsUsingJson(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
@@ -98,17 +89,14 @@ public class AutomationRequestJsonTests extends CoreResourceJsonTests {
         }
 
         String additionalParameters = setupProps.getProperty("queryAdditionalParameters");
-        String query =
-                (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
+        String query = (additionalParameters.length() == 0) ? "?" : "?" + additionalParameters + "&";
         query = query + "oslc.where=" + URLEncoder.encode(where, "UTF-8") + "&oslc.pageSize=1";
 
         for (String queryBaseUri : capabilityURLsUsingJson) {
 
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
 
-            Response resp =
-                    OSLCUtils.getResponseFromUrl(
-                            setupBaseUrl, queryUrl, creds, OSLCConstants.CT_JSON, headers);
+            Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, OSLCConstants.CT_JSON, headers);
 
             String respBody = resp.readEntity(String.class);
 
@@ -152,9 +140,8 @@ public class AutomationRequestJsonTests extends CoreResourceJsonTests {
 
     @Test
     public void autoRequestHasAtLeastOneState() throws JSONException {
-        assertTrue(
-                (doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONObject)
-                        || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONArray));
+        assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONObject)
+                || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONArray));
     }
 
     @Test
@@ -166,9 +153,7 @@ public class AutomationRequestJsonTests extends CoreResourceJsonTests {
 
     @Test
     public void autoRequestHasOneExecutesLink() throws JSONException {
-        assertTrue(
-                (doc.get(OSLCConstants.AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN) instanceof JSONObject)
-                        || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN)
-                                instanceof JSONArray));
+        assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN) instanceof JSONObject)
+                || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_EXECUTES_AUTO_PLAN) instanceof JSONArray));
     }
 }

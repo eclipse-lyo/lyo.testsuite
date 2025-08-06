@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
-import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
@@ -44,15 +44,12 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of the OSLCv2 creation and
- * updating of change requests. It uses the template files specified in
- * setup.properties as the entity to be POST or PUT, for creation and updating
- * respectively. If these files are not defined, it uses the resource shapes for
- * the creation factory.
+ * This class provides JUnit tests for the validation of the OSLCv2 creation and updating of change requests. It uses
+ * the template files specified in setup.properties as the entity to be POST or PUT, for creation and updating
+ * respectively. If these files are not defined, it uses the resource shapes for the creation factory.
  *
- * After each test, it attempts to perform a DELETE call on the resource that
- * was presumably created, but this DELETE call is not technically required in
- * the OSLC spec, so the created change request may still exist for some service
+ * <p>After each test, it attempts to perform a DELETE call on the resource that was presumably created, but this DELETE
+ * call is not technically required in the OSLC spec, so the created change request may still exist for some service
  * providers.
  */
 @RunWith(Parameterized.class)
@@ -80,22 +77,13 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
 
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathException,
-                    JSONException {
+            throws IOException, ParserConfigurationException, SAXException, XPathException, JSONException {
         ArrayList<String> serviceUrls = getServiceProviderURLsUsingJson(null);
 
         // TODO: We should use JSON for this.
-        return toCollection(
-                getCapabilityURLsUsingRdfXml(
-                        OSLCConstants.CREATION_PROP,
-                        serviceUrls,
-                        useDefaultUsageForCreation,
-                        null));
+        return toCollection(getCapabilityURLsUsingRdfXml(
+                OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null));
     }
-
 
     @Override
     public String getCreateContent() throws IOException, JSONException {
@@ -143,8 +131,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     /*
      * Add reasonable values for any required properties.
      */
-    private void fillRequiredProperties(JSONObject toCreate, JSONObject shape)
-            throws JSONException, IOException {
+    private void fillRequiredProperties(JSONObject toCreate, JSONObject shape) throws JSONException, IOException {
         // Look at each property.
         JSONArray array = shape.getJSONArray("oslc:property");
         for (int i = 0; i < array.length(); ++i) {
@@ -157,8 +144,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
         }
     }
 
-    private void fillInProperty(JSONObject toCreate, JSONObject property)
-            throws JSONException, IOException {
+    private void fillInProperty(JSONObject toCreate, JSONObject property) throws JSONException, IOException {
         // Try to use an allowed value.
         JSONArray allowedValueArray = getAllowedValues(property);
         if (allowedValueArray != null && !allowedValueArray.isEmpty()) {
@@ -173,8 +159,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     /*
      * Tries to fill in a reasonable property value based on the value type.
      */
-    private void fillInUsingValueType(JSONObject toCreate, JSONObject property)
-            throws JSONException {
+    private void fillInUsingValueType(JSONObject toCreate, JSONObject property) throws JSONException {
         Object valueTypeObject = property.get("oslc:valueType");
         String key = getQName(property);
         if (valueTypeObject != null) {
@@ -183,8 +168,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
             /*
              * Look at each type. Try to fill in something reasonable.
              */
-            if (valueTypes.contains(OSLCConstants.STRING_TYPE)
-                    || valueTypes.contains(OSLCConstants.XML_LITERAL_TYPE)) {
+            if (valueTypes.contains(OSLCConstants.STRING_TYPE) || valueTypes.contains(OSLCConstants.XML_LITERAL_TYPE)) {
                 String string = generateStringValue(getMaxSize(property));
                 toCreate.put(key, string);
             } else if (valueTypes.contains(OSLCConstants.BOOLEAN_TYPE)) {
@@ -210,8 +194,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
         String propertyDefinition =
                 property.getJSONObject("oslc:propertyDefinition").getString("rdf:resource");
         String name = property.getString("oslc:name");
-        String namespace =
-                propertyDefinition.substring(0, propertyDefinition.length() - name.length());
+        String namespace = propertyDefinition.substring(0, propertyDefinition.length() - name.length());
         String prefix = getPrefix(namespace);
         assertNotNull("No prefix for namespace: " + namespace, prefix);
 
@@ -322,11 +305,9 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     }
 
     private JSONObject getResource(String uri) throws IOException, JSONException {
-        Response resp =
-                OSLCUtils.getResponseFromUrl(uri, null, creds, OSLCConstants.CT_JSON, headers);
+        Response resp = OSLCUtils.getResponseFromUrl(uri, null, creds, OSLCConstants.CT_JSON, headers);
         try {
-            assertEquals(
-                    "Failed to get resource at " + uri, 200, resp.getStatus());
+            assertEquals("Failed to get resource at " + uri, 200, resp.getStatus());
             return (JSONObject) JSON.parse(resp.readEntity(InputStream.class));
         } finally {
             resp.close();
@@ -334,18 +315,14 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     }
 
     private JSONObject getInstanceShape(JSONObject toUpdate) throws JSONException, IOException {
-        assertTrue(
-                "No instance shape for resource: " + toUpdate.write(),
-                toUpdate.has("oslc:instanceShape"));
-        String instanceShapeUri =
-                toUpdate.getJSONObject("oslc:instanceShape").getString("rdf:resource");
+        assertTrue("No instance shape for resource: " + toUpdate.write(), toUpdate.has("oslc:instanceShape"));
+        String instanceShapeUri = toUpdate.getJSONObject("oslc:instanceShape").getString("rdf:resource");
         JSONObject instanceShapeResource = getResource(instanceShapeUri);
 
         return instanceShapeResource;
     }
 
-    private void modifySomeProperty(JSONObject toUpdate, JSONObject instanceShapeResource)
-            throws JSONException {
+    private void modifySomeProperty(JSONObject toUpdate, JSONObject instanceShapeResource) throws JSONException {
         JSONArray array = instanceShapeResource.getJSONArray("oslc:property");
         for (int i = 0; i < array.length(); ++i) {
             JSONObject property = array.getJSONObject(i);
@@ -359,8 +336,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
             // if there isn't an editable string property for the resource.
             HashSet<String> valueTypes = getValueTypes(property);
 
-            if (valueTypes.contains(OSLCConstants.STRING_TYPE)
-                    || valueTypes.contains(OSLCConstants.XML_LITERAL_TYPE)) {
+            if (valueTypes.contains(OSLCConstants.STRING_TYPE) || valueTypes.contains(OSLCConstants.XML_LITERAL_TYPE)) {
                 String string = generateStringValue(getMaxSize(property));
                 toUpdate.put(getQName(property), string);
                 return;

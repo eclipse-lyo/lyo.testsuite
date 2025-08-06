@@ -18,12 +18,12 @@ package org.eclipse.lyo.testsuite.oslcv2.qm;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
-import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.Test;
@@ -33,10 +33,7 @@ import org.xml.sax.SAXException;
 public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public TestExecutionRecordRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
         super(thisUrl);
@@ -58,8 +55,7 @@ public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 
     @Test
     public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException {
-        StmtIterator listStatements =
-                getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "runsTestCase");
+        StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "runsTestCase");
         int size = listStatements.toList().size();
         assertTrue("TestExecutionRecord has one oslc_qm:runsTestCase, found " + size, size == 1);
     }

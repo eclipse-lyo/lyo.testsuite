@@ -18,12 +18,12 @@ package org.eclipse.lyo.testsuite.oslcv2.auto;
 
 import static org.junit.Assert.assertTrue;
 
-import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.Test;
@@ -33,18 +33,15 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of a auto result returned by accessing the auto result URL directly.
- * It runs the equality query from the properties file and grabs the first result
- * to test against, checking the relationship of elements in the XML representation of the auto result.
+ * This class provides JUnit tests for the validation of a auto result returned by accessing the auto result URL
+ * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
+ * the relationship of elements in the XML representation of the auto result.
  */
 @RunWith(Parameterized.class)
 public class AutomationResultRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public AutomationResultRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
         super(thisUrl);
     }
@@ -87,24 +84,21 @@ public class AutomationResultRdfXmlTests extends CoreResourceRdfXmlTests {
 
     @Test
     public void autoResultHasAtMostOneDesiredState() {
-        StmtIterator listStatements =
-                getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_DESIRED_STATE);
+        StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_DESIRED_STATE);
         int size = listStatements.toList().size();
         assertTrue("Can have at most 1 oslc_auto:desiredState, found " + size, size <= 1);
     }
 
     @Test
     public void autoResultHasOneReportsOnLink() {
-        StmtIterator listStatements =
-                getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_REPORTS_AUTO_PLAN);
+        StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_REPORTS_AUTO_PLAN);
         int size = listStatements.toList().size();
         assertTrue("Can have 1  oslc_auto:reportsOnAutomationPlan, found " + size, size == 1);
     }
 
     @Test
     public void autoResultHasOneProducedByLink() {
-        StmtIterator listStatements =
-                getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_PRODUCED_AUTO_REQUEST);
+        StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_PRODUCED_AUTO_REQUEST);
         int size = listStatements.toList().size();
         assertTrue("Can have 1  oslc_auto:producedByAutomationRequest, found " + size, size == 1);
     }

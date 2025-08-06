@@ -30,18 +30,15 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of an automation plan returned by accessing the automation
- * plan's URL directly. It runs the equality query from the properties file and grabs the first result
- * to test against, checking the relationship of elements in the XML representation of the automation plan.
+ * This class provides JUnit tests for the validation of an automation plan returned by accessing the automation plan's
+ * URL directly. It runs the equality query from the properties file and grabs the first result to test against,
+ * checking the relationship of elements in the XML representation of the automation plan.
  */
 // @RunWith(Parameterized.class)
 public class AutomationPlanXmlTests extends CoreResourceXmlTests {
 
     public AutomationPlanXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
         super(thisUrl);
         setNode(ns, resource);

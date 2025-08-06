@@ -18,12 +18,12 @@ package org.eclipse.lyo.testsuite.oslcv2.pm;
 
 import static org.junit.Assert.assertTrue;
 
-import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.Test;
@@ -32,16 +32,12 @@ import org.xml.sax.SAXException;
 
 /**
  * This class provides JUnit tests for the validation of a performance monitoring record returned by accessing the
- * performance monitoring record URL directly.
- * It runs the equality query from the properties file and grabs the first request
- * to test against, checking the relationship of elements in the XML representation of the PMR request.
+ * performance monitoring record URL directly. It runs the equality query from the properties file and grabs the first
+ * request to test against, checking the relationship of elements in the XML representation of the PMR request.
  */
 public class PerformanceMonitoringRecordSoftwareServerRdfXmlTests extends CoreResourceRdfXmlTests {
     public PerformanceMonitoringRecordSoftwareServerRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
         super(thisUrl);
         // TODO Auto-generated constructor stub

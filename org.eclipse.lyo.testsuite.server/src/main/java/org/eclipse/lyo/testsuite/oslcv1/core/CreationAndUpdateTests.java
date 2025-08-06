@@ -20,6 +20,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,10 +31,6 @@ import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
-import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-import org.apache.http.auth.Credentials;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -48,13 +46,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of the OSLC CM creation and updating of
- * change requests. It uses the template files specified in setup.properties as the entity
- * to be POST or PUT, for creation and updating respectively.
+ * This class provides JUnit tests for the validation of the OSLC CM creation and updating of change requests. It uses
+ * the template files specified in setup.properties as the entity to be POST or PUT, for creation and updating
+ * respectively.
  *
- * After each test, it attempts to perform a DELETE call on the resource that was presumably
- * created, but this DELETE call is not technically required in the OSLC CM spec, so the
- * created change request may still exist.
+ * <p>After each test, it attempts to perform a DELETE call on the resource that was presumably created, but this DELETE
+ * call is not technically required in the OSLC CM spec, so the created change request may still exist.
  */
 @RunWith(Parameterized.class)
 public class CreationAndUpdateTests {
@@ -71,8 +68,7 @@ public class CreationAndUpdateTests {
     }
 
     @Before
-    public void setup()
-            throws IOException, ParserConfigurationException, SAXException, XPathException {
+    public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException {
         Properties setupProps = SetupProperties.setup(null);
         if (setupProps.getProperty("testBackwardsCompatability") != null
                 && Boolean.parseBoolean(setupProps.getProperty("testBackwardsCompatability"))) {
@@ -81,18 +77,10 @@ public class CreationAndUpdateTests {
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
         basicCreds = new TestsBase.UserPassword(userId, pw);
-        templatedDocument =
-                OSLCUtils.readFileAsString(
-                        new File(setupProps.getProperty("createTemplateXmlFile")));
-        updateDocument =
-                OSLCUtils.readFileAsString(
-                        new File(setupProps.getProperty("updateTemplateXmlFile")));
-        jsonDocument =
-                OSLCUtils.readFileAsString(
-                        new File(setupProps.getProperty("createTemplateJsonFile")));
-        jsonUpdate =
-                OSLCUtils.readFileAsString(
-                        new File(setupProps.getProperty("updateTemplateJsonFile")));
+        templatedDocument = OSLCUtils.readFileAsString(new File(setupProps.getProperty("createTemplateXmlFile")));
+        updateDocument = OSLCUtils.readFileAsString(new File(setupProps.getProperty("updateTemplateXmlFile")));
+        jsonDocument = OSLCUtils.readFileAsString(new File(setupProps.getProperty("createTemplateJsonFile")));
+        jsonUpdate = OSLCUtils.readFileAsString(new File(setupProps.getProperty("updateTemplateJsonFile")));
     }
 
     @Parameters
@@ -114,45 +102,33 @@ public class CreationAndUpdateTests {
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
 
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        base,
-                        base,
-                        new TestsBase.UserPassword(userId, pw),
-                        OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
+        Response resp = OSLCUtils.getResponseFromUrl(
+                base,
+                base,
+                new TestsBase.UserPassword(userId, pw),
+                OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
 
         // If our 'base' is a ServiceDescription, find and add the factory service url
         if (resp.getHeaderString("Content-Type").contains(OSLCConstants.CT_DISC_DESC_XML)) {
-            Document baseDoc =
-                    OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
+            Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
             Node factoryUrl =
-                    (Node)
-                            OSLCUtils.getXPath()
-                                    .evaluate(
-                                            "//oslc_cm:factory/oslc_cm:url",
-                                            baseDoc,
-                                            XPathConstants.NODE);
+                    (Node) OSLCUtils.getXPath().evaluate("//oslc_cm:factory/oslc_cm:url", baseDoc, XPathConstants.NODE);
             Collection<Object[]> data = new ArrayList<Object[]>();
             data.add(new Object[] {factoryUrl.getTextContent()});
             return data;
         }
 
-        Document baseDoc =
-                OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
+        Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
 
         // ArrayList to contain the urls from all of the SPCs
         Collection<Object[]> data = new ArrayList<Object[]>();
 
         // Get all the ServiceDescriptionDocuments from this ServiceProviderCatalog
-        NodeList sDescs =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_disc:services/@rdf:resource",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        NodeList sDescs = (NodeList)
+                OSLCUtils.getXPath().evaluate("//oslc_disc:services/@rdf:resource", baseDoc, XPathConstants.NODESET);
         for (int i = 0; i < sDescs.getLength(); i++) {
-            Collection<Object[]> subCollection = getReferencedUrls(sDescs.item(i).getNodeValue());
+            Collection<Object[]> subCollection =
+                    getReferencedUrls(sDescs.item(i).getNodeValue());
             Iterator<Object[]> iter = subCollection.iterator();
             while (iter.hasNext()) {
                 data.add(iter.next());
@@ -162,16 +138,15 @@ public class CreationAndUpdateTests {
         // Get all ServiceProviderCatalog urls from the base document in order to recursively add
         // all the
         // simple query services from the eventual service description documents from them as well.
-        NodeList spcs =
-                (NodeList)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc_disc:entry/oslc_disc:ServiceProviderCatalog/@rdf:about",
-                                        baseDoc,
-                                        XPathConstants.NODESET);
+        NodeList spcs = (NodeList) OSLCUtils.getXPath()
+                .evaluate(
+                        "//oslc_disc:entry/oslc_disc:ServiceProviderCatalog/@rdf:about",
+                        baseDoc,
+                        XPathConstants.NODESET);
         for (int i = 0; i < spcs.getLength(); i++) {
             if (!spcs.item(i).getNodeValue().equals(base)) {
-                Collection<Object[]> subCollection = getReferencedUrls(spcs.item(i).getNodeValue());
+                Collection<Object[]> subCollection =
+                        getReferencedUrls(spcs.item(i).getNodeValue());
                 Iterator<Object[]> iter = subCollection.iterator();
                 while (iter.hasNext()) {
                     data.add(iter.next());
@@ -185,13 +160,8 @@ public class CreationAndUpdateTests {
     public void createValidCMDefectUsingXmlTemplate() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_XML,
-                        OSLCConstants.CT_CR_XML,
-                        templatedDocument);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, templatedDocument);
 
         // Assert the response gave a 201 Created
         resp.close();
@@ -211,13 +181,8 @@ public class CreationAndUpdateTests {
     public void createValidCMDefectUsingJsonTemplate() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_JSON,
-                        OSLCConstants.CT_CR_JSON,
-                        jsonDocument);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_JSON, OSLCConstants.CT_CR_JSON, jsonDocument);
 
         // Assert the response gave a 201 Created
         resp.close();
@@ -237,13 +202,8 @@ public class CreationAndUpdateTests {
     @Test
     public void createCMDefectWithInvalidContentType() throws IOException {
         // Issue post request using the provided template and an invalid contentType
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_XML,
-                        "weird/type",
-                        templatedDocument);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_XML, "weird/type", templatedDocument);
         resp.close();
         assertEquals(Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode(), resp.getStatus());
     }
@@ -251,13 +211,8 @@ public class CreationAndUpdateTests {
     @Test
     public void createCMDefectWithInvalidContent() throws IOException {
         // Issue post request using the provided template and an invalid contentType
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_XML,
-                        OSLCConstants.CT_CR_XML,
-                        "notvalidxmldefect");
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, "notvalidxmldefect");
         resp.close();
         assertEquals(Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
@@ -266,13 +221,8 @@ public class CreationAndUpdateTests {
     public void createCMDefectAndUpdateItUsingXml() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_XML,
-                        OSLCConstants.CT_CR_XML,
-                        templatedDocument);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, templatedDocument);
 
         // Assert the response gave a 201 Created
         resp.close();
@@ -282,13 +232,8 @@ public class CreationAndUpdateTests {
         assertNotNull(location);
 
         // Now, go to the url of the new change request and update it.
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location,
-                        basicCreds,
-                        OSLCConstants.CT_CR_XML,
-                        OSLCConstants.CT_CR_XML,
-                        updateDocument);
+        resp = OSLCUtils.putDataToUrl(
+                location, basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, updateDocument);
         if (resp.getEntity() != null) {
             resp.close();
         }
@@ -304,13 +249,8 @@ public class CreationAndUpdateTests {
     public void createCMDefectAndUpdateItUsingJson() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_JSON,
-                        OSLCConstants.CT_CR_JSON,
-                        jsonDocument);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_JSON, OSLCConstants.CT_CR_JSON, jsonDocument);
 
         // Assert the response gave a 201 Created
         resp.close();
@@ -321,13 +261,8 @@ public class CreationAndUpdateTests {
         assertFalse(location == null);
 
         // Now, go to the url of the new change request and update it.
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location,
-                        basicCreds,
-                        OSLCConstants.CT_CR_JSON,
-                        OSLCConstants.CT_CR_JSON,
-                        jsonUpdate);
+        resp = OSLCUtils.putDataToUrl(
+                location, basicCreds, OSLCConstants.CT_CR_JSON, OSLCConstants.CT_CR_JSON, jsonUpdate);
         if (resp.getEntity() != null) {
             resp.close();
         }
@@ -343,13 +278,8 @@ public class CreationAndUpdateTests {
     public void updateCreatedDefectWithBadRequest() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_XML,
-                        OSLCConstants.CT_CR_XML,
-                        templatedDocument);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, templatedDocument);
 
         // Assert the response gave a 201 Created
         resp.close();
@@ -359,13 +289,7 @@ public class CreationAndUpdateTests {
         assertFalse(location == null);
 
         // Now, go to the url of the new change request and update it.
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location,
-                        basicCreds,
-                        "*/*",
-                        OSLCConstants.CT_CR_XML,
-                        "NOTVALIDXML");
+        resp = OSLCUtils.putDataToUrl(location, basicCreds, "*/*", OSLCConstants.CT_CR_XML, "NOTVALIDXML");
         if (resp.getEntity() != null) {
             resp.close();
         }
@@ -381,13 +305,8 @@ public class CreationAndUpdateTests {
     public void updateCreatedDefectWithBadType() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        currentUrl,
-                        basicCreds,
-                        OSLCConstants.CT_CR_XML,
-                        OSLCConstants.CT_CR_XML,
-                        templatedDocument);
+        Response resp = OSLCUtils.postDataToUrl(
+                currentUrl, basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, templatedDocument);
 
         // Assert the response gave a 201 Created
         resp.close();
@@ -398,9 +317,7 @@ public class CreationAndUpdateTests {
         assertFalse(location == null);
 
         // Now, go to the url of the new change request and update it.
-        resp =
-                OSLCUtils.putDataToUrl(
-                        location, basicCreds, "*/*", "text/html", updateDocument);
+        resp = OSLCUtils.putDataToUrl(location, basicCreds, "*/*", "text/html", updateDocument);
         if (resp.getEntity() != null) {
             resp.close();
         }

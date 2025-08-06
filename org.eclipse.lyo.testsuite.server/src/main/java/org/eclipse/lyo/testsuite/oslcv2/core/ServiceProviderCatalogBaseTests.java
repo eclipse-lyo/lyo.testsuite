@@ -17,8 +17,8 @@ package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import jakarta.ws.rs.core.Response;
+import java.io.IOException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Ignore;
@@ -27,9 +27,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 /**
- * This class provides JUnit tests for the validation of OSLC Service Provider
- * Catalogs, for the 2.0 version of the OSLC standard, as defined by the OSLC
- * Core Spec.
+ * This class provides JUnit tests for the validation of OSLC Service Provider Catalogs, for the 2.0 version of the OSLC
+ * standard, as defined by the OSLC Core Spec.
  */
 @RunWith(Parameterized.class)
 public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
@@ -44,15 +43,12 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
     }
 
     @Test
-    @Ignore(
-            "Neither HTTP/1.1 nor OSLC Core 2.0 REQUIRE a 406 Not Acceptable response. "
-                    + "It doesn't appear to be mentioned in the OSLC 2.0 Core specification. "
-                    + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
-                    + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
+    @Ignore("Neither HTTP/1.1 nor OSLC Core 2.0 REQUIRE a 406 Not Acceptable response. "
+            + "It doesn't appear to be mentioned in the OSLC 2.0 Core specification. "
+            + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
+            + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
     public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
+        Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
         if (resp.getEntity() != null) {
             String respType = "";
             if (resp.getHeaderString("Content-Type") != null) {
@@ -64,25 +60,17 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
                             + resp.getStatus()
                             + " or Content-type='invalid/content-type' but received "
                             + respType,
-                    resp.getStatus() == 406
-                            || respType.contains("invalid/content-type"));
+                    resp.getStatus() == 406 || respType.contains("invalid/content-type"));
         }
     }
 
-    /**
-     * Not required directly from the spec, just mentions that it should be
-     * application/rdf+xml
-     */
+    /** Not required directly from the spec, just mentions that it should be application/rdf+xml */
     @Test
     public void contentTypeIsSuggestedType() throws IOException {
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, fContentType, headers);
+        Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
         resp.close();
         // Make sure the response to this URL was of valid type
         String ct = resp.getHeaderString("Content-Type");
-        assertTrue(
-                "Expected content-type \"" + fContentType + "\" received : " + ct,
-                ct.contains(fContentType));
+        assertTrue("Expected content-type \"" + fContentType + "\" received : " + ct, ct.contains(fContentType));
     }
 }

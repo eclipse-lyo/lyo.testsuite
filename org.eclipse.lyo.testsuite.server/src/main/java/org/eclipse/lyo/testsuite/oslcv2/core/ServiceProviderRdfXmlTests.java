@@ -21,12 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -35,8 +30,12 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.Response;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -48,10 +47,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
-/**
- * This class provides JUnit tests for the validation of OSLCv2 ServiceProvider documents
- *
- */
+/** This class provides JUnit tests for the validation of OSLCv2 ServiceProvider documents */
 @RunWith(Parameterized.class)
 public class ServiceProviderRdfXmlTests extends TestsBase {
 
@@ -61,15 +57,10 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
     private Resource fServiceProvider = null;
 
     public ServiceProviderRdfXmlTests(String url)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         super(url);
 
-        response =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, fContentType, headers);
+        response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
         try {
             assertEquals(
                     "Did not successfully retrieve ServiceProvider at: " + currentUrl,
@@ -149,43 +140,33 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
     }
 
     @Test
-    @Ignore(
-            "Neither HTTP/1.1 nor OSLC Core 2.0 REQUIRE a 406 Not Acceptable response. "
-                    + "It doesn't appear to be mentioned in the OSLC 2.0 Core specification. "
-                    + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
-                    + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
+    @Ignore("Neither HTTP/1.1 nor OSLC Core 2.0 REQUIRE a 406 Not Acceptable response. "
+            + "It doesn't appear to be mentioned in the OSLC 2.0 Core specification. "
+            + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
+            + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
     public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
-        String respType =
-                (resp.getHeaderString("Content-Type") == null)
-                        ? ""
-                        : resp.getHeaderString("Content-Type");
+        Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
+        String respType = (resp.getHeaderString("Content-Type") == null) ? "" : resp.getHeaderString("Content-Type");
         resp.close();
         assertTrue(
                 "Expected 406 but received "
                         + resp.getStatus()
                         + ",Content-type='invalid/content-type' but received "
                         + respType,
-                resp.getStatus() == 406
-                        || respType.contains("invalid/content-type"));
+                resp.getStatus() == 406 || respType.contains("invalid/content-type"));
     }
 
     @Test
     public void responseContentTypeIsXML() throws IOException {
-        Response resp =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, currentUrl, creds, fContentType, headers);
+        Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
         // Make sure the response to this URL was of valid type
         resp.close();
         String contentType = resp.getHeaderString("Content-Type");
         String contentTypeSplit[] = contentType.split(";");
         contentType = contentTypeSplit[0];
-        assertTrue(
-                contentType.equalsIgnoreCase("application/xml")
-                        || contentType.equalsIgnoreCase("application/rdf+xml")
-                        || contentType.equalsIgnoreCase("text/xml"));
+        assertTrue(contentType.equalsIgnoreCase("application/xml")
+                || contentType.equalsIgnoreCase("application/rdf+xml")
+                || contentType.equalsIgnoreCase("text/xml"));
     }
 
     @Test
@@ -193,9 +174,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
         Model baseRespModel = this.fRdfModel;
         String badParmUrl = currentUrl + "?oslc_cm:query";
 
-        var parameterResp =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, badParmUrl, creds, fContentType, headers);
+        var parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, badParmUrl, creds, fContentType, headers);
         assertEquals(
                 "Did not successfully retrieve catalog at: " + badParmUrl,
                 Response.Status.OK.getStatusCode(),
@@ -221,7 +200,8 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
     public void eachServiceHasOneDomain() throws XPathExpressionException {
         Property domainProp = fRdfModel.createProperty(OSLCConstants.OSLC_V2, "domain");
         Property serviceProp = fRdfModel.createProperty(OSLCConstants.SERVICE_PROP);
-        List<Statement> statements = fServiceProvider.listProperties(serviceProp).toList();
+        List<Statement> statements =
+                fServiceProvider.listProperties(serviceProp).toList();
         boolean domainFound = false;
         for (Statement statement : statements) {
             Resource service = statement.getResource();

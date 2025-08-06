@@ -30,17 +30,14 @@ import org.xml.sax.SAXException;
 
 /**
  * This class provides JUnit tests for the validation of a auto plan returned by accessing the auto plan's URL directly.
- * It runs the equality query from the properties file and grabs the first result
- * to test against, checking the relationship of elements in the XML representation of the auto plan.
+ * It runs the equality query from the properties file and grabs the first result to test against, checking the
+ * relationship of elements in the XML representation of the auto plan.
  */
 @RunWith(Parameterized.class)
 public class AutomationPlanRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public AutomationPlanRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
         super(thisUrl);
     }

@@ -19,6 +19,7 @@ package org.eclipse.lyo.testsuite.oslcv2.core;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,8 +28,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -42,11 +41,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the basic validation of query factories
- * as specified in the OSLC version 2 spec. This version of the query tests only
- * tests the basic status code and form of the query responses, as without
- * shapes implemented it is difficult to represent the needed various templates
- * of different change request types and to query for the templates.
+ * This class provides JUnit tests for the basic validation of query factories as specified in the OSLC version 2 spec.
+ * This version of the query tests only tests the basic status code and form of the query responses, as without shapes
+ * implemented it is difficult to represent the needed various templates of different change request types and to query
+ * for the templates.
  */
 @RunWith(Parameterized.class)
 public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
@@ -83,14 +81,9 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
     }
 
     protected void validateNonEmptyResponse(String query)
-            throws XPathExpressionException,
-                    IOException,
-                    ParserConfigurationException,
-                    SAXException {
+            throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
         String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
-        Response response =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, queryUrl, creds, OSLCConstants.CT_XML, headers);
+        Response response = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, OSLCConstants.CT_XML, headers);
         int statusCode = response.getStatus();
         if (Response.Status.OK.getStatusCode() != statusCode) {
             response.close();
@@ -100,30 +93,18 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
         String responseBody = response.readEntity(String.class);
 
         Document doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
-        Node results =
-                (Node)
-                        OSLCUtils.getXPath()
-                                .evaluate(
-                                        "//oslc:ResponseInfo/@rdf:about", doc, XPathConstants.NODE);
+        Node results = (Node) OSLCUtils.getXPath().evaluate("//oslc:ResponseInfo/@rdf:about", doc, XPathConstants.NODE);
 
         // Only test oslc:ResponseInfo if found
         if (results != null) {
-            results =
-                    (Node)
-                            OSLCUtils.getXPath()
-                                    .evaluate("//oslc:totalCount", doc, XPathConstants.NODE);
+            results = (Node) OSLCUtils.getXPath().evaluate("//oslc:totalCount", doc, XPathConstants.NODE);
             if (results != null) {
                 int totalCount = Integer.parseInt(results.getTextContent());
                 assertTrue("Expected oslc:totalCount > 0", totalCount > 0);
             }
 
-            NodeList resultList =
-                    (NodeList)
-                            OSLCUtils.getXPath()
-                                    .evaluate(
-                                            "//rdf:Description/rdfs:member",
-                                            doc,
-                                            XPathConstants.NODESET);
+            NodeList resultList = (NodeList)
+                    OSLCUtils.getXPath().evaluate("//rdf:Description/rdfs:member", doc, XPathConstants.NODESET);
             assertNotNull("Expected rdfs:member(s)", resultList);
             assertNotNull("Expected > 1 rdfs:member(s)", resultList.getLength() > 0);
         }
@@ -131,62 +112,42 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 
     @Test
     public void validEqualsQueryContainsExpectedResource()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
     @Test
     public void validNotEqualQueryContainsExpectedResource()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryUrlForValidNotEqualQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
     @Test
     public void validLessThanQueryContainsExpectedResources()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    ParseException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
         String query = getQueryUrlForValidLessThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
     @Test
     public void validGreaterThanQueryContainsExpectedDefects()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException,
-                    ParseException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
         String query = getQueryUrlForValidGreaterThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
     @Test
     public void validCompoundQueryContainsExpectedResource()
-            throws IOException,
-                    SAXException,
-                    ParserConfigurationException,
-                    XPathExpressionException {
+            throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryUrlForValidCompoundQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
     @Test
     public void fullTextSearchContainsExpectedResults()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         if (!getFullTextSearch()) return;
 
         String query = getQueryUrlForFullTextSearchContainsExpectedResults();

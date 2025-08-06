@@ -17,12 +17,12 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -48,10 +48,7 @@ public class CreateAssetXmlTest extends CreateAssetBase {
 
     @Test
     public void createAssetWithCategory()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         assetUrl = createAsset(readFileFromProperty("createWithCategoryTemplateXmlFile"));
         String resp = getAssetAsString();
         Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
@@ -62,16 +59,12 @@ public class CreateAssetXmlTest extends CreateAssetBase {
 
     @Test
     public void createAssetWithRelationship()
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException {
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         String otherUrl = null;
         try {
             otherUrl = createAsset(xmlCreateTemplate);
-            String asset =
-                    readFileFromProperty("createWithRelationshipTemplateXmlFile")
-                            .replace("%s", otherUrl);
+            String asset = readFileFromProperty("createWithRelationshipTemplateXmlFile")
+                    .replace("%s", otherUrl);
             assetUrl = createAsset(asset);
             String resp = getAssetAsString();
             Document document = OSLCUtils.createXMLDocFromResponseBody(resp);

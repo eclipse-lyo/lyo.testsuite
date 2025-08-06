@@ -19,6 +19,12 @@ package org.eclipse.lyo.testsuite.oslcv2.core;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -30,13 +36,6 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
@@ -46,11 +45,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * This class provides JUnit tests for the basic validation of query factories
- * as specified in the OSLC version 2 spec. This version of the query tests only
- * tests the basic status code and form of the query responses, as without
- * shapes implemented it is difficult to represent the needed various templates
- * of different change request types and to query for the templates.
+ * This class provides JUnit tests for the basic validation of query factories as specified in the OSLC version 2 spec.
+ * This version of the query tests only tests the basic status code and form of the query responses, as without shapes
+ * implemented it is difficult to represent the needed various templates of different change request types and to query
+ * for the templates.
  */
 @RunWith(Parameterized.class)
 public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
@@ -73,8 +71,7 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
         } else {
             ArrayList<String> serviceUrls =
                     getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
-            capabilityURLsUsingRdfXml =
-                    getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
+            capabilityURLsUsingRdfXml = getCapabilityURLsUsingRdfXml(OSLCConstants.QUERY_BASE_PROP, serviceUrls, true);
         }
 
         return toCollection(capabilityURLsUsingRdfXml);
@@ -82,9 +79,7 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
     protected void validateNonEmptyResponse(String query) throws IOException {
         String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
-        Response response =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, queryUrl, creds, OSLCConstants.CT_RDF, headers);
+        Response response = OSLCUtils.getResponseFromUrl(setupBaseUrl, queryUrl, creds, OSLCConstants.CT_RDF, headers);
 
         int statusCode = response.getStatus();
         if (Response.Status.OK.getStatusCode() != statusCode) {

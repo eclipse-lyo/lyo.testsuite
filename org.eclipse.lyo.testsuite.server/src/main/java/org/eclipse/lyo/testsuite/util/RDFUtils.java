@@ -15,12 +15,12 @@
  */
 package org.eclipse.lyo.testsuite.util;
 
+import java.util.Iterator;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.reasoner.ValidityReport;
-import java.util.Iterator;
 import org.junit.Assert;
 
 public class RDFUtils {

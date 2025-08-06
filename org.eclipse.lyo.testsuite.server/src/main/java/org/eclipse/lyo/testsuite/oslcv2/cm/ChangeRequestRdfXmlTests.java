@@ -17,12 +17,12 @@ package org.eclipse.lyo.testsuite.oslcv2.cm;
 
 import static org.junit.Assert.assertTrue;
 
-import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.Test;
@@ -32,18 +32,15 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
- * This class provides JUnit tests for the validation of a change request returned by accessing the change
- * request's URL directly. It runs the equality query from the properties file and grabs the first result
- * to test against, checking the relationship of elements in the XML representation of the change request.
+ * This class provides JUnit tests for the validation of a change request returned by accessing the change request's URL
+ * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
+ * the relationship of elements in the XML representation of the change request.
  */
 @RunWith(Parameterized.class)
 public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public ChangeRequestRdfXmlTests(String thisUrl)
-            throws IOException,
-                    ParserConfigurationException,
-                    SAXException,
-                    XPathExpressionException,
+            throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
         super(thisUrl);
     }

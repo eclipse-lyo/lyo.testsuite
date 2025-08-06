@@ -17,8 +17,7 @@ public class FetchResourceJsonTests extends FetchResourceTests {
     // TODO: JSON is not required by all tests, consider remove test annotation here, then
     // subclassing by domain tests to add it back in.
     @Test
-    public void getValidResourceUsingJSON()
-            throws IOException, NullPointerException, JSONException {
+    public void getValidResourceUsingJSON() throws IOException, NullPointerException, JSONException {
         String body = getValidResourceUsingContentType(OSLCConstants.CT_JSON);
 
         JSONArtifact userData = JSON.parse(body);

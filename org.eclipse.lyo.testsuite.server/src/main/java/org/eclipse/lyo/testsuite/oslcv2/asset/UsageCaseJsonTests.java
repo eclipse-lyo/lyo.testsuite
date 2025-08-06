@@ -18,18 +18,16 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.Response;
 import org.apache.http.client.ClientProtocolException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -70,24 +68,17 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 
     @Test
     public void publishUsageCase()
-            throws IOException,
-                    NullPointerException,
-                    XPathException,
-                    ParserConfigurationException,
-                    SAXException,
+            throws IOException, NullPointerException, XPathException, ParserConfigurationException, SAXException,
                     JSONException {
         // Gets the asset creation services
-        ArrayList<String> serviceUrls =
-                getServiceProviderURLsUsingJson(setupProps.getProperty("baseUri"), onlyOnce);
-        ArrayList<String> creationUrls =
-                TestsBase.getCapabilityURLsUsingRdfXml(
-                        OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
+        ArrayList<String> serviceUrls = getServiceProviderURLsUsingJson(setupProps.getProperty("baseUri"), onlyOnce);
+        ArrayList<String> creationUrls = TestsBase.getCapabilityURLsUsingRdfXml(
+                OSLCConstants.CREATION_PROP, serviceUrls, useDefaultUsageForCreation, null);
         currentUrl = creationUrls.getFirst();
 
         // Creates the asset
         assetUrl = createAsset(jsonCreateTemplate);
-        assertTrue(
-                "The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
 
         // Gets the created asset
         String resp = getAssetAsString();
@@ -95,28 +86,22 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         // Gets the artifact factory from the asset
         JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
         String artifactFactory = baseUrl + factory.getString("rdf:resource");
-        assertTrue(
-                "There needs to be an artifact factory",
-                artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
 
         // Adds an artifact to the asset
         File file = new File(setupProps.getProperty("artifactContentType"));
         var h = Map.entry("oslc_asset.name", file.getName());
 
-        Response response =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory,
-                        creds,
-                        acceptType,
-                        setupProps.getProperty("artifactContentType"),
-                        readFileFromProperty("artifactFile"),
-                        addHeader(null, h));
+        Response response = OSLCUtils.postDataToUrl(
+                artifactFactory,
+                creds,
+                acceptType,
+                setupProps.getProperty("artifactContentType"),
+                readFileFromProperty("artifactFile"),
+                addHeader(null, h));
         response.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + response.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus(),
                 response.getStatus() == Status.CREATED.getStatusCode());
 
         assertTrue("No Location header", response.getHeaderString("Location") != null);
@@ -145,10 +130,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         resp.close();
         JSONObject query = new JSONObject(content);
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
         return query;
     }
@@ -168,8 +150,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         return bestAsset;
     }
 
-    private void retrieveArtifact(String rawAsset)
-            throws JSONException, ClientProtocolException, IOException {
+    private void retrieveArtifact(String rawAsset) throws JSONException, ClientProtocolException, IOException {
         JSONObject asset = new JSONObject(rawAsset);
         JSONArray artifacts = asset.getJSONArray("oslc_asset:artifact");
         assertTrue("This asset has no artifacts", artifacts.length() > 0);
@@ -178,14 +159,10 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         JSONObject content = artifact.getJSONObject("oslc_asset:content");
         String artifactUrl = content.getString("rdf:resource");
 
-        Response resp =
-                OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
+        Response resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 

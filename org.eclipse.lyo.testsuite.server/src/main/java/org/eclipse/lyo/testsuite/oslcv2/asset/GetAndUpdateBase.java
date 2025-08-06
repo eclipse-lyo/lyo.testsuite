@@ -17,14 +17,13 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.File;
 import java.io.IOException;
-import jakarta.ws.rs.core.Response.Status;
-import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import org.apache.http.client.ClientProtocolException;
 import java.util.HashMap;
-import org.apache.http.params.HttpConnectionParams;
+import java.util.Map;
+import org.apache.http.client.ClientProtocolException;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 
     public GetAndUpdateBase(String url, String acceptType, String contentType) {
         super(url, acceptType, contentType);
-//        HttpConnectionParams.setConnectionTimeout(OSLCUtils.httpClient.getParams(), 30000);
+        //        HttpConnectionParams.setConnectionTimeout(OSLCUtils.httpClient.getParams(), 30000);
     }
 
     @Test
@@ -54,6 +53,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 
     /**
      * Uploads the artifact set in the property file
+     *
      * @param artifactFactory
      * @return the url location of the artifact
      */
@@ -61,20 +61,16 @@ public class GetAndUpdateBase extends AssetTestBase {
         File file = new File(setupProps.getProperty("artifactContentType"));
         var h = Map.entry("oslc_asset.name", file.getName());
 
-        Response resp =
-                OSLCUtils.postDataToUrl(
-                        artifactFactory,
-                        creds,
-                        acceptType,
-                        setupProps.getProperty("artifactContentType"),
-                        readFileFromProperty("artifactFile"),
-                        addHeader(null, h));
+        Response resp = OSLCUtils.postDataToUrl(
+                artifactFactory,
+                creds,
+                acceptType,
+                setupProps.getProperty("artifactContentType"),
+                readFileFromProperty("artifactFile"),
+                addHeader(null, h));
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Status.CREATED.getStatusCode());
 
         assertTrue("No Location header", resp.getHeaderString("Location") != null);
@@ -82,16 +78,11 @@ public class GetAndUpdateBase extends AssetTestBase {
         return resp.getHeaderString("Location");
     }
 
-    protected void downloadArtifact(String artifactUrl)
-            throws ClientProtocolException, IOException {
-        Response resp =
-                OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
+    protected void downloadArtifact(String artifactUrl) throws ClientProtocolException, IOException {
+        Response resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
         resp.close();
         assertTrue(
-                "Expected "
-                        + Response.Status.OK.getStatusCode()
-                        + ", received "
-                        + resp.getStatus(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
                 resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 }
