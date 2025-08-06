@@ -20,6 +20,7 @@ package org.eclipse.lyo.testsuite.oslcv2;
 
 import static org.junit.Assert.assertEquals;
 
+import com.sun.net.httpserver.HttpPrincipal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -28,6 +29,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,14 +40,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+
+import jakarta.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
@@ -62,6 +59,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.apache.http.client.ClientProtocolException;
 
 public abstract class TestsBase {
     private static Logger logger = Logger.getLogger(TestsBase.class);
@@ -72,7 +70,61 @@ public abstract class TestsBase {
         OAUTH
     };
 
-    protected static Credentials creds;
+    protected static UserCredentials creds;
+
+    public interface UserCredentials {
+        /**
+         * Returns the user ID of the credentials.
+         *
+         * @return the user ID
+         */
+        Principal getPrincipal();
+
+        /**
+         * Returns the password of the credentials.
+         *
+         * @return the password
+         */
+        String getSecret();
+    }
+
+    public record UserPassword(String login, String password) implements UserCredentials {
+        @Override
+        public Principal getPrincipal() {
+            return new HttpPrincipal(login, "realm");
+        }
+
+        @Override
+        public String getSecret() {
+            return password;
+        }
+    }
+    public record Oauth1UserCredentials(Principal principal, String secret) implements UserCredentials {
+        @Override
+        public Principal getPrincipal() {
+            return principal;
+        }
+
+        @Override
+        public String getSecret() {
+            return secret;
+        }
+    }
+
+    public record NoCredentials() implements UserCredentials {
+
+        public static final NoCredentials INSTANCE = new NoCredentials();
+        @Override
+        public Principal getPrincipal() {
+            return null;
+        }
+
+        @Override
+        public String getSecret() {
+            return "";
+        }
+    }
+
     protected static boolean onlyOnce = true;
     protected static boolean useDefaultUsageForCreation = true;
     protected static Properties setupProps = null;
@@ -84,7 +136,7 @@ public abstract class TestsBase {
     protected static String jsonUpdateTemplate;
     protected static String updateParams;
     protected static String useThisServiceProvider;
-    protected static Header[] headers;
+    protected static Map<String, String> headers;
     protected static AuthMethods authMethod = AuthMethods.BASIC;
     protected static String implName;
 
@@ -110,22 +162,20 @@ public abstract class TestsBase {
             String userId = setupProps.getProperty("userId");
             String pw = setupProps.getProperty("pw");
             if (userId != null && pw != null) {
-                creds = new UsernamePasswordCredentials(userId, pw);
+                creds = new UserPassword(userId, pw);
             } else {
                 String consumerKey = setupProps.getProperty("consumerKey");
                 String consumerSecret = setupProps.getProperty("consumerSecret");
                 if (consumerKey != null && consumerSecret != null) {
-                    creds =
-                            new OAuthCredentials(
-                                    new OAuthConsumerPrincipal(consumerKey), consumerSecret);
+                    creds = new Oauth1UserCredentials(new OAuthConsumerPrincipal(consumerKey), consumerSecret);
                 } else {
                     logger.warn("No credentials found in setup.properties");
+                    creds = null;
                 }
             }
 
-            Header h = new BasicHeader("OSLC-Core-Version", "2.0");
-
-            headers = new Header[] {h};
+            headers = new HashMap<>();
+            headers.put("OSLC-Core-Version", "2.0");
             String onlyOnceStr = setupProps.getProperty("runOnlyOnce");
             if (onlyOnceStr != null && onlyOnceStr.equals("false")) {
                 onlyOnce = false;
@@ -141,8 +191,9 @@ public abstract class TestsBase {
             if (authType.equalsIgnoreCase("OAUTH")) {
                 authMethod = AuthMethods.OAUTH;
             } else if (authType.equalsIgnoreCase("FORM")) {
-                authMethod = AuthMethods.FORM;
-                formLogin(userId, pw);
+//                authMethod = AuthMethods.FORM;
+//                formLogin(userId, pw);
+                throw new IllegalStateException("FORM login not supported any more");
             }
 
             useThisServiceProvider = setupProps.getProperty("useThisServiceProvider");
@@ -175,14 +226,14 @@ public abstract class TestsBase {
         return setupProps.get(propName);
     }
 
-    public static int getPropertyInt(String propName, int defaultValue) {
-        Object property = getProperty(propName);
-        if (property == null) {
-            return defaultValue;
-        } else {
-            return Integer.parseInt((String) property);
-        }
-    }
+//    public static int getPropertyInt(String propName, int defaultValue) {
+//        Object property = getProperty(propName);
+//        if (property == null) {
+//            return defaultValue;
+//        } else {
+//            return Integer.parseInt((String) property);
+//        }
+//    }
 
     @BeforeClass
     public static void setup()
@@ -221,15 +272,40 @@ public abstract class TestsBase {
         String base = null;
         if (inBaseURL == null) base = setupBaseUrl;
         else base = inBaseURL;
-        HttpResponse resp =
-                OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_XML, headers);
+        Response resp;
+        if (creds instanceof UserPassword userCredentials) {
+            logger.debug("Using login/pw");
+            resp = OSLCUtils.getResponseFromUrl(base, base, userCredentials, OSLCConstants.CT_XML, headers);
+        } else if (creds instanceof Oauth1UserCredentials oauth1UserCredentials) {
+            logger.debug("Using OAuth1.0a");
+            resp = OSLCUtils.getResponseFromUrl(base, base, oauth1UserCredentials, OSLCConstants.CT_XML, headers);
+        } else if (creds == null) {
+            logger.warn("Using no credentials");
+            resp = OSLCUtils.getResponseFromUrl(base, base, NoCredentials.INSTANCE, OSLCConstants.CT_XML, headers);
+        } else {
+            throw new IllegalStateException("Unknown credentials type: " + creds.getClass().getName());
+        }
 
-        String responseBody = EntityUtils.toString(resp.getEntity());
+        Document baseDoc;
+
+        int statusCode = resp.getStatus();
+        String responseBody = resp.readEntity(String.class);
         if (logger.isDebugEnabled()) {
             logger.debug("Reading service catalog <%s>".formatted(base));
+            logger.debug("Response code: %d".formatted(statusCode));
             logger.debug(responseBody);
         }
-        Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
+
+        if (statusCode >= 200 && statusCode < 300) {
+
+            baseDoc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
+        } else if (statusCode >= 400 && statusCode < 500) {
+            throw new ClientProtocolException("Client error: " + resp.getStatusInfo().getReasonPhrase());
+        } else if (statusCode >= 500) {
+            throw new IOException("Server error: " + resp.getStatusInfo().getReasonPhrase());
+        } else {
+            throw new IOException("Unexpected HTTP status code: " + statusCode);
+        }
 
         // Get all ServiceProvider urls from the base document in order to
         // recursively add all the capability urls from them as well.
@@ -321,11 +397,15 @@ public abstract class TestsBase {
         ArrayList<Node> data = new ArrayList<>();
 
         for (String base : serviceUrls) {
-            HttpResponse resp =
-                    OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_XML, headers);
+            Response resp;
+            if (creds instanceof UserPassword userCredentials) {
+                resp = OSLCUtils.getResponseFromUrl(base, null, userCredentials, OSLCConstants.CT_XML, headers);
+            } else {
+                resp = OSLCUtils.getResponseFromUrl(base, null, (Oauth1UserCredentials) creds, OSLCConstants.CT_XML, headers);
+            }
 
             Document baseDoc =
-                    OSLCUtils.createXMLDocFromResponseBody(EntityUtils.toString(resp.getEntity()));
+                    OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
 
             NodeList sDescs =
                     (NodeList)
@@ -370,18 +450,19 @@ public abstract class TestsBase {
         String firstUrl = null;
 
         for (String base : serviceUrls) {
-            HttpResponse resp =
-                    OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_XML, headers);
+            Response resp =
+                    OSLCUtils.getResponseFromUrl(base, null, creds, OSLCConstants.CT_XML, headers);
 
             try {
-                if (resp.getStatusLine().getStatusCode() > 299) {
+                int statusCode = resp.getStatus();
+                if (statusCode > 299) {
                     logger.error(
                             "Failed to fetch a resource: "
-                                    + resp.getStatusLine().getReasonPhrase());
+                                    + Response.Status.fromStatusCode(statusCode).getReasonPhrase());
                     throw new IllegalStateException();
                 }
 
-                String responseBody = EntityUtils.toString(resp.getEntity());
+                String responseBody = resp.readEntity(String.class);
                 if (logger.isDebugEnabled()) {
                     logger.debug("Reading service provider document <%s>".formatted(base));
                     logger.debug(responseBody);
@@ -421,7 +502,7 @@ public abstract class TestsBase {
                     }
                 }
             } finally {
-                EntityUtils.consume(resp.getEntity());
+                resp.close();
             }
         }
         // If we didn't find the default, then just send back the first one we
@@ -443,21 +524,20 @@ public abstract class TestsBase {
             return data;
         }
 
-        HttpResponse resp =
-                OSLCUtils.getResponseFromUrl(
-                        setupBaseUrl, inBaseURL, creds, OSLCConstants.CT_RDF, headers);
+            Response resp;
+        resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, inBaseURL, creds, OSLCConstants.CT_RDF, headers);
         assertEquals(
                 "Did not successfully retrieve ServiceProviders at: " + inBaseURL,
-                HttpStatus.SC_OK,
-                resp.getStatusLine().getStatusCode());
+                Response.Status.OK.getStatusCode(),
+                resp.getStatus());
 
         // Used to hold RDF from doing service discovery
         Model spModel = ModelFactory.createDefaultModel();
         spModel.read(
-                resp.getEntity().getContent(),
+                resp.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, inBaseURL),
                 OSLCConstants.JENA_RDF_XML);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         RDFUtils.validateModel(spModel);
 
         // Get all the "inlined" definitions for Service Providers, namely
@@ -536,16 +616,17 @@ public abstract class TestsBase {
         ArrayList<String> data = new ArrayList<>();
         String firstUrl = null;
         for (String base : serviceUrls) {
-            HttpResponse resp =
-                    OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_RDF, headers);
+            Response resp;
+            resp = OSLCUtils.getResponseFromUrl(base, null, creds, OSLCConstants.CT_RDF, headers);
 
             try {
-                if (resp.getStatusLine().getStatusCode() > 299) {
+                int statusCode = resp.getStatus();
+                if (statusCode > 299) {
                     throw new IllegalStateException(
-                            "Request failed: " + resp.getStatusLine().getReasonPhrase());
+                            "Request failed: " + Response.Status.fromStatusCode(statusCode).getReasonPhrase());
                 }
                 Model spModel = ModelFactory.createDefaultModel();
-                spModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
+                spModel.read(resp.readEntity(InputStream.class), base, OSLCConstants.JENA_RDF_XML);
                 RDFUtils.validateModel(spModel);
 
                 Property capProp = spModel.createProperty(propertyUri);
@@ -609,7 +690,7 @@ public abstract class TestsBase {
                     }
                 }
             } finally {
-                EntityUtils.consume(resp.getEntity());
+                resp.close();
             }
         }
         // If no default usage was found, then just return first one
@@ -625,25 +706,25 @@ public abstract class TestsBase {
         return creationShapeMap.get(creationFactoryUri);
     }
 
-    public static boolean formLogin(String userId, String pw) {
-        String formUri = setupProps.getProperty("formUri");
-        // Get cookies for forms login procedure (ie: get redirected to login
-        // page.
-        HttpResponse resp;
-        try {
-            resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, setupBaseUrl, null, "*/*");
-            if (resp.getEntity() != null) {
-                EntityUtils.consume(resp.getEntity());
-            }
-            // Post info to forms auth page
-            OSLCUtils.setupFormsAuth(formUri, userId, pw);
-        } catch (ClientProtocolException e) {
-            return false;
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
+//    public static boolean formLogin(String userId, String pw) {
+//        String formUri = setupProps.getProperty("formUri");
+//        // Get cookies for forms login procedure (ie: get redirected to login
+//        // page.
+//        Response resp;
+//        try {
+//            resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, setupBaseUrl, null, "*/*");
+//            if (resp.getEntity() != null) {
+//                resp.close();
+//            }
+//            // Post info to forms auth page
+//            OSLCUtils.setupFormsAuth(formUri, userId, pw);
+//        } catch (ClientProtocolException e) {
+//            return false;
+//        } catch (IOException e) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     public static ArrayList<String> getServiceProviderURLsUsingJson(String inBaseURL)
             throws IOException,
@@ -677,14 +758,14 @@ public abstract class TestsBase {
             return data;
         }
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_JSON, headers);
         assertEquals(
                 "Failed to retrieve ServiceProviders at: " + inBaseURL,
-                HttpStatus.SC_OK,
-                resp.getStatusLine().getStatusCode());
+                Response.Status.OK.getStatusCode(),
+                resp.getStatus());
 
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
 
         // Create mapping of JSON variables
         JSONArtifact userData = JSON.parse(respBody);
@@ -718,14 +799,16 @@ public abstract class TestsBase {
         ArrayList<String> data = new ArrayList<>();
 
         for (String base : serviceUrls) {
-            HttpResponse resp =
-                    OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_JSON, headers);
+            Response resp;
+
+            resp = OSLCUtils.getResponseFromUrl(base, base, (UserCredentials) creds, OSLCConstants.CT_JSON, headers);
+
             assertEquals(
                     "Failed to retrieve ServiceProviders at: " + base,
-                    HttpStatus.SC_OK,
-                    resp.getStatusLine().getStatusCode());
+                    Response.Status.OK.getStatusCode(),
+                    resp.getStatus());
 
-            String respBody = EntityUtils.toString(resp.getEntity());
+            String respBody = resp.readEntity(String.class);
 
             String contentType = OSLCUtils.getContentType(resp);
 

@@ -31,12 +31,12 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
@@ -82,21 +82,21 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
     protected void validateNonEmptyResponse(String query) throws IOException {
         String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
-        HttpResponse response =
+        Response response =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, queryUrl, creds, OSLCConstants.CT_RDF, headers);
 
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (HttpStatus.SC_OK != statusCode) {
+        int statusCode = response.getStatus();
+        if (Response.Status.OK.getStatusCode() != statusCode) {
             throw new IOException("Response code: " + statusCode + " for " + queryUrl);
         }
 
         Model queryModel = ModelFactory.createDefaultModel();
         queryModel.read(
-                response.getEntity().getContent(),
+                response.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
                 OSLCConstants.JENA_RDF_XML);
-        EntityUtils.consume(response.getEntity());
+        response.close();
         RDFUtils.validateModel(queryModel);
 
         Resource resultsRes = queryModel.getResource(currentUrl);

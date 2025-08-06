@@ -26,9 +26,8 @@ import java.text.ParseException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -124,11 +123,11 @@ public class QueryTests extends SimplifiedQueryBaseTests {
     }
 
     protected String runQuery(String queryURL, String contentType) throws IOException {
-        HttpResponse response =
+        Response response =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl + queryURL, creds, contentType, headers);
-        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-        String responseBody = EntityUtils.toString(response.getEntity());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        String responseBody = response.readEntity(String.class);
         return responseBody;
     }
 
@@ -148,10 +147,10 @@ public class QueryTests extends SimplifiedQueryBaseTests {
                         + "&oslc.select="
                         + queryComparisonProperty;
         // Get response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl + query, creds, "application/xml", headers);
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         NodeList results =

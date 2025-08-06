@@ -80,5 +80,26 @@ query on to actually retrieve a change request, this class as well as the
 CreationAndUpdateTests class can both be improved by utilizing shapes to 
 programmatically create records on the fly.
 
-## Credits
+## Authentication
 
+The test suite supports multiple authentication methods:
+
+- BASIC: Username/password authentication (default)
+- FORM: Form-based authentication
+- OAUTH: OAuth authentication
+
+To configure the authentication method, set the `authMethod` property in your `setup.properties` file:
+
+```
+authMethod=BASIC
+userId=yourUsername
+pw=yourPassword
+```
+
+For BASIC auth, a sample configuration file is provided at `config/sample-setup-basic.properties`.
+
+## Running BASIC Auth Tests
+
+To run the BASIC auth tests, you can use the `BasicAuthTests` class. This class contains tests that verify BASIC auth functionality.
+
+## Credits

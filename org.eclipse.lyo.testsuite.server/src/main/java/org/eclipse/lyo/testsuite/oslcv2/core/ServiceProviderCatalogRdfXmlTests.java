@@ -28,14 +28,14 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -49,7 +49,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     private Logger logger = Logger.getLogger(ServiceProviderCatalogRdfXmlTests.class);
     private Model rdfModel = ModelFactory.createDefaultModel();
     private Resource catalog = null;
-    private HttpResponse response = null;
+    private Response response = null;
 
     public ServiceProviderCatalogRdfXmlTests(String thisUrl) throws IOException {
         super(thisUrl);
@@ -62,11 +62,11 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
 
         assertEquals(
                 "Did not successfully retrieve catalog at: " + currentUrl,
-                HttpStatus.SC_OK,
-                response.getStatusLine().getStatusCode());
+                Response.Status.OK.getStatusCode(),
+                response.getStatus());
 
         rdfModel.read(
-                response.getEntity().getContent(),
+                response.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(rdfModel);
@@ -95,20 +95,20 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         // ArrayList to contain the urls from all SPCs
         Collection<Object[]> data = new ArrayList<Object[]>();
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_RDF, headers);
 
         try {
             assertEquals(
                     "Did not successfully retrieve catalog at: " + base,
-                    HttpStatus.SC_OK,
-                    resp.getStatusLine().getStatusCode());
+                    Response.Status.OK.getStatusCode(),
+                    resp.getStatus());
 
             // Add ourself (base)
             data.add(new Object[] {base});
 
             Model rdfModel = ModelFactory.createDefaultModel();
-            rdfModel.read(resp.getEntity().getContent(), base, OSLCConstants.JENA_RDF_XML);
+            rdfModel.read(resp.readEntity(InputStream.class), base, OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(rdfModel);
 
             Property catPredicate =
@@ -120,7 +120,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
 
             return data;
         } finally {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 
@@ -128,8 +128,8 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     public void baseUrlIsValid() throws IOException {
         // Get the status, make sure 200 OK
         assertTrue(
-                response.getStatusLine().toString(),
-                response.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                response.getStatusInfo().getReasonPhrase(),
+                response.getStatus() == Response.Status.OK.getStatusCode());
 
         // Verify we got a response
         assertNotNull("Failed to locate Catalog resource at URI: " + setupBaseUrl, catalog);
@@ -231,17 +231,17 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
 
         String badParmUrl = currentUrl + "?oslc_cm:query";
 
-        HttpResponse parameterResp =
+        var parameterResp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, badParmUrl, creds, fContentType, headers);
         assertEquals(
                 "Did not successfully retrieve catalog at: " + badParmUrl,
-                HttpStatus.SC_OK,
-                response.getStatusLine().getStatusCode());
+                Response.Status.OK.getStatusCode(),
+                response.getStatus());
 
         Model badParmModel = ModelFactory.createDefaultModel();
         badParmModel.read(
-                parameterResp.getEntity().getContent(),
+                parameterResp.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(badParmModel);

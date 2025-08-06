@@ -23,9 +23,8 @@ import static org.junit.Assume.assumeTrue;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -44,7 +43,7 @@ import org.xml.sax.SAXException;
  */
 @RunWith(Parameterized.class)
 public abstract class CoreResourceJsonTests extends TestsBase {
-    private HttpResponse response;
+    private Response response;
     private String responseBody;
     protected JSONObject doc;
 
@@ -64,15 +63,15 @@ public abstract class CoreResourceJsonTests extends TestsBase {
         response =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, OSLCConstants.CT_JSON, headers);
-        responseBody = EntityUtils.toString(response.getEntity());
-        int sc = response.getStatusLine().getStatusCode();
+        responseBody = response.readEntity(String.class);
+        int sc = response.getStatus();
 
         // Some records in the system might not be accessible to this user. This
         // isn't a failure, but there's nothing more we can test.
-        assumeTrue(sc != HttpStatus.SC_FORBIDDEN && sc != HttpStatus.SC_UNAUTHORIZED);
+        assumeTrue(sc != Status.FORBIDDEN.getStatusCode() && sc != Status.UNAUTHORIZED.getStatusCode());
 
         // Make sure the request succeeded before continuing.
-        assertEquals(HttpStatus.SC_OK, sc);
+        assertEquals(Response.Status.OK.getStatusCode(), sc);
 
         // Get JSON doc from response
         JSONArtifact userData = JSON.parse(responseBody);

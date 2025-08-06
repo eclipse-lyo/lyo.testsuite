@@ -23,8 +23,9 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import java.io.InputStream;
+
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -50,11 +51,11 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
         file = readFileFromProperty("createWithCategoryTemplateXmlFile");
 
         assetUrl = createAsset(file);
-        HttpResponse resp = getAssetResponse();
+        Response resp = getAssetResponse();
 
         Model model = ModelFactory.createDefaultModel();
-        model.read(resp.getEntity().getContent(), baseUrl);
-        EntityUtils.consume(resp.getEntity());
+        model.read(resp.readEntity(InputStream.class), baseUrl);
+        resp.close();
 
         Property property = model.getProperty(OSLCConstants.ASSET_CATEGORIZATION_PROP);
         StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
@@ -63,7 +64,7 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
 
     @Test
     public void createAssetWithRelationship() throws IOException {
-        HttpResponse resp = null;
+        Response resp = null;
         String otherUrl = null;
         try {
             otherUrl = createAsset(rdfXmlCreateTemplate);
@@ -76,8 +77,8 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
             resp = getAssetResponse();
 
             Model model = ModelFactory.createDefaultModel();
-            model.read(resp.getEntity().getContent(), baseUrl);
-            EntityUtils.consume(resp.getEntity());
+            model.read(resp.readEntity(InputStream.class), baseUrl);
+            resp.close();
 
             Property property = model.getProperty(OSLCConstants.DC_RELATION_PROP);
             StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
@@ -85,7 +86,7 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
             assertTrue("The relation was not created", statements.hasNext());
         } finally {
             resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 

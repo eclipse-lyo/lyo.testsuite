@@ -111,23 +111,60 @@
       <version>4.13.2</version>
     </dependency>
 
+    <!-- Lyo Client dependencies -->
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.5.14</version>
+      <groupId>org.eclipse.lyo.clients</groupId>
+      <artifactId>oslc-client</artifactId>
+      <version>7.0.0.Alpha3</version>
     </dependency>
 
     <dependency>
-      <groupId>net.oauth.core</groupId>
-      <artifactId>oauth</artifactId>
-      <version>20090617</version>
-      <scope>compile</scope>
+      <groupId>org.eclipse.lyo.clients</groupId>
+      <artifactId>oslc-client-base</artifactId>
+      <version>7.0.0.Alpha3</version>
     </dependency>
 
     <dependency>
-      <groupId>net.oauth.core</groupId>
-      <artifactId>oauth-httpclient3</artifactId>
-      <version>20090617</version>
+      <groupId>org.eclipse.lyo.server</groupId>
+      <artifactId>net.oauth.core-oauth-jakarta</artifactId>
+      <version>7.0.0.Alpha3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.lyo.server</groupId>
+      <artifactId>net.oauth.core-oauth-consumer-jakarta</artifactId>
+      <version>7.0.0.Alpha3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.lyo.server</groupId>
+      <artifactId>net.oauth.core-oauth-httpclient4-jakarta</artifactId>
+      <version>7.0.0.Alpha3</version>
+    </dependency>
+
+    <!-- JAX-RS dependencies -->
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-client</artifactId>
+      <version>3.1.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
+      <version>3.1.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.connectors</groupId>
+      <artifactId>jersey-apache-connector</artifactId>
+      <version>3.1.7</version>
     </dependency>
 
     <dependency>
@@ -140,14 +177,11 @@
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
      <!-- <version>2.13.0</version> -->
-      <version>5.5.0</version>
+      <!-- <version>5.5.0</version> -->
+       <!-- Lyo not ready yet -->
+      <version>4.10.0</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
-      <version>4.4.16</version>
-    </dependency>
 
     <dependency>
       <groupId>xml-apis</groupId>
@@ -168,14 +202,18 @@
       <version>1.1.3</version>
     </dependency>
     <dependency>
-      <groupId>ch.qos.reload4j</groupId>
-      <artifactId>reload4j</artifactId>
-      <version>1.2.26</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>2.0.17</version>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.abdera</groupId>
@@ -256,12 +294,18 @@
           <!-- define a language-specific format -->
           <java>
             <!-- apply a specific flavor of google-java-format and reflow long strings -->
-            <googleJavaFormat>
+            <!-- <googleJavaFormat>
               <version>1.28.0</version>
               <style>AOSP</style>
               <reflowLongStrings>true</reflowLongStrings>
               <formatJavadoc>true</formatJavadoc>
-            </googleJavaFormat>
+            </googleJavaFormat> -->
+            <palantirJavaFormat>
+  <version>2.73.0</version>                     <!-- optional -->
+  <style>PALANTIR</style>                       <!-- or AOSP/GOOGLE (optional) -->
+  <formatJavadoc>true</formatJavadoc>          <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
+</palantirJavaFormat>
+
           </java>
         </configuration>
       </plugin>

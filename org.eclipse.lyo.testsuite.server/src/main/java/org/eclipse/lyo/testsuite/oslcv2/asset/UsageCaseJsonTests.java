@@ -24,11 +24,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -100,25 +101,25 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 
         // Adds an artifact to the asset
         File file = new File(setupProps.getProperty("artifactContentType"));
-        BasicHeader h = new BasicHeader("oslc_asset.name", file.getName());
+        var h = Map.entry("oslc_asset.name", file.getName());
 
-        HttpResponse response =
+        Response response =
                 OSLCUtils.postDataToUrl(
                         artifactFactory,
                         creds,
                         acceptType,
                         setupProps.getProperty("artifactContentType"),
                         readFileFromProperty("artifactFile"),
-                        addHeader(h));
-        EntityUtils.consume(response.getEntity());
+                        addHeader(null, h));
+        response.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + response.getStatusLine().getStatusCode(),
-                response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
+                        + response.getStatus(),
+                response.getStatus() == Status.CREATED.getStatusCode());
 
-        assertTrue("No Location header", response.getFirstHeader("Location") != null);
+        assertTrue("No Location header", response.getHeaderString("Location") != null);
 
         // Updates the artifacts subject
         resp = getAssetAsString();
@@ -139,16 +140,16 @@ public class UsageCaseJsonTests extends UsageCaseBase {
     }
 
     private JSONObject runQuery() throws IOException, IllegalStateException, JSONException {
-        HttpResponse resp = executeQuery();
-        String content = EntityUtils.toString(resp.getEntity());
-        EntityUtils.consume(resp.getEntity());
+        Response resp = executeQuery();
+        String content = resp.readEntity(String.class);
+        resp.close();
         JSONObject query = new JSONObject(content);
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
         return query;
     }
 
@@ -177,15 +178,15 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         JSONObject content = artifact.getJSONObject("oslc_asset:content");
         String artifactUrl = content.getString("rdf:resource");
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 
     private String JSONToString(JSONObject jsonObject) throws JSONException {

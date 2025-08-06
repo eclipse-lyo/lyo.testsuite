@@ -18,8 +18,7 @@ package org.eclipse.lyo.testsuite.oslcv2.asset;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -61,8 +60,8 @@ public class CreateAssetJsonTest extends CreateAssetBase {
             JSONObject asset = new JSONObject(resp);
             assertTrue("The category was not set", asset.get("dcterms:relation") != null);
         } finally {
-            HttpResponse resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
-            EntityUtils.consume(resp.getEntity());
+            Response resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
+            resp.close();
         }
     }
 

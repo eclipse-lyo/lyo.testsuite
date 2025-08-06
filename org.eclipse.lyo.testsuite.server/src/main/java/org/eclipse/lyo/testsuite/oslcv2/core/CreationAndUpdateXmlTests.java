@@ -45,6 +45,16 @@ public class CreationAndUpdateXmlTests extends AbstractCreationAndUpdateRdfTests
         super(url);
     }
 
+    @Override
+    public String getContentType() {
+        return OSLCConstants.CT_XML;
+    }
+
+    @Override
+    protected String getHeaderString(String s) {
+        return headers.get(s);
+    }
+
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
@@ -64,11 +74,6 @@ public class CreationAndUpdateXmlTests extends AbstractCreationAndUpdateRdfTests
         }
 
         return toCollection(capabilityURLsUsingXml);
-    }
-
-    @Override
-    public String getContentType() {
-        return OSLCConstants.CT_XML;
     }
 
     @Override

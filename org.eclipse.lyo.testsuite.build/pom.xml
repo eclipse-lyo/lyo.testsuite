@@ -70,7 +70,7 @@
     major versions of Jena - will need to stub everything out -->
     <!--    <module>../org.eclipse.lyo.testsuite.recipes</module>-->
     <module>../org.eclipse.lyo.testsuite.server</module>
-    <module>../org.eclipse.lyo.testsuite.trs</module>
+<!--    <module>../org.eclipse.lyo.testsuite.trs</module>-->
   </modules>
 
   <build>

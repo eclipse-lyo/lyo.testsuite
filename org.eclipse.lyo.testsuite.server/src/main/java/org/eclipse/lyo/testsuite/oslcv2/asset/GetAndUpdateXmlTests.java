@@ -24,12 +24,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response.Status;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.ParseException;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import java.util.HashMap;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -176,13 +175,13 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
                     SAXException,
                     XPathExpressionException {
         String artifactFactory = getArtifactFactory();
-        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        HttpResponse response =
+        Response response =
                 OSLCUtils.postDataToUrl(
                         artifactFactory,
                         creds,
@@ -190,13 +189,13 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
                         OSLCConstants.CT_XML,
                         artifact,
                         header);
-        EntityUtils.consume(response.getEntity());
+        response.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_CREATED
+                        + Status.CREATED.getStatusCode()
                         + ", received "
-                        + response.getStatusLine().getStatusCode(),
-                response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
+                        + response.getStatus(),
+                response.getStatus() == Status.CREATED.getStatusCode());
     }
 
     @Test
@@ -230,14 +229,14 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
                     XPathExpressionException {
         String artifactFactory = getArtifactFactory();
 
-        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         // Adds the artifact to the asset
-        HttpResponse response =
+        Response response =
                 OSLCUtils.postDataToUrl(
                         artifactFactory,
                         creds,
@@ -245,7 +244,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
                         OSLCConstants.CT_XML,
                         artifact,
                         header);
-        EntityUtils.consume(response.getEntity());
+        response.close();
 
         // Gets the asset with the artifact added to it
         String resp = getAssetAsString();

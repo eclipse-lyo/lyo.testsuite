@@ -27,9 +27,8 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Feed;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -76,17 +75,17 @@ public class SimplifiedQueryAtomTests extends SimplifiedQueryBaseTests {
         String queryUrl = OSLCUtils.addQueryStringToURL(currentUrl, query);
 
         // Send ATOM feed request
-        HttpResponse response =
+        Response response =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, queryUrl, creds, OSLCConstants.CT_ATOM, headers);
 
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (HttpStatus.SC_OK != statusCode) {
-            EntityUtils.consume(response.getEntity());
+        int statusCode = response.getStatus();
+        if (Response.Status.OK.getStatusCode() != statusCode) {
+            response.close();
             throw new IOException("Response code: " + statusCode + " for " + queryUrl);
         }
 
-        String responseBody = EntityUtils.toString(response.getEntity());
+        String responseBody = response.readEntity(String.class);
         //
         // Validate ATOM feed response
         //

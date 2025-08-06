@@ -41,10 +41,9 @@ public class SetupProperties {
                             + System.getProperty("user.dir")
                             + "/"
                             + propFileName);
-            return null;
+            throw new RuntimeException("Property file not found", e);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Error loading properties", e);
         }
     }
 }
