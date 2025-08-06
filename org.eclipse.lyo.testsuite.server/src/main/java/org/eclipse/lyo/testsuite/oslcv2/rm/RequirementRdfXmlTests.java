@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  * Contributors:
  *
  *    Steve Speicher - initial API and implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.rm;
 
 import java.io.IOException;

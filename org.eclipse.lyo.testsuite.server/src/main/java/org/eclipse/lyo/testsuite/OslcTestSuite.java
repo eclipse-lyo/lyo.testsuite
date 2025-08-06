@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +14,7 @@
  *    Steve Speicher - initial API and implementation
  *    Matthew Brown
  *    Samuel Padgett - fix suite error when using Ant
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2012 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  * Contributors:
  *
  *    Tim Eck II - asset management test cases and RAMConfigTool
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.util;
 
 import java.io.BufferedReader;

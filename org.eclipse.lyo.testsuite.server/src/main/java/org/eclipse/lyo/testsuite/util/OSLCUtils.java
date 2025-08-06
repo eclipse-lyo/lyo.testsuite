@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -15,7 +15,7 @@
  *    Tim Eck II     - asset management test cases
  *    Samuel Padgett - add null guards in getHeaderString("Content-Type")
  *    Samuel Padgett - add support for two-legged OAuth authentication
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.util;
 
 import java.io.File;

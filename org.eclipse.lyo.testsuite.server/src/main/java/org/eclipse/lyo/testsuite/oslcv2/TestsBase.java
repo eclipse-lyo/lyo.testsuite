@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -15,7 +15,7 @@
  *    Yuhong Yin
  *    Samuel Padgett - create and update resources using shapes
  *    Samuel Padgett - don't cache query shapes for creation when the URIs are the same
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2;
 
 import static org.junit.Assert.assertEquals;

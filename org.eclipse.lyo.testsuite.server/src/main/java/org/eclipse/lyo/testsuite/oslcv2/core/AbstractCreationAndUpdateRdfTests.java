@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2013, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +14,7 @@
  *    Samuel Padgett - create and update resources using shapes
  *    Samuel Padgett - don't cache query shapes for creation when the URIs are the same
  *    Samuel Padgett - handle oslc:AllowedValues blank nodes
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.*;

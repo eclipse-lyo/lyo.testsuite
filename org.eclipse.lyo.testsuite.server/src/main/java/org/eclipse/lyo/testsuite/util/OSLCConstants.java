@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -15,7 +15,7 @@
  *    Yuhong Yin
  *    Tim Eck II     - asset management test cases
  *    Samuel Padgett - add constants for resource shapes
- *******************************************************************************/
+ */
 
 package org.eclipse.lyo.testsuite.util;
 

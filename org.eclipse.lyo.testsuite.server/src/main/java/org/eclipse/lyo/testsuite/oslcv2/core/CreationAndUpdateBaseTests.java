@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011, 2014 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -15,7 +15,7 @@
  *    Samuel Padgett - create and update resources using shapes
  *    Samuel Padgett - add logging
  *    Samuel Padgett - relax status code assertion for updateCreatedResourceWithInvalidContent
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.Assert.assertEquals;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2011,2013 IBM Corporation.
  *
  * All rights reserved. This program and the accompanying materials
@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Julianne Bielski - updated for OSLC Performance Monitoring V2 spec
- *******************************************************************************/
+ */
 package org.eclipse.lyo.testsuite.oslcv2.pm;
 
 import static org.junit.Assert.assertTrue;
