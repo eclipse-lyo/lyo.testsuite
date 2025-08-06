@@ -13,7 +13,11 @@
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
 
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <pathelement location="../../../reports/lib/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>
     <property environment="env"/>
 	<property name="ECLIPSE_HOME" value="${eclipse_home}"/>
     <property name="junit.output.dir" value="junit"/>
@@ -40,14 +44,12 @@
 	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-parser/1.1.2/abdera-parser-1.1.jar"/>
 	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-core/1.1.2/abdera-core-1.1.jar"/>
 	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-i18n/1.1.2/abdera-i18n-1.1.jar"/>
-	    	<pathelement location="${top}/.m2/repository/org/apache/ws/commons/axiom/axiom-api/1.2.10/axiom-api-1.2.10.jar"/>
-	    	<pathelement location="${top}/.m2/repository/org/apache/ws/commons/axiom/axiom-impl/1.2.10/axiom-impl-1.2.10.jar"/>
 	    </path>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-	  <classpath>
-	    <pathelement location="${top}/.m2/repository/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"/>
-	  </classpath>
-	</taskdef>
+    <classpath>
+      <pathelement location="../../../reports/lib/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>
     <path id="org.eclipse.lyo.testsuite.server.classpath">
         <pathelement location="../../target/classes"/>
         <path refid="Maven Dependencies.libraryclasspath"/>

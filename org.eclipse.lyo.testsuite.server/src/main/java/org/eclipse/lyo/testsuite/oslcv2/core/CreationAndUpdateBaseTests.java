@@ -30,9 +30,10 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import org.apache.axiom.attachments.utils.IOUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -380,8 +381,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
         if (logger.isDebugEnabled()) {
             logger.debug("HTTP Response: %s".formatted(resp.getStatusLine()));
-            byte[] content = IOUtils.getStreamAsByteArray(resp.getEntity().getContent());
-            logger.debug(new String(content, "UTF-8"));
+            try (InputStream is = resp.getEntity().getContent()) {
+                byte[] content = is.readAllBytes();
+                logger.debug(new String(content, StandardCharsets.UTF_8));
+            }
         } else {
             EntityUtils.consume(resp.getEntity());
         }

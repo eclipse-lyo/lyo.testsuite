@@ -33,6 +33,7 @@
  -->
 
 <xsl:param name="TITLE">OSLC Unit Test Report</xsl:param>
+<xsl:message>DEBUG: props property from XML is: '<xsl:value-of select="/testsuites/testsuite/properties/property[@name='props']/@value"/>'</xsl:message>
 <xsl:variable name="spec" select="document('../oslc-spec-mapping/oslc-am-v2.xml')"/>
 <xsl:variable name="troubleshoot" select="document('../support/troubleshooting.xml')"/>
 <xsl:variable name="date" select="date:new()"/>
@@ -43,7 +44,7 @@
 	</xsl:call-template>
 </xsl:variable>
 <xsl:variable name="propsFileFolderPath" select="substring-before(/testsuites/testsuite/properties/property[@name='props']/@value,$propsFileName)" />
-<xsl:variable name="propsFile" select="file:new(string($propsFileFolderPath),string($propsFileName))"/>
+<xsl:variable name="propsFile" select="file:new(string(/testsuites/testsuite/properties/property[@name='props']/@value))"/>
 <xsl:variable name="file_reader" select="FR:new(string($propsFile))" />
 <xsl:variable name="scanner" select="scan:new($file_reader)"/>
 
@@ -138,7 +139,7 @@
       .Properties {
         text-align:right;
       }
-      
+
       img.OSLCLogo {
       	width: 72px;
       	height:91px;
@@ -149,7 +150,7 @@
       	height:15px;
       	background:url(./oslc_sprite.png) -102px 0px;
       }
-      
+
       </style>
       <script type="text/javascript" language="JavaScript">
         var TestCases = new Array();
@@ -169,7 +170,7 @@
        <script type="text/javascript" language="JavaScript"><![CDATA[
        var W3CDOM = (document.createElement && document.getElementsByTagName);
        window.onload 	= init;
-       
+
         function displayProperties (name) {
 
           var win = window.open('','JUnitSystemProperties','scrollbars=1,resizable=1');
@@ -198,7 +199,7 @@
           doc.write("<td align='right'><a style='color:#FFFFFF' href='javascript:window.close();'>Close</a></td>");
     	  doc.write("</tr>");
     	  doc.write("</table>");
-		  doc.write("</div>");  
+		  doc.write("</div>");
           doc.write("<h3>Properties of " + name + "</h3>");
           doc.write("<table><tr><td>");
           doc.write("<table class='properties'>");
@@ -234,26 +235,26 @@
           doc.close();
           win.focus();
         }
-        
+
 		function init(evt) {
 			SVGscale(0.5);
 		}
-        
+
         function SVGscale(scale) {
 			window.SVGsetDimension(1600*scale,1200*scale);
-			window.SVGsetScale(scale,scale);	
+			window.SVGsetScale(scale,scale);
        		if (!W3CDOM) return;
 			var box 	= document.getElementById('svgid');
 			box.width  	= 1600*scale;
 			box.height 	= 1200*scale;
 		}
-      ]]></script> 
+      ]]></script>
         </head>
         <body>
 
             <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
-			
+
 			<!-- Assessmen part -->
             <xsl:call-template name="compliancepart"/>
             <hr size="1" width="95%" align="left"/>
@@ -379,20 +380,20 @@
     </xsl:template>
 
 	<xsl:template name="compliancepart">
-		
+
 			<!-- Object Container to render the SVG User Load Preview Graph within the HTML -->
 							<span style="text-align:center;display:block;margin: 0 auto;"><object id="svgid" type="image/svg+xml" name="SVGContainer" data="barchartSVG.svg" width="1100" height="450">
  								<param name="src" value="barchartSVG.svg" />
 								<param name="wmode" value="transparent"  />
 								<embed id="svgid" src="barchartSVG.svg" type="image/svg+xml" width="1100" height="600" wmode="transparent" />
 							</object></span>
-									
+
         <h2>OSLC Assessment</h2>
 
 		<xsl:variable name="mustCount" select="'180'"/>
 		<xsl:variable name="junitMustCount" select="'156'"/>
 		<xsl:variable name="junitUniqueReqMustCount" select="'51'"/>
-		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />    
+		<xsl:variable name="testsuiteMustCount" select="count($spec//testcase[@level='MUST'])" />
         <xsl:variable name="passedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='passedMust'])"/>
         <xsl:variable name="failedMustCount" select="count(/testsuites/testsuite/testcase[@assessment='failedMust'])"/>
         <xsl:variable name="errorMustCount" select="count(/testsuites/testsuite/testcase[@assessment='errorMust'])"/>
@@ -484,7 +485,7 @@
             </td>
         </tr>
         </table>
-        
+
         <table border="0" width="95%">
         <tr>
         <td style="text-align: justify;">
@@ -496,7 +497,7 @@
         </td>
         </tr>
         </table>
-        
+
         <div class="Properties">
                 <a>
                     <xsl:attribute name="href">javascript:displayProperties('<xsl:value-of select="/testsuites/testsuite/properties/property[@name='props']/@value"/>');</xsl:attribute>
@@ -577,7 +578,7 @@
     </tr>
     </table>
 </div>
-    <hr size="1"/> 
+    <hr size="1"/>
 </xsl:template>
 
 <xsl:template match="testsuite" mode="header">
@@ -693,7 +694,7 @@
             <xsl:value-of select="@message"/>
         </xsl:otherwise>
     </xsl:choose>
-  
+
     <!-- display the stacktrace -->
     <code>
         <br/><br/>
@@ -701,7 +702,7 @@
             <xsl:with-param name="word" select="."/>
         </xsl:call-template>
     </code>
-    
+
     <!-- the later is better but might be problematic for non-21" monitors... -->
     <!--pre><xsl:value-of select="."/></pre-->
     <xsl:variable name="currentMessage" select="@message"/>
@@ -743,7 +744,7 @@
      </xsl:when>
    </xsl:choose>
    </xsl:for-each>
-    
+
 </xsl:template>
 
 <xsl:template name="JS-escape">
@@ -753,7 +754,7 @@
     <xsl:param name="tmp3" select="stringutils:replace(string($tmp2),&quot;&#10;&quot;,'\n')"/>
  	<xsl:param name="tmp4" select="stringutils:replace(string($tmp3),&quot;&#13;&quot;,'\r')"/>
  	<xsl:param name="tmp5" select="stringutils:replace(string($tmp4),&quot;&#xa;&quot;,'\n')"/>
- 	
+
  	<xsl:choose>
  	<xsl:when test="starts-with($tmp5,'#')">
  		 	<span style="color:gray;"><xsl:value-of select="concat('# ',substring-after($tmp5,'='))"/></span>
@@ -771,7 +772,7 @@
  			</xsl:when>
  			<xsl:otherwise>
  				<xsl:value-of select="$tmp5"/>
- 			</xsl:otherwise>	
+ 			</xsl:otherwise>
  		</xsl:choose>
  	</xsl:otherwise>
  	</xsl:choose>
@@ -813,7 +814,7 @@
 </xsl:template>
 
   <xsl:template name="OSLCProperties">
-  
+
   	<!-- OSLC Config Value Pairs -->
 	cur = TestCases['<xsl:value-of select="/testsuites/testsuite/properties/property[@name='props']/@value"/>'] = new Array();
 	cur['baseUri'] = '<a href="{substring-after($baseUri,'=')}" target="_new"><xsl:call-template name="JS-escape"><xsl:with-param name="string" select="$baseUri"/></xsl:call-template></a>';
@@ -845,20 +846,20 @@
 	cur['OAuthConsumerToken'] = '<xsl:call-template name="JS-escape"><xsl:with-param name="string" select="$OAuthConsumerToken"/></xsl:call-template>';
 	cur['OAuthConsumerSecret'] = '<xsl:call-template name="JS-escape"><xsl:with-param name="string" select="$OAuthConsumerSecret"/></xsl:call-template>';
   </xsl:template>
-  
+
   <xsl:template name="systemOut">
   	curSysOut = SysOutMessages['SystemOut'] = new Array();
    		<xsl:for-each select="//system-out[string-length(normalize-space(.)) > 0]">
    	curSysOut['<xsl:value-of select="position()"/>'] = '<td><img class='info' style='vertical-align:bottom;' src='./1px.gif'/><xsl:text> </xsl:text><xsl:call-template name="JS-escape"><xsl:with-param name="string" select="concat('System Out: ',.)"/></xsl:call-template></td>';
    		</xsl:for-each>
   </xsl:template>
-  
+
     <xsl:template name="systemErr">
   	curSysErr = SysErrMessages['SystemErr'] = new Array();
    		<xsl:for-each select="//system-err[string-length(normalize-space(.)) > 0]">
    				<xsl:choose>
    					<xsl:when test="position() mod 2 = 1">
-   	curSysErr['<xsl:value-of select="position()"/>'] = '<td style="background-color:#F8E8E7;"><img class='debug' style='vertical-align:bottom;' src='./1px.gif'/><xsl:text> </xsl:text><xsl:call-template name="JS-escape"><xsl:with-param name="string" select="concat('System Err: ',.)"/></xsl:call-template></td>';				
+   	curSysErr['<xsl:value-of select="position()"/>'] = '<td style="background-color:#F8E8E7;"><img class='debug' style='vertical-align:bottom;' src='./1px.gif'/><xsl:text> </xsl:text><xsl:call-template name="JS-escape"><xsl:with-param name="string" select="concat('System Err: ',.)"/></xsl:call-template></td>';
    					</xsl:when>
    					<xsl:otherwise>
    	curSysErr['<xsl:value-of select="position()"/>'] = '<td><img class='debug' style='vertical-align:bottom;' src='./1px.gif'/><xsl:text> </xsl:text><xsl:call-template name="JS-escape"><xsl:with-param name="string" select="concat('System Err: ',.)"/></xsl:call-template></td>';

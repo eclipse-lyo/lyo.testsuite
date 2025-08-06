@@ -10,10 +10,15 @@
     <echo message="basedir = ${basedir}"/>
     <property name="assessment.props" value="${basedir}/assessment.props"/>
 	<property file="${assessment.props}"/>
+	<property name="props" value="${basedir}/config/ram/ram-setupv2.properties"/>
 	<echo message="top = ${top}"/>
 	<echo message="eclipse_home = ${eclipse_home}"/>
 
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${basedir}/../../../reports/lib/ant-contrib-1.0b3.jar"/>
+		</classpath>
+	</taskdef>
     <property environment="env"/>
 	<property name="ECLIPSE_HOME" value="${eclipse_home}"/>
     <property name="junit.output.dir" value="junit"/>
@@ -40,14 +45,12 @@
 	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-parser/1.1.2/abdera-parser-1.1.jar"/>
 	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-core/1.1.2/abdera-core-1.1.jar"/>
 	    	<pathelement location="${top}/.m2/repository/org/apache/abdera/abdera-i18n/1.1.2/abdera-i18n-1.1.jar"/>
-	    	<pathelement location="${top}/.m2/repository/org/apache/ws/commons/axiom/axiom-api/1.2.10/axiom-api-1.2.10.jar"/>
-	    	<pathelement location="${top}/.m2/repository/org/apache/ws/commons/axiom/axiom-impl/1.2.10/axiom-impl-1.2.10.jar"/>
 	    </path>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-	  <classpath>
-	    <pathelement location="${top}/.m2/repository/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"/>
-	  </classpath>
-	</taskdef>
+    <classpath>
+      <pathelement location="../../../reports/lib/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>
     <path id="org.eclipse.lyo.testsuite.server.classpath">
         <pathelement location="../../target/classes"/>
         <path refid="Maven Dependencies.libraryclasspath"/>
@@ -129,7 +132,7 @@
         	<test name="org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseRdfXmlTests" todir="${junit.output.dir}"/>
         	<test name="org.eclipse.lyo.testsuite.oslcv2.asset.UsageCaseXmlTests" todir="${junit.output.dir}"/>
 
-            <jvmarg line="-Dprops=../../config/ram/ram-setupv2.properties"/>
+            <jvmarg line="-Dprops=${basedir}/config/ram/ram-setupv2.properties"/>
             <classpath refid="run.org.eclipse.lyo.testsuite.server.classpath"/>
         </junit>
     </target>
@@ -186,9 +189,13 @@
     		    		<echo message="NO OSLCAssessmentReport.html file within the report directory was detected ..."/>
     		    	</else>
     		    </if>
-    			<echo message="Converting TESTS-TestSuitesOSLC.xml into a HTML report"/>
-    	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/barchartSVG.svg"	style="./reportstyle/barchartSVG.xsl"/>
-    	<xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/OSLCAssessmentReport.html"	style="./reportstyle/junit-noframes.xsl"/>
+    			<echo message="Converting TESTS-TestSuitesOSLC.xml into a HTML report" />
+    <xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/barchartSVG.svg"
+      style="./reportstyle/barchartSVG.xsl" />
+    <xslt in="${todir}/TESTS-TestSuitesOSLC.xml" out="${reportdir}/OSLCAssessmentReport.html"
+      style="./reportstyle/junit-noframes.xsl">
+      <param name="props" expression="${props}"/>
+    </xslt>
 
     	<copy todir="${reportdir}">
     		<fileset dir="./reportstyle" includes="*.png, *.gif"/>

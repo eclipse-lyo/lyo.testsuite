@@ -10,3 +10,17 @@ bin/
 .idea/
 *.iml
 
+.vscode/settings.json
+
+# if we want to check them in
+# org.eclipse.lyo.testsuite.server/assessment/am/junit/TEST-*.xml
+# org.eclipse.lyo.testsuite.server/assessment/am/junit/TESTS-*.xml
+# org.eclipse.lyo.testsuite.server/assessment/cm/junit/TEST-*.xml
+# org.eclipse.lyo.testsuite.server/assessment/cm/junit/TESTS-*.xml
+# org.eclipse.lyo.testsuite.server/assessment/qm/junit/TEST-*.xml
+# org.eclipse.lyo.testsuite.server/assessment/qm/junit/TESTS-*.xml
+# org.eclipse.lyo.testsuite.server/assessment/rm/junit/TEST-*.xml
+# org.eclipse.lyo.testsuite.server/assessment/rm/junit/TESTS-*.xml
+# if we do NOT want to check them in
+org.eclipse.lyo.testsuite.server/assessment/**/TEST-*.xml
+org.eclipse.lyo.testsuite.server/assessment/**/TESTS-*.xml
