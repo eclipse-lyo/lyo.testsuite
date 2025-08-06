@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright (c) 2011, 2012, 2025 IBM Corporation and others
     Copyright (c) 2011, 2012 IBM Corporation.
    
     All rights reserved. This program and the accompanying materials
@@ -10,7 +11,11 @@
     http://www.eclipse.org/org/documents/edl-v10.php.
    
     Contributors:
-       Steve Speicher       Yuhong Yin        Purpose:    	This configuration file is used by CreateAndUpdate*Tests.java
+       Steve Speicher
+       Yuhong Yin
+    
+    Purpose:
+    	This configuration file is used by CreateAndUpdate*Tests.java
  -->
 
 <rdf:RDF
@@ -24,7 +29,8 @@
     xmlns:calm="http://jazz.net/xmlns/prod/jazz/calm/1.0/" > 
  <rdf:Description>
   <rdf:type rdf:resource="http://open-services.net/ns/qm#TestScript"/>
-  <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Test Script</dcterms:description>  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14443/jts/users/unassigned"/>
+  <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Test Script</dcterms:description>
+  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14443/jts/users/unassigned"/>
   <dcterms:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Other Test Script</dcterms:title>
  </rdf:Description>
 </rdf:RDF>

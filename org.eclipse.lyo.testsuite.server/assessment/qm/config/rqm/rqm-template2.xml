@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright (c) 2011, 2025 IBM Corporation and others
     Copyright (c) 2011 IBM Corporation.
    
     All rights reserved. This program and the accompanying materials
@@ -26,6 +27,7 @@
  <rdf:Description>
   <rdf:type rdf:resource="http://open-services.net/ns/qm#TestScript"/>
   <dcterms:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Test Script</dcterms:description>
-  <dcterms:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Other Test Script</dcterms:title>  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14443/jts/users/unassigned"/>
+  <dcterms:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Other Test Script</dcterms:title>
+  <dcterms:contributor rdf:resource="https://quagmire.rtp.raleigh.ibm.com:14443/jts/users/unassigned"/>
  </rdf:Description>
 </rdf:RDF>
