@@ -27,12 +27,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response.Status;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.ParseException;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import java.util.HashMap;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -109,14 +108,14 @@ public class UsageCaseXmlTests extends UsageCaseBase {
         // Add the artifact to the asset
         String artifactFactory = getArtifactFactory();
 
-        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         // String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
         String fileName = setupProps.getProperty("createTemplateXmlFile");
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        HttpResponse response =
+        Response response =
                 OSLCUtils.postDataToUrl(
                         artifactFactory,
                         creds,
@@ -124,19 +123,19 @@ public class UsageCaseXmlTests extends UsageCaseBase {
                         OSLCConstants.CT_XML,
                         artifact,
                         header);
-        EntityUtils.consume(response.getEntity());
+        response.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + response.getStatusLine().getStatusCode(),
-                response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
+                        + response.getStatus(),
+                response.getStatus() == Status.CREATED.getStatusCode());
 
         // Get updated asset and update the artifact
-        HttpResponse resp = getAssetResponse();
-        String content = EntityUtils.toString(resp.getEntity());
+        Response resp = getAssetResponse();
+        String content = resp.readEntity(String.class);
         Document document = OSLCUtils.createXMLDocFromResponseBody(content);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         String path = "/rdf:RDF/oslc_asset:Asset/oslc_asset:artifact[1]/oslc_asset:Artifact";
         XPath xpath = OSLCUtils.getXPath();
         Node artifactNode = (Node) xpath.evaluate(path, document, XPathConstants.NODE);
@@ -165,9 +164,9 @@ public class UsageCaseXmlTests extends UsageCaseBase {
 
         // Check to see if the label was updated
         resp = getAssetResponse();
-        content = EntityUtils.toString(resp.getEntity());
+        content = resp.readEntity(String.class);
         document = OSLCUtils.createXMLDocFromResponseBody(content);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         path = "/rdf:RDF/oslc_asset:Asset/oslc_asset:artifact[1]/oslc_asset:Artifact/oslc:label";
         xpath = OSLCUtils.getXPath();
         label = (Node) xpath.evaluate(path, document, XPathConstants.NODE);
@@ -176,16 +175,16 @@ public class UsageCaseXmlTests extends UsageCaseBase {
     }
 
     private Document runQuery() throws IOException, ParserConfigurationException, SAXException {
-        HttpResponse resp = executeQuery();
+        Response resp = executeQuery();
         Document document =
-                OSLCUtils.createXMLDocFromResponseBody(EntityUtils.toString(resp.getEntity()));
-        EntityUtils.consume(resp.getEntity());
+                OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
         return document;
     }
 
@@ -231,15 +230,15 @@ public class UsageCaseXmlTests extends UsageCaseBase {
         String artifactUrl = attributes.getNamedItem("rdf:resource").getNodeValue();
         assertTrue("No artifact could be found in the asset", artifactUrl != null);
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 
     private String getArtifactFactory()

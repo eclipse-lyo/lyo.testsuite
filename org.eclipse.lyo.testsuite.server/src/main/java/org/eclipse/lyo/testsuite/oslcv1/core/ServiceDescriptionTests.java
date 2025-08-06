@@ -27,10 +27,9 @@ import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.util.EntityUtils;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
@@ -53,10 +52,10 @@ public class ServiceDescriptionTests {
 
     // Base URL of the OSLC Service Description Document to be tested
     private static String baseUrl;
-    private static Credentials basicCreds;
+    private static TestsBase.UserCredentials basicCreds;
 
     private String currentUrl;
-    private HttpResponse response;
+    private Response response;
     private String responseBody;
     private Document doc;
 
@@ -75,11 +74,11 @@ public class ServiceDescriptionTests {
         baseUrl = setupProps.getProperty("baseUri");
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
-        basicCreds = new UsernamePasswordCredentials(userId, pw);
+        basicCreds = new TestsBase.UserPassword(userId, pw);
         response =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_DESC_XML);
-        responseBody = EntityUtils.toString(response.getEntity());
+        responseBody = response.readEntity(String.class);
         // Get XML Doc from response
         doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
     }
@@ -103,24 +102,24 @@ public class ServiceDescriptionTests {
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         base,
                         base,
-                        new UsernamePasswordCredentials(userId, pw),
+                        new TestsBase.UserPassword(userId, pw),
                         OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
 
         // If our 'base' is a ServiceDescription we don't need to recurse as this is the only one we
         // can find
-        if (resp.getEntity().getContentType().getValue().contains(OSLCConstants.CT_DISC_DESC_XML)) {
+        if (resp.getHeaderString("Content-Type").contains(OSLCConstants.CT_DISC_DESC_XML)) {
             Collection<Object[]> data = new ArrayList<Object[]>();
             data.add(new Object[] {base});
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
             return data;
         }
 
         Document baseDoc =
-                OSLCUtils.createXMLDocFromResponseBody(EntityUtils.toString(resp.getEntity()));
+                OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
 
         // ArrayList to contain the urls from all SPCs
         Collection<Object[]> data = new ArrayList<Object[]>();
@@ -167,8 +166,8 @@ public class ServiceDescriptionTests {
     public void baseUrlIsValid() {
         // Get the status, make sure 200 OK
         assertTrue(
-                response.getStatusLine().toString(),
-                response.getStatusLine().getStatusCode() == 200);
+                response.getStatusInfo().getReasonPhrase(),
+                response.getStatus() == 200);
 
         // Verify we got a response
         assertNotNull(responseBody);
@@ -176,44 +175,43 @@ public class ServiceDescriptionTests {
 
     @Test
     public void invalidContentTypeGivesNotSupported() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl, basicCreds, "application/svg+xml");
-        String respType = resp.getEntity().getContentType().getValue();
-        EntityUtils.consume(resp.getEntity());
+        String respType = resp.getHeaderString("Content-Type");
+        resp.close();
         assertTrue(
-                resp.getStatusLine().getStatusCode() == 406
+                resp.getStatus() == 406
                         || respType.contains("application/svg+xml"));
     }
 
     @Test
     public void contentTypeIsCMServiceDescription() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_DESC_XML);
         // Make sure the response to this URL was of valid type
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
-                resp.getEntity()
-                        .getContentType()
-                        .getValue()
+                resp.getHeaderString("Content-Type")
+
                         .contains(OSLCConstants.CT_DISC_DESC_XML));
     }
 
     @Test
     public void misplacedParametersDoNotEffectResponse() throws IOException {
-        HttpResponse baseResp =
+        var baseResp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_DESC_XML);
-        String baseRespValue = EntityUtils.toString(baseResp.getEntity());
+        String baseRespValue = baseResp.readEntity(String.class);
 
-        HttpResponse parameterResp =
+        var parameterResp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl,
                         currentUrl + "?oslc_cm:query",
                         basicCreds,
                         OSLCConstants.CT_DISC_DESC_XML);
-        String parameterRespValue = EntityUtils.toString(parameterResp.getEntity());
+        String parameterRespValue = parameterResp.readEntity(String.class);
 
         assertTrue(baseRespValue.equals(parameterRespValue));
     }
@@ -439,10 +437,10 @@ public class ServiceDescriptionTests {
             String url = urlElement.getTextContent();
 
             // Perform HTTP GET request on the URL and verify it exists in some form
-            HttpResponse urlResponse =
+            var urlResponse =
                     OSLCUtils.getResponseFromUrl(baseUrl, url, basicCreds, "*/*");
-            EntityUtils.consume(urlResponse.getEntity());
-            assertFalse(urlResponse.getStatusLine().getStatusCode() == 404);
+            urlResponse.close();
+            assertFalse(urlResponse.getStatus() == 404);
         }
     }
 

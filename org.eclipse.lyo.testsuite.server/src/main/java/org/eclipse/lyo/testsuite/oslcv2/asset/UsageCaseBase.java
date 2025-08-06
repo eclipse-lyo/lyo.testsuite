@@ -19,8 +19,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.client.ClientProtocolException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -68,7 +69,7 @@ public class UsageCaseBase extends AssetTestBase {
         return toCollection(capabilityURLsUsingRdfXml);
     }
 
-    protected HttpResponse executeQuery() throws ClientProtocolException, IOException {
+    protected Response executeQuery() throws ClientProtocolException, IOException {
         String query =
                 "?oslc.select="
                         + URLEncoder.encode("oslc_asset:version", "UTF-8")
@@ -79,13 +80,15 @@ public class UsageCaseBase extends AssetTestBase {
         return OSLCUtils.getDataFromUrl(queryUrl, creds, acceptType, contentType, headers);
     }
 
-    protected Header[] addHeader(Header header) {
-        Header[] newHeaders = new Header[headers.length + 1];
-        int i = 0;
-        for (; i < headers.length; i++) {
-            newHeaders[i] = headers[i];
+    protected Map<String, String> addHeader(Map<String, String> headers, Map.Entry<String, String> header) {
+        // handle immutable and mutable maps
+        if (headers == null) {
+            var map = new HashMap<>();
+            map.put(header.getKey(), header.getValue());
+            return headers;
+        } else {
+            headers.put(header.getKey(), header.getValue());
+            return headers;
         }
-        newHeaders[i] = header;
-        return newHeaders;
     }
 }

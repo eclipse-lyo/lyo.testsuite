@@ -34,11 +34,9 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
+import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -125,22 +123,22 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
     public void createResourceWithInvalidContentType() throws Exception {
         // Issue post request using the provided template and an invalid
         // contentType
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl, creds, "*/*", "weird/type", getCreateContent(), headers);
-        EntityUtils.consume(resp.getEntity());
-        assertEquals(415, resp.getStatusLine().getStatusCode());
+        resp.close();
+        assertEquals(415, resp.getStatus());
     }
 
-    private HttpResponse doPost(String contentType, String accept, String content)
+    private Response doPost(String contentType, String accept, String content)
             throws IOException {
 
         // issue the POST call
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(currentUrl, creds, accept, contentType, content, headers);
 
-        if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE) {
-            EntityUtils.consume(resp.getEntity());
+        if (resp.getStatus() == 415) { // Unsupported Media Type
+            resp.close();
             String knownIssue = "";
             if (implName.equalsIgnoreCase("RQM")) {
                 knownIssue =
@@ -161,13 +159,13 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
     @Test
     public void createValidResourceUsingTemplate() throws Exception {
-        HttpResponse resp = doPost(getContentType(), getContentType(), getCreateContent());
+        Response resp = doPost(getContentType(), getContentType(), getCreateContent());
 
         // Assert the response gave a 201 Created
-        String responseBody = EntityUtils.toString(resp.getEntity());
-        EntityUtils.consume(resp.getEntity());
-        assertEquals(responseBody, HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
-        Header location = resp.getFirstHeader("Location");
+        String responseBody = resp.readEntity(String.class);
+        resp.close();
+        assertEquals(responseBody, 201, resp.getStatus());
+        String location = resp.getHeaderString("Location");
         // Assert that we were given a Location header pointing to the resource,
         // which is not a MUST according to oslc v2, but probably should be
         // present
@@ -176,16 +174,16 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         // Attempt to clean up after the test by calling delete on the given
         // url,
         // which is not a MUST according to the oslc cm spec
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "*/*");
+        resp = OSLCUtils.deleteFromUrl(location, creds, "*/*");
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 
     @Test
     public void createResourceWithInvalidContent() throws IOException {
         // Issue post request using valid content type but invalid content
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         creds,
@@ -193,45 +191,43 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
                         getContentType(),
                         "invalid content",
                         headers);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
 
         // An error status code should be at least 400.
         assertTrue(
                 "Expecting error but received successful status code",
-                resp.getStatusLine().getStatusCode() >= 400);
+                resp.getStatus() >= 400);
 
         // Malformed content should not result in a 500 internal server error.
         assertFalse(
                 "Server should not return an internal server error",
-                resp.getStatusLine().getStatusCode() == 500);
+                resp.getStatus() == 500);
     }
 
     @Test
     public void createResourceAndUpdateIt() throws Exception {
 
-        HttpResponse resp = createResource(getContentType(), getContentType(), getCreateContent());
+        Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 
-        Header location = getRequiredLocationHeader(resp);
+        String location = getRequiredLocationHeader(resp);
         assertTrue("Location(" + location + ")" + " must not be null", location != null);
 
         // check whether a POST response body is empty (which is allowed)
-        Header contentLength = resp.getFirstHeader("Content-Length");
+        String contentLength = resp.getHeaderString("Content-Length");
         boolean hasPayLoad = true;
         if (contentLength != null) {
-            String len = contentLength.getValue().toString();
-            if (len.equalsIgnoreCase("0")) {
+            if (contentLength.equalsIgnoreCase("0")) {
                 hasPayLoad = false;
             }
         }
 
-        Header eTag = resp.getFirstHeader("ETag");
-        Header lastModified = resp.getFirstHeader("Last-Modified");
-        int size = headers.length;
-        Header[] putHeaders = new Header[size + 2];
+        String eTag = resp.getHeaderString("ETag");
+        String lastModified = resp.getHeaderString("Last-Modified");
+        int size = headers.size();
+        Map<String, String> putHeaders = new HashMap<>(size + 2);
 
-        int i = 0;
-        for (; i < size; i++) {
-            putHeaders[i] = headers[i];
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            putHeaders.put(header.getKey(), header.getValue());
         }
 
         if (hasPayLoad) {
@@ -242,18 +238,18 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         }
 
         if (eTag != null) {
-            putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue());
+            putHeaders.put("If-Match", eTag);
         } else {
-            putHeaders[i++] = new BasicHeader("bogus1", "bogus1");
+            putHeaders.put("bogus1", "bogus1");
         }
 
         if (lastModified != null) {
-            putHeaders[i++] = new BasicHeader("If-Unmodified-Since", lastModified.getValue());
+            putHeaders.put("If-Unmodified-Since", lastModified);
         } else {
-            putHeaders[i++] = new BasicHeader("bogus1", "bogus1");
+            putHeaders.put("bogus1", "bogus1");
         }
 
-        String updateUrl = location.getValue();
+        String updateUrl = location;
         String updateContent = getUpdateContent(updateUrl);
 
         // We may need to add something to update URL to match the template
@@ -267,135 +263,133 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
                         getContentType(),
                         updateContent,
                         putHeaders);
-        String responseBody = EntityUtils.toString(resp.getEntity());
-        if (resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        String responseBody = resp.readEntity(String.class);
+        if (resp.getEntity() != null) resp.close();
         // Assert that a proper PUT resulted in a 200 OK
         assertEquals(
                 "HTTP Response body: \n " + responseBody,
-                HttpStatus.SC_OK,
-                resp.getStatusLine().getStatusCode());
+                Response.Status.OK.getStatusCode(),
+                resp.getStatus());
 
         // Clean up after the test by attempting to delete the created resource
         if (location != null) {
-            resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "*/*");
-            if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+            resp = OSLCUtils.deleteFromUrl(location, creds, "*/*");
+            if (resp != null && resp.getEntity() != null) resp.close();
         }
     }
 
     @Test
     public void updateCreatedResourceWithInvalidContent() throws Exception {
-        HttpResponse resp = createResource(getContentType(), getContentType(), getCreateContent());
-        Header location = getRequiredLocationHeader(resp);
-        Header eTag = resp.getFirstHeader("ETag");
-        Header lastModified = resp.getFirstHeader("Last-Modified");
+        Response resp = createResource(getContentType(), getContentType(), getCreateContent());
+        String location = getRequiredLocationHeader(resp);
+        String eTag = resp.getHeaderString("ETag");
+        String lastModified = resp.getHeaderString("Last-Modified");
 
         // Ignore ETag and Last-Modified for these tests
-        int size = headers.length;
+        int size = headers.size();
         if (eTag != null) size++;
         if (lastModified != null) size++;
-        Header[] putHeaders = new Header[size];
-        int i = 0;
-        for (; i < headers.length; i++) {
-            putHeaders[i] = headers[i];
+        Map<String, String> putHeaders = new HashMap<>(size);
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            putHeaders.put(header.getKey(), header.getValue());
         }
         if (eTag != null) {
-            putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue());
+            putHeaders.put("If-Match", eTag);
         }
         if (lastModified != null) {
-            putHeaders[i++] = new BasicHeader("If-Unmodified-Since", lastModified.getValue());
+            putHeaders.put("If-Unmodified-Since", lastModified);
         }
 
         // Now, go to the url of the new change request and update it.
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(),
+                        location,
                         creds,
                         getContentType(),
                         getContentType(),
                         "invalid content",
                         putHeaders);
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
         // Assert that an invalid PUT resulted in a 4xx status
-        final int status = resp.getStatusLine().getStatusCode();
+        final int status = resp.getStatus();
         assertTrue(
-                "Expected a 4xx status code, but got %s.%n".formatted(resp.getStatusLine()),
+                "Expected a 4xx status code, but got %s.%n".formatted(resp.getStatus()),
                 status >= 400 && status <= 499);
 
         // Clean up after the test by attempting to delete the created resource
-        if (location != null) resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
+        if (location != null) resp = OSLCUtils.deleteFromUrl(location, creds, "");
 
-        if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        if (resp != null && resp.getEntity() != null) resp.close();
     }
 
     @Test
     public void updateCreatedResourceWithBadType() throws Exception {
-        HttpResponse resp = createResource(getContentType(), getContentType(), getCreateContent());
-        Header location = getRequiredLocationHeader(resp);
-        Header eTag = resp.getFirstHeader("ETag");
-        Header lastModified = resp.getFirstHeader("Last-Modified");
+        Response resp = createResource(getContentType(), getContentType(), getCreateContent());
+        String location = getRequiredLocationHeader(resp);
+        String eTag = resp.getHeaderString("ETag");
+        String lastModified = resp.getHeaderString("Last-Modified");
 
         // Ignore eTag and Last-Modified for this test
-        int size = headers.length;
+        int size = headers.size();
         if (eTag != null) size++;
         if (lastModified != null) size++;
-        Header[] putHeaders = new Header[size];
-        int i = 0;
-        for (; i < headers.length; i++) {
-            putHeaders[i] = headers[i];
+        Map<String, String> putHeaders = new HashMap<>(size);
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            putHeaders.put(header.getKey(), header.getValue());
         }
         if (eTag != null) {
-            putHeaders[i++] = new BasicHeader("If-Match", eTag.getValue());
+            putHeaders.put("If-Match", eTag);
         }
         if (lastModified != null) {
-            putHeaders[i++] = new BasicHeader("If-Unmodified-Since", lastModified.getValue());
+            putHeaders.put("If-Unmodified-Since", lastModified);
         }
 
-        String updateContent = getUpdateContent(location.getValue());
+        String updateContent = getUpdateContent(location);
 
         // Now, go to the url of the new change request and update it.
         // resp = OSLCUtils.putDataToUrl(location.getValue(), creds, "*/*",
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(),
+                        location,
                         creds,
                         "application/xml",
                         "application/invalid",
                         updateContent,
                         putHeaders);
-        if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        if (resp != null && resp.getEntity() != null) resp.close();
 
-        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, resp.getStatusLine().getStatusCode());
+        assertEquals(415, resp.getStatus()); // Unsupported Media Type
 
         // Clean up after the test by attempting to delete the created resource
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
+        resp = OSLCUtils.deleteFromUrl(location, creds, "");
 
-        if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        if (resp != null && resp.getEntity() != null) resp.close();
     }
 
-    private HttpResponse createResource(String contentType, String accept, String createContent)
+    private Response createResource(String contentType, String accept, String createContent)
             throws IOException {
 
-        HttpResponse resp = doPost(contentType, accept, createContent);
+        Response resp = doPost(contentType, accept, createContent);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("HTTP Response: %s".formatted(resp.getStatusLine()));
-            try (InputStream is = resp.getEntity().getContent()) {
+            logger.debug("HTTP Response: %s".formatted(resp.getStatus()));
+            try (InputStream is = resp.readEntity(InputStream.class)) {
                 byte[] content = is.readAllBytes();
                 logger.debug(new String(content, StandardCharsets.UTF_8));
             }
         } else {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
 
         // Assert the response gave a 201 Created
-        assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
+        assertEquals(201, resp.getStatus());
         return resp;
     }
 
-    private Header getRequiredLocationHeader(HttpResponse resp) {
-        Header location = resp.getFirstHeader("Location");
+    private String getRequiredLocationHeader(Response resp) {
+        String location = resp.getHeaderString("Location");
 
         // Assert that we were given a Location header pointing to the resource
         assertNotNull("Expected 201-Created to return non-null Location header", location);
@@ -406,23 +400,22 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
     @Test
     public void updateCreatedResourceWithFailedPrecondition() throws Exception {
 
-        HttpResponse resp = createResource(getContentType(), getContentType(), getCreateContent());
+        Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 
-        Header location = getRequiredLocationHeader(resp);
+        String location = getRequiredLocationHeader(resp);
         assertTrue("Location(" + location + ")" + " must not be null", location != null);
 
         // check whether a POST response body is empty (which is allowed)
-        Header contentLength = resp.getFirstHeader("Content-Length");
+        String contentLength = resp.getHeaderString("Content-Length");
         boolean hasPayLoad = true;
         if (contentLength != null) {
-            String len = contentLength.getValue().toString();
-            if (len.equalsIgnoreCase("0")) {
+            if (contentLength.equalsIgnoreCase("0")) {
                 hasPayLoad = false;
             }
         }
 
-        Header eTag = resp.getFirstHeader("ETag");
-        Header lastModified = resp.getFirstHeader("Last-Modified");
+        String eTag = resp.getHeaderString("ETag");
+        String lastModified = resp.getHeaderString("Last-Modified");
 
         if (hasPayLoad) {
             assertTrue(
@@ -434,35 +427,32 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
                     eTag != null || lastModified != null);
         }
 
-        int size = headers.length + 1;
-
-        Header[] putHeaders = new Header[size];
-        int i = 0;
-        for (; i < headers.length; i++) {
-            putHeaders[i] = headers[i];
+        int size = headers.size() + 1;
+        Map<String, String> putHeaders = new HashMap<>(size);
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            putHeaders.put(header.getKey(), header.getValue());
         }
 
         if (!hasPayLoad || eTag != null) {
-            putHeaders[i++] = new BasicHeader("If-Match", "\"Bogus\"");
+            putHeaders.put("If-Match", "\"Bogus\"");
         } else if (lastModified != null) {
-            putHeaders[i++] =
-                    new BasicHeader("If-Unmodified-Since", "Tue, 15 Nov 1994 12:45:26 GMT");
+            putHeaders.put("If-Unmodified-Since", "Tue, 15 Nov 1994 12:45:26 GMT");
         }
 
-        String updateContent = getUpdateContent(location.getValue());
+        String updateContent = getUpdateContent(location);
 
         // Now, go to the url of the new change request and update it.
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(),
+                        location,
                         creds,
                         getContentType(),
                         getContentType(),
                         updateContent,
                         putHeaders);
-        if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        if (resp != null && resp.getEntity() != null) resp.close();
 
-        if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+        if (resp.getStatus() == 500) { // Internal Server Error
             String knownIssue = "";
             if (implName.equalsIgnoreCase("RQM")) {
                 knownIssue =
@@ -473,35 +463,34 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
             throw new AssertionError("Known issue for provider " + implName + ". " + knownIssue);
         }
 
-        assertEquals(HttpStatus.SC_PRECONDITION_FAILED, resp.getStatusLine().getStatusCode());
+        assertEquals(412, resp.getStatus()); // Precondition Failed
 
         // Clean up after the test by attempting to delete the created resource
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
+        resp = OSLCUtils.deleteFromUrl(location, creds, "");
 
-        if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        if (resp != null && resp.getEntity() != null) resp.close();
     }
 
     @Test
     @Ignore("This is OPTIONAL in OSLC 2.0 (and HTTP)")
     public void updateCreatedResourceWithEmptyPrecondition() throws Exception {
 
-        HttpResponse resp = createResource(getContentType(), getContentType(), getCreateContent());
+        Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 
-        Header location = getRequiredLocationHeader(resp);
+        String location = getRequiredLocationHeader(resp);
         assertTrue("Location(" + location + ")" + " must not be null", location != null);
 
         // check whether a POST response body is empty (which is allowed)
-        Header contentLength = resp.getFirstHeader("Content-Length");
+        String contentLength = resp.getHeaderString("Content-Length");
         boolean hasPayLoad = true;
         if (contentLength != null) {
-            String len = contentLength.getValue().toString();
-            if (len.equalsIgnoreCase("0")) {
+            if (contentLength.equalsIgnoreCase("0")) {
                 hasPayLoad = false;
             }
         }
 
-        Header eTag = resp.getFirstHeader("ETag");
-        Header lastModified = resp.getFirstHeader("Last-Modified");
+        String eTag = resp.getHeaderString("ETag");
+        String lastModified = resp.getHeaderString("Last-Modified");
 
         if (hasPayLoad) {
             assertTrue(
@@ -513,33 +502,30 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
                     eTag != null || lastModified != null);
         }
 
-        int size = headers.length;
-
-        // Put headers but ignore the precondition headers: "If-Match", and "If-Unmodified-Since"
-        Header[] putHeaders = new Header[size];
-        int i = 0;
-        for (; i < headers.length; i++) {
-            putHeaders[i] = headers[i];
+        int size = headers.size();
+        Map<String, String> putHeaders = new HashMap<>(size);
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            putHeaders.put(header.getKey(), header.getValue());
         }
 
         // Now, go to the url of the new change request and update it.
-        String updateContent = getUpdateContent(location.getValue());
+        String updateContent = getUpdateContent(location);
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(),
+                        location,
                         creds,
                         getContentType(),
                         getContentType(),
                         updateContent,
                         putHeaders);
-        if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        if (resp != null && resp.getEntity() != null) resp.close();
 
-        assertEquals(HttpStatus.SC_BAD_REQUEST, resp.getStatusLine().getStatusCode());
+        assertEquals(400, resp.getStatus()); // Bad Request
 
         // Clean up after the test by attempting to delete the created resource
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), creds, "");
+        resp = OSLCUtils.deleteFromUrl(location, creds, "");
 
-        if (resp != null && resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        if (resp != null && resp.getEntity() != null) resp.close();
     }
 
     protected String generateStringValue(Integer maxSize) {

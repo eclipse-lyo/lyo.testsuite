@@ -25,14 +25,14 @@ import static org.junit.Assert.assertTrue;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
 @RunWith(Parameterized.class)
 public class ServiceProviderXmlTests extends TestsBase {
 
-    private HttpResponse response;
+    private Response response;
     private static String fContentType = OSLCConstants.CT_XML;
     private String responseBody;
     private Document doc;
@@ -68,15 +68,15 @@ public class ServiceProviderXmlTests extends TestsBase {
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, fContentType, headers);
         try {
-            if (response.getStatusLine().getStatusCode() <= 299) {
-                responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatus() <= 299) {
+                responseBody = response.readEntity(String.class);
                 // Get XML Doc from response
                 doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
             } else {
                 throw new IllegalStateException("Request failed");
             }
         } finally {
-            EntityUtils.consume(response.getEntity());
+            response.close();
         }
     }
 
@@ -108,8 +108,8 @@ public class ServiceProviderXmlTests extends TestsBase {
 
         // Get the status, make sure 200 OK
         assertTrue(
-                "Expected 200-Ok but received " + response.getStatusLine().toString(),
-                response.getStatusLine().getStatusCode() == 200);
+                "Expected 200-Ok but received " + response.getStatusInfo().getStatusCode(),
+                response.getStatus() == 200);
 
         // Verify we got a response
         assertNotNull(responseBody);
@@ -122,31 +122,31 @@ public class ServiceProviderXmlTests extends TestsBase {
                     + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
                     + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
     public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
         String respType =
-                (resp.getEntity().getContentType() == null)
+                (resp.getHeaderString("Content-Type") == null)
                         ? ""
-                        : resp.getEntity().getContentType().getValue();
-        EntityUtils.consume(resp.getEntity());
+                        : resp.getHeaderString("Content-Type");
+        resp.close();
         assertTrue(
                 "Expected 406 but received "
-                        + resp.getStatusLine()
+                        + resp.getStatus()
                         + ",Content-type='invalid/content-type' but received "
                         + respType,
-                resp.getStatusLine().getStatusCode() == 406
+                resp.getStatus() == 406
                         || respType.contains("application/svg+xml"));
     }
 
     @Test
     public void responseContentTypeIsXML() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, fContentType, headers);
         // Make sure the response to this URL was of valid type
-        EntityUtils.consume(resp.getEntity());
-        String contentType = resp.getEntity().getContentType().getValue();
+        resp.close();
+        String contentType = resp.getHeaderString("Content-Type");
         String contentTypeSplit[] = contentType.split(";");
         contentType = contentTypeSplit[0];
 
@@ -158,26 +158,26 @@ public class ServiceProviderXmlTests extends TestsBase {
 
     @Test
     public void misplacedParametersDoNotEffectResponse() throws IOException {
-        HttpResponse baseResp =
+        var baseResp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, fContentType, headers);
 
         Model baseRespModel = ModelFactory.createDefaultModel();
         baseRespModel.read(
-                baseResp.getEntity().getContent(),
+                baseResp.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(baseRespModel);
 
         String badParmUrl = currentUrl + "?oslc_cm:query";
 
-        HttpResponse parameterResp =
+        var parameterResp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, badParmUrl, creds, fContentType, headers);
 
         Model badParmModel = ModelFactory.createDefaultModel();
         badParmModel.read(
-                parameterResp.getEntity().getContent(),
+                parameterResp.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(badParmModel);
@@ -297,10 +297,13 @@ public class ServiceProviderXmlTests extends TestsBase {
         assertNotNull("oslc:details element is required for oslc:ServiceProfile", details);
         Node node = details.getAttributes().getNamedItemNS(OSLCConstants.RDF, "resource");
         assertNotNull(node.getNodeValue());
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(setupBaseUrl, node.getNodeValue(), creds, "");
-        resp.getEntity().consumeContent();
-        assertFalse(resp.getStatusLine().getStatusCode() == 404);
+
+        resp.readEntity(String.class);
+        resp.close();
+
+        assertFalse(resp.getStatus() == 404);
     }
 
     @Test

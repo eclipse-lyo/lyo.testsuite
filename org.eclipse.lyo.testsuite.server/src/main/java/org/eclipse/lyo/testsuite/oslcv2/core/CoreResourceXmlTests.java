@@ -31,9 +31,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -48,7 +47,7 @@ import org.xml.sax.SAXException;
 
 @RunWith(Parameterized.class)
 public abstract class CoreResourceXmlTests extends TestsBase {
-    protected HttpResponse response;
+    protected Response response;
     protected String responseBody;
     protected Document doc;
     protected String node = "";
@@ -69,15 +68,15 @@ public abstract class CoreResourceXmlTests extends TestsBase {
         response =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, OSLCConstants.CT_XML, headers);
-        responseBody = EntityUtils.toString(response.getEntity());
-        int sc = response.getStatusLine().getStatusCode();
+        responseBody = response.readEntity(String.class);
+        int sc = response.getStatus();
 
         // Some records in the system might not be accessible to this user. This
         // isn't a failure, but there's nothing more we can test.
-        assumeTrue(sc != HttpStatus.SC_FORBIDDEN && sc != HttpStatus.SC_UNAUTHORIZED);
+        assumeTrue(sc != Status.FORBIDDEN.getStatusCode() && sc != Status.UNAUTHORIZED.getStatusCode());
 
         // Make sure the request succeeded before continuing.
-        assertEquals(HttpStatus.SC_OK, sc);
+        assertEquals(Response.Status.OK.getStatusCode(), sc);
 
         // Get XML Doc from response
         doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
@@ -116,14 +115,14 @@ public abstract class CoreResourceXmlTests extends TestsBase {
 
         for (String queryBase : capabilityURLsUsingXML) {
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBase, query);
-            HttpResponse resp =
+            Response resp =
                     OSLCUtils.getResponseFromUrl(
                             setupBaseUrl, queryUrl, creds, OSLCConstants.CT_XML, headers);
-            String respBody = EntityUtils.toString(resp.getEntity());
-            EntityUtils.consume(resp.getEntity());
+            String respBody = resp.readEntity(String.class);
+            resp.close();
             assertTrue(
-                    "Received " + resp.getStatusLine(),
-                    (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK));
+                    "Received " + resp.getStatus(),
+                    (resp.getStatus() == Response.Status.OK.getStatusCode()));
 
             // Get XML Doc from response
             Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);

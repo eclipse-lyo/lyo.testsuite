@@ -25,8 +25,7 @@ import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
@@ -107,11 +106,11 @@ public class ChangeRequestJsonTests extends CoreResourceJsonTests {
 
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
 
-            HttpResponse resp =
+            Response resp =
                     OSLCUtils.getResponseFromUrl(
                             setupBaseUrl, queryUrl, creds, OSLCConstants.CT_JSON, headers);
 
-            String respBody = EntityUtils.toString(resp.getEntity());
+            String respBody = resp.readEntity(String.class);
 
             // Parse the response
             JSONArtifact userData = null;

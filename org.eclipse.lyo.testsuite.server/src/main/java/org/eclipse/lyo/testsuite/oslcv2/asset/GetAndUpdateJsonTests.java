@@ -21,12 +21,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response.Status;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.ParseException;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import java.util.HashMap;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -108,13 +107,13 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
                 "There needs to be an artifact factory url",
                 artifactFactory != null && artifactFactory.length() > 0);
 
-        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
-        HttpResponse response =
+        Response response =
                 OSLCUtils.postDataToUrl(
                         artifactFactory,
                         creds,
@@ -122,13 +121,13 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
                         OSLCConstants.CT_JSON,
                         artifact,
                         header);
-        EntityUtils.consume(response.getEntity());
+        response.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + response.getStatusLine().getStatusCode(),
-                response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
+                        + response.getStatus(),
+                response.getStatus() == Status.CREATED.getStatusCode());
     }
 
     @Test
@@ -154,14 +153,14 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
                     IllegalStateException,
                     JSONException {
         String artifactFactory = getArtifactFactory();
-        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactJsonFile");
         assertTrue("There needs to be an artifact template file", fileName != null);
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         // Adds the artifact to the asset
-        HttpResponse response =
+        Response response =
                 OSLCUtils.postDataToUrl(
                         artifactFactory,
                         creds,
@@ -169,7 +168,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
                         OSLCConstants.CT_JSON,
                         artifact,
                         header);
-        EntityUtils.consume(response.getEntity());
+        response.close();
 
         // Gets the asset with the artifact added to it
         String resp = getAssetAsString();

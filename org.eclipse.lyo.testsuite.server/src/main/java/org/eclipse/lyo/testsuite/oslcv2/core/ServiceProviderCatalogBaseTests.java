@@ -18,8 +18,7 @@ package org.eclipse.lyo.testsuite.oslcv2.core;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Ignore;
@@ -36,7 +35,7 @@ import org.junit.runners.Parameterized;
 public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 
     // Base URL of the OSLC Service Provider Catalog to be tested
-    // protected HttpResponse response = null;
+    // protected Response response = null;
     protected static String fContentType = null;
 
     public ServiceProviderCatalogBaseTests(String thisUrl) {
@@ -51,21 +50,21 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
                     + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
                     + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
     public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
         if (resp.getEntity() != null) {
             String respType = "";
-            if (resp.getEntity().getContentType() != null) {
-                respType = resp.getEntity().getContentType().getValue();
+            if (resp.getHeaderString("Content-Type") != null) {
+                respType = resp.getHeaderString("Content-Type");
             }
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
             assertTrue(
                     "Expected 406 but received "
-                            + resp.getStatusLine()
+                            + resp.getStatus()
                             + " or Content-type='invalid/content-type' but received "
                             + respType,
-                    resp.getStatusLine().getStatusCode() == 406
+                    resp.getStatus() == 406
                             || respType.contains("invalid/content-type"));
         }
     }
@@ -76,12 +75,12 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
      */
     @Test
     public void contentTypeIsSuggestedType() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, fContentType, headers);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         // Make sure the response to this URL was of valid type
-        String ct = resp.getEntity().getContentType().getValue();
+        String ct = resp.getHeaderString("Content-Type");
         assertTrue(
                 "Expected content-type \"" + fContentType + "\" received : " + ct,
                 ct.contains(fContentType));

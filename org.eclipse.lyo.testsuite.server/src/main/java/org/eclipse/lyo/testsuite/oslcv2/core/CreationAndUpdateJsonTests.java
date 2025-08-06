@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,8 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
@@ -73,6 +73,11 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
         super(url);
     }
 
+    @Override
+    public String getContentType() {
+        return OSLCConstants.CT_JSON;
+    }
+
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException,
@@ -91,10 +96,6 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
                         null));
     }
 
-    @Override
-    public String getContentType() {
-        return OSLCConstants.CT_JSON;
-    }
 
     @Override
     public String getCreateContent() throws IOException, JSONException {
@@ -321,14 +322,14 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     }
 
     private JSONObject getResource(String uri) throws IOException, JSONException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(uri, null, creds, OSLCConstants.CT_JSON, headers);
         try {
             assertEquals(
-                    "Failed to get resource at " + uri, 200, resp.getStatusLine().getStatusCode());
-            return (JSONObject) JSON.parse(resp.getEntity().getContent());
+                    "Failed to get resource at " + uri, 200, resp.getStatus());
+            return (JSONObject) JSON.parse(resp.readEntity(InputStream.class));
         } finally {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 

@@ -19,13 +19,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response.Status;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicHeader;
+import java.util.HashMap;
 import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.util.EntityUtils;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ public class GetAndUpdateBase extends AssetTestBase {
 
     public GetAndUpdateBase(String url, String acceptType, String contentType) {
         super(url, acceptType, contentType);
-        HttpConnectionParams.setConnectionTimeout(OSLCUtils.httpClient.getParams(), 30000);
+//        HttpConnectionParams.setConnectionTimeout(OSLCUtils.httpClient.getParams(), 30000);
     }
 
     @Test
@@ -41,57 +40,58 @@ public class GetAndUpdateBase extends AssetTestBase {
         getAssetAsString();
     }
 
-    protected Header[] addHeader(Header header) {
-        Header[] newHeaders = new Header[headers.length + 1];
-        int i = 0;
-        for (; i < headers.length; i++) {
-            newHeaders[i] = headers[i];
+    protected Map<String, String> addHeader(Map<String, String> headers, Map.Entry<String, String> header) {
+        // handle immutable and mutable maps
+        if (headers == null) {
+            var map = new HashMap<>();
+            map.put(header.getKey(), header.getValue());
+            return headers;
+        } else {
+            headers.put(header.getKey(), header.getValue());
+            return headers;
         }
-        newHeaders[i] = header;
-        return newHeaders;
     }
 
     /**
      * Uploads the artifact set in the property file
-     * @param fileName
      * @param artifactFactory
      * @return the url location of the artifact
      */
     protected String uploadArtifact(String artifactFactory) throws IOException {
         File file = new File(setupProps.getProperty("artifactContentType"));
-        Header h = new BasicHeader("oslc_asset.name", file.getName());
+        var h = Map.entry("oslc_asset.name", file.getName());
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         artifactFactory,
                         creds,
                         acceptType,
                         setupProps.getProperty("artifactContentType"),
                         readFileFromProperty("artifactFile"),
-                        addHeader(h));
-        EntityUtils.consume(resp.getEntity());
+                        addHeader(null, h));
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED);
+                        + resp.getStatus(),
+                resp.getStatus() == Status.CREATED.getStatusCode());
 
-        assertTrue("No Location header", resp.getFirstHeader("Location") != null);
-        assertTrue("No content length header", resp.getFirstHeader("Content-Length") != null);
-        return resp.getFirstHeader("Location").getValue();
+        assertTrue("No Location header", resp.getHeaderString("Location") != null);
+        assertTrue("No content length header", resp.getHeaderString("Content-Length") != null);
+        return resp.getHeaderString("Location");
     }
 
     protected void downloadArtifact(String artifactUrl)
             throws ClientProtocolException, IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 }

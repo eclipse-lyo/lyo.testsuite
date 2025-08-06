@@ -29,14 +29,15 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
@@ -56,7 +57,7 @@ import org.xml.sax.SAXException;
 public abstract class CoreResourceRdfXmlTests extends TestsBase {
     private static Logger logger = Logger.getLogger(CoreResourceRdfXmlTests.class);
 
-    private HttpResponse response;
+    private Response response;
     private Model fRdfModel = ModelFactory.createDefaultModel();
     private Resource fResource = null;
 
@@ -82,13 +83,13 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
                         setupBaseUrl, currentUrl, creds, OSLCConstants.CT_RDF, headers);
         // Some records in the system might not be accessible to this user. This
         // isn't a failure, but there's nothing more we can test.
-        int sc = response.getStatusLine().getStatusCode();
-        assumeTrue(sc != HttpStatus.SC_FORBIDDEN && sc != HttpStatus.SC_UNAUTHORIZED);
+        int sc = response.getStatus();
+        assumeTrue(sc != Status.FORBIDDEN.getStatusCode() && sc != Status.UNAUTHORIZED.getStatusCode());
         // Make sure the request succeeded before continuing.
-        assertEquals(HttpStatus.SC_OK, sc);
+        assertEquals(Response.Status.OK.getStatusCode(), sc);
 
         fRdfModel.read(
-                response.getEntity().getContent(),
+                response.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(fRdfModel);
@@ -145,12 +146,12 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
 
         for (String queryBaseUri : capabilityURLsUsingRdfXml) {
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
-            HttpResponse resp =
+            Response resp =
                     OSLCUtils.getResponseFromUrl(
                             setupBaseUrl, queryUrl, creds, OSLCConstants.CT_RDF, headers);
             Model queryModel = ModelFactory.createDefaultModel();
             queryModel.read(
-                    resp.getEntity().getContent(), queryBaseUri, OSLCConstants.JENA_RDF_XML);
+                    resp.readEntity(InputStream.class), queryBaseUri, OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(queryModel);
 
             Property member = queryModel.createProperty(eval);

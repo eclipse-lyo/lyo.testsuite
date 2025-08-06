@@ -29,12 +29,11 @@ import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.util.EntityUtils;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
@@ -59,7 +58,7 @@ import org.xml.sax.SAXException;
  */
 @RunWith(Parameterized.class)
 public class CreationAndUpdateTests {
-    private static Credentials basicCreds;
+    private static TestsBase.UserCredentials basicCreds;
 
     private String currentUrl;
     private String templatedDocument;
@@ -81,7 +80,7 @@ public class CreationAndUpdateTests {
         }
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
-        basicCreds = new UsernamePasswordCredentials(userId, pw);
+        basicCreds = new TestsBase.UserPassword(userId, pw);
         templatedDocument =
                 OSLCUtils.readFileAsString(
                         new File(setupProps.getProperty("createTemplateXmlFile")));
@@ -115,17 +114,17 @@ public class CreationAndUpdateTests {
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         base,
                         base,
-                        new UsernamePasswordCredentials(userId, pw),
+                        new TestsBase.UserPassword(userId, pw),
                         OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
 
         // If our 'base' is a ServiceDescription, find and add the factory service url
-        if (resp.getEntity().getContentType().getValue().contains(OSLCConstants.CT_DISC_DESC_XML)) {
+        if (resp.getHeaderString("Content-Type").contains(OSLCConstants.CT_DISC_DESC_XML)) {
             Document baseDoc =
-                    OSLCUtils.createXMLDocFromResponseBody(EntityUtils.toString(resp.getEntity()));
+                    OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
             Node factoryUrl =
                     (Node)
                             OSLCUtils.getXPath()
@@ -139,7 +138,7 @@ public class CreationAndUpdateTests {
         }
 
         Document baseDoc =
-                OSLCUtils.createXMLDocFromResponseBody(EntityUtils.toString(resp.getEntity()));
+                OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
 
         // ArrayList to contain the urls from all of the SPCs
         Collection<Object[]> data = new ArrayList<Object[]>();
@@ -186,7 +185,7 @@ public class CreationAndUpdateTests {
     public void createValidCMDefectUsingXmlTemplate() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
@@ -195,16 +194,16 @@ public class CreationAndUpdateTests {
                         templatedDocument);
 
         // Assert the response gave a 201 Created
-        EntityUtils.consume(resp.getEntity());
-        assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
-        Header location = resp.getFirstHeader("Location");
+        resp.close();
+        assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());
+        var location = resp.getHeaderString("Location");
         // Assert that we were given a Location header pointing to the resource
         assertFalse(location == null);
         // Attempt to clean up after the test by calling delete on the given url,
         // which is not a MUST according to the oslc cm spec
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
+        resp = OSLCUtils.deleteFromUrl(location, basicCreds, "*/*");
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 
@@ -212,7 +211,7 @@ public class CreationAndUpdateTests {
     public void createValidCMDefectUsingJsonTemplate() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
@@ -221,53 +220,53 @@ public class CreationAndUpdateTests {
                         jsonDocument);
 
         // Assert the response gave a 201 Created
-        EntityUtils.consume(resp.getEntity());
-        assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
-        Header location = resp.getFirstHeader("Location");
+        resp.close();
+        assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());
+        var location = resp.getHeaderString("Location");
 
         // Assert that we were given a Location header pointing to the resource
         assertNotNull(location);
         // Attempt to clean up after the test by calling delete on the given url,
         // which is not a MUST according to the oslc cm spec
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "/*");
+        resp = OSLCUtils.deleteFromUrl(location, basicCreds, "/*");
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 
     @Test
     public void createCMDefectWithInvalidContentType() throws IOException {
         // Issue post request using the provided template and an invalid contentType
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
                         OSLCConstants.CT_CR_XML,
                         "weird/type",
                         templatedDocument);
-        EntityUtils.consume(resp.getEntity());
-        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, resp.getStatusLine().getStatusCode());
+        resp.close();
+        assertEquals(Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode(), resp.getStatus());
     }
 
     @Test
     public void createCMDefectWithInvalidContent() throws IOException {
         // Issue post request using the provided template and an invalid contentType
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
                         OSLCConstants.CT_CR_XML,
                         OSLCConstants.CT_CR_XML,
                         "notvalidxmldefect");
-        EntityUtils.consume(resp.getEntity());
-        assertEquals(HttpStatus.SC_BAD_REQUEST, resp.getStatusLine().getStatusCode());
+        resp.close();
+        assertEquals(Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     @Test
     public void createCMDefectAndUpdateItUsingXml() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
@@ -276,36 +275,36 @@ public class CreationAndUpdateTests {
                         templatedDocument);
 
         // Assert the response gave a 201 Created
-        EntityUtils.consume(resp.getEntity());
-        assertEquals(HttpStatus.SC_CREATED, resp.getStatusLine().getStatusCode());
-        Header location = resp.getFirstHeader("Location");
+        resp.close();
+        assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());
+        var location = resp.getHeaderString("Location");
         // Assert that we were given a Location header pointing to the resource
         assertNotNull(location);
 
         // Now, go to the url of the new change request and update it.
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(),
+                        location,
                         basicCreds,
                         OSLCConstants.CT_CR_XML,
                         OSLCConstants.CT_CR_XML,
                         updateDocument);
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
         // Assert that a proper PUT resulted in a 200 OK
-        assertEquals(HttpStatus.SC_OK, resp.getStatusLine().getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
         // Clean up after the test by attempting to delete the created resource
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
-        if (resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        resp = OSLCUtils.deleteFromUrl(location, basicCreds, "*/*");
+        if (resp.getEntity() != null) resp.close();
     }
 
     @Test
     public void createCMDefectAndUpdateItUsingJson() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
@@ -314,9 +313,9 @@ public class CreationAndUpdateTests {
                         jsonDocument);
 
         // Assert the response gave a 201 Created
-        EntityUtils.consume(resp.getEntity());
-        assertTrue(resp.getStatusLine().getStatusCode() == 201);
-        Header location = resp.getFirstHeader("Location");
+        resp.close();
+        assertTrue(resp.getStatus() == 201);
+        var location = resp.getHeaderString("Location");
 
         // Assert that we were given a Location header pointing to the resource
         assertFalse(location == null);
@@ -324,27 +323,27 @@ public class CreationAndUpdateTests {
         // Now, go to the url of the new change request and update it.
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(),
+                        location,
                         basicCreds,
                         OSLCConstants.CT_CR_JSON,
                         OSLCConstants.CT_CR_JSON,
                         jsonUpdate);
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
         // Assert that a proper PUT resulted in a 200 OK
-        assertTrue(resp.getStatusLine().getStatusCode() == 200);
+        assertTrue(resp.getStatus() == 200);
 
         // Clean up after the test by attempting to delete the created resource
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "*/*");
-        if (resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        resp = OSLCUtils.deleteFromUrl(location, basicCreds, "*/*");
+        if (resp.getEntity() != null) resp.close();
     }
 
     @Test
     public void updateCreatedDefectWithBadRequest() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
@@ -353,36 +352,36 @@ public class CreationAndUpdateTests {
                         templatedDocument);
 
         // Assert the response gave a 201 Created
-        EntityUtils.consume(resp.getEntity());
-        assertTrue(resp.getStatusLine().getStatusCode() == 201);
-        Header location = resp.getFirstHeader("Location");
+        resp.close();
+        assertTrue(resp.getStatus() == 201);
+        var location = resp.getHeaderString("Location");
         // Assert that we were given a Location header pointing to the resource
         assertFalse(location == null);
 
         // Now, go to the url of the new change request and update it.
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(),
+                        location,
                         basicCreds,
                         "*/*",
                         OSLCConstants.CT_CR_XML,
                         "NOTVALIDXML");
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
         // Assert that an invalid PUT resulted in a 400 BAD REQUEST
-        assertTrue(resp.getStatusLine().getStatusCode() == 400);
+        assertTrue(resp.getStatus() == 400);
 
         // Clean up after the test by attempting to delete the created resource
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
-        if (resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        resp = OSLCUtils.deleteFromUrl(location, basicCreds, "");
+        if (resp.getEntity() != null) resp.close();
     }
 
     @Test
     public void updateCreatedDefectWithBadType() throws IOException {
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl,
                         basicCreds,
@@ -391,9 +390,9 @@ public class CreationAndUpdateTests {
                         templatedDocument);
 
         // Assert the response gave a 201 Created
-        EntityUtils.consume(resp.getEntity());
-        assertTrue(resp.getStatusLine().getStatusCode() == 201);
-        Header location = resp.getFirstHeader("Location");
+        resp.close();
+        assertTrue(resp.getStatus() == 201);
+        var location = resp.getHeaderString("Location");
 
         // Assert that we were given a Location header pointing to the resource
         assertFalse(location == null);
@@ -401,15 +400,15 @@ public class CreationAndUpdateTests {
         // Now, go to the url of the new change request and update it.
         resp =
                 OSLCUtils.putDataToUrl(
-                        location.getValue(), basicCreds, "*/*", "text/html", updateDocument);
+                        location, basicCreds, "*/*", "text/html", updateDocument);
         if (resp.getEntity() != null) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
         // Assert that an invalid PUT resulted in a 400 BAD REQUEST
-        assertTrue(resp.getStatusLine().getStatusCode() == 415);
+        assertTrue(resp.getStatus() == 415);
 
         // Clean up after the test by attempting to delete the created resource
-        resp = OSLCUtils.deleteFromUrl(location.getValue(), basicCreds, "");
-        if (resp.getEntity() != null) EntityUtils.consume(resp.getEntity());
+        resp = OSLCUtils.deleteFromUrl(location, basicCreds, "");
+        if (resp.getEntity() != null) resp.close();
     }
 }

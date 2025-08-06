@@ -28,14 +28,14 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
+import java.util.HashMap;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -75,7 +75,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         Property versionProperty = model.getProperty(OSLCConstants.ASSET_VERSION_PROP);
         Statement urlStatement = bestAsset.getProperty(versionProperty);
         assetUrl = urlStatement.getSubject().toString();
-        HttpResponse resp = getAssetResponse();
+        Response resp = getAssetResponse();
         assetUrl = null; // This is required so that the asset is not deleted
         retrieveArtifact(resp);
     }
@@ -96,18 +96,18 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
                 "The location of the asset after it was create was not returned", assetUrl != null);
         baseUrl = setupProps.getProperty("baseUrl");
 
-        HttpResponse resp = getAssetResponse();
+        Response resp = getAssetResponse();
 
         Model model = ModelFactory.createDefaultModel();
-        model.read(resp.getEntity().getContent(), baseUrl);
-        EntityUtils.consume(resp.getEntity());
+        model.read(resp.readEntity(InputStream.class), baseUrl);
+        resp.close();
 
         // Gets the artifact factory from the asset
         String artifactFactory = getPropertyValue(model, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP);
         assertTrue(
                 "There needs to be an artifact factory",
                 artifactFactory != null && artifactFactory.length() > 0);
-        Header[] header = addHeader(new BasicHeader("oslc_asset.name", "/helpFolder/help"));
+        var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         // Creates the artifact
         String fileName = setupProps.getProperty("createTemplateArtifactRdfXmlFile");
@@ -121,20 +121,20 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         resp =
                 OSLCUtils.postDataToUrl(
                         artifactFactory, creds, OSLCConstants.CT_RDF, null, artifact, header);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected: "
-                        + HttpStatus.SC_CREATED
+                        + Status.CREATED.getStatusCode()
                         + ", received: "
-                        + resp.getStatusLine().getStatusCode(),
-                HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
+                        + resp.getStatus(),
+                Status.CREATED.getStatusCode() == resp.getStatus());
 
         // Get and updates the artifacts subject
         resp = getAssetResponse();
 
         model = ModelFactory.createDefaultModel();
-        model.read(resp.getEntity().getContent(), baseUrl);
-        EntityUtils.consume(resp.getEntity());
+        model.read(resp.readEntity(InputStream.class), baseUrl);
+        resp.close();
 
         // TODO make this so that if the label is not there it is added
         Property artifactProp = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
@@ -155,8 +155,8 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         // Checks the validity of the put
         resp = getAssetResponse();
         model = ModelFactory.createDefaultModel();
-        model.read(resp.getEntity().getContent(), baseUrl);
-        EntityUtils.consume(resp.getEntity());
+        model.read(resp.readEntity(InputStream.class), baseUrl);
+        resp.close();
         artifactStatements = model.listStatements(null, artifactProp, (RDFNode) null);
         statementList = artifactStatements.toList();
         for (int i = 0; i < statementList.size(); i++) {
@@ -170,16 +170,16 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
     }
 
     private Model runQuery() throws IOException, ParserConfigurationException, SAXException {
-        HttpResponse resp = executeQuery();
+        Response resp = executeQuery();
         Model model = ModelFactory.createDefaultModel();
-        model.read(resp.getEntity().getContent(), baseUrl);
-        EntityUtils.consume(resp.getEntity());
+        model.read(resp.readEntity(InputStream.class), baseUrl);
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
         return model;
     }
 
@@ -200,16 +200,16 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         return bestAsset;
     }
 
-    private void retrieveArtifact(HttpResponse resp) throws IllegalStateException, IOException {
+    private void retrieveArtifact(Response resp) throws IllegalStateException, IOException {
         Model model = ModelFactory.createDefaultModel();
-        model.read(resp.getEntity().getContent(), baseUrl);
-        EntityUtils.consume(resp.getEntity());
+        model.read(resp.readEntity(InputStream.class), baseUrl);
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
 
         Property property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
         StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
@@ -229,13 +229,13 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         assertTrue("No artifact could be found in the asset", artifactUrl != null);
 
         resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 
     private String getPropertyValue(Model model, String uri) {

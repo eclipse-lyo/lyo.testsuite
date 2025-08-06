@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,9 +31,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
@@ -40,6 +40,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -53,10 +55,11 @@ import org.xml.sax.SAXException;
 @RunWith(Parameterized.class)
 public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTests {
 
+    private static final Logger log = LoggerFactory.getLogger(ServiceProviderCatalogXmlTests.class);
     // Base URL of the OSLC Service Provider Catalog to be tested
     protected String responseBody;
     protected Document doc;
-    protected HttpResponse response = null;
+    protected Response response = null;
 
     public ServiceProviderCatalogXmlTests(String url)
             throws IOException, ParserConfigurationException, SAXException {
@@ -67,7 +70,7 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         response =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, fContentType, headers);
-        responseBody = EntityUtils.toString(response.getEntity());
+        responseBody = response.readEntity(String.class);
         // Get XML Doc from response
         doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
     }
@@ -91,23 +94,23 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
 
         staticSetup();
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_XML, headers);
 
         try {
-            int statusCode = resp.getStatusLine().getStatusCode();
-            if (HttpStatus.SC_OK != statusCode) {
+            int statusCode = resp.getStatus();
+            if (Response.Status.OK.getStatusCode() != statusCode) {
                 throw new IllegalStateException(
                         "Response code: "
                                 + statusCode
                                 + " for "
                                 + base
                                 + " ("
-                                + resp.getStatusLine().getReasonPhrase()
+                                + resp.getStatusInfo().getReasonPhrase()
                                 + ")");
             }
 
-            String respBody = EntityUtils.toString(resp.getEntity());
+            String respBody = resp.readEntity(String.class);
             Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
             // ArrayList to contain the urls from all SPCs
@@ -144,7 +147,7 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
             }
             return data;
         } finally {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 
@@ -152,8 +155,8 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
     public void baseUrlIsValid() throws IOException {
         // Get the status, make sure 200 OK
         assertTrue(
-                response.getStatusLine().toString(),
-                response.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                response.getStatusInfo().getReasonPhrase(),
+                response.getStatus() == Response.Status.OK.getStatusCode());
 
         // Verify we got a response
         assertNotNull(responseBody);
@@ -526,9 +529,9 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         for (int i = 0; i < catalogAbouts.getLength(); i++) {
             String url = catalogAbouts.item(i).getNodeValue();
             assertFalse(url.isEmpty());
-            HttpResponse response = OSLCUtils.getResponseFromUrl(setupBaseUrl, url, creds, "*/*");
-            EntityUtils.consume(response.getEntity());
-            assertFalse(response.getStatusLine().getStatusCode() == 404);
+            Response response = OSLCUtils.getResponseFromUrl(setupBaseUrl, url, creds, "*/*");
+            response.close();
+            assertFalse(response.getStatus() == 404);
         }
     }
 
@@ -554,9 +557,9 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         for (int i = 0; i < resources.getLength(); i++) {
             String url = resources.item(i).getNodeValue();
             assertNotNull(url);
-            HttpResponse resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, url, creds, "*/*");
-            EntityUtils.consume(resp.getEntity());
-            assertFalse(resp.getStatusLine().getStatusCode() == 404);
+            Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, url, creds, "*/*");
+            resp.close();
+            assertFalse(resp.getStatus() == 404);
         }
     }
 
@@ -586,26 +589,29 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
 
     @Test
     public void misplacedParametersDoNotEffectResponse() throws IOException {
-        HttpResponse baseResp =
+        log.warn("misplacedParametersDoNotEffectResponse");
+        log.warn("setupBaseUrl: {}", setupBaseUrl);
+        log.warn("currentUrl: {}", currentUrl);
+        var baseResp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, fContentType, headers);
 
         Model baseRespModel = ModelFactory.createDefaultModel();
         baseRespModel.read(
-                baseResp.getEntity().getContent(),
+                baseResp.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(baseRespModel);
 
         String badParmUrl = currentUrl + "?oslc_cm:query";
 
-        HttpResponse parameterResp =
+        var parameterResp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, badParmUrl, creds, fContentType, headers);
 
         Model badParmModel = ModelFactory.createDefaultModel();
         badParmModel.read(
-                parameterResp.getEntity().getContent(),
+                parameterResp.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(badParmModel);

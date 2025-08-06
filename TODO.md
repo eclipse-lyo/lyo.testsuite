@@ -1,3 +1,4 @@
+- import org.eclipse.lyo.client.credentials.UsernamePasswordCredentials was hallucinated
 - need to update the script to take the suiteconfig.properties as an input
     - the script shall run the junit
     - copy the surefire reports

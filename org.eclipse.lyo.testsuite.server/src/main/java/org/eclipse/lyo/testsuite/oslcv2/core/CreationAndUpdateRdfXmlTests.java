@@ -45,6 +45,7 @@ public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTe
         super(url);
     }
 
+
     @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
@@ -80,6 +81,11 @@ public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTe
     @Override
     public String getContentType() {
         return OSLCConstants.CT_RDF;
+    }
+
+    @Override
+    protected String getHeaderString(String s) {
+        return headers.get(s);
     }
 
     @Override

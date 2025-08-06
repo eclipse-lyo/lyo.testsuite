@@ -28,15 +28,15 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
 @RunWith(Parameterized.class)
 public class ServiceProviderRdfXmlTests extends TestsBase {
 
-    protected HttpResponse response;
+    protected Response response;
     protected static String fContentType = OSLCConstants.CT_RDF;
     private Model fRdfModel = ModelFactory.createDefaultModel();
     private Resource fServiceProvider = null;
@@ -73,11 +73,11 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
         try {
             assertEquals(
                     "Did not successfully retrieve ServiceProvider at: " + currentUrl,
-                    HttpStatus.SC_OK,
-                    response.getStatusLine().getStatusCode());
+                    Response.Status.OK.getStatusCode(),
+                    response.getStatus());
 
             fRdfModel.read(
-                    response.getEntity().getContent(),
+                    response.readEntity(InputStream.class),
                     OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, currentUrl),
                     OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(fRdfModel);
@@ -85,7 +85,7 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 
             assertNotNull(fServiceProvider);
         } finally {
-            EntityUtils.consume(response.getEntity());
+            response.close();
         }
     }
 
@@ -126,8 +126,8 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 
         // Get the status, make sure 200 OK
         assertTrue(
-                "Expected 200-Ok but received " + response.getStatusLine().toString(),
-                response.getStatusLine().getStatusCode() == 200);
+                "Expected 200-Ok but received " + response.getStatusInfo().getStatusCode(),
+                response.getStatus() == 200);
     }
 
     @Test
@@ -155,31 +155,31 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
                     + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
                     + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
     public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
         String respType =
-                (resp.getEntity().getContentType() == null)
+                (resp.getHeaderString("Content-Type") == null)
                         ? ""
-                        : resp.getEntity().getContentType().getValue();
-        EntityUtils.consume(resp.getEntity());
+                        : resp.getHeaderString("Content-Type");
+        resp.close();
         assertTrue(
                 "Expected 406 but received "
-                        + resp.getStatusLine()
+                        + resp.getStatus()
                         + ",Content-type='invalid/content-type' but received "
                         + respType,
-                resp.getStatusLine().getStatusCode() == 406
+                resp.getStatus() == 406
                         || respType.contains("invalid/content-type"));
     }
 
     @Test
     public void responseContentTypeIsXML() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, fContentType, headers);
         // Make sure the response to this URL was of valid type
-        EntityUtils.consume(resp.getEntity());
-        String contentType = resp.getEntity().getContentType().getValue();
+        resp.close();
+        String contentType = resp.getHeaderString("Content-Type");
         String contentTypeSplit[] = contentType.split(";");
         contentType = contentTypeSplit[0];
         assertTrue(
@@ -193,17 +193,17 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
         Model baseRespModel = this.fRdfModel;
         String badParmUrl = currentUrl + "?oslc_cm:query";
 
-        HttpResponse parameterResp =
+        var parameterResp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, badParmUrl, creds, fContentType, headers);
         assertEquals(
                 "Did not successfully retrieve catalog at: " + badParmUrl,
-                HttpStatus.SC_OK,
-                response.getStatusLine().getStatusCode());
+                Response.Status.OK.getStatusCode(),
+                response.getStatus());
 
         Model badParmModel = ModelFactory.createDefaultModel();
         badParmModel.read(
-                parameterResp.getEntity().getContent(),
+                parameterResp.readEntity(InputStream.class),
                 OSLCUtils.absoluteUrlFromRelative(setupBaseUrl, badParmUrl),
                 OSLCConstants.JENA_RDF_XML);
         RDFUtils.validateModel(fRdfModel);

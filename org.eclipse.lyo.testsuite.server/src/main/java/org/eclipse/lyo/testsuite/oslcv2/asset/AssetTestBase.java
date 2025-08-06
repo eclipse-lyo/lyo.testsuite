@@ -20,10 +20,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import java.util.Map;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -64,8 +63,8 @@ public class AssetTestBase extends TestsBase {
     @After
     public void tearDown() throws IOException {
         if (assetUrl == null) return;
-        HttpResponse resp = OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
-        EntityUtils.consume(resp.getEntity());
+        Response resp = OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
+        resp.close();
     }
 
     /**
@@ -74,16 +73,16 @@ public class AssetTestBase extends TestsBase {
      * @throws IOException
      */
     protected String getAssetAsString() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getDataFromUrl(assetUrl, creds, acceptType, contentType, headers);
-        String content = EntityUtils.toString(resp.getEntity());
-        EntityUtils.consume(resp.getEntity());
+        String content = resp.readEntity(String.class);
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
         return content;
     }
 
@@ -91,18 +90,18 @@ public class AssetTestBase extends TestsBase {
      * Get's an asset and then returns the response
      * @throws IOException
      */
-    protected HttpResponse getAssetResponse() throws IOException {
-        HttpResponse resp =
+    protected Response getAssetResponse() throws IOException {
+        Response resp =
                 OSLCUtils.getDataFromUrl(assetUrl, creds, acceptType, contentType, headers);
         try {
             assertTrue(
                     "Expected "
-                            + HttpStatus.SC_OK
+                            + Response.Status.OK.getStatusCode()
                             + ", received "
-                            + resp.getStatusLine().getStatusCode(),
-                    resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                            + resp.getStatus(),
+                    resp.getStatus() == Response.Status.OK.getStatusCode());
         } catch (AssertionError e) {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
             throw e;
         }
         return resp;
@@ -113,19 +112,19 @@ public class AssetTestBase extends TestsBase {
      * the created asset is returned
      */
     protected String createAsset(String content) throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.postDataToUrl(
                         currentUrl, creds, acceptType, contentType, content, headers);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected: "
-                        + HttpStatus.SC_CREATED
+                        + Status.CREATED.getStatusCode()
                         + ", received: "
-                        + resp.getStatusLine().getStatusCode(),
-                HttpStatus.SC_CREATED == resp.getStatusLine().getStatusCode());
+                        + resp.getStatus(),
+            Status.CREATED.getStatusCode() == resp.getStatus());
 
-        Header loc = resp.getFirstHeader("Location");
-        return loc.getValue();
+        var loc = resp.getHeaderString("Location");
+        return loc;
     }
 
     /**
@@ -138,15 +137,15 @@ public class AssetTestBase extends TestsBase {
     }
 
     protected void putAsset(String content) throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.putDataToUrl(assetUrl, creds, acceptType, contentType, content, headers);
 
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected "
-                        + HttpStatus.SC_OK
+                        + Response.Status.OK.getStatusCode()
                         + ", received "
-                        + resp.getStatusLine().getStatusCode(),
-                resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+                        + resp.getStatus(),
+                resp.getStatus() == Response.Status.OK.getStatusCode());
     }
 }

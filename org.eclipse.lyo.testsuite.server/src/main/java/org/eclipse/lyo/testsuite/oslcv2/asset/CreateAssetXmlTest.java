@@ -22,8 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.Test;
@@ -80,8 +79,8 @@ public class CreateAssetXmlTest extends CreateAssetBase {
             String cat = getNodeAttribute(children, "dcterms:relation", "rdf:resource");
             assertTrue("Relationship was not set", cat != null);
         } finally {
-            HttpResponse resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
-            EntityUtils.consume(resp.getEntity());
+            Response resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
+            resp.close();
         }
     }
 

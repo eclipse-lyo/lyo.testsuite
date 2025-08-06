@@ -30,17 +30,18 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
+import org.junit.Test;
 
 /**
  * Common class for testing creation and update using RDF media types.
@@ -279,12 +280,14 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
 
     protected String toString(Model model) {
         String lang =
-                (OSLCConstants.CT_XML.equals(getContentType())) ? "RDF/XML-ABBREV" : "RDF/XML";
+                (OSLCConstants.CT_XML.equals(getHeaderString("Content-Type"))) ? "RDF/XML-ABBREV" : "RDF/XML";
         StringWriter writer = new StringWriter();
         model.write(writer, lang, "");
 
         return writer.toString();
     }
+
+    protected abstract String getHeaderString(String s);
 
     /*
      * Is this property from a resource shape required?
@@ -346,19 +349,21 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
     }
 
     private Model getModel(String uri) throws IOException {
-        HttpResponse resp =
-                OSLCUtils.getResponseFromUrl(
-                        uri, null, TestsBase.creds, OSLCConstants.CT_RDF, TestsBase.headers);
+        Response resp =
+            OSLCUtils.getResponseFromUrl(uri, uri, TestsBase.creds, OSLCConstants.CT_RDF, TestsBase.headers);
+
+
+
         try {
             assertEquals(
-                    "Failed to get resource at " + uri, 200, resp.getStatusLine().getStatusCode());
+                    "Failed to get resource at " + uri, 200, resp.getStatus());
             Model model = ModelFactory.createDefaultModel();
-            model.read(resp.getEntity().getContent(), uri, OSLCConstants.JENA_RDF_XML);
+            model.read(resp.readEntity(InputStream.class), uri, OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(model);
 
             return model;
         } finally {
-            EntityUtils.consume(resp.getEntity());
+            resp.close();
         }
     }
 
@@ -440,7 +445,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
 
     protected String getUpdateContent(String resourceUri, String template) throws IOException {
         if (template == null) {
-            return updateResourceFromShape(resourceUri, getContentType());
+            return updateResourceFromShape(resourceUri, getHeaderString("Content-Type"));
         }
 
         if (template.contains("rdf:about=\"\"")) {

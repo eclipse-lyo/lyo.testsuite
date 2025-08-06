@@ -28,15 +28,15 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.StmtIterator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
@@ -99,12 +99,12 @@ public class FetchResourceTests extends TestsBase {
         ArrayList<String> results = new ArrayList<String>();
         for (String queryBaseUri : capabilityURLsUsingRdfXml) {
             String queryUrl = OSLCUtils.addQueryStringToURL(queryBaseUri, query);
-            HttpResponse resp =
+            Response resp =
                     OSLCUtils.getResponseFromUrl(
                             setupBaseUrl, queryUrl, creds, OSLCConstants.CT_RDF, headers);
             Model queryModel = ModelFactory.createDefaultModel();
             queryModel.read(
-                    resp.getEntity().getContent(), queryBaseUri, OSLCConstants.JENA_RDF_XML);
+                    resp.readEntity(InputStream.class), queryBaseUri, OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(queryModel);
 
             Property member = queryModel.createProperty(OSLCConstants.RDFS_MEMBER);
@@ -120,15 +120,15 @@ public class FetchResourceTests extends TestsBase {
     }
 
     protected String getValidResourceUsingContentType(String requestType) throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(currentUrl, currentUrl, creds, requestType, headers);
 
-        String responseBody = EntityUtils.toString(resp.getEntity());
-        EntityUtils.consume(resp.getEntity());
+        String responseBody = resp.readEntity(String.class);
+        resp.close();
         assertEquals(
-                "Expected response code 200 but received " + resp.getStatusLine(),
-                HttpStatus.SC_OK,
-                resp.getStatusLine().getStatusCode());
+                "Expected response code 200 but received " + resp.getStatus(),
+                Response.Status.OK.getStatusCode(),
+                resp.getStatus());
 
         String contentType = OSLCUtils.getContentType(resp);
 
@@ -213,10 +213,10 @@ public class FetchResourceTests extends TestsBase {
             assertNotNull("oslc:icon in oslc:Compact missing rdf:about attribute", rdfAbout);
             iconUrl = rdfAbout.getTextContent();
 
-            HttpResponse response =
+            Response response =
                     OSLCUtils.getResponseFromUrl(iconUrl, iconUrl, creds, "*/*", headers);
-            int statusCode = response.getStatusLine().getStatusCode();
-            EntityUtils.consume(response.getEntity());
+            int statusCode = response.getStatus();
+            response.close();
             assertTrue(
                     "Fetching icon from "
                             + iconUrl
@@ -266,12 +266,12 @@ public class FetchResourceTests extends TestsBase {
                                         XPathConstants.NODE);
         assertNotNull("Expected number of oslc:Preview/oslc:document/@rdf:resource", node);
         String previewUrl = node.getTextContent();
-        HttpResponse response =
+        Response response =
                 OSLCUtils.getResponseFromUrl(previewUrl, previewUrl, creds, "*/*", headers);
 
-        int statusCode = response.getStatusLine().getStatusCode();
-        String contentType = response.getEntity().getContentType().getValue();
-        EntityUtils.consume(response.getEntity());
+        int statusCode = response.getStatus();
+        String contentType = response.getHeaderString("Content-Type");
+        response.close();
         assertTrue(
                 "Fetching document preview from "
                         + previewUrl
@@ -285,17 +285,17 @@ public class FetchResourceTests extends TestsBase {
 
     @Test
     public void getResourceUsingInvalidContentType() throws IOException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
         String respType = OSLCUtils.getContentType(resp);
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         assertTrue(
                 "Expected 406 but received "
-                        + resp.getStatusLine()
+                        + resp.getStatus()
                         + ", requested Content-type='invalid/content-type' but received "
                         + respType,
-                resp.getStatusLine().getStatusCode() == 406
+                resp.getStatus() == 406
                         || respType.contains("invalid/content-type"));
     }
 }

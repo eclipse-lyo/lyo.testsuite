@@ -13,7 +13,7 @@
  *
  *    Steve Speicher - initial API and implementation
  *    Tim Eck II     - asset management test cases
- *    Samuel Padgett - add null guards in getContentType()
+ *    Samuel Padgett - add null guards in getHeaderString("Content-Type")
  *    Samuel Padgett - add support for two-legged OAuth authentication
  *******************************************************************************/
 package org.eclipse.lyo.testsuite.util;
@@ -25,23 +25,12 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,41 +42,20 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
+
+import org.eclipse.lyo.client.OslcClient;
+import org.eclipse.lyo.client.OslcClientFactory;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
+import org.eclipse.lyo.testsuite.util.oauth.OAuthCredentials;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
+import org.apache.log4j.Logger;
+import org.apache.http.auth.Credentials;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthMessage;
 import net.oauth.OAuthServiceProvider;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.ProtocolException;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
-import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.eclipse.lyo.testsuite.util.oauth.OAuthCredentials;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Assert;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -95,10 +63,35 @@ import org.xml.sax.SAXException;
 
 public class OSLCUtils {
     private static Logger logger = Logger.getLogger(OSLCUtils.class);
-    // HttpClient used for all requests
-    public static DefaultHttpClient httpClient = null;
+    // Lyo Client used for all requests
+    private static OslcClient oslcClient = null;
     private static final String JAZZ_AUTH_MESSAGE_HEADER = "X-com-ibm-team-repository-web-auth-msg";
     private static final String JAZZ_AUTH_FAILED = "authfailed";
+
+    private static OslcClient getOslcClient(TestsBase.UserCredentials creds) {
+        if (oslcClient == null) {
+            // Create a new ClientBuilder
+            ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+
+            if (creds instanceof TestsBase.Oauth1UserCredentials oauth1UserCredentials) {
+                var builder = OslcClientFactory.oslcOAuthClientBuilder();
+                // FIXME callback
+                builder.setOAuthConsumer(null, oauth1UserCredentials.principal().getName(), oauth1UserCredentials.secret());
+                builder.setClientBuilder(clientBuilder);
+            } else {
+                if (creds instanceof TestsBase.UserPassword(String login, String password)) {
+                    var authFeature = HttpAuthenticationFeature.basic(login, password);
+                    clientBuilder.register(authFeature);
+                }
+                var builder = OslcClientFactory.oslcClientBuilder();
+                builder.setClientBuilder(clientBuilder);
+            }
+
+            // Create the OSLC client
+            oslcClient = new OslcClient(clientBuilder);
+        }
+        return oslcClient;
+    }
 
     public static Document createXMLDocFromResponseBody(String respBody)
             throws ParserConfigurationException, IOException, SAXException {
@@ -128,9 +121,42 @@ public class OSLCUtils {
         return writer.getBuffer().toString();
     }
 
-    public static HttpResponse getResponseFromUrl(
-            String baseUrl, String url, Credentials creds, String acceptTypes) throws IOException {
+    public static Response getResponseFromUrl(
+        String baseUrl, String url, TestsBase.Oauth1UserCredentials creds, String acceptTypes) throws IOException {
         return getResponseFromUrl(baseUrl, url, creds, acceptTypes, null);
+    }
+
+    public static Response getResponseFromUrl(
+        String baseUrl, String url, TestsBase.UserPassword userCredentials, String acceptTypes) throws IOException {
+        return getResponseFromUrl(baseUrl, url, userCredentials, acceptTypes, null);
+    }
+
+    public static Response getResponseFromUrl(
+        String baseUrl, String url, TestsBase.UserPassword userCredentials, String acceptTypes, Map<String, String> headers)
+            throws IOException {
+        OslcClient client = getOslcClient(userCredentials);
+
+        url = absoluteUrlFromRelative(baseUrl, url);
+
+        // Prepare request headers
+        Map<String, String> requestHeaders = new HashMap<>();
+        if (headers != null) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                requestHeaders.put(entry.getKey(), entry.getValue());
+            }
+        }
+        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+            requestHeaders.put("Accept", acceptTypes);
+        }
+//
+//        // Add Basic Auth header
+//        String authHeader = "Basic " + java.util.Base64.getEncoder().encodeToString((userCredentials.getPrincipal() + ":" + userCredentials.getSecret()).getBytes());
+//        requestHeaders.put("Authorization", authHeader);
+
+
+        // Execute the request
+        Response response = client.getResource(url, requestHeaders);
+        return response;
     }
 
     public static String absoluteUrlFromRelative(String baseUrl, String url)
@@ -142,104 +168,49 @@ public class OSLCUtils {
         return result.toString();
     }
 
-    public static HttpResponse getResponseFromUrl(
-            String baseUrl, String url, Credentials creds, String acceptTypes, Header[] headers)
+    public static Response getResponseFromUrl(
+        String baseUrl, String url, TestsBase.Oauth1UserCredentials creds, String acceptTypes, Map<String, String> headers)
             throws IOException {
 
-        getHttpClient(creds);
+        OslcClient client = getOslcClient(creds);
 
         url = absoluteUrlFromRelative(baseUrl, url);
-        HttpGet httpget = new HttpGet(url);
-        RequestConfig requestConfig =
-                RequestConfig.custom()
-                        .setStaleConnectionCheckEnabled(true)
-                        .setConnectionRequestTimeout(
-                                TestsBase.getPropertyInt("timeoutRequest", 1000))
-                        .setConnectTimeout(TestsBase.getPropertyInt("timeoutConnect", 500))
-                        .setSocketTimeout(TestsBase.getPropertyInt("timeoutSocket", 5000))
-                        .build();
-        httpget.setConfig(requestConfig);
-        // Set headers, accept only the types passed in
-        if (headers != null) {
-            httpget.setHeaders(headers);
-        }
-        httpget.setHeader("Accept", acceptTypes);
-        oAuthSign(httpget, creds);
 
-        // Get the response and return it
-        HttpResponse response = httpClient.execute(httpget);
+        // Prepare request headers
+        Map<String, String> requestHeaders = new HashMap<>();
+        if (headers != null) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                requestHeaders.put(entry.getKey(), entry.getValue());
+            }
+        }
+        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+            requestHeaders.put("Accept", acceptTypes);
+        }
+
+        // Handle OAuth signing if needed
+        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+            oAuthSignLyo(client, url, "GET", creds, requestHeaders);
+        }
+
+        // Execute the request
+        Response response = client.getResource(url, requestHeaders);
         return response;
     }
 
-    private static HttpClient getHttpClient(Credentials creds) {
-        // If this is our first request, initialized our httpclient
-        if (httpClient == null) {
-            httpClient = new DefaultHttpClient();
-            setupLazySSLSupport(httpClient);
-            if (creds != null && !(creds instanceof OAuthCredentials)) {
-                httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
-            } else {
-                throw new IllegalArgumentException();
-            }
-
-            httpClient.setRedirectStrategy(
-                    new DefaultRedirectStrategy() {
-                        @Override
-                        public boolean isRedirected(
-                                HttpRequest request,
-                                HttpResponse response,
-                                org.apache.http.protocol.HttpContext context) {
-                            boolean isRedirect = false;
-                            try {
-                                isRedirect = super.isRedirected(request, response, context);
-                            } catch (ProtocolException e) {
-                                e.printStackTrace();
-                            }
-                            if (!isRedirect) {
-                                int responseCode = response.getStatusLine().getStatusCode();
-                                if (responseCode == 301 || responseCode == 302) {
-                                    return true;
-                                }
-                            }
-                            return isRedirect;
-                        }
-                    });
-
-            // workaround from
-            // https://stackoverflow.com/questions/21800495/invalid-use-of-singleclientconnmanager-connection-still-allocated
-            ClientConnectionManager mgr = httpClient.getConnectionManager();
-            HttpParams params = httpClient.getParams();
-
-            mgr.closeIdleConnections(3, TimeUnit.SECONDS);
-            ThreadSafeClientConnManager conman =
-                    new ThreadSafeClientConnManager(mgr.getSchemeRegistry());
-            conman.setDefaultMaxPerRoute(6);
-            conman.setMaxTotal(256);
-            // TODO: switch to this
-            //            PoolingHttpClientConnectionManager conman = new
-            // PoolingHttpClientConnectionManager();
-
-            httpClient = new DefaultHttpClient(conman, params);
-        }
-        return httpClient;
-    }
-
-    // Sign the request using 2-legged OAuth if necessary.
-    private static void oAuthSign(HttpRequestBase request, Credentials creds) {
-        if (creds instanceof OAuthCredentials) {
+    // Sign the request using 2-legged OAuth if necessary for Lyo Client.
+    private static void oAuthSignLyo(OslcClient client, String url, String method, TestsBase.Oauth1UserCredentials creds, Map<String, String> headers) {
+        if (creds != null) {
             OAuthServiceProvider provider = new OAuthServiceProvider(null, null, null);
             OAuthConsumer consumer =
                     new OAuthConsumer(
-                            "", creds.getUserPrincipal().getName(), creds.getPassword(), provider);
+                            "", creds.getPrincipal().getName(), creds.getSecret(), provider);
             OAuthAccessor accessor = new OAuthAccessor(consumer);
             accessor.accessToken = "";
             OAuthMessage message;
             try {
-                message =
-                        accessor.newRequestMessage(
-                                request.getMethod(), request.getURI().toString(), null);
+                message = accessor.newRequestMessage(method, url, null);
                 String authHeader = message.getAuthorizationHeader(null);
-                request.addHeader("Authorization", authHeader);
+                headers.put("Authorization", authHeader);
             } catch (Exception e) {
                 logger.error("Could not OAuth sign request", e);
                 throw new RuntimeException(e);
@@ -247,137 +218,165 @@ public class OSLCUtils {
         }
     }
 
-    public static int checkOslcVersion(String url, Credentials creds, String acceptTypes)
-            throws ClientProtocolException, IOException {
-        getHttpClient(creds);
+//    public static int checkOslcVersion(String url, TestsBase.UserCredentials creds, String acceptTypes)
+//            throws IOException {
+//        OslcClient client = getOslcClient(creds);
+//
+//        // Prepare request headers
+//        Map<String, String> requestHeaders = new HashMap<>();
+//        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+//            requestHeaders.put("Accept", acceptTypes);
+//        }
+//        requestHeaders.put("OSLC-Core-Version", "2.0");
+//
+//        // Handle OAuth signing if needed
+//        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+//            oAuthSignLyo(client, url, "GET", creds, requestHeaders);
+//        }
+//
+//        // Execute the request
+//        Response response = client.getResource(url, requestHeaders);
+//
+//        // Consume the entity (we don't need the body)
+//        response.readEntity(String.class);
+//
+//        // Check for OSLC-Core-Version header
+//        if (response.getHeaders().containsKey("OSLC-Core-Version")) {
+//            String version = response.getHeaderString("OSLC-Core-Version");
+//            if ("2.0".equals(version)) {
+//                return 2;
+//            }
+//        }
+//        return 1;
+//    }
 
-        HttpGet httpget = new HttpGet(url);
-        // Get the response and return it, accept only service provider catalogs & description
-        // documents
-        httpget.setHeader("Accept", acceptTypes);
-        httpget.setHeader("OSLC-Core-Version", "2.0");
-        oAuthSign(httpget, creds);
-        HttpResponse response = httpClient.execute(httpget);
-        EntityUtils.consume(response.getEntity());
-
-        if (response.containsHeader("OSLC-Core-Version")
-                && response.getFirstHeader("OSLC-Core-Version").getValue().equals("2.0")) {
-            return 2;
-        }
-        return 1;
-    }
-
-    public static HttpResponse postDataToUrl(
-            String url, Credentials creds, String acceptTypes, String contentType, String content)
+    public static Response postDataToUrl(
+        String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType, String content)
             throws IOException {
         return postDataToUrl(url, creds, acceptTypes, contentType, content, null);
     }
 
-    public static HttpResponse postDataToUrl(
+    public static Response postDataToUrl(
             String url,
-            Credentials creds,
+            TestsBase.UserCredentials creds,
             String acceptTypes,
             String contentType,
             String content,
-            Header[] headers)
+            Map<String, String> headers)
             throws IOException {
-        getHttpClient(creds);
+        OslcClient client = getOslcClient(creds);
 
-        // Create the post and add headers
-        HttpPost httppost = new HttpPost(url);
-        StringEntity entity = new StringEntity(content);
+        // Prepare request headers
+        Map<String, String> requestHeaders = new HashMap<>();
+        if (headers != null) {
+            requestHeaders.putAll(headers);
+        }
+        if (contentType != null && !contentType.isEmpty()) {
+            requestHeaders.put("Content-Type", contentType);
+        }
+        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+            requestHeaders.put("Accept", acceptTypes);
+        }
 
-        httppost.setEntity(entity);
-        if (headers != null) httppost.setHeaders(headers);
-        if (contentType != null && !contentType.isEmpty())
-            httppost.addHeader("Content-Type", contentType);
-        if (acceptTypes != null && !acceptTypes.isEmpty())
-            httppost.addHeader("Accept", acceptTypes);
+        // Handle OAuth signing if needed
+        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+            oAuthSignLyo(client, url, "POST", oAuthCredentials, requestHeaders);
+        }
 
-        oAuthSign(httppost, creds);
-
-        // Send the request and return the response
-        HttpResponse resp = httpClient.execute(httppost);
-        return resp;
+        // Execute the request
+        Response response = client.createResource(url, content, contentType, acceptTypes);
+        return response;
     }
 
-    public static HttpResponse deleteFromUrl(String url, Credentials creds, String acceptTypes)
+    public static Response deleteFromUrl(String url, TestsBase.UserCredentials creds, String acceptTypes)
             throws IOException {
-        getHttpClient(creds);
+        OslcClient client = getOslcClient(creds);
 
-        // Create the post and add headers
-        HttpDelete httpdelete = new HttpDelete(url);
+        // Prepare request headers
+        Map<String, String> requestHeaders = new HashMap<>();
+        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+            requestHeaders.put("Accept", acceptTypes);
+        }
 
-        if (acceptTypes != null && !acceptTypes.isEmpty())
-            httpdelete.addHeader("Accept", acceptTypes);
+        // Handle OAuth signing if needed
+        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+            oAuthSignLyo(client, url, "DELETE", oAuthCredentials, requestHeaders);
+        }
 
-        oAuthSign(httpdelete, creds);
-        // Send the request and return the response
-        HttpResponse resp = httpClient.execute(httpdelete, new BasicHttpContext());
-        return resp;
+        // Execute the request
+        Response response = client.deleteResource(url);
+        return response;
     }
 
-    public static HttpResponse putDataToUrl(
-            String url, Credentials creds, String acceptTypes, String contentType, String content)
+    public static Response putDataToUrl(
+            String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType, String content)
             throws IOException {
         return putDataToUrl(url, creds, acceptTypes, contentType, content, null);
     }
 
-    public static HttpResponse putDataToUrl(
+    public static Response putDataToUrl(
             String url,
-            Credentials creds,
+            TestsBase.UserCredentials creds,
             String acceptTypes,
             String contentType,
             String content,
-            Header[] headers)
+            Map<String, String> headers)
             throws IOException {
-        getHttpClient(creds);
+        OslcClient client = getOslcClient(creds);
 
-        // Create the post and add headers
-        HttpPut httpput = new HttpPut(url);
-        StringEntity entity = new StringEntity(content);
-
-        httpput.setEntity(entity);
+        // Prepare request headers
+        Map<String, String> requestHeaders = new HashMap<>();
         if (headers != null) {
-            httpput.setHeaders(headers);
+            requestHeaders.putAll(headers);
         }
-        if (contentType != null && !contentType.isEmpty())
-            httpput.addHeader("Content-Type", contentType);
-        if (acceptTypes != null && !acceptTypes.isEmpty()) httpput.addHeader("Accept", acceptTypes);
+        if (contentType != null && !contentType.isEmpty()) {
+            requestHeaders.put("Content-Type", contentType);
+        }
+        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+            requestHeaders.put("Accept", acceptTypes);
+        }
 
-        oAuthSign(httpput, creds);
+        // Handle OAuth signing if needed
+        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+            oAuthSignLyo(client, url, "PUT", oAuthCredentials, requestHeaders);
+        }
 
-        // Send the request and return the response
-        HttpResponse resp = httpClient.execute(httpput, new BasicHttpContext());
-        return resp;
+        // Execute the request
+        Response response = client.updateResource(url, content, contentType, acceptTypes);
+        return response;
     }
 
-    public static HttpResponse getDataFromUrl(
-            String url, Credentials creds, String acceptTypes, String contentType)
-            throws ClientProtocolException, IOException {
+    public static Response getDataFromUrl(
+            String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType)
+            throws IOException {
         return getDataFromUrl(url, creds, acceptTypes, contentType, null);
     }
 
-    public static HttpResponse getDataFromUrl(
-            String url, Credentials creds, String acceptTypes, String contentType, Header[] headers)
-            throws ClientProtocolException, IOException {
-        getHttpClient(creds);
+    public static Response getDataFromUrl(
+            String url, TestsBase.UserCredentials creds, String acceptTypes, String contentType, Map<String, String> headers)
+            throws IOException {
+        OslcClient client = getOslcClient(creds);
 
-        // Create the post and add headers
-        HttpGet httpget = new HttpGet(url);
-
+        // Prepare request headers
+        Map<String, String> requestHeaders = new HashMap<>();
         if (headers != null) {
-            httpget.setHeaders(headers);
+            requestHeaders.putAll(headers);
         }
-        if (contentType != null && !contentType.isEmpty())
-            httpget.addHeader("Content-Type", contentType);
-        if (acceptTypes != null && !acceptTypes.isEmpty()) httpget.addHeader("Accept", acceptTypes);
+        if (contentType != null && !contentType.isEmpty()) {
+            requestHeaders.put("Content-Type", contentType);
+        }
+        if (acceptTypes != null && !acceptTypes.isEmpty()) {
+            requestHeaders.put("Accept", acceptTypes);
+        }
 
-        oAuthSign(httpget, creds);
+        // Handle OAuth signing if needed
+        if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+            oAuthSignLyo(client, url, "GET", oAuthCredentials, requestHeaders);
+        }
 
-        // Send the request and return the response
-        HttpResponse resp = httpClient.execute(httpget, new BasicHttpContext());
-        return resp;
+        // Execute the request
+        Response response = client.getResource(url, requestHeaders);
+        return response;
     }
 
     public static XPath getXPath() {
@@ -387,89 +386,8 @@ public class OSLCUtils {
         return xpath;
     }
 
-    public static void setupLazySSLSupport(HttpClient httpClient) {
-        ClientConnectionManager connManager = httpClient.getConnectionManager();
-        SchemeRegistry schemeRegistry = connManager.getSchemeRegistry();
-        schemeRegistry.unregister("https");
-        /** Create a trust manager that does not validate certificate chains */
-        TrustManager[] trustAllCerts =
-                new TrustManager[] {
-                    new X509TrustManager() {
-                        public void checkClientTrusted(
-                                java.security.cert.X509Certificate[] certs, String authType) {
-                            /** Ignore Method Call */
-                        }
-
-                        public void checkServerTrusted(
-                                java.security.cert.X509Certificate[] certs, String authType) {
-                            /** Ignore Method Call */
-                        }
-
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return null;
-                        }
-                    }
-                };
-
-        X509HostnameVerifier verifier =
-                new X509HostnameVerifier() {
-
-                    @Override
-                    public void verify(String string, SSLSocket ssls) throws IOException {}
-
-                    @Override
-                    public void verify(String string, X509Certificate xc) throws SSLException {}
-
-                    @Override
-                    public void verify(String string, String[] strings, String[] strings1)
-                            throws SSLException {}
-
-                    @Override
-                    public boolean verify(String string, SSLSession ssls) {
-                        return true;
-                    }
-                };
-
-        class TLSSocketFactory extends SSLSocketFactory {
-            private final javax.net.ssl.SSLSocketFactory socketfactory;
-
-            public TLSSocketFactory(SSLContext sslContext) {
-                super(sslContext);
-                this.socketfactory = sslContext.getSocketFactory();
-            }
-
-            public Socket createSocket() throws IOException {
-                SSLSocket socket = (SSLSocket) super.createSocket();
-                socket.setEnabledProtocols(new String[] {"SSLv3", "TLSv1"});
-                return socket;
-            }
-
-            public Socket createSocket(
-                    final Socket socket, final String host, final int port, final boolean autoClose)
-                    throws IOException, UnknownHostException {
-                SSLSocket sslSocket =
-                        (SSLSocket) this.socketfactory.createSocket(socket, host, port, autoClose);
-                sslSocket.setEnabledProtocols(new String[] {"SSLv3", "TLSv1"});
-                getHostnameVerifier().verify(host, sslSocket);
-                return sslSocket;
-            }
-        }
-
-        SSLContext sc = null;
-        try {
-            sc = SSLContext.getInstance("TLS"); // $NON-NLS-1$
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        } catch (NoSuchAlgorithmException e) {
-            /* Fail Silently */
-        } catch (KeyManagementException e) {
-            /* Fail Silently */
-        }
-
-        SSLSocketFactory sf = new TLSSocketFactory(sc);
-        sf.setHostnameVerifier(verifier);
-        Scheme https = new Scheme("https", sf, 443);
-
-        schemeRegistry.register(https);
+    public static void setupLazySSLSupport() {
+        // This method is no longer needed as SSL is configured in the Lyo Client setup
     }
 
     public static String readFileByNameAsString(String fileName) {
@@ -497,12 +415,7 @@ public class OSLCUtils {
     }
 
     public static void setupFormsAuth(String url, String username, String password)
-            throws ClientProtocolException, IOException {
-        // If this is our first request, initialized our httpclient
-        if (httpClient == null) {
-            httpClient = new DefaultHttpClient();
-            setupLazySSLSupport(httpClient);
-        }
+            throws IOException {
         // parse the old style of properties file baseUrl so users don't have to modify properties
         // files
         String[] tmpUrls = url.split("/authenticated");
@@ -510,45 +423,38 @@ public class OSLCUtils {
             url = tmpUrls[0];
         } // else assume (!) it is the style of URL we want - just scheme://hostname:port/context
 
-        HttpResponse resp;
-        int statusCode = -1;
-        String location = null;
-        HttpGet get1 = new HttpGet(url + "/auth/authrequired");
-        resp = httpClient.execute(get1);
-        statusCode = resp.getStatusLine().getStatusCode();
+        OslcClient client = getOslcClient(null);
+
+        // Prepare request headers
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "*/*");
+        headers.put("X-Requested-With", "XMLHttpRequest");
+        headers.put("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+        headers.put("OSLC-Core-Version", "2.0");
+
+        // First request to get authrequired
+        Response resp = client.getResource(url + "/auth/authrequired", headers);
+        int statusCode = resp.getStatus();
+        String location = getHeader(resp, "Location");
+        resp.readEntity(String.class);
+        followRedirects(client, statusCode, location);
+
+        // Second request to get identity
+        resp = client.getResource(url + "/authenticated/identity", headers);
+        statusCode = resp.getStatus();
         location = getHeader(resp, "Location");
-        EntityUtils.consume(resp.getEntity());
-        followRedirects(statusCode, location, httpClient);
+        resp.readEntity(String.class);
+        followRedirects(client, statusCode, location);
 
-        HttpGet get2 = new HttpGet(url + "/authenticated/identity");
+        // POST to j_security_check
+        String formData = "j_username=" + username + "&j_password=" + password;
+        resp = client.createResource(url + "/j_security_check", formData, "application/x-www-form-urlencoded", "*/*");
+        statusCode = resp.getStatus();
 
-        resp = httpClient.execute(get2);
-        statusCode = resp.getStatusLine().getStatusCode();
-        location = getHeader(resp, "Location");
-        EntityUtils.consume(resp.getEntity());
-        followRedirects(statusCode, location, httpClient);
-
-        HttpPost httppost = new HttpPost(url + "/j_security_check");
-        StringEntity entity =
-                new StringEntity("j_username=" + username + "&j_password=" + password);
-        // Set headers, accept only the types passed in
-        httppost.setHeader("Accept", "*/*");
-        httppost.setHeader("X-Requested-With", "XMLHttpRequest");
-        httppost.setEntity(entity);
-        httppost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-        httppost.addHeader("OSLC-Core-Version", "2.0");
-        // Get the response and return it
-        resp = httpClient.execute(httppost);
-        statusCode = resp.getStatusLine().getStatusCode();
-
-        String jazzAuthMessage = null;
-        Header jazzAuthMessageHeader = resp.getLastHeader(JAZZ_AUTH_MESSAGE_HEADER);
-        if (jazzAuthMessageHeader != null) {
-            jazzAuthMessage = jazzAuthMessageHeader.getValue();
-        }
+        String jazzAuthMessage = getHeader(resp, JAZZ_AUTH_MESSAGE_HEADER);
 
         if (jazzAuthMessage != null && jazzAuthMessage.equalsIgnoreCase(JAZZ_AUTH_FAILED)) {
-            EntityUtils.consume(resp.getEntity());
+            resp.readEntity(String.class);
             Assert.fail(
                     "Could not login to Jazz server.  URL: "
                             + url
@@ -556,48 +462,42 @@ public class OSLCUtils {
                             + username
                             + "password: "
                             + password);
-        } else if (statusCode != HttpStatus.SC_OK
-                && statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
-            EntityUtils.consume(resp.getEntity());
+        } else if (statusCode != 200 && statusCode != 302) {
+            resp.readEntity(String.class);
             Assert.fail("Unknown error logging in to Jazz Server.  Status code: " + statusCode);
         } else // success
         {
             location = getHeader(resp, "Location");
-            EntityUtils.consume(resp.getEntity());
-            followRedirects(statusCode, location, httpClient);
-            HttpGet get3 =
-                    new HttpGet(
-                            url
-                                    + "/service/com.ibm.team.repository.service.internal.webuiInitializer.IWebUIInitializerRestService/initializationData");
-            resp = httpClient.execute(get3);
-            statusCode = resp.getStatusLine().getStatusCode();
+            resp.readEntity(String.class);
+            followRedirects(client, statusCode, location);
+
+            // Final request to get initialization data
+            resp = client.getResource(
+                    url + "/service/com.ibm.team.repository.service.internal.webuiInitializer.IWebUIInitializerRestService/initializationData",
+                    headers);
+            statusCode = resp.getStatus();
             location = getHeader(resp, "Location");
-            EntityUtils.consume(resp.getEntity());
-            followRedirects(statusCode, location, httpClient);
+            resp.readEntity(String.class);
+            followRedirects(client, statusCode, location);
         }
-        EntityUtils.consume(resp.getEntity());
+        resp.readEntity(String.class);
     }
 
-    private static void followRedirects(int statusCode, String location, HttpClient httpClient) {
-
-        while ((statusCode == HttpStatus.SC_MOVED_TEMPORARILY) && (location != null)) {
-            HttpGet get = new HttpGet(location);
+    private static void followRedirects(OslcClient client, int statusCode, String location) {
+        while ((statusCode == 302) && (location != null)) {
             try {
-                HttpResponse newResp = httpClient.execute(get);
-                statusCode = newResp.getStatusLine().getStatusCode();
-                location = getHeader(newResp, "Location");
-                EntityUtils.consume(newResp.getEntity());
+                Response resp = client.getResource(location);
+                statusCode = resp.getStatus();
+                location = getHeader(resp, "Location");
+                resp.readEntity(String.class);
             } catch (Exception e) {
                 Assert.fail(e.getMessage());
             }
         }
     }
 
-    private static String getHeader(HttpResponse resp, String headerName) {
-        String retval = null;
-        Header header = resp.getFirstHeader(headerName);
-        if (header != null) retval = header.getValue();
-        return retval;
+    private static String getHeader(Response resp, String headerName) {
+        return resp.getHeaderString(headerName);
     }
 
     /**
@@ -685,20 +585,28 @@ public class OSLCUtils {
         return updatedUrl.toString();
     }
 
-    public static String getContentType(HttpResponse resp) {
+    public static String getContentType(Response resp) {
         Assert.assertNotNull(resp);
-        HttpEntity entity = resp.getEntity();
-        if (entity == null) {
+        String contentType = resp.getHeaderString("Content-Type");
+        if (contentType == null) {
             return null;
         }
 
-        Header h = entity.getContentType();
-        if (h == null) {
-            return null;
-        }
-
-        String contentType = h.getValue();
         String contentTypeSplit[] = contentType.split(";");
         return contentTypeSplit[0];
+    }
+
+    public static Response getResponseFromUrl(String base, String url, TestsBase.UserCredentials creds, String contentType) throws IOException {
+        return getResponseFromUrl(base, url, creds, contentType, null);
+    }
+
+    public static Response getResponseFromUrl(String base, String url, TestsBase.UserCredentials creds, String contentType, Map<String, String> headers) throws IOException {
+        if (creds instanceof TestsBase.UserPassword userPassword) {
+            return getResponseFromUrl(base, url, userPassword, contentType, headers);
+        } else if (creds instanceof TestsBase.Oauth1UserCredentials oAuthCredentials) {
+            return getResponseFromUrl(base, url, oAuthCredentials, contentType, headers);
+        } else {
+            throw new IllegalArgumentException("Unknown credentials type: " + creds.getClass().getName());
+        }
     }
 }

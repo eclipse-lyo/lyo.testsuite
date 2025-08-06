@@ -32,15 +32,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.http.HttpResponse;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.util.EntityUtils;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
+import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
@@ -62,7 +61,7 @@ import org.xml.sax.SAXException;
 public class QueryTests {
 
     private static String baseUrl;
-    private static Credentials basicCreds;
+    private static TestsBase.UserCredentials basicCreds;
 
     private String currentUrl;
     private String queryProperty;
@@ -87,7 +86,7 @@ public class QueryTests {
         baseUrl = setupProps.getProperty("baseUri");
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
-        basicCreds = new UsernamePasswordCredentials(userId, pw);
+        basicCreds = new TestsBase.UserPassword(userId, pw);
         queryProperty = setupProps.getProperty("queryEqualityProperty");
         queryPropertyValue = setupProps.getProperty("queryEqualityValue");
         queryComparisonProperty = setupProps.getProperty("queryComparisonProperty");
@@ -115,17 +114,17 @@ public class QueryTests {
         String userId = setupProps.getProperty("userId");
         String pw = setupProps.getProperty("pw");
 
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         base,
                         base,
-                        new UsernamePasswordCredentials(userId, pw),
+                        new TestsBase.UserPassword(userId, pw),
                         OSLCConstants.CT_DISC_CAT_XML + ", " + OSLCConstants.CT_DISC_DESC_XML);
 
         // If our 'base' is a ServiceDescription, find and add the simpleQuery service url
-        if (resp.getEntity().getContentType().getValue().contains(OSLCConstants.CT_DISC_DESC_XML)) {
+        if (resp.getHeaderString("Content-Type").contains(OSLCConstants.CT_DISC_DESC_XML)) {
             Document baseDoc =
-                    OSLCUtils.createXMLDocFromResponseBody(EntityUtils.toString(resp.getEntity()));
+                    OSLCUtils.createXMLDocFromResponseBody(resp.readEntity(String.class));
             Node simpleQueryUrl =
                     (Node)
                             OSLCUtils.getXPath()
@@ -138,7 +137,7 @@ public class QueryTests {
             return data;
         }
 
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document baseDoc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // ArrayList to contain the urls from all of the SPCs
@@ -201,10 +200,10 @@ public class QueryTests {
                         + "&oslc_cm.properties="
                         + queryProperty;
         // Get the response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
-                        baseUrl, currentUrl + query, basicCreds, "application/xml");
-        String respBody = EntityUtils.toString(resp.getEntity());
+                        baseUrl, currentUrl + query, basicCreds, "application/xml", null);
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
         // Check for the expected result
         NodeList lst = doc.getElementsByTagNameNS("*", queryProperty);
@@ -237,10 +236,10 @@ public class QueryTests {
                         + queryProperty;
 
         // Get response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, OSLCConstants.CT_XML);
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // Make sure each entry has a matching property element with a value that matches the query
@@ -283,10 +282,10 @@ public class QueryTests {
                         + queryComparisonProperty;
 
         // Get response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, "application/xml");
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // Make sure each entry has a matching property element with a value that matches the query
@@ -320,10 +319,10 @@ public class QueryTests {
                         + queryProperty;
 
         // Get response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, "application/xml");
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // verify that the results did not contain entries whose property = propertyValue
@@ -352,10 +351,10 @@ public class QueryTests {
                         + queryComparisonProperty;
 
         // Get response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, "application/xml");
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // Verify that all returned items were modified before yesterday
@@ -384,10 +383,10 @@ public class QueryTests {
                         + queryComparisonProperty;
 
         // Get response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, "application/xml");
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // Verify that all returned items were modified before yesterday
@@ -407,12 +406,12 @@ public class QueryTests {
                     XPathExpressionException {
         String query = getQueryBase();
         query = query + "oslc_cm.query=notrealthing" + URLEncoder.encode("=\"defect\"", "UTF-8");
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, "application/xml");
-        EntityUtils.consume(resp.getEntity());
+        resp.close();
         // Make sure we get a 400 (BAD REQUEST) for an invalid field
-        assertTrue(resp.getStatusLine().getStatusCode() == 400);
+        assertTrue(resp.getStatus() == 400);
     }
 
     @Test
@@ -427,10 +426,10 @@ public class QueryTests {
                         + "oslc_cm.query=oslc_cm:searchTerms="
                         + URLEncoder.encode("\"" + fullTextSearchTerm + "\"", "UTF-8");
         // Get response
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, "application/xml");
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
         // Verify that each score element is non-negative
@@ -591,10 +590,10 @@ public class QueryTests {
     }
 
     private JSONArray processJSONQuery(String query) throws IOException, JSONException {
-        HttpResponse resp =
+        Response resp =
                 OSLCUtils.getResponseFromUrl(
                         baseUrl, currentUrl + query, basicCreds, "application/json");
-        String respBody = EntityUtils.toString(resp.getEntity());
+        String respBody = resp.readEntity(String.class);
         // Create mapping of json variables
         JSONArtifact userData = JSON.parse(respBody);
         JSONObject resultJson = null;
