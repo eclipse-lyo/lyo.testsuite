@@ -160,6 +160,23 @@ See [doc/HowToRunOSLCProviderTestsAndGenerateAssessmentReport.pdf](doc/HowToRunO
 -   Improved query tests
 -   Improved OAuth tests
 
+## Credits
+
+- Samuel Padgett - initial API and implementation, resource shapes, logging, OAuth authentication, various fixes and improvements
+- Steve Speicher - initial API and implementation
+- Joseph Leong - Initial implementation
+- Sujeet Mishra - Initial implementation
+- Yuhong Yin - initial API and implementation
+- David Terry - Add fields for TRS 2.0 compliance, TRS 2.0 Specification Tests
+- Julianne Bielski - updated for OSLC Performance Monitoring V2 spec
+- Julie Bielski - performance management test cases
+- Michael Fiedler - updated for OSLC Automation V2 spec
+- Tim Eck II - asset management test cases and RAMConfigTool
+- Tori Santonil - validate oslc:domain property on oslc:Service resource
+- Matthew Brown
+- Andrew Berezovskyi - migration to Lyo Client, support for OSLC Reference Implementation, ongoing maintenance of the Eclipse Lyo project
+
 ## Contributing
 
 See [contributing](https://github.com/eclipse/lyo#contributing) under the main [Eclipse Lyo](https://github.com/eclipse/lyo) repository.
+
