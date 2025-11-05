@@ -43,7 +43,7 @@
       <dependency>
         <groupId>org.openrewrite</groupId>
         <artifactId>rewrite-bom</artifactId>
-        <version>8.59.1</version>
+        <version>8.66.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
