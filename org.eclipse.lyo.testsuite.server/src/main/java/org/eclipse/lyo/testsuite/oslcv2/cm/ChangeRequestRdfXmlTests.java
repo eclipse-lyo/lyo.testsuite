@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.cm;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,10 +23,8 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,16 +32,14 @@ import org.xml.sax.SAXException;
  * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
  * the relationship of elements in the XML representation of the change request.
  */
-@RunWith(Parameterized.class)
 public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    public ChangeRequestRdfXmlTests(String thisUrl)
+    public void initChangeRequestRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
         super(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();
@@ -65,59 +61,75 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public static String eval = OSLCConstants.RDFS_MEMBER;
 
-    @Test
-    public void changeRequestHasAtMostOneCloseDate() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostOneCloseDate(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_CLOSE_DATE_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:closeDate, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:closeDate, found " + size);
     }
 
-    @Test
-    public void changeRequestHasAtMostOneStatus() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostOneStatus(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_STATUS_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:status, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:status, found " + size);
     }
 
-    @Test
-    public void changeRequestHasAtMostOneClosedElement() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostOneClosedElement(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_CLOSED_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:closed, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:closed, found " + size);
     }
 
-    @Test
-    public void changeRequestHasAtMostInProgressElement() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostInProgressElement(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_INPROGRESS_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:inprogress, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:inprogress, found " + size);
     }
 
-    @Test
-    public void changeRequestHasAtMostOneFixedElement() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostOneFixedElement(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_FIXED_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:fixed, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:fixed, found " + size);
     }
 
-    @Test
-    public void changeRequestHasAtMostOneApprovedElement() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostOneApprovedElement(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_APPROVED_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:approved, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:approved, found " + size);
     }
 
-    @Test
-    public void changeRequestHasAtMostOneReviewedElement() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostOneReviewedElement(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_REVIEWED_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:reviewed, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:reviewed, found " + size);
     }
 
-    @Test
-    public void changeRequestHasAtMostOneVerifiedElement() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeRequestHasAtMostOneVerifiedElement(String thisUrl) {
+        initChangeRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.CM_VERIFIED_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc_cm:verified, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc_cm:verified, found " + size);
     }
 }

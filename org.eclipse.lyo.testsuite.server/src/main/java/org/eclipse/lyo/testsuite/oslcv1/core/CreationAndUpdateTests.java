@@ -13,10 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv1.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -33,11 +30,9 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -51,7 +46,6 @@ import org.xml.sax.SAXException;
  * <p>After each test, it attempts to perform a DELETE call on the resource that was presumably created, but this DELETE
  * call is not technically required in the OSLC CM spec, so the created change request may still exist.
  */
-@RunWith(Parameterized.class)
 public class CreationAndUpdateTests {
     private static TestsBase.UserCredentials basicCreds;
 
@@ -61,11 +55,11 @@ public class CreationAndUpdateTests {
     private String jsonDocument;
     private String jsonUpdate;
 
-    public CreationAndUpdateTests(String url) {
+    public void initCreationAndUpdateTests(String url) {
         this.currentUrl = url;
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException {
         Properties setupProps = SetupProperties.setup(null);
         if (setupProps.getProperty("testBackwardsCompatability") != null
@@ -81,7 +75,6 @@ public class CreationAndUpdateTests {
         jsonUpdate = OSLCUtils.readFileAsString(new File(setupProps.getProperty("updateTemplateJsonFile")));
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
@@ -154,8 +147,10 @@ public class CreationAndUpdateTests {
         return data;
     }
 
-    @Test
-    public void createValidCMDefectUsingXmlTemplate() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void createValidCMDefectUsingXmlTemplate(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
         Response resp = OSLCUtils.postDataToUrl(
@@ -175,8 +170,10 @@ public class CreationAndUpdateTests {
         }
     }
 
-    @Test
-    public void createValidCMDefectUsingJsonTemplate() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void createValidCMDefectUsingJsonTemplate(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
         Response resp = OSLCUtils.postDataToUrl(
@@ -197,8 +194,10 @@ public class CreationAndUpdateTests {
         }
     }
 
-    @Test
-    public void createCMDefectWithInvalidContentType() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void createCMDefectWithInvalidContentType(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template and an invalid contentType
         Response resp = OSLCUtils.postDataToUrl(
                 currentUrl, basicCreds, OSLCConstants.CT_CR_XML, "weird/type", templatedDocument);
@@ -206,8 +205,10 @@ public class CreationAndUpdateTests {
         assertEquals(Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode(), resp.getStatus());
     }
 
-    @Test
-    public void createCMDefectWithInvalidContent() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void createCMDefectWithInvalidContent(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template and an invalid contentType
         Response resp = OSLCUtils.postDataToUrl(
                 currentUrl, basicCreds, OSLCConstants.CT_CR_XML, OSLCConstants.CT_CR_XML, "notvalidxmldefect");
@@ -215,8 +216,10 @@ public class CreationAndUpdateTests {
         assertEquals(Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
-    @Test
-    public void createCMDefectAndUpdateItUsingXml() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void createCMDefectAndUpdateItUsingXml(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
         Response resp = OSLCUtils.postDataToUrl(
@@ -243,8 +246,10 @@ public class CreationAndUpdateTests {
         if (resp.getEntity() != null) resp.close();
     }
 
-    @Test
-    public void createCMDefectAndUpdateItUsingJson() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void createCMDefectAndUpdateItUsingJson(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
         Response resp = OSLCUtils.postDataToUrl(
@@ -272,8 +277,10 @@ public class CreationAndUpdateTests {
         if (resp.getEntity() != null) resp.close();
     }
 
-    @Test
-    public void updateCreatedDefectWithBadRequest() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void updateCreatedDefectWithBadRequest(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
         Response resp = OSLCUtils.postDataToUrl(
@@ -299,8 +306,10 @@ public class CreationAndUpdateTests {
         if (resp.getEntity() != null) resp.close();
     }
 
-    @Test
-    public void updateCreatedDefectWithBadType() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void updateCreatedDefectWithBadType(String url) throws IOException {
+        initCreationAndUpdateTests(url);
         // Issue post request using the provided template
         // Using Content-type header of OSLCConstants as required by the OSLC CM spec
         Response resp = OSLCUtils.postDataToUrl(

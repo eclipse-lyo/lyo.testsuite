@@ -7,21 +7,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
-@RunWith(Parameterized.class)
 public class RequirementCollectionXmlTests extends CoreResourceXmlTests {
 
-    public RequirementCollectionXmlTests(String thisUrl)
+    public void initRequirementCollectionXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         super(thisUrl);
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, javax.xml.xpath.XPathException {
 

@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,10 +23,8 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,16 +32,14 @@ import org.xml.sax.SAXException;
  * directly. It runs the equality query from the properties file and grabs the first request to test against, checking
  * the relationship of elements in the XML representation of the auto request.
  */
-@RunWith(Parameterized.class)
 public class AutomationRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    public AutomationRequestRdfXmlTests(String thisUrl)
+    public void initAutomationRequestRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
         super(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();
@@ -65,24 +61,30 @@ public class AutomationRequestRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public static String eval = OSLCConstants.RDFS_MEMBER;
 
-    @Test
-    public void autoRequestHasAtLeastOneState() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoRequestHasAtLeastOneState(String thisUrl) {
+        initAutomationRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_STATE);
         int size = listStatements.toList().size();
-        assertTrue("Can have 1 or more oslc_auto:state, found " + size, size >= 1);
+        assertTrue(size >= 1, "Can have 1 or more oslc_auto:state, found " + size);
     }
 
-    @Test
-    public void autoRequestHasAtMostOneDesiredState() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoRequestHasAtMostOneDesiredState(String thisUrl) {
+        initAutomationRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_DESIRED_STATE);
         int size = listStatements.toList().size();
-        assertTrue("Can have at most 1 oslc_auto:desiredState, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have at most 1 oslc_auto:desiredState, found " + size);
     }
 
-    @Test
-    public void autoRequestHasOneExecutesLink() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoRequestHasOneExecutesLink(String thisUrl) {
+        initAutomationRequestRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.AUTO_AUTOMATION_EXECUTES_AUTO_PLAN);
         int size = listStatements.toList().size();
-        assertTrue("Can have 1  oslc_auto:executesAutomationPlan, found " + size, size == 1);
+        assertTrue(size == 1, "Can have 1  oslc_auto:executesAutomationPlan, found " + size);
     }
 }

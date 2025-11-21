@@ -13,9 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -32,7 +30,7 @@ import org.apache.wink.json4j.compat.JSONArray;
 import org.apache.wink.json4j.compat.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.w3c.dom.Document;
@@ -72,7 +70,7 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         if (results == null)
             results = (NodeList) OSLCUtils.getXPath().evaluate("//rdf:Description", doc, XPathConstants.NODESET);
         assertNotNull(results);
-        assertTrue("Expected query results > 0", results.getLength() > 0);
+        assertTrue(results.getLength() > 0, "Expected query results > 0");
         // Check that the property elements are equal to the expected value
         checkEqualityProperty(results, queryProperty, queryPropertyValue, doc);
     }
@@ -129,7 +127,7 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         if (results == null)
             results = (NodeList) OSLCUtils.getXPath().evaluate("//rdf:Description", doc, XPathConstants.NODESET);
         assertTrue(results != null);
-        assertTrue("Expecting query results >0", results.getLength() > 0);
+        assertTrue(results.getLength() > 0, "Expecting query results >0");
         // Check that the property elements are less than the query comparison property
         checkLessThanProperty(results, queryComparisonProperty, queryComparisonValue, doc);
     }
@@ -153,7 +151,7 @@ public class QueryTests extends SimplifiedQueryBaseTests {
             results = (NodeList) OSLCUtils.getXPath().evaluate("//rdf:Description", doc, XPathConstants.NODESET);
         }
         assertTrue(results != null);
-        assertTrue("Expected query results >0", results.getLength() > 0);
+        assertTrue(results.getLength() > 0, "Expected query results >0");
         // Check that the property elements are greater than the query comparison property
         checkGreaterThanProperty(results, queryComparisonProperty, queryComparisonValue, doc);
     }
@@ -203,7 +201,7 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         // Verify that all results are less than the comparison value
         JSONArray results = (JSONArray) resultJson.get("oslc:results");
 
-        assertTrue("Query did not return any result", results.length() > 0);
+        assertTrue(results.length() > 0, "Query did not return any result");
         // TODO: Add JSON logic
     }
 
@@ -229,7 +227,7 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         assertNotNull(lst);
 
         // Verify our fulltext search returned a result
-        assertTrue("Exptected full text to respond with results", lst.getLength() > 0);
+        assertTrue(lst.getLength() > 0, "Exptected full text to respond with results");
     }
 
     public void checkEqualityProperty(NodeList resultList, String queryProperty, String qVal, Document doc) {

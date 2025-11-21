@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -56,7 +56,7 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
 
         Property property = model.getProperty(OSLCConstants.ASSET_CATEGORIZATION_PROP);
         StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
-        assertTrue("The category was not set", statements.hasNext());
+        assertTrue(statements.hasNext(), "The category was not set");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
             Property property = model.getProperty(OSLCConstants.DC_RELATION_PROP);
             StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
 
-            assertTrue("The relation was not created", statements.hasNext());
+            assertTrue(statements.hasNext(), "The relation was not created");
         } finally {
             resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
             resp.close();

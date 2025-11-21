@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -23,7 +23,7 @@ import java.util.Collection;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.runners.Parameterized.Parameters;
 
 public class AssetTestBase extends TestsBase {
@@ -53,7 +53,7 @@ public class AssetTestBase extends TestsBase {
         return toCollection(capabilityURLsUsingRdfXml);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws IOException {
         if (assetUrl == null) return;
         Response resp = OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
@@ -70,8 +70,8 @@ public class AssetTestBase extends TestsBase {
         String content = resp.readEntity(String.class);
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
         return content;
     }
 
@@ -84,8 +84,8 @@ public class AssetTestBase extends TestsBase {
         Response resp = OSLCUtils.getDataFromUrl(assetUrl, creds, acceptType, contentType, headers);
         try {
             assertTrue(
-                    "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                    resp.getStatus() == Response.Status.OK.getStatusCode());
+                    resp.getStatus() == Response.Status.OK.getStatusCode(),
+                    "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
         } catch (AssertionError e) {
             resp.close();
             throw e;
@@ -100,8 +100,8 @@ public class AssetTestBase extends TestsBase {
         Response resp = OSLCUtils.postDataToUrl(currentUrl, creds, acceptType, contentType, content, headers);
         resp.close();
         assertTrue(
-                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus(),
-                Status.CREATED.getStatusCode() == resp.getStatus());
+                Status.CREATED.getStatusCode() == resp.getStatus(),
+                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus());
 
         var loc = resp.getHeaderString("Location");
         return loc;
@@ -119,7 +119,7 @@ public class AssetTestBase extends TestsBase {
 
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
     }
 }

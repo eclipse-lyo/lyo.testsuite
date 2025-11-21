@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class CreateAssetBase extends AssetTestBase {
         Response resp = OSLCUtils.deleteFromUrl(assetUrl, creds, acceptType);
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
     }
 }

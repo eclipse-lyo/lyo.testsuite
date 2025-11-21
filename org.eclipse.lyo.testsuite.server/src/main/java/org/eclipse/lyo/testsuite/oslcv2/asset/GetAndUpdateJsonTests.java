@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -27,7 +27,7 @@ import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
@@ -40,7 +40,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
 
         assetUrl = createAsset(jsonCreateTemplate);
-        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
 
         String resp = getAssetAsString();
         hasJson = new JSONObject(resp);
@@ -48,12 +48,12 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
     @Test
     public void assetHasArtifactFactory() {
-        assertTrue("Artifact Factory was not found", hasJson.has("oslc_asset:artifactFactory"));
+        assertTrue(hasJson.has("oslc_asset:artifactFactory"), "Artifact Factory was not found");
     }
 
     @Test
     public void assetHasTitle() {
-        assertTrue("Title was not found", hasJson.has(OSLCConstants.DCTERMS_TITLE));
+        assertTrue(hasJson.has(OSLCConstants.DCTERMS_TITLE), "Title was not found");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
         // NodeList children = getAssetNodeChildren(document);
         String actualName = asset.getString("dcterms:title");
-        assertTrue("Expected " + name + ", received " + actualName, name.equals(actualName));
+        assertTrue(name.equals(actualName), "Expected " + name + ", received " + actualName);
     }
 
     @Test
@@ -92,20 +92,20 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
         String artifactFactory = factory.getString("rdf:resource");
         assertTrue(
-                "There needs to be an artifact factory url", artifactFactory != null && artifactFactory.length() > 0);
+                artifactFactory != null && artifactFactory.length() > 0, "There needs to be an artifact factory url");
 
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
-        assertTrue("There needs to be an artifact template file", fileName != null);
+        assertTrue(fileName != null, "There needs to be an artifact template file");
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         Response response = OSLCUtils.postDataToUrl(
                 artifactFactory, creds, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON, artifact, header);
         response.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus(),
-                response.getStatus() == Status.CREATED.getStatusCode());
+                response.getStatus() == Status.CREATED.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus());
     }
 
     @Test
@@ -129,7 +129,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactJsonFile");
-        assertTrue("There needs to be an artifact template file", fileName != null);
+        assertTrue(fileName != null, "There needs to be an artifact template file");
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         // Adds the artifact to the asset
@@ -146,7 +146,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
 
         resp = getAssetAsString();
         asset = new JSONObject(resp);
-        assertTrue("The artifact was not removed", !asset.containsKey("oslc_asset:artifact"));
+        assertTrue(!asset.containsKey("oslc_asset:artifact"), "The artifact was not removed");
     }
 
     private String JSONToString(JSONObject jsonObject) throws JSONException {
@@ -163,7 +163,7 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         // Gets the artifact factory from the asset
         JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
         String artifactFactory = factory.getString("rdf:resource");
-        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue(artifactFactory != null && artifactFactory.length() > 0, "There needs to be an artifact factory");
         return artifactFactory;
     }
 }

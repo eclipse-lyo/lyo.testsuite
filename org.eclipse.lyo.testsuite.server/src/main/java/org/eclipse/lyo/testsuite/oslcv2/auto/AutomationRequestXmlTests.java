@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -75,7 +75,7 @@ public class AutomationRequestXmlTests extends CoreResourceXmlTests {
 
         NodeList states = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-        assertTrue("oslc_auto_v2:state" + getFailureMessage(), (states.getLength() >= 1));
+        assertTrue((states.getLength() >= 1), "oslc_auto_v2:state" + getFailureMessage());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class AutomationRequestXmlTests extends CoreResourceXmlTests {
 
         NodeList desiredStates = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-        assertTrue("oslc_auto_v2:desiredState" + getFailureMessage(), (desiredStates.getLength() <= 1));
+        assertTrue((desiredStates.getLength() <= 1), "oslc_auto_v2:desiredState" + getFailureMessage());
     }
 
     @Test
@@ -93,6 +93,6 @@ public class AutomationRequestXmlTests extends CoreResourceXmlTests {
 
         NodeList executes = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-        assertEquals("oslc_auto_v2:executesAutomationPlan" + getFailureMessage(), 1, executes.getLength());
+        assertEquals(1, executes.getLength(), "oslc_auto_v2:executesAutomationPlan" + getFailureMessage());
     }
 }

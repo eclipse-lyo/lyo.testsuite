@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
@@ -55,7 +55,7 @@ public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
     public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException {
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "runsTestCase");
         int size = listStatements.toList().size();
-        assertTrue("TestExecutionRecord has one oslc_qm:runsTestCase, found " + size, size == 1);
+        assertTrue(size == 1, "TestExecutionRecord has one oslc_qm:runsTestCase, found " + size);
     }
 
     public static String ns = "oslc_qm_v2";

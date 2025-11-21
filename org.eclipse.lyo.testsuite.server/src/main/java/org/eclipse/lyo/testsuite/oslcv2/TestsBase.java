@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.sun.net.httpserver.HttpPrincipal;
 import jakarta.ws.rs.core.Response;
@@ -48,7 +48,7 @@ import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
 import org.eclipse.lyo.testsuite.util.oauth.OAuthConsumerPrincipal;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -230,7 +230,7 @@ public abstract class TestsBase {
     //        }
     //    }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException, ParserConfigurationException, SAXException, XPathException {
         staticSetup();
     }
@@ -475,9 +475,9 @@ public abstract class TestsBase {
         Response resp;
         resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, inBaseURL, creds, OSLCConstants.CT_RDF, headers);
         assertEquals(
-                "Did not successfully retrieve ServiceProviders at: " + inBaseURL,
                 Response.Status.OK.getStatusCode(),
-                resp.getStatus());
+                resp.getStatus(),
+                "Did not successfully retrieve ServiceProviders at: " + inBaseURL);
 
         // Used to hold RDF from doing service discovery
         Model spModel = ModelFactory.createDefaultModel();
@@ -692,9 +692,9 @@ public abstract class TestsBase {
 
         Response resp = OSLCUtils.getResponseFromUrl(base, base, creds, OSLCConstants.CT_JSON, headers);
         assertEquals(
-                "Failed to retrieve ServiceProviders at: " + inBaseURL,
                 Response.Status.OK.getStatusCode(),
-                resp.getStatus());
+                resp.getStatus(),
+                "Failed to retrieve ServiceProviders at: " + inBaseURL);
 
         String respBody = resp.readEntity(String.class);
 
@@ -731,18 +731,18 @@ public abstract class TestsBase {
             resp = OSLCUtils.getResponseFromUrl(base, base, (UserCredentials) creds, OSLCConstants.CT_JSON, headers);
 
             assertEquals(
-                    "Failed to retrieve ServiceProviders at: " + base,
                     Response.Status.OK.getStatusCode(),
-                    resp.getStatus());
+                    resp.getStatus(),
+                    "Failed to retrieve ServiceProviders at: " + base);
 
             String respBody = resp.readEntity(String.class);
 
             String contentType = OSLCUtils.getContentType(resp);
 
             assertEquals(
-                    "Expected content-type " + OSLCConstants.CT_JSON + " but received " + contentType,
                     OSLCConstants.CT_JSON,
-                    contentType);
+                    contentType,
+                    "Expected content-type " + OSLCConstants.CT_JSON + " but received " + contentType);
 
             // Create mapping of JSON variables
             JSONArtifact userData = JSON.parse(respBody);

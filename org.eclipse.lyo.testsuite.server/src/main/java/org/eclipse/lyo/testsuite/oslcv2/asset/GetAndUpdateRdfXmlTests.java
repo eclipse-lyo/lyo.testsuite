@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -32,7 +32,7 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -45,7 +45,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
 
         assetUrl = createAsset(rdfXmlCreateTemplate);
-        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
         baseUrl = setupProps.getProperty("baseUrl");
 
         Response resp = getAssetResponse();
@@ -68,18 +68,18 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
     @Test
     public void assetHasArtifactFactory() {
         assertTrue(
-                "Artifact Factory was not found",
-                getPropertyValue(hasModel, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP) != null);
+                getPropertyValue(hasModel, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP) != null,
+                "Artifact Factory was not found");
     }
 
     @Test
     public void assetHasAtMostOneGuid() {
-        assertTrue("Multiple guids returned", isOneOrNone(hasModel, OSLCConstants.ASSET_GUID_PROP));
+        assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_GUID_PROP), "Multiple guids returned");
     }
 
     @Test
     public void assetHasAtMostOneVersion() {
-        assertTrue("Multiple versions returned", isOneOrNone(hasModel, OSLCConstants.ASSET_VERSION_PROP));
+        assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_VERSION_PROP), "Multiple versions returned");
     }
 
     @Test
@@ -114,7 +114,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
     @Test
     public void assetHasTitle() {
-        assertTrue("Title was not found", getPropertyValue(hasModel, OSLCConstants.DC_TITLE_PROP) != null);
+        assertTrue(getPropertyValue(hasModel, OSLCConstants.DC_TITLE_PROP) != null, "Title was not found");
     }
 
     @Test
@@ -153,7 +153,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         resp.close();
 
         String actualName = getPropertyValue(model, OSLCConstants.DC_TITLE_PROP);
-        assertTrue("Expected " + name + ", received " + actualName, name.equals(actualName));
+        assertTrue(name.equals(actualName), "Expected " + name + ", received " + actualName);
     }
 
     @Test
@@ -165,14 +165,14 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         if (fileName == null) // Fall back to the xml if the rdf is not defined
         fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
 
-        assertTrue("There needs to be an artifact template file", fileName != null);
+        assertTrue(fileName != null, "There needs to be an artifact template file");
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         Response resp = OSLCUtils.postDataToUrl(artifactFactory, creds, OSLCConstants.CT_RDF, null, artifact, header);
         resp.close();
         assertTrue(
-                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus(),
-                Status.CREATED.getStatusCode() == resp.getStatus());
+                Status.CREATED.getStatusCode() == resp.getStatus(),
+                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus());
     }
 
     @Test
@@ -199,7 +199,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         if (fileName == null) // Fall back to the xml if the rdf is not defined
         fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
 
-        assertTrue("There needs to be an artifact template file", fileName != null);
+        assertTrue(fileName != null, "There needs to be an artifact template file");
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         // Adds the artifact to the asset
@@ -236,7 +236,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         resp.close();
         property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
         statements = model.listStatements(null, property, (RDFNode) null);
-        assertFalse("The artifact was no removed", statements.hasNext());
+        assertFalse(statements.hasNext(), "The artifact was no removed");
     }
 
     private String getPropertyValue(Model model, String uri) {
@@ -285,7 +285,7 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
 
         // Gets the artifact factory from the asset
         String artifactFactory = getPropertyValue(model, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP);
-        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue(artifactFactory != null && artifactFactory.length() > 0, "There needs to be an artifact factory");
         return artifactFactory;
     }
 }

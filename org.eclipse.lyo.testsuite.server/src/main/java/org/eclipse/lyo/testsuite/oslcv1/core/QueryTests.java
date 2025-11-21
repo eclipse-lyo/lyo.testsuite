@@ -13,9 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv1.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -39,11 +37,9 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -53,7 +49,6 @@ import org.xml.sax.SAXException;
  * This class provides JUnit tests for the validation of OSLC Simply Query services, currently focusing on the
  * validation of the OSLC_CM definition of Queries.
  */
-@RunWith(Parameterized.class)
 public class QueryTests {
 
     private static String baseUrl;
@@ -67,11 +62,11 @@ public class QueryTests {
     private String queryComparisonValue;
     private String fullTextSearchTerm;
 
-    public QueryTests(String url) {
+    public void initQueryTests(String url) {
         this.currentUrl = url;
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException {
         Properties setupProps = SetupProperties.setup(null);
         if (setupProps.getProperty("testBackwardsCompatability") != null
@@ -90,7 +85,6 @@ public class QueryTests {
         fullTextSearchTerm = setupProps.getProperty("fullTextSearchTerm");
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
@@ -166,9 +160,11 @@ public class QueryTests {
         return data;
     }
 
-    @Test
-    public void validEqualsTypeQueryContainsExpectedDefect()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validEqualsTypeQueryContainsExpectedDefect(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -193,9 +189,11 @@ public class QueryTests {
         assertTrue(containsExpectedDefectResults);
     }
 
-    @Test
-    public void validTypeQueryReturnsCorrectType()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validTypeQueryReturnsCorrectType(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -221,9 +219,11 @@ public class QueryTests {
         }
     }
 
-    @Test
-    public void validCompoundQueryContainsExpectedDefect()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validCompoundQueryContainsExpectedDefect(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -264,9 +264,11 @@ public class QueryTests {
         }
     }
 
-    @Test
-    public void validNotEqualQueryContainsExpectedDefect()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validNotEqualQueryContainsExpectedDefect(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -287,9 +289,11 @@ public class QueryTests {
         }
     }
 
-    @Test
-    public void validLessThanQueryContainsExpectedDefects()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validLessThanQueryContainsExpectedDefects(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -312,9 +316,11 @@ public class QueryTests {
         // TODO: How to validate the list is what is expected?
     }
 
-    @Test
-    public void validGreaterThanQueriesContainExpectedDefects()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validGreaterThanQueriesContainExpectedDefects(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -339,9 +345,11 @@ public class QueryTests {
         }
     }
 
-    @Test
-    public void invalidQueryReturnsErrorCode()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void invalidQueryReturnsErrorCode(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query + "oslc_cm.query=notrealthing" + URLEncoder.encode("=\"defect\"", "UTF-8");
         Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl + query, basicCreds, "application/xml");
@@ -350,9 +358,11 @@ public class QueryTests {
         assertTrue(resp.getStatus() == 400);
     }
 
-    @Test
-    public void fulltextSearchReturnsScoreValueInResults()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void fulltextSearchReturnsScoreValueInResults(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query=oslc_cm:searchTerms="
@@ -372,10 +382,12 @@ public class QueryTests {
         }
     }
 
+    @MethodSource("getAllDescriptionUrls")
     @SuppressWarnings("unchecked")
-    @Test
-    public void validEqualsTypeQueryContainsExpectedDefectJson()
+    @ParameterizedTest
+    public void validEqualsTypeQueryContainsExpectedDefectJson(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initQueryTests(url);
         // Form the query
         String query = getQueryBase();
         query = query
@@ -397,10 +409,12 @@ public class QueryTests {
         return query;
     }
 
+    @MethodSource("getAllDescriptionUrls")
     @SuppressWarnings("unchecked")
-    @Test
-    public void validTypeQueryReturnsOnlyTypeJson()
+    @ParameterizedTest
+    public void validTypeQueryReturnsOnlyTypeJson(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -419,10 +433,12 @@ public class QueryTests {
         }
     }
 
+    @MethodSource("getAllDescriptionUrls")
     @SuppressWarnings("unchecked")
-    @Test
-    public void validCompoundQueryContainsExpectedDefectJson()
+    @ParameterizedTest
+    public void validCompoundQueryContainsExpectedDefectJson(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -453,10 +469,12 @@ public class QueryTests {
         }
     }
 
+    @MethodSource("getAllDescriptionUrls")
     @SuppressWarnings("unchecked")
-    @Test
-    public void validNotEqualQueryContainsExpectedDefectJson()
+    @ParameterizedTest
+    public void validNotEqualQueryContainsExpectedDefectJson(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -472,9 +490,11 @@ public class QueryTests {
         }
     }
 
+    @MethodSource("getAllDescriptionUrls")
     @SuppressWarnings("unchecked")
-    @Test
-    public void validLessThanQueryContainsExpectedDefectsJson() throws IOException, JSONException {
+    @ParameterizedTest
+    public void validLessThanQueryContainsExpectedDefectsJson(String url) throws IOException, JSONException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -510,11 +530,13 @@ public class QueryTests {
         return results;
     }
 
+    @MethodSource("getAllDescriptionUrls")
     @SuppressWarnings("unchecked")
-    @Test
-    public void validGreaterThanQueriesContainExpectedDefectsJson()
+    @ParameterizedTest
+    public void validGreaterThanQueriesContainExpectedDefectsJson(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException,
                     JSONException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query="
@@ -534,10 +556,12 @@ public class QueryTests {
         }
     }
 
+    @MethodSource("getAllDescriptionUrls")
     @SuppressWarnings("unchecked")
-    @Test
-    public void fulltextSearchReturnsScoreValueInResultsJson()
+    @ParameterizedTest
+    public void fulltextSearchReturnsScoreValueInResultsJson(String url)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initQueryTests(url);
         String query = getQueryBase();
         query = query
                 + "oslc_cm.query=oslc_cm:searchTerms="

@@ -13,9 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -36,7 +34,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
@@ -55,9 +53,9 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
 
         assertEquals(
-                "Did not successfully retrieve catalog at: " + currentUrl,
                 Response.Status.OK.getStatusCode(),
-                response.getStatus());
+                response.getStatus(),
+                "Did not successfully retrieve catalog at: " + currentUrl);
 
         rdfModel.read(
                 response.readEntity(InputStream.class),
@@ -66,7 +64,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         RDFUtils.validateModel(rdfModel);
         catalog = (Resource) rdfModel.getResource(currentUrl);
 
-        assertNotNull("Failed to read Catalog resource at URI: " + currentUrl, catalog);
+        assertNotNull(catalog, "Failed to read Catalog resource at URI: " + currentUrl);
     }
 
     @Parameters
@@ -92,9 +90,9 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
 
         try {
             assertEquals(
-                    "Did not successfully retrieve catalog at: " + base,
                     Response.Status.OK.getStatusCode(),
-                    resp.getStatus());
+                    resp.getStatus(),
+                    "Did not successfully retrieve catalog at: " + base);
 
             // Add ourself (base)
             data.add(new Object[] {base});
@@ -120,10 +118,10 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     public void baseUrlIsValid() throws IOException {
         // Get the status, make sure 200 OK
         assertTrue(
-                response.getStatusInfo().getReasonPhrase(), response.getStatus() == Response.Status.OK.getStatusCode());
+                response.getStatus() == Response.Status.OK.getStatusCode(), response.getStatusInfo().getReasonPhrase());
 
         // Verify we got a response
-        assertNotNull("Failed to locate Catalog resource at URI: " + setupBaseUrl, catalog);
+        assertNotNull(catalog, "Failed to locate Catalog resource at URI: " + setupBaseUrl);
     }
 
     @Test
@@ -175,8 +173,8 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         while (listStatements.hasNext()) {
             Resource cat = (Resource) listStatements.nextStatement().getObject();
             assertTrue(
-                    "ServiceProviders have at most 1 dc:title",
-                    cat.listProperties(dcTitle).toList().size() <= 1);
+                    cat.listProperties(dcTitle).toList().size() <= 1,
+                    "ServiceProviders have at most 1 dc:title");
         }
     }
 
@@ -185,8 +183,8 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         Property dcPublisher = rdfModel.createProperty(OSLCConstants.DC_PUBLISHER_PROP);
         StmtIterator listStatements = rdfModel.listStatements(catalog, dcPublisher, (RDFNode) null);
         assertTrue(
-                "ServiceProviderCatalogs have at most 1 oslc:publisher",
-                listStatements.toList().size() <= 1);
+                listStatements.toList().size() <= 1,
+                "ServiceProviderCatalogs have at most 1 oslc:publisher");
     }
 
     @Test
@@ -197,8 +195,8 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         while (listStatements.hasNext()) {
             Resource cat = (Resource) listStatements.nextStatement().getObject();
             assertTrue(
-                    "Service providers have at most 1 oslc:publisher",
-                    cat.listProperties(dcPublisher).toList().size() <= 1);
+                    cat.listProperties(dcPublisher).toList().size() <= 1,
+                    "Service providers have at most 1 oslc:publisher");
         }
     }
 
@@ -223,9 +221,9 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
 
         var parameterResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, badParmUrl, creds, fContentType, headers);
         assertEquals(
-                "Did not successfully retrieve catalog at: " + badParmUrl,
                 Response.Status.OK.getStatusCode(),
-                response.getStatus());
+                response.getStatus(),
+                "Did not successfully retrieve catalog at: " + badParmUrl);
 
         Model badParmModel = ModelFactory.createDefaultModel();
         badParmModel.read(

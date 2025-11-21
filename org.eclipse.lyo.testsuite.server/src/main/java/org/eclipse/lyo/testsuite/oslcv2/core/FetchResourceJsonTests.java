@@ -1,13 +1,13 @@
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FetchResourceJsonTests extends FetchResourceTests {
     public FetchResourceJsonTests(String url) {
@@ -21,6 +21,6 @@ public class FetchResourceJsonTests extends FetchResourceTests {
         String body = getValidResourceUsingContentType(OSLCConstants.CT_JSON);
 
         JSONArtifact userData = JSON.parse(body);
-        assertNotNull("Received JSON content but did not parse properly", userData);
+        assertNotNull(userData, "Received JSON content but did not parse properly");
     }
 }

@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -28,10 +28,8 @@ import org.apache.wink.json4j.JSONException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -40,14 +38,12 @@ import org.xml.sax.SAXException;
  * implemented it is difficult to represent the needed various templates of different change request types and to query
  * for the templates.
  */
-@RunWith(Parameterized.class)
 public class SimplifiedQueryJsonTests extends SimplifiedQueryBaseTests {
 
-    public SimplifiedQueryJsonTests(String thisUri) {
+    public void initSimplifiedQueryJsonTests(String thisUri) {
         super(thisUri);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the
@@ -80,47 +76,59 @@ public class SimplifiedQueryJsonTests extends SimplifiedQueryBaseTests {
         // Validate JSON response
         //
         // TODO: add more detailed validation
-        assertTrue("query response is in Json format.", JSON.parse(responseBody) instanceof JSONArtifact);
+        assertTrue(JSON.parse(responseBody) instanceof JSONArtifact, "query response is in Json format.");
     }
 
-    @Test
-    public void validEqualsQueryContainsExpectedResource()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validEqualsQueryContainsExpectedResource(String thisUri)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, JSONException {
+        initSimplifiedQueryJsonTests(thisUri);
         String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validNotEqualQueryContainsExpectedResource()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validNotEqualQueryContainsExpectedResource(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initSimplifiedQueryJsonTests(thisUri);
         String query = getQueryUrlForValidNotEqualQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validLessThanQueryContainsExpectedResources()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validLessThanQueryContainsExpectedResources(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initSimplifiedQueryJsonTests(thisUri);
         String query = getQueryUrlForValidLessThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validGreaterThanQueryContainsExpectedDefects()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validGreaterThanQueryContainsExpectedDefects(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initSimplifiedQueryJsonTests(thisUri);
         String query = getQueryUrlForValidGreaterThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validCompoundQueryContainsExpectedResource()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validCompoundQueryContainsExpectedResource(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, JSONException {
+        initSimplifiedQueryJsonTests(thisUri);
         String query = getQueryUrlForValidCompoundQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void fullTextSearchContainsExpectedResults()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void fullTextSearchContainsExpectedResults(String thisUri)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, JSONException {
+        initSimplifiedQueryJsonTests(thisUri);
         if (!getFullTextSearch()) return;
 
         String query = getQueryUrlForFullTextSearchContainsExpectedResults();

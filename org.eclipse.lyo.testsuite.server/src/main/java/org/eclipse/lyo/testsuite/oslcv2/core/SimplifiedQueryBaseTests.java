@@ -19,7 +19,7 @@ import java.net.URLEncoder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.xml.sax.SAXException;
 
 /**
@@ -42,7 +42,7 @@ public abstract class SimplifiedQueryBaseTests extends TestsBase {
         super(thisUri);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void mysetup() throws IOException, ParserConfigurationException, SAXException, XPathException {
 
         staticSetup();

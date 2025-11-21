@@ -13,10 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.FileNotFoundException;
@@ -37,8 +34,8 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -139,7 +136,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         // Assert the response gave a 201 Created
         String responseBody = resp.readEntity(String.class);
         resp.close();
-        assertEquals(responseBody, 201, resp.getStatus());
+        assertEquals(201, resp.getStatus(), responseBody);
         String location = resp.getHeaderString("Location");
         // Assert that we were given a Location header pointing to the resource,
         // which is not a MUST according to oslc v2, but probably should be
@@ -163,10 +160,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         resp.close();
 
         // An error status code should be at least 400.
-        assertTrue("Expecting error but received successful status code", resp.getStatus() >= 400);
+        assertTrue(resp.getStatus() >= 400, "Expecting error but received successful status code");
 
         // Malformed content should not result in a 500 internal server error.
-        assertFalse("Server should not return an internal server error", resp.getStatus() == 500);
+        assertFalse(resp.getStatus() == 500, "Server should not return an internal server error");
     }
 
     @Test
@@ -175,7 +172,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 
         String location = getRequiredLocationHeader(resp);
-        assertTrue("Location(" + location + ")" + " must not be null", location != null);
+        assertTrue(location != null, "Location(" + location + ")" + " must not be null");
 
         // check whether a POST response body is empty (which is allowed)
         String contentLength = resp.getHeaderString("Content-Length");
@@ -198,8 +195,8 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         if (hasPayLoad) {
             // then fail, because we expect at least one, if not both
             assertTrue(
-                    "ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null",
-                    eTag != null || lastModified != null);
+                    eTag != null || lastModified != null,
+                    "ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null");
         }
 
         if (eTag != null) {
@@ -224,7 +221,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         String responseBody = resp.readEntity(String.class);
         if (resp.getEntity() != null) resp.close();
         // Assert that a proper PUT resulted in a 200 OK
-        assertEquals("HTTP Response body: \n " + responseBody, Response.Status.OK.getStatusCode(), resp.getStatus());
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus(), "HTTP Response body: \n " + responseBody);
 
         // Clean up after the test by attempting to delete the created resource
         if (location != null) {
@@ -264,8 +261,8 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         // Assert that an invalid PUT resulted in a 4xx status
         final int status = resp.getStatus();
         assertTrue(
-                "Expected a 4xx status code, but got %s.%n".formatted(resp.getStatus()),
-                status >= 400 && status <= 499);
+                status >= 400 && status <= 499,
+                "Expected a 4xx status code, but got %s.%n".formatted(resp.getStatus()));
 
         // Clean up after the test by attempting to delete the created resource
         if (location != null) resp = OSLCUtils.deleteFromUrl(location, creds, "");
@@ -334,7 +331,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         String location = resp.getHeaderString("Location");
 
         // Assert that we were given a Location header pointing to the resource
-        assertNotNull("Expected 201-Created to return non-null Location header", location);
+        assertNotNull(location, "Expected 201-Created to return non-null Location header");
 
         return location;
     }
@@ -345,7 +342,7 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 
         String location = getRequiredLocationHeader(resp);
-        assertTrue("Location(" + location + ")" + " must not be null", location != null);
+        assertTrue(location != null, "Location(" + location + ")" + " must not be null");
 
         // check whether a POST response body is empty (which is allowed)
         String contentLength = resp.getHeaderString("Content-Length");
@@ -361,8 +358,8 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
         if (hasPayLoad) {
             assertTrue(
-                    "Either ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null",
-                    eTag != null || lastModified != null);
+                    eTag != null || lastModified != null,
+                    "Either ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null");
         }
 
         int size = headers.size() + 1;
@@ -402,13 +399,13 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
     }
 
     @Test
-    @Ignore("This is OPTIONAL in OSLC 2.0 (and HTTP)")
+    @Disabled("This is OPTIONAL in OSLC 2.0 (and HTTP)")
     public void updateCreatedResourceWithEmptyPrecondition() throws Exception {
 
         Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 
         String location = getRequiredLocationHeader(resp);
-        assertTrue("Location(" + location + ")" + " must not be null", location != null);
+        assertTrue(location != null, "Location(" + location + ")" + " must not be null");
 
         // check whether a POST response body is empty (which is allowed)
         String contentLength = resp.getHeaderString("Content-Length");
@@ -424,8 +421,8 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
 
         if (hasPayLoad) {
             assertTrue(
-                    "Either ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null",
-                    eTag != null || lastModified != null);
+                    eTag != null || lastModified != null,
+                    "Either ETag(" + eTag + ") or Last-Modified(" + lastModified + ") must not be null");
         }
 
         int size = headers.size();

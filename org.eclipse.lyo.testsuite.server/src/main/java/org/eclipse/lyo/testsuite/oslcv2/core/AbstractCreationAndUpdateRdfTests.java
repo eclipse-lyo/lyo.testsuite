@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
             Integer.parseInt(System.getProperty("org.eclipse.lyo.testsuite.oslcv2.createResource.maxDepth", "10"));
 
     protected Resource createResourceFromShape(Model requestModel, String shapeUri, int depth) throws IOException {
-        assertTrue("Detected possible circular reference in shape while creating resource.", depth < MAX_DEPTH);
+        assertTrue(depth < MAX_DEPTH, "Detected possible circular reference in shape while creating resource.");
 
         // Get the shape.
         Model shapeModel = getModel(shapeUri);
@@ -329,7 +329,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
                 OSLCUtils.getResponseFromUrl(uri, uri, TestsBase.creds, OSLCConstants.CT_RDF, TestsBase.headers);
 
         try {
-            assertEquals("Failed to get resource at " + uri, 200, resp.getStatus());
+            assertEquals(200, resp.getStatus(), "Failed to get resource at " + uri);
             Model model = ModelFactory.createDefaultModel();
             model.read(resp.readEntity(InputStream.class), uri, OSLCConstants.JENA_RDF_XML);
             RDFUtils.validateModel(model);
@@ -352,7 +352,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
         Resource resource = resourceModel.getResource(uri);
         Property instanceShapeProp = resourceModel.createProperty(OSLCConstants.INSTANCE_SHAPE);
         Statement instanceShapeStatement = resource.getProperty(instanceShapeProp);
-        assertNotNull("The resource does not have an instance shape.", instanceShapeStatement);
+        assertNotNull(instanceShapeStatement, "The resource does not have an instance shape.");
 
         String shapeUri = instanceShapeStatement.getResource().getURI();
         Model shapeModel = getModel(shapeUri);
@@ -398,7 +398,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
         String content;
         if (template == null) {
             String shapeUri = TestsBase.getShapeUriForCreation(TestsBase.currentUrl);
-            assertNotNull("No shape for creation factory: " + TestsBase.currentUrl, shapeUri);
+            assertNotNull(shapeUri, "No shape for creation factory: " + TestsBase.currentUrl);
             content = createResourceFromShape(shapeUri);
         } else {
             content = template;

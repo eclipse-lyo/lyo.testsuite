@@ -13,9 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv1.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -30,11 +28,9 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -44,7 +40,6 @@ import org.xml.sax.SAXException;
  * This class provides JUnit tests for the validation of OSLC ServiceDescriptionDocuments, currently focusing on the
  * validation of the OSLC_CM definition of ServiceDescriptionDocument.
  */
-@RunWith(Parameterized.class)
 public class ServiceDescriptionTests {
 
     // Base URL of the OSLC Service Description Document to be tested
@@ -56,11 +51,11 @@ public class ServiceDescriptionTests {
     private String responseBody;
     private Document doc;
 
-    public ServiceDescriptionTests(String url) {
+    public void initServiceDescriptionTests(String url) {
         this.currentUrl = url;
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException, ParserConfigurationException, SAXException, XPathException {
         Properties setupProps = SetupProperties.setup(null);
         if (setupProps.getProperty("testBackwardsCompatability") != null
@@ -77,7 +72,6 @@ public class ServiceDescriptionTests {
         doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
@@ -147,33 +141,41 @@ public class ServiceDescriptionTests {
         return data;
     }
 
-    @Test
-    public void baseUrlIsValid() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void baseUrlIsValid(String url) {
+        initServiceDescriptionTests(url);
         // Get the status, make sure 200 OK
-        assertTrue(response.getStatusInfo().getReasonPhrase(), response.getStatus() == 200);
+        assertTrue(response.getStatus() == 200, response.getStatusInfo().getReasonPhrase());
 
         // Verify we got a response
         assertNotNull(responseBody);
     }
 
-    @Test
-    public void invalidContentTypeGivesNotSupported() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void invalidContentTypeGivesNotSupported(String url) throws IOException {
+        initServiceDescriptionTests(url);
         Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, "application/svg+xml");
         String respType = resp.getHeaderString("Content-Type");
         resp.close();
         assertTrue(resp.getStatus() == 406 || respType.contains("application/svg+xml"));
     }
 
-    @Test
-    public void contentTypeIsCMServiceDescription() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void contentTypeIsCMServiceDescription(String url) throws IOException {
+        initServiceDescriptionTests(url);
         Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_DESC_XML);
         // Make sure the response to this URL was of valid type
         resp.close();
         assertTrue(resp.getHeaderString("Content-Type").contains(OSLCConstants.CT_DISC_DESC_XML));
     }
 
-    @Test
-    public void misplacedParametersDoNotEffectResponse() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void misplacedParametersDoNotEffectResponse(String url) throws IOException {
+        initServiceDescriptionTests(url);
         var baseResp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_DESC_XML);
         String baseRespValue = baseResp.readEntity(String.class);
 
@@ -184,8 +186,10 @@ public class ServiceDescriptionTests {
         assertTrue(baseRespValue.equals(parameterRespValue));
     }
 
-    @Test
-    public void serviceDescriptionHasTitle() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceDescriptionHasTitle(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // Verify that the ServiceDescription has a dc:title child element
         Node title =
                 (Node) OSLCUtils.getXPath().evaluate("/oslc_cm:ServiceDescriptor/dc:title", doc, XPathConstants.NODE);
@@ -198,16 +202,20 @@ public class ServiceDescriptionTests {
         assertTrue(children.getLength() == 0);
     }
 
-    @Test
-    public void serviceDescriptionHasDescription() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceDescriptionHasDescription(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // Verify the ServiceDescription has a dc:description child element
         Node description = (Node)
                 OSLCUtils.getXPath().evaluate("/oslc_cm:ServiceDescriptor/dc:description", doc, XPathConstants.NODE);
         assertNotNull(description);
     }
 
-    @Test
-    public void serviceDescriptionContributorHasIdentifier() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceDescriptionContributorHasIdentifier(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // If the ServiceDescription has a dc:contributor element, make sure it has a dc:identifier
         // child element
         NodeList contrib = (NodeList) OSLCUtils.getXPath().evaluate("//dc:contributor", doc, XPathConstants.NODE);
@@ -218,8 +226,10 @@ public class ServiceDescriptionTests {
         }
     }
 
-    @Test
-    public void changeManagementServiceDescriptionHasValidFactory() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeManagementServiceDescriptionHasValidFactory(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // If ServiceDescription is oslc_cm, make sure it has a valid factory child element
         Node cmRequest = (Node) OSLCUtils.getXPath().evaluate("//oslc_cm:changeRequests", doc, XPathConstants.NODE);
         if (cmRequest != null) {
@@ -236,8 +246,10 @@ public class ServiceDescriptionTests {
         }
     }
 
-    @Test
-    public void changeManagementServiceDescriptionHasValidSimpleQuery() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeManagementServiceDescriptionHasValidSimpleQuery(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // If ServiceDescription is oslc_cm, make sure it has a valid simple query child element
         Node cmRequest = (Node) OSLCUtils.getXPath().evaluate("//oslc_cm:changeRequests", doc, XPathConstants.NODE);
         if (cmRequest != null) {
@@ -254,8 +266,10 @@ public class ServiceDescriptionTests {
         }
     }
 
-    @Test
-    public void changeManagementServiceDescriptionHasValidSelectionDialog() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeManagementServiceDescriptionHasValidSelectionDialog(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // If ServiceDescription is oslc_cm, make sure it has a valid selection dialog child element
         Node cmRequest = (Node) OSLCUtils.getXPath().evaluate("//oslc_cm:changeRequests", doc, XPathConstants.NODE);
         if (cmRequest != null) {
@@ -279,8 +293,10 @@ public class ServiceDescriptionTests {
         }
     }
 
-    @Test
-    public void changeManagementServiceDescriptionHasValidCreationDialog() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void changeManagementServiceDescriptionHasValidCreationDialog(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // If ServiceDescription is oslc_cm, make sure it has a valid creation dialog child element
         Node cmRequest = (Node) OSLCUtils.getXPath().evaluate("//oslc_cm:changeRequests", doc, XPathConstants.NODE);
         if (cmRequest != null) {
@@ -304,8 +320,10 @@ public class ServiceDescriptionTests {
         }
     }
 
-    @Test
-    public void validateUrlsInServiceDescription() throws IOException, XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validateUrlsInServiceDescription(String url) throws IOException, XPathException {
+        initServiceDescriptionTests(url);
         // Get all referenced oslc_cm:url elements in the Description Document
         NodeList urlElements = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_cm:url", doc, XPathConstants.NODESET);
         for (int i = 0; i < urlElements.getLength(); i++) {
@@ -319,8 +337,10 @@ public class ServiceDescriptionTests {
         }
     }
 
-    @Test
-    public void homeElementHasTitleAndUrlChildElements() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void homeElementHasTitleAndUrlChildElements(String url) throws XPathException {
+        initServiceDescriptionTests(url);
         // Make sure each home element has a title and url
         NodeList hElements = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_cm:home", doc, XPathConstants.NODESET);
         for (int i = 0; i < hElements.getLength(); i++) {

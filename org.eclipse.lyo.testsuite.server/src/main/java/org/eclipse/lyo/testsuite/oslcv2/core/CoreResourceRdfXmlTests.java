@@ -13,10 +13,10 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -40,14 +40,11 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 /** This class provides JUnit tests with JSON format for the validation of an OSLC core resource. */
-@RunWith(Parameterized.class)
 public abstract class CoreResourceRdfXmlTests extends TestsBase {
     private static Logger logger = Logger.getLogger(CoreResourceRdfXmlTests.class);
 
@@ -59,7 +56,7 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
     protected static String xpathSubStmt = "";
     protected static String resourceType = "";
 
-    public CoreResourceRdfXmlTests(String thisUrl)
+    public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
@@ -97,7 +94,6 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
         }
     }
 
-    @Parameters
     protected static Collection<Object[]> getAllDescriptionUrls(String eval) throws IOException {
         ArrayList<String> results = new ArrayList<String>();
 
@@ -143,60 +139,76 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
         return toCollection(results);
     }
 
-    @Test
-    public void CoreResourceHasOneTitle() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasOneTitle(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.DC_TITLE_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have 1 dc:title, found " + size, size == 1);
+        assertTrue(size == 1, "Can have 1 dc:title, found " + size);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneDescription() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasAtMostOneDescription(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.DC_DESC_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 dc:description, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 dc:description, found " + size);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneIdentifier() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasAtMostOneIdentifier(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.DC_ID_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 dc:identifier, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 dc:identifier, found " + size);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneName() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasAtMostOneName(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.DC_NAME_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 dc:name, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 dc:name, found " + size);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneCreatedDate() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasAtMostOneCreatedDate(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.DC_CREATED_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 dc:created, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 dc:created, found " + size);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneModifiedDate() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasAtMostOneModifiedDate(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.DC_MODIFIED_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 dc:modified, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 dc:modified, found " + size);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneDiscussion() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasAtMostOneDiscussion(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.DISCUSSION_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc:discussion, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc:discussion, found " + size);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneInstanceShape() {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void CoreResourceHasAtMostOneInstanceShape(String thisUrl) {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.INST_SHAPE_PROP);
         int size = listStatements.toList().size();
-        assertTrue("Can have <=1 oslc:instanceShape, found " + size, size <= 1);
+        assertTrue(size <= 1, "Can have <=1 oslc:instanceShape, found " + size);
     }
 
     protected StmtIterator getStatementsForProp(String propUri) {

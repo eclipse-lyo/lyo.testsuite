@@ -13,9 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
@@ -37,24 +35,20 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /** This class provides JUnit tests for the validation of the OSLCv2 fetching of resources. */
-@RunWith(Parameterized.class)
 public class FetchResourceTests extends TestsBase {
 
-    public FetchResourceTests(String url) {
+    public void initFetchResourceTests(String url) {
         super(url);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
         staticSetup();
         // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
@@ -112,19 +106,21 @@ public class FetchResourceTests extends TestsBase {
         String responseBody = resp.readEntity(String.class);
         resp.close();
         assertEquals(
-                "Expected response code 200 but received " + resp.getStatus(),
                 Response.Status.OK.getStatusCode(),
-                resp.getStatus());
+                resp.getStatus(),
+                "Expected response code 200 but received " + resp.getStatus());
 
         String contentType = OSLCUtils.getContentType(resp);
 
-        assertEquals("Expected content-type " + requestType + " but received " + contentType, requestType, contentType);
+        assertEquals(requestType, contentType, "Expected content-type " + requestType + " but received " + contentType);
 
         return responseBody;
     }
 
-    @Test
-    public void getValidResourceUsingRdfXml() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void getValidResourceUsingRdfXml(String url) throws IOException {
+        initFetchResourceTests(url);
         String body = getValidResourceUsingContentType(OSLCConstants.CT_RDF);
 
         Model rdfModel = ModelFactory.createDefaultModel();
@@ -135,17 +131,21 @@ public class FetchResourceTests extends TestsBase {
         RDFUtils.validateModel(rdfModel);
     }
 
-    @Test
-    public void getValidResourceUsingXml() throws IOException, ParserConfigurationException, SAXException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void getValidResourceUsingXml(String url) throws IOException, ParserConfigurationException, SAXException {
+        initFetchResourceTests(url);
         String body = getValidResourceUsingContentType(OSLCConstants.CT_XML);
 
         Document doc = OSLCUtils.createXMLDocFromResponseBody(body);
-        assertNotNull("XML document did not parse successfully", doc);
+        assertNotNull(doc, "XML document did not parse successfully");
     }
 
-    @Test
-    public void getValidResourceUsingCOMPACT()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void getValidResourceUsingCOMPACT(String url)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        initFetchResourceTests(url);
         String body = getValidResourceUsingContentType(OSLCConstants.CT_COMPACT);
 
         Document doc = OSLCUtils.createXMLDocFromResponseBody(body);
@@ -157,41 +157,41 @@ public class FetchResourceTests extends TestsBase {
 
         NodeList nodeList = (NodeList) OSLCUtils.getXPath().evaluate("./dc:title", compactNode, XPathConstants.NODESET);
         int numNodes = nodeList.getLength();
-        assertTrue("Expected number of dcterms:titles to be <=1 but was: " + numNodes, numNodes <= 1);
+        assertTrue(numNodes <= 1, "Expected number of dcterms:titles to be <=1 but was: " + numNodes);
 
         nodeList =
                 (NodeList) OSLCUtils.getXPath().evaluate("./oslc_v2:shortTitle", compactNode, XPathConstants.NODESET);
         numNodes = nodeList.getLength();
-        assertTrue("Expected number of oslc:shortTitles to be <=1 but was: " + numNodes, numNodes <= 1);
+        assertTrue(numNodes <= 1, "Expected number of oslc:shortTitles to be <=1 but was: " + numNodes);
 
         nodeList = (NodeList) OSLCUtils.getXPath().evaluate("./oslc_v2:icon", compactNode, XPathConstants.NODESET);
         numNodes = nodeList.getLength();
-        assertTrue("Expected number of oslc:icon to be <=1 but was: " + numNodes, numNodes <= 1);
+        assertTrue(numNodes <= 1, "Expected number of oslc:icon to be <=1 but was: " + numNodes);
 
         String iconUrl = null;
         if (numNodes == 1) {
             Node rdfAbout = nodeList.item(0).getAttributes().getNamedItemNS(OSLCConstants.RDF, "resource");
-            assertNotNull("oslc:icon in oslc:Compact missing rdf:about attribute", rdfAbout);
+            assertNotNull(rdfAbout, "oslc:icon in oslc:Compact missing rdf:about attribute");
             iconUrl = rdfAbout.getTextContent();
 
             Response response = OSLCUtils.getResponseFromUrl(iconUrl, iconUrl, creds, "*/*", headers);
             int statusCode = response.getStatus();
             response.close();
             assertTrue(
-                    "Fetching icon from " + iconUrl + " did not respond with expected code, received " + statusCode,
-                    200 <= statusCode && statusCode < 400);
+                    200 <= statusCode && statusCode < 400,
+                    "Fetching icon from " + iconUrl + " did not respond with expected code, received " + statusCode);
         }
 
         nodeList =
                 (NodeList) OSLCUtils.getXPath().evaluate("./oslc_v2:smallPreview", compactNode, XPathConstants.NODESET);
         numNodes = nodeList.getLength();
-        assertTrue("Expected number of oslc:smallPreview is 0 or 1 but was: " + numNodes, numNodes <= 1);
+        assertTrue(numNodes <= 1, "Expected number of oslc:smallPreview is 0 or 1 but was: " + numNodes);
         if (numNodes == 1) validateCompactPreview(nodeList);
 
         nodeList =
                 (NodeList) OSLCUtils.getXPath().evaluate("./oslc_v2:largePreview", compactNode, XPathConstants.NODESET);
         numNodes = nodeList.getLength();
-        assertTrue("Expected number of oslc:largePreview is 0 or 1 but was: " + numNodes, numNodes <= 1);
+        assertTrue(numNodes <= 1, "Expected number of oslc:largePreview is 0 or 1 but was: " + numNodes);
         if (numNodes == 1) validateCompactPreview(nodeList);
     }
 
@@ -199,7 +199,7 @@ public class FetchResourceTests extends TestsBase {
     protected void validateCompactPreview(NodeList nodeList) throws IOException, XPathExpressionException {
         Node node = (Node) OSLCUtils.getXPath()
                 .evaluate("./oslc_v2:Preview/oslc_v2:document/@rdf:resource", nodeList.item(0), XPathConstants.NODE);
-        assertNotNull("Expected number of oslc:Preview/oslc:document/@rdf:resource", node);
+        assertNotNull(node, "Expected number of oslc:Preview/oslc:document/@rdf:resource");
         String previewUrl = node.getTextContent();
         Response response = OSLCUtils.getResponseFromUrl(previewUrl, previewUrl, creds, "*/*", headers);
 
@@ -207,26 +207,28 @@ public class FetchResourceTests extends TestsBase {
         String contentType = response.getHeaderString("Content-Type");
         response.close();
         assertTrue(
+                200 <= statusCode && statusCode < 400,
                 "Fetching document preview from "
                         + previewUrl
                         + " did not respond with expected code, received "
-                        + statusCode,
-                200 <= statusCode && statusCode < 400);
+                        + statusCode);
         assertTrue(
-                "Expected HTML content type from preview document but received " + contentType,
-                contentType.startsWith("text/html"));
+                contentType.startsWith("text/html"),
+                "Expected HTML content type from preview document but received " + contentType);
     }
 
-    @Test
-    public void getResourceUsingInvalidContentType() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void getResourceUsingInvalidContentType(String url) throws IOException {
+        initFetchResourceTests(url);
         Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
         String respType = OSLCUtils.getContentType(resp);
         resp.close();
         assertTrue(
+                resp.getStatus() == 406 || respType.contains("invalid/content-type"),
                 "Expected 406 but received "
                         + resp.getStatus()
                         + ", requested Content-type='invalid/content-type' but received "
-                        + respType,
-                resp.getStatus() == 406 || respType.contains("invalid/content-type"));
+                        + respType);
     }
 }

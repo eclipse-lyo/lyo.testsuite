@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -28,7 +28,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.http.ParseException;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.w3c.dom.Document;
@@ -45,7 +45,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
 
         assetUrl = createAsset(xmlCreateTemplate);
-        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
 
         String resp = getAssetAsString();
         hasDocument = OSLCUtils.createXMLDocFromResponseBody(resp);
@@ -63,17 +63,17 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
     @Test
     public void assetHasArtifactFactory() {
-        assertTrue("Artifact Factory was not found", hasNode(hasDocument, "oslc_asset:artifactFactory"));
+        assertTrue(hasNode(hasDocument, "oslc_asset:artifactFactory"), "Artifact Factory was not found");
     }
 
     @Test
     public void assetHasAtMostOneGuid() {
-        assertTrue("Multiple guids returned", isOneOrNone(hasDocument, "oslc_asset:guid"));
+        assertTrue(isOneOrNone(hasDocument, "oslc_asset:guid"), "Multiple guids returned");
     }
 
     @Test
     public void assetHasAtMostOneVersion() {
-        assertTrue("Multiple versions returned", isOneOrNone(hasDocument, "oslc_asset:version"));
+        assertTrue(isOneOrNone(hasDocument, "oslc_asset:version"), "Multiple versions returned");
     }
 
     @Test
@@ -108,7 +108,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
     @Test
     public void assetHasTitle() {
-        assertTrue("Title was not found", hasNode(hasDocument, OSLCConstants.DCTERMS_TITLE));
+        assertTrue(hasNode(hasDocument, OSLCConstants.DCTERMS_TITLE), "Title was not found");
     }
 
     @Test
@@ -153,7 +153,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
 
         NodeList children = getAssetNodeChildren(document);
         String actualName = getNodeText(children, "dcterms:title");
-        assertTrue("Expected " + name + ", received " + actualName, name.equals(actualName));
+        assertTrue(name.equals(actualName), "Expected " + name + ", received " + actualName);
     }
 
     @Test
@@ -163,15 +163,15 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
-        assertTrue("There needs to be an artifact template file", fileName != null);
+        assertTrue(fileName != null, "There needs to be an artifact template file");
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         Response response = OSLCUtils.postDataToUrl(
                 artifactFactory, creds, OSLCConstants.CT_XML, OSLCConstants.CT_XML, artifact, header);
         response.close();
         assertTrue(
-                "Expected " + Status.CREATED.getStatusCode() + ", received " + response.getStatus(),
-                response.getStatus() == Status.CREATED.getStatusCode());
+                response.getStatus() == Status.CREATED.getStatusCode(),
+                "Expected " + Status.CREATED.getStatusCode() + ", received " + response.getStatus());
     }
 
     @Test
@@ -198,7 +198,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         String fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
-        assertTrue("There needs to be an artifact template file", fileName != null);
+        assertTrue(fileName != null, "There needs to be an artifact template file");
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         // Adds the artifact to the asset
@@ -278,7 +278,7 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         // Gets the artifact factory from the asset
         NodeList nodes = getAssetNodeChildren(document);
         String artifactFactory = getNodeAttribute(nodes, "oslc_asset:artifactFactory", "rdf:resource");
-        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue(artifactFactory != null && artifactFactory.length() > 0, "There needs to be an artifact factory");
         return artifactFactory;
     }
 }

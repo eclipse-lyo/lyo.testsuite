@@ -13,9 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -32,10 +30,8 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -47,7 +43,6 @@ import org.xml.sax.SAXException;
  * This class provides JUnit tests for the validation of OSLC Service Provider Catalogs, for the 2.0 version of the OSLC
  * standard, as defined by the OSLC Core Spec.
  */
-@RunWith(Parameterized.class)
 public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTests {
 
     private static final Logger log = LoggerFactory.getLogger(ServiceProviderCatalogXmlTests.class);
@@ -56,7 +51,7 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
     protected Document doc;
     protected Response response = null;
 
-    public ServiceProviderCatalogXmlTests(String url) throws IOException, ParserConfigurationException, SAXException {
+    public void initServiceProviderCatalogXmlTests(String url) throws IOException, ParserConfigurationException, SAXException {
         super(url);
 
         fContentType = OSLCConstants.CT_XML;
@@ -67,7 +62,6 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllServiceProviderCatalogUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the
@@ -135,25 +129,31 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void baseUrlIsValid() throws IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void baseUrlIsValid(String url) throws IOException {
+        initServiceProviderCatalogXmlTests(url);
         // Get the status, make sure 200 OK
         assertTrue(
-                response.getStatusInfo().getReasonPhrase(), response.getStatus() == Response.Status.OK.getStatusCode());
+                response.getStatus() == Response.Status.OK.getStatusCode(), response.getStatusInfo().getReasonPhrase());
 
         // Verify we got a response
         assertNotNull(responseBody);
     }
 
-    @Test
-    public void catalogRootIsRdfNamespaceDeclaration() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void catalogRootIsRdfNamespaceDeclaration(String url) throws XPathException {
+        initServiceProviderCatalogXmlTests(url);
         // Make sure our root element is the RDF namespace declarations
         Node rootNode = (Node) OSLCUtils.getXPath().evaluate("/rdf:RDF", doc, XPathConstants.NODE);
         assertNotNull(rootNode);
     }
 
-    @Test
-    public void catalogRootAboutElementPointsToSelf() throws XPathException, IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void catalogRootAboutElementPointsToSelf(String url) throws XPathException, IOException {
+        initServiceProviderCatalogXmlTests(url);
         // Make sure that we our root element has an rdf:about that points the
         // same server provider catalog
         Node aboutRoot = (Node)
@@ -162,8 +162,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         assertTrue(currentUrl.equals(aboutRoot.getNodeValue()));
     }
 
-    @Test
-    public void serviceProviderCatalogsHaveAtMostOneTitle() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProviderCatalogsHaveAtMostOneTitle(String url) throws XPathException {
+        initServiceProviderCatalogXmlTests(url);
         // Check root to make sure it has at most one title.
         NodeList rootChildren = (NodeList)
                 OSLCUtils.getXPath().evaluate("/rdf:RDF/oslc_v2:ServiceProviderCatalog/*", doc, XPathConstants.NODESET);
@@ -196,8 +198,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void serviceProvidersHaveAtMostOneTitle() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProvidersHaveAtMostOneTitle(String url) throws XPathException {
+        initServiceProviderCatalogXmlTests(url);
         // Get all service providers listed
         NodeList nestedSPCs =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:serviceProvider", doc, XPathConstants.NODESET);
@@ -219,8 +223,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void serviceProviderCatalogsHaveAtMostOnePublisher() throws XPathExpressionException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProviderCatalogsHaveAtMostOnePublisher(String url) throws XPathExpressionException {
+        initServiceProviderCatalogXmlTests(url);
         // Check root for Publisher, make sure it only has at most one
         NodeList rootChildren = (NodeList)
                 OSLCUtils.getXPath().evaluate("/rdf:RDF/oslc_v2:ServiceProviderCatalog/*", doc, XPathConstants.NODESET);
@@ -252,8 +258,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void serviceProvidersHaveAtMostOnePublisher() throws XPathExpressionException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProvidersHaveAtMostOnePublisher(String url) throws XPathExpressionException {
+        initServiceProviderCatalogXmlTests(url);
         // Get the listed ServiceProvider elements
         NodeList nestedSPCs =
                 (NodeList) OSLCUtils.getXPath().evaluate("/*/*//oslc_v2:serviceProvider", doc, XPathConstants.NODESET);
@@ -273,8 +281,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void publisherElementsAreValid() throws XPathExpressionException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void publisherElementsAreValid(String url) throws XPathExpressionException {
+        initServiceProviderCatalogXmlTests(url);
         // Get all Publisher xml blocks
         NodeList publishers = (NodeList) OSLCUtils.getXPath().evaluate("//dc:publisher/*", doc, XPathConstants.NODESET);
 
@@ -315,8 +325,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void serviceProviderCatalogsHaveAtMostOneOAuthElement() throws XPathExpressionException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProviderCatalogsHaveAtMostOneOAuthElement(String url) throws XPathExpressionException {
+        initServiceProviderCatalogXmlTests(url);
         // Check root for OAuth block, make sure it only has at most one
         NodeList rootChildren = (NodeList)
                 OSLCUtils.getXPath().evaluate("/rdf:RDF/oslc_v2:ServiceProviderCatalog/*", doc, XPathConstants.NODESET);
@@ -348,8 +360,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void serviceProvidersHaveAtMostOneOAuthElement() throws XPathExpressionException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProvidersHaveAtMostOneOAuthElement(String url) throws XPathExpressionException {
+        initServiceProviderCatalogXmlTests(url);
         // Get list of other service provider elements
         NodeList nestedSPCs =
                 (NodeList) OSLCUtils.getXPath().evaluate("/*/*//oslc_v2:serviceProvider", doc, XPathConstants.NODESET);
@@ -369,8 +383,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void oAuthElementsAreValid() throws XPathExpressionException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void oAuthElementsAreValid(String url) throws XPathExpressionException {
+        initServiceProviderCatalogXmlTests(url);
         // Get all oauthAuthorization xml blocks
         NodeList oAuthElement =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:oauthConfiguration/*", doc, XPathConstants.NODESET);
@@ -405,8 +421,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void serviceProviderCatalogsHaveValidResourceUrl() throws XPathException, IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProviderCatalogsHaveValidResourceUrl(String url) throws XPathException, IOException {
+        initServiceProviderCatalogXmlTests(url);
         // Get all ServiceProviderCatalog elements and their rdf:about
         // attributes, making sure we have a URL
         // to the resource for each catalog
@@ -426,8 +444,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void servicesProvidersHaveValidResourceUrl() throws XPathException, IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void servicesProvidersHaveValidResourceUrl(String url) throws XPathException, IOException {
+        initServiceProviderCatalogXmlTests(url);
         // Get all ServiceProvider elements
         NodeList services =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider", doc, XPathConstants.NODESET);
@@ -447,8 +467,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void detailsElementsHaveValidResourceAttribute() throws IOException, XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void detailsElementsHaveValidResourceAttribute(String url) throws IOException, XPathException {
+        initServiceProviderCatalogXmlTests(url);
         // Get all details elements
         NodeList detailsElements =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:details", doc, XPathConstants.NODESET);
@@ -464,8 +486,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         }
     }
 
-    @Test
-    public void misplacedParametersDoNotEffectResponse() throws IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void misplacedParametersDoNotEffectResponse(String url) throws IOException {
+        initServiceProviderCatalogXmlTests(url);
         log.warn("misplacedParametersDoNotEffectResponse");
         log.warn("setupBaseUrl: {}", setupBaseUrl);
         log.warn("currentUrl: {}", currentUrl);

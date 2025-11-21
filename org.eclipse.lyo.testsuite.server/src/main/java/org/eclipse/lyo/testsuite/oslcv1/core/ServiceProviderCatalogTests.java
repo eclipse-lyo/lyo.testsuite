@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv1.core;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -28,11 +28,9 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -42,7 +40,6 @@ import org.xml.sax.SAXException;
  * This class provides JUnit tests for the validation of OSLC Service Provider Catalogs, as outlined by the OSLC Core
  * Spec.
  */
-@RunWith(Parameterized.class)
 public class ServiceProviderCatalogTests {
 
     // Base URL of the OSLC Service Provider Catalog to be tested
@@ -54,11 +51,11 @@ public class ServiceProviderCatalogTests {
     private String responseBody;
     private Document doc;
 
-    public ServiceProviderCatalogTests(String url) {
+    public void initServiceProviderCatalogTests(String url) {
         this.currentUrl = url;
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() throws IOException, ParserConfigurationException, SAXException {
         Properties setupProps = SetupProperties.setup(null);
         if (setupProps.getProperty("testBackwardsCompatability") != null
@@ -75,7 +72,6 @@ public class ServiceProviderCatalogTests {
         doc = OSLCUtils.createXMLDocFromResponseBody(responseBody);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllServiceProviderCatalogUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
@@ -130,25 +126,31 @@ public class ServiceProviderCatalogTests {
         return data;
     }
 
-    @Test
-    public void baseUrlIsValid() throws IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void baseUrlIsValid(String url) throws IOException {
+        initServiceProviderCatalogTests(url);
         // Get the status, make sure 200 OK
-        assertEquals(response.getStatusInfo().getReasonPhrase(), 200, response.getStatus());
+        assertEquals(200, response.getStatus(), response.getStatusInfo().getReasonPhrase());
 
         // Verify we got a response
         assertNotNull(responseBody);
     }
 
-    @Test
-    public void invalidContentTypeGivesNotSupported() throws IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void invalidContentTypeGivesNotSupported(String url) throws IOException {
+        initServiceProviderCatalogTests(url);
         Response resp = OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, "application/svg+xml", null);
         String respType = resp.getHeaderString("Content-Type");
         resp.close();
         assertTrue(resp.getStatus() == 406 || respType.contains("application/svg+xml"));
     }
 
-    @Test
-    public void contentTypeIsServiceProviderCatalog() throws IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void contentTypeIsServiceProviderCatalog(String url) throws IOException {
+        initServiceProviderCatalogTests(url);
         Response resp =
                 OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_CAT_XML, null);
         resp.close();
@@ -156,8 +158,10 @@ public class ServiceProviderCatalogTests {
         assertTrue(resp.getHeaderString("Content-Type").contains(OSLCConstants.CT_DISC_CAT_XML));
     }
 
-    @Test
-    public void misplacedParametersDoNotEffectResponse() throws IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void misplacedParametersDoNotEffectResponse(String url) throws IOException {
+        initServiceProviderCatalogTests(url);
         var baseResp =
                 OSLCUtils.getResponseFromUrl(baseUrl, currentUrl, basicCreds, OSLCConstants.CT_DISC_CAT_XML, null);
         String baseRespValue = baseResp.readEntity(String.class);
@@ -169,16 +173,20 @@ public class ServiceProviderCatalogTests {
         assertTrue(baseRespValue.equals(parameterRespValue));
     }
 
-    @Test
-    public void catalogRootIsServiceProviderCatalog() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void catalogRootIsServiceProviderCatalog(String url) throws XPathException {
+        initServiceProviderCatalogTests(url);
         // Make sure our root element is a ServiceProviderCatalog
         Node rootNode =
                 (Node) OSLCUtils.getXPath().evaluate("/oslc_disc:ServiceProviderCatalog", doc, XPathConstants.NODE);
         assertNotNull(rootNode);
     }
 
-    @Test
-    public void catalogRootAboutElementPointsToSelf() throws XPathException, IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void catalogRootAboutElementPointsToSelf(String url) throws XPathException, IOException {
+        initServiceProviderCatalogTests(url);
         // Make sure that we our root element has an rdf:about that points the same server provider
         // catalog
         Node aboutRoot = (Node)
@@ -189,8 +197,10 @@ public class ServiceProviderCatalogTests {
         assertTrue(responseBody.equals(resp.readEntity(String.class)));
     }
 
-    @Test
-    public void serviceProviderCatalogsHaveValidTitles() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProviderCatalogsHaveValidTitles(String url) throws XPathException {
+        initServiceProviderCatalogTests(url);
         // Check root
         Node rootCatalogTitle = (Node)
                 OSLCUtils.getXPath().evaluate("/oslc_disc:ServiceProviderCatalog/dc:title", doc, XPathConstants.NODE);
@@ -230,8 +240,10 @@ public class ServiceProviderCatalogTests {
         }
     }
 
-    @Test
-    public void serviceProvidersHaveValidTitles() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProvidersHaveValidTitles(String url) throws XPathException {
+        initServiceProviderCatalogTests(url);
         // Get all entries, parse out which have embedded ServiceProviders and check the titles
         NodeList entries = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_disc:entry/*", doc, XPathConstants.NODESET);
         for (int i = 0; i < entries.getLength(); i++) {
@@ -258,8 +270,10 @@ public class ServiceProviderCatalogTests {
         }
     }
 
-    @Test
-    public void serviceProviderCatalogsHaveValidAboutAttribute() throws XPathException, IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProviderCatalogsHaveValidAboutAttribute(String url) throws XPathException, IOException {
+        initServiceProviderCatalogTests(url);
         // Get all ServiceProviderCatalog elements and their rdf:about attributes, make sure that
         // each catalog has
         // an rdf:about attribute
@@ -279,8 +293,10 @@ public class ServiceProviderCatalogTests {
         }
     }
 
-    @Test
-    public void entryElementsHaveSingleServiceProviderOrCatalog() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void entryElementsHaveSingleServiceProviderOrCatalog(String url) throws XPathException {
+        initServiceProviderCatalogTests(url);
         // Get all entry elements
         NodeList entries = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_disc:entry", doc, XPathConstants.NODESET);
         // Check for either 1 ServiceProviderCatalog or 1 ServiceProvider, but not both.
@@ -306,8 +322,10 @@ public class ServiceProviderCatalogTests {
         }
     }
 
-    @Test
-    public void noInternalServiceProviderCatalogsHaveEntryElements() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void noInternalServiceProviderCatalogsHaveEntryElements(String url) throws XPathException {
+        initServiceProviderCatalogTests(url);
         // Gets list of possible internal entry elements and ensures that there are none
         NodeList internEntry = (NodeList) OSLCUtils.getXPath()
                 .evaluate(
@@ -317,8 +335,10 @@ public class ServiceProviderCatalogTests {
         assertTrue(internEntry.getLength() == 0);
     }
 
-    @Test
-    public void serviceProviderElementsHaveServicesChildElement() throws XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void serviceProviderElementsHaveServicesChildElement(String url) throws XPathException {
+        initServiceProviderCatalogTests(url);
         // Get all entry elements
         NodeList entries = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_disc:entry", doc, XPathConstants.NODESET);
         for (int i = 0; i < entries.getLength(); i++) {
@@ -337,8 +357,10 @@ public class ServiceProviderCatalogTests {
         }
     }
 
-    @Test
-    public void servicesChildElementHasValidResourceAttribute() throws XPathException, IOException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void servicesChildElementHasValidResourceAttribute(String url) throws XPathException, IOException {
+        initServiceProviderCatalogTests(url);
         // Get all services elements
         NodeList services =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_disc:services", doc, XPathConstants.NODESET);
@@ -357,8 +379,10 @@ public class ServiceProviderCatalogTests {
         }
     }
 
-    @Test
-    public void detailsElementsHaveValidResourceAttribute() throws IOException, XPathException {
+    @MethodSource("getAllServiceProviderCatalogUrls")
+    @ParameterizedTest
+    public void detailsElementsHaveValidResourceAttribute(String url) throws IOException, XPathException {
+        initServiceProviderCatalogTests(url);
         // Get all details elements
         NodeList detailsElements =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_disc:details", doc, XPathConstants.NODESET);

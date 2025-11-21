@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -61,7 +61,7 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 
         NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
 
-        assertEquals("oslc_qm_v2:runsTestCase" + getFailureMessage(), 1, results.getLength());
+        assertEquals(1, results.getLength(), "oslc_qm_v2:runsTestCase" + getFailureMessage());
     }
 
     public static String ns = "oslc_qm_v2";

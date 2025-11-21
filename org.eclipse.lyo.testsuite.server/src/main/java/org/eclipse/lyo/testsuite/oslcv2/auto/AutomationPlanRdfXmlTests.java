@@ -20,9 +20,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
@@ -30,16 +27,14 @@ import org.xml.sax.SAXException;
  * It runs the equality query from the properties file and grabs the first result to test against, checking the
  * relationship of elements in the XML representation of the auto plan.
  */
-@RunWith(Parameterized.class)
 public class AutomationPlanRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    public AutomationPlanRdfXmlTests(String thisUrl)
+    public void initAutomationPlanRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
         super(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();

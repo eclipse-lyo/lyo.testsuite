@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.cm;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -74,7 +74,7 @@ public class ChangeRequestXmlTests extends CoreResourceXmlTests {
     public void changeRequestHasAtMostOneCloseDate() throws XPathExpressionException {
         NodeList closeDates = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:closeDate", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), closeDates.getLength() <= 1);
+        assertTrue(closeDates.getLength() <= 1, getFailureMessage());
         // If there is a close date, verify the format.
         if (closeDates.getLength() > 0) {
             try {
@@ -89,48 +89,48 @@ public class ChangeRequestXmlTests extends CoreResourceXmlTests {
     public void changeRequestHasAtMostOneStatus() throws XPathExpressionException {
         NodeList statuses = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:status", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), statuses.getLength() <= 1);
+        assertTrue(statuses.getLength() <= 1, getFailureMessage());
     }
 
     @Test
     public void changeRequestHasAtMostOneClosedElement() throws XPathExpressionException {
         NodeList closedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:closed", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), closedEles.getLength() <= 1);
+        assertTrue(closedEles.getLength() <= 1, getFailureMessage());
     }
 
     @Test
     public void changeRequestHasAtMostInProgressElement() throws XPathExpressionException {
         NodeList inProgressEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:inprogress", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), inProgressEles.getLength() <= 1);
+        assertTrue(inProgressEles.getLength() <= 1, getFailureMessage());
     }
 
     @Test
     public void changeRequestHasAtMostOneFixedElement() throws XPathExpressionException {
         NodeList fixedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:fixed", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), fixedEles.getLength() <= 1);
+        assertTrue(fixedEles.getLength() <= 1, getFailureMessage());
     }
 
     @Test
     public void changeRequestHasAtMostOneApprovedElement() throws XPathExpressionException {
         NodeList approvedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:approved", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), approvedEles.getLength() <= 1);
+        assertTrue(approvedEles.getLength() <= 1, getFailureMessage());
     }
 
     @Test
     public void changeRequestHasAtMostOneReviewedElement() throws XPathExpressionException {
         NodeList reviewedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:reviewed", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), reviewedEles.getLength() <= 1);
+        assertTrue(reviewedEles.getLength() <= 1, getFailureMessage());
     }
 
     @Test
     public void changeRequestHasAtMostOneVerifiedElement() throws XPathExpressionException {
         NodeList verifiedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:verified", doc, XPathConstants.NODESET);
-        assertTrue(getFailureMessage(), verifiedEles.getLength() <= 1);
+        assertTrue(verifiedEles.getLength() <= 1, getFailureMessage());
     }
 }

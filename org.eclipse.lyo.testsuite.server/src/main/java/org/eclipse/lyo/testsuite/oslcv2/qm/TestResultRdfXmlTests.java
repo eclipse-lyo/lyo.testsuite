@@ -13,9 +13,9 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
@@ -56,14 +56,14 @@ public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
     public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException {
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "reportsOnTestCase");
         int size = listStatements.toList().size();
-        assertEquals("TestResult has exactly one oslc_qm:reportsOnTestCase", 1, size);
+        assertEquals(1, size, "TestResult has exactly one oslc_qm:reportsOnTestCase");
     }
 
     @Test
     public void TestResultHasAtMostOneStatus() throws XPathExpressionException {
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "status");
         int size = listStatements.toList().size();
-        assertTrue("TestResult has zero or one oslc_qm:status, found " + size, size <= 1);
+        assertTrue(size <= 1, "TestResult has zero or one oslc_qm:status, found " + size);
     }
 
     public static String eval = OSLCConstants.QM_TEST_RESULT;

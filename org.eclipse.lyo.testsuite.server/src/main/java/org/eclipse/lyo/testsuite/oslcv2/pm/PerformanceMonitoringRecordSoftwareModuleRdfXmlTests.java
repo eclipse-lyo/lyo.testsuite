@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.pm;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
@@ -69,7 +69,7 @@ public class PerformanceMonitoringRecordSoftwareModuleRdfXmlTests extends CoreRe
     public void PerformanceMonitoringRecordHasOneisPartOf() {
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.PM_PMR_ISPARTOF);
         int size = listStatements.toList().size();
-        assertTrue("Can have 1 dcterms:isPartOf, found " + size, size == 1);
+        assertTrue(size == 1, "Can have 1 dcterms:isPartOf, found " + size);
     }
 
     @Test
@@ -77,6 +77,6 @@ public class PerformanceMonitoringRecordSoftwareModuleRdfXmlTests extends CoreRe
     public void PerformanceMonitoringRecordHasObservesOPTIONAL() {
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.PM_PMR_OBSERVES);
         int size = listStatements.toList().size();
-        assertTrue("Can have zero or many  ems:observes, found " + size, size >= 0);
+        assertTrue(size >= 0, "Can have zero or many  ems:observes, found " + size);
     }
 }
