@@ -13,11 +13,12 @@ public class RequirementCollectionRdfXmlTests extends CoreResourceRdfXmlTests {
 
     public static String eval = OSLCConstants.RDFS_MEMBER;
 
-    public void initRequirementCollectionRdfXmlTests(String thisUrl)
+    @Override
+    public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
-        super(thisUrl);
+        super.initCoreResourceRdfXmlTests(thisUrl);
     }
 
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {

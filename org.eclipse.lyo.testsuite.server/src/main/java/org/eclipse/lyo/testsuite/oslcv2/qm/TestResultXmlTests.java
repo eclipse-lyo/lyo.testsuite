@@ -33,12 +33,12 @@ import org.xml.sax.SAXException;
 
 public class TestResultXmlTests extends CoreResourceXmlTests {
 
-    public TestResultXmlTests(String thisUrl)
+    
+    public void initCoreResourceXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
-        super(thisUrl);
-
+        super.initCoreResourceXmlTests(thisUrl);
         setNode(ns, resource);
     }
 

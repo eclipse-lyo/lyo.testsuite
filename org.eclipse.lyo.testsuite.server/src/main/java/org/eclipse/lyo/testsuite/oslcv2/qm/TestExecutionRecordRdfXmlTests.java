@@ -30,11 +30,12 @@ import org.xml.sax.SAXException;
 
 public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    public TestExecutionRecordRdfXmlTests(String thisUrl)
+    
+    public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
-        super(thisUrl);
+        super.initCoreResourceRdfXmlTests(thisUrl);
     }
 
     @Parameters

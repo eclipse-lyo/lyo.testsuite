@@ -11,9 +11,10 @@ import org.xml.sax.SAXException;
 
 public class RequirementCollectionXmlTests extends CoreResourceXmlTests {
 
-    public void initRequirementCollectionXmlTests(String thisUrl)
+    @Override
+    public void initCoreResourceXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        super(thisUrl);
+        super.initCoreResourceXmlTests(thisUrl);
         setNode(ns, resource);
     }
 

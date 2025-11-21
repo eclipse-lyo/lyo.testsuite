@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  */
 public class SimplifiedQueryJsonTests extends SimplifiedQueryBaseTests {
 
-    public void initSimplifiedQueryJsonTests(String thisUri) {
+    public SimplifiedQueryJsonTests(String thisUri) {
         super(thisUri);
     }
 

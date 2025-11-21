@@ -22,10 +22,10 @@ public class RequirementXmlTests extends CoreResourceXmlTests {
     public static String ns = "oslc_rm_v2";
     public static String resource = "Requirement";
 
-    public RequirementXmlTests(String thisUrl)
+    @Override
+    public void initCoreResourceXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-
-        super(thisUrl);
+        super.initCoreResourceXmlTests(thisUrl);
         setNode(ns, resource);
     }
 

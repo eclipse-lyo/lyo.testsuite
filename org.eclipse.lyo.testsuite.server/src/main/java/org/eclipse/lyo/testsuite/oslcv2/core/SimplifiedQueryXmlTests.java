@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  */
 public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 
-    public void initSimplifiedQueryXmlTests(String thisUri) {
+    public SimplifiedQueryXmlTests(String thisUri) {
         super(thisUri);
     }
 

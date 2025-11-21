@@ -34,10 +34,12 @@ import org.xml.sax.SAXException;
  * request to test against, checking the relationship of elements in the XML representation of the PMR request.
  */
 public class PerformanceMonitoringRecordProcessRdfXmlTests extends CoreResourceRdfXmlTests {
-    public PerformanceMonitoringRecordProcessRdfXmlTests(String thisUrl)
+    
+    public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
-        super(thisUrl);
+
+        super.initCoreResourceRdfXmlTests(thisUrl);
         // TODO Auto-generated constructor stub
 
     }

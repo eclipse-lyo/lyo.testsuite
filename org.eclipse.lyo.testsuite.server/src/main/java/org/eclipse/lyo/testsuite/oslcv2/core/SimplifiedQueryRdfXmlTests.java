@@ -47,7 +47,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
 
-    public void initSimplifiedQueryRdfXmlTests(String thisUri) {
+    public SimplifiedQueryRdfXmlTests(String thisUri) {
         super(thisUri);
     }
 

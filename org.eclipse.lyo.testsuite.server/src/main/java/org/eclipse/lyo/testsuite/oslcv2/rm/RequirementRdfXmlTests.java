@@ -24,11 +24,12 @@ import org.xml.sax.SAXException;
 
 public class RequirementRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    public void initRequirementRdfXmlTests(String thisUrl)
+    @Override
+    public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
-        super(thisUrl);
+        super.initCoreResourceRdfXmlTests(thisUrl);
     }
 
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
