@@ -256,9 +256,9 @@ public class ServiceDescriptionTests {
             NodeList sQ = (NodeList) OSLCUtils.getXPath()
                     .evaluate("//oslc_cm:changeRequests/oslc_cm:simpleQuery", doc, XPathConstants.NODESET);
             assertTrue(sQ.getLength() == 1);
-            Node url = (Node) OSLCUtils.getXPath()
+            Node urlNode = (Node) OSLCUtils.getXPath()
                     .evaluate("//oslc_cm:changeRequests/oslc_cm:simpleQuery/oslc_cm:url", doc, XPathConstants.NODE);
-            assertNotNull(url);
+            assertNotNull(urlNode);
             Node title = (Node) OSLCUtils.getXPath()
                     .evaluate("//oslc_cm:changeRequests/oslc_cm:simpleQuery/dc:title", doc, XPathConstants.NODE);
             assertNotNull(title);
@@ -328,10 +328,10 @@ public class ServiceDescriptionTests {
         NodeList urlElements = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_cm:url", doc, XPathConstants.NODESET);
         for (int i = 0; i < urlElements.getLength(); i++) {
             Node urlElement = urlElements.item(i);
-            String url = urlElement.getTextContent();
+            String urlText = urlElement.getTextContent();
 
             // Perform HTTP GET request on the URL and verify it exists in some form
-            var urlResponse = OSLCUtils.getResponseFromUrl(baseUrl, url, basicCreds, "*/*");
+            var urlResponse = OSLCUtils.getResponseFromUrl(baseUrl, urlText, basicCreds, "*/*");
             urlResponse.close();
             assertFalse(urlResponse.getStatus() == 404);
         }

@@ -119,7 +119,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
     @MethodSource("getAllDescriptionUrls")
     @ParameterizedTest
     public void validEqualsQueryContainsExpectedResource(String thisUri) throws IOException {
-        initSimplifiedQueryRdfXmlTests(thisUri);
         String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -127,7 +126,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
     @MethodSource("getAllDescriptionUrls")
     @ParameterizedTest
     public void validNotEqualQueryContainsExpectedResource(String thisUri) throws IOException {
-        initSimplifiedQueryRdfXmlTests(thisUri);
         String query = getQueryUrlForValidNotEqualQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -135,7 +133,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
     @MethodSource("getAllDescriptionUrls")
     @ParameterizedTest
     public void validLessThanQueryContainsExpectedResources(String thisUri) throws IOException {
-        initSimplifiedQueryRdfXmlTests(thisUri);
         String query = getQueryUrlForValidLessThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -143,7 +140,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
     @MethodSource("getAllDescriptionUrls")
     @ParameterizedTest
     public void validGreaterThanQueryContainsExpectedDefects(String thisUri) throws IOException {
-        initSimplifiedQueryRdfXmlTests(thisUri);
         String query = getQueryUrlForValidGreaterThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -151,7 +147,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
     @MethodSource("getAllDescriptionUrls")
     @ParameterizedTest
     public void validCompoundQueryContainsExpectedResource(String thisUri) throws IOException {
-        initSimplifiedQueryRdfXmlTests(thisUri);
         String query = getQueryUrlForValidCompoundQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -160,7 +155,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void fullTextSearchContainsExpectedResults(String thisUri) throws IOException {
 
-        initSimplifiedQueryRdfXmlTests(thisUri);
 
         if (!getFullTextSearch()) return;
 

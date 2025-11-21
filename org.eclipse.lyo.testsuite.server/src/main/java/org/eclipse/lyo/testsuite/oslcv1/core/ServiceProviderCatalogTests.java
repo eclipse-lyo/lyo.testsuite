@@ -286,7 +286,7 @@ public class ServiceProviderCatalogTests {
         // Verify the rdf:about attribute links
         for (int i = 0; i < catalogAbouts.getLength(); i++) {
             String url = catalogAbouts.item(i).getNodeValue();
-            assertFalse(url.isEmpty());
+            assertFalse(catalogUrl.isEmpty());
             Response response = OSLCUtils.getResponseFromUrl(baseUrl, url, basicCreds, "*/*", null);
             assertFalse(response.getStatus() == 404);
             response.close();
@@ -371,9 +371,9 @@ public class ServiceProviderCatalogTests {
         assertTrue(services.getLength() == resources.getLength());
         // Verify that the resource urls are valid
         for (int i = 0; i < resources.getLength(); i++) {
-            String url = resources.item(i).getNodeValue();
-            assertNotNull(url);
-            Response resp = OSLCUtils.getResponseFromUrl(baseUrl, url, basicCreds, "*/*", null);
+            String resourceUrl = resources.item(i).getNodeValue();
+            assertNotNull(resourceUrl);
+            Response resp = OSLCUtils.getResponseFromUrl(baseUrl, resourceUrl, basicCreds, "*/*", null);
             assertFalse(resp.getStatus() == 404);
             resp.close();
         }
@@ -393,8 +393,8 @@ public class ServiceProviderCatalogTests {
         assertTrue(detailsElements.getLength() == resources.getLength());
         // Verify that the resource has a url
         for (int i = 0; i < resources.getLength(); i++) {
-            String url = resources.item(i).getNodeValue();
-            assertNotNull(url);
+            String detailUrl = resources.item(i).getNodeValue();
+            assertNotNull(detailUrl);
         }
     }
 }

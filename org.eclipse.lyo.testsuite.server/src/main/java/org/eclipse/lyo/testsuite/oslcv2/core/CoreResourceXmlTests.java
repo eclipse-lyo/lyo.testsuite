@@ -14,7 +14,6 @@
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import jakarta.ws.rs.core.Response;
@@ -53,7 +52,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
         // If currentUrl is null, it means that the query didn't match any
         // records. This isn't exactly a failure, but there's nothing more we
         // can test.
-        assumeNotNull(currentUrl);
+        assumeTrue(currentUrl != null);
         response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, OSLCConstants.CT_XML, headers);
         responseBody = response.readEntity(String.class);
         int sc = response.getStatus();

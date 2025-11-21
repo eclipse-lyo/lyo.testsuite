@@ -107,7 +107,6 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void validEqualsQueryContainsExpectedResource(String thisUri)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        initSimplifiedQueryXmlTests(thisUri);
         String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -116,7 +115,6 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void validNotEqualQueryContainsExpectedResource(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
-        initSimplifiedQueryXmlTests(thisUri);
         String query = getQueryUrlForValidNotEqualQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -125,7 +123,6 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void validLessThanQueryContainsExpectedResources(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
-        initSimplifiedQueryXmlTests(thisUri);
         String query = getQueryUrlForValidLessThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -134,7 +131,6 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void validGreaterThanQueryContainsExpectedDefects(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
-        initSimplifiedQueryXmlTests(thisUri);
         String query = getQueryUrlForValidGreaterThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -143,7 +139,6 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void validCompoundQueryContainsExpectedResource(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
-        initSimplifiedQueryXmlTests(thisUri);
         String query = getQueryUrlForValidCompoundQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
@@ -152,7 +147,6 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void fullTextSearchContainsExpectedResults(String thisUri)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        initSimplifiedQueryXmlTests(thisUri);
         if (!getFullTextSearch()) return;
 
         String query = getQueryUrlForFullTextSearchContainsExpectedResults();
