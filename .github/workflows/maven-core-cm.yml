@@ -64,9 +64,8 @@ jobs:
             echo "Spotless FAIL; run `mvn validate -Pspotless --file org.eclipse.lyo.testsuite.build/pom.xml` locally" >&2
           fi
       - name: Run OpenRewrite (Maven plugin)
-        # package is needed due to ANTLR and net.oauth.core processing steps
         run: |
-          mvn -B package org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests -P'!enforcer' --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
+          mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests -P'!enforcer' --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
           if [ -z "$(git -C testsuite/ status --porcelain)" ]; then
             echo "rewrite PASS"
           else
