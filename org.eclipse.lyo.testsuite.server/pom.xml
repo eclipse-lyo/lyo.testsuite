@@ -225,6 +225,11 @@
       <plugin>
         <groupId>org.openrewrite.maven</groupId>
         <artifactId>rewrite-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/*.props</exclude>
+          </excludes>
+        </configuration>
       </plugin>
 
       <plugin>
