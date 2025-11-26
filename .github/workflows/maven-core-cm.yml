@@ -8,8 +8,8 @@ on:
     branches: [master, main]
   pull_request:
     branches: [master, main]
-  # schedule:
-  #   - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
+  schedule:
+    - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
   merge_group:
   workflow_dispatch:
 
@@ -38,9 +38,9 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-${{ matrix.jdk }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            ${{ runner.os }}-${{ matrix.jdk }}-maven-
       - name: Build RefImpl
         run: |
           # disable basic auth
@@ -55,3 +55,20 @@ jobs:
           sleep 20
           >&2 echo "Done sleeping"
           testsuite/scripts/run-suite.sh
+      - name: Run Spotless (Maven plugin)
+        run: |
+          mvn -B spotless:apply -P!enforcer --file pom.xml
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Spotless PASS"
+          else
+            echo "Spotless FAIL; run `mvn validate -Pspotless` locally" >&2
+          fi
+      - name: Run OpenRewrite (Maven plugin)
+        # package is needed due to ANTLR and net.oauth.core processing steps
+        run: |
+          mvn -B package org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests -P'!enforcer' --file pom.xml
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "rewrite PASS"
+          else
+            echo "rewrite FAIL; run `mvn org.openrewrite.maven:rewrite-maven-plugin:run` locally" >&2
+          fi
