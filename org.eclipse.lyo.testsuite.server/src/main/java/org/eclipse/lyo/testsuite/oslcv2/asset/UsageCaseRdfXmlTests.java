@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -36,8 +36,8 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
@@ -51,7 +51,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         baseUrl = setupProps.getProperty("baseUrl");
     }
@@ -60,12 +60,12 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
     public void queryUsageTest() throws IOException, ParserConfigurationException, SAXException {
         Model model = runQuery();
         bestAsset = getBestAsset(model);
-        assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
+        assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
     }
 
     @Test
     public void retrieveUsageCase() throws IOException, ParserConfigurationException, SAXException {
-        assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
+        assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
 
         // Once the best asset is determined then the full asset is retrieved
         Model model = ModelFactory.createDefaultModel();
@@ -87,7 +87,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 
         // Creates the asset
         assetUrl = createAsset(rdfXmlCreateTemplate);
-        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
         baseUrl = setupProps.getProperty("baseUrl");
 
         Response resp = getAssetResponse();
@@ -98,7 +98,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
 
         // Gets the artifact factory from the asset
         String artifactFactory = getPropertyValue(model, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP);
-        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue(artifactFactory != null && artifactFactory.length() > 0, "There needs to be an artifact factory");
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
         // Creates the artifact
@@ -107,14 +107,14 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
             // fileName = setupProps.getProperty("createTemplateArtifactXmlFile");
             fileName = setupProps.getProperty("createTemplateXmlFile");
 
-        assertTrue("There needs to be an artifact template file", fileName != null);
+        assertTrue(fileName != null, "There needs to be an artifact template file");
         String artifact = OSLCUtils.readFileByNameAsString(fileName);
 
         resp = OSLCUtils.postDataToUrl(artifactFactory, creds, OSLCConstants.CT_RDF, null, artifact, header);
         resp.close();
         assertTrue(
-                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus(),
-                Status.CREATED.getStatusCode() == resp.getStatus());
+                Status.CREATED.getStatusCode() == resp.getStatus(),
+                "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus());
 
         // Get and updates the artifacts subject
         resp = getAssetResponse();
@@ -151,7 +151,7 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
             Property prop = model.createProperty(OSLCConstants.LABEL_PROP);
             setPropertyValue(artifactStatement, prop, labelValue);
             StmtIterator statements = artifactStatement.getResource().listProperties(prop);
-            assertTrue("No label property was found", statements.hasNext());
+            assertTrue(statements.hasNext(), "No label property was found");
             assertEquals(labelValue, statements.next().getObject().toString());
         }
     }
@@ -162,8 +162,8 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         model.read(resp.readEntity(InputStream.class), baseUrl);
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
         return model;
     }
 
@@ -189,8 +189,8 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         model.read(resp.readEntity(InputStream.class), baseUrl);
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
 
         Property property = model.getProperty(OSLCConstants.ASSET_ARTIFACT_PROP);
         StmtIterator statements = model.listStatements(null, property, (RDFNode) null);
@@ -207,13 +207,13 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
             }
             break;
         }
-        assertTrue("No artifact could be found in the asset", artifactUrl != null);
+        assertTrue(artifactUrl != null, "No artifact could be found in the asset");
 
         resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
     }
 
     private String getPropertyValue(Model model, String uri) {

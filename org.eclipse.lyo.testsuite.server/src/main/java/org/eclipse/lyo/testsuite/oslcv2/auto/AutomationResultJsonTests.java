@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.auto;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -31,10 +31,8 @@ import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceJsonTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -42,17 +40,15 @@ import org.xml.sax.SAXException;
  * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
  * the relationship of elements in the JSON representation of the auto result
  */
-@RunWith(Parameterized.class)
 public class AutomationResultJsonTests extends CoreResourceJsonTests {
 
-    public AutomationResultJsonTests(String thisUrl)
+    public void initAutomationResultJsonTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException, JSONException {
 
         super(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, NullPointerException, XPathException, ParserConfigurationException, SAXException,
                     JSONException {
@@ -135,33 +131,43 @@ public class AutomationResultJsonTests extends CoreResourceJsonTests {
         return toCollection(results);
     }
 
-    @Test
-    public void autoResultHasAtLeastOneState() throws JSONException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoResultHasAtLeastOneState(String thisUrl) throws JSONException {
+        initAutomationResultJsonTests(thisUrl);
         assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONObject)
                 || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_STATE) instanceof JSONArray));
     }
 
-    @Test
-    public void autoResultHasAtLeastOneVerdict() throws JSONException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoResultHasAtLeastOneVerdict(String thisUrl) throws JSONException {
+        initAutomationResultJsonTests(thisUrl);
         assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_VERDICT) instanceof JSONObject)
                 || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_VERDICT) instanceof JSONArray));
     }
 
-    @Test
-    public void autoResultHasAtMostOneDesiredState() throws JSONException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoResultHasAtMostOneDesiredState(String thisUrl) throws JSONException {
+        initAutomationResultJsonTests(thisUrl);
         if (doc.containsKey(OSLCConstants.AUTO_OSLC_AUTO_DESIRED_STATE)) {
             assertTrue(doc.get(OSLCConstants.AUTO_OSLC_AUTO_DESIRED_STATE) instanceof JSONObject);
         }
     }
 
-    @Test
-    public void autoResultHasOneReportsOnLink() throws JSONException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoResultHasOneReportsOnLink(String thisUrl) throws JSONException {
+        initAutomationResultJsonTests(thisUrl);
         assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_REPORTS_AUTO_PLAN) instanceof JSONObject)
                 || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_REPORTS_AUTO_PLAN) instanceof JSONArray));
     }
 
-    @Test
-    public void autoResultHasOneProducedByLink() throws JSONException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void autoResultHasOneProducedByLink(String thisUrl) throws JSONException {
+        initAutomationResultJsonTests(thisUrl);
         assertTrue((doc.get(OSLCConstants.AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST) instanceof JSONObject)
                 || (doc.get(OSLCConstants.AUTO_OSLC_AUTO_PRODUCED_AUTO_REQUEST) instanceof JSONArray));
     }

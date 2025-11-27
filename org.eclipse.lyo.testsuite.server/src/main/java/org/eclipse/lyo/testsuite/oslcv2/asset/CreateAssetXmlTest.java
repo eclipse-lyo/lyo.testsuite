@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.w3c.dom.Document;
@@ -52,7 +52,7 @@ public class CreateAssetXmlTest extends CreateAssetBase {
         Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
         NodeList children = getAssetNodeChildren(document);
         String cat = getNodeAttribute(children, "oslc_asset:categorization", "rdf:resource");
-        assertTrue("Category was not set", cat != null);
+        assertTrue(cat != null, "Category was not set");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class CreateAssetXmlTest extends CreateAssetBase {
             Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
             NodeList children = getAssetNodeChildren(document);
             String cat = getNodeAttribute(children, "dcterms:relation", "rdf:resource");
-            assertTrue("Relationship was not set", cat != null);
+            assertTrue(cat != null, "Relationship was not set");
         } finally {
             Response resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
             resp.close();

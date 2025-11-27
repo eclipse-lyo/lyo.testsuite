@@ -19,7 +19,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.reasoner.ValidityReport;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public class RDFUtils {
 
@@ -49,7 +49,7 @@ public class RDFUtils {
                 errorMessage.append(reports.next().toString());
             }
 
-            Assert.fail(errorMessage.toString());
+            Assertions.fail(errorMessage.toString());
         }
     }
 }

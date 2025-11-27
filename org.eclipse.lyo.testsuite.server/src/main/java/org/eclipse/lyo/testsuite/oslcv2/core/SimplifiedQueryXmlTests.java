@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -28,10 +28,8 @@ import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -43,14 +41,12 @@ import org.xml.sax.SAXException;
  * implemented it is difficult to represent the needed various templates of different change request types and to query
  * for the templates.
  */
-@RunWith(Parameterized.class)
 public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
 
     public SimplifiedQueryXmlTests(String thisUri) {
         super(thisUri);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 
@@ -97,53 +93,59 @@ public class SimplifiedQueryXmlTests extends SimplifiedQueryBaseTests {
             results = (Node) OSLCUtils.getXPath().evaluate("//oslc:totalCount", doc, XPathConstants.NODE);
             if (results != null) {
                 int totalCount = Integer.parseInt(results.getTextContent());
-                assertTrue("Expected oslc:totalCount > 0", totalCount > 0);
+                assertTrue(totalCount > 0, "Expected oslc:totalCount > 0");
             }
 
             NodeList resultList = (NodeList)
                     OSLCUtils.getXPath().evaluate("//rdf:Description/rdfs:member", doc, XPathConstants.NODESET);
-            assertNotNull("Expected rdfs:member(s)", resultList);
-            assertNotNull("Expected > 1 rdfs:member(s)", resultList.getLength() > 0);
+            assertNotNull(resultList, "Expected rdfs:member(s)");
+            assertNotNull(resultList.getLength() > 0, "Expected > 1 rdfs:member(s)");
         }
     }
 
-    @Test
-    public void validEqualsQueryContainsExpectedResource()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validEqualsQueryContainsExpectedResource(String thisUri)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         String query = getQueryUrlForValidEqualsQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validNotEqualQueryContainsExpectedResource()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validNotEqualQueryContainsExpectedResource(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryUrlForValidNotEqualQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validLessThanQueryContainsExpectedResources()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validLessThanQueryContainsExpectedResources(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
         String query = getQueryUrlForValidLessThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validGreaterThanQueryContainsExpectedDefects()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validGreaterThanQueryContainsExpectedDefects(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
         String query = getQueryUrlForValidGreaterThanQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void validCompoundQueryContainsExpectedResource()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void validCompoundQueryContainsExpectedResource(String thisUri)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         String query = getQueryUrlForValidCompoundQueryContainsExpectedResources();
         validateNonEmptyResponse(query);
     }
 
-    @Test
-    public void fullTextSearchContainsExpectedResults()
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void fullTextSearchContainsExpectedResults(String thisUri)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         if (!getFullTextSearch()) return;
 

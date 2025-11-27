@@ -13,8 +13,8 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -32,7 +32,7 @@ import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
@@ -51,12 +51,12 @@ public class UsageCaseJsonTests extends UsageCaseBase {
     public void queryUsageTest() throws IllegalStateException, IOException, JSONException {
         JSONObject query = runQuery();
         bestAsset = getBestAsset(query);
-        assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
+        assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
     }
 
     @Test
     public void retrieveUsageCase() throws JSONException, IOException {
-        assertTrue("The asset with the highest version couldn't be found", bestAsset != null);
+        assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
 
         assetUrl = bestAsset.getString("rdf:about");
         String asset = getAssetAsString();
@@ -76,7 +76,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
 
         // Creates the asset
         assetUrl = createAsset(jsonCreateTemplate);
-        assertTrue("The location of the asset after it was create was not returned", assetUrl != null);
+        assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
 
         // Gets the created asset
         String resp = getAssetAsString();
@@ -84,7 +84,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         // Gets the artifact factory from the asset
         JSONObject factory = (JSONObject) asset.get("oslc_asset:artifactFactory");
         String artifactFactory = baseUrl + factory.getString("rdf:resource");
-        assertTrue("There needs to be an artifact factory", artifactFactory != null && artifactFactory.length() > 0);
+        assertTrue(artifactFactory != null && artifactFactory.length() > 0, "There needs to be an artifact factory");
 
         // Adds an artifact to the asset
         File file = new File(setupProps.getProperty("artifactContentType"));
@@ -99,10 +99,10 @@ public class UsageCaseJsonTests extends UsageCaseBase {
                 addHeader(null, h));
         response.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus(),
-                response.getStatus() == Status.CREATED.getStatusCode());
+                response.getStatus() == Status.CREATED.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus());
 
-        assertTrue("No Location header", response.getHeaderString("Location") != null);
+        assertTrue(response.getHeaderString("Location") != null, "No Location header");
 
         // Updates the artifacts subject
         resp = getAssetAsString();
@@ -119,7 +119,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         asset = new JSONObject(resp);
         artifacts = asset.getJSONArray("oslc_asset:artifact");
         artifact = artifacts.getJSONObject(0);
-        assertEquals("The label value was not set", labelValue, artifact.getString("oslc:label"));
+        assertEquals(labelValue, artifact.getString("oslc:label"), "The label value was not set");
     }
 
     private JSONObject runQuery() throws IOException, IllegalStateException, JSONException {
@@ -128,8 +128,8 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         resp.close();
         JSONObject query = new JSONObject(content);
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
         return query;
     }
 
@@ -151,7 +151,7 @@ public class UsageCaseJsonTests extends UsageCaseBase {
     private void retrieveArtifact(String rawAsset) throws JSONException, ClientProtocolException, IOException {
         JSONObject asset = new JSONObject(rawAsset);
         JSONArray artifacts = asset.getJSONArray("oslc_asset:artifact");
-        assertTrue("This asset has no artifacts", artifacts.length() > 0);
+        assertTrue(artifacts.length() > 0, "This asset has no artifacts");
 
         JSONObject artifact = artifacts.getJSONObject(0);
         JSONObject content = artifact.getJSONObject("oslc_asset:content");
@@ -160,8 +160,8 @@ public class UsageCaseJsonTests extends UsageCaseBase {
         Response resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
     }
 
     private String JSONToString(JSONObject jsonObject) throws JSONException {

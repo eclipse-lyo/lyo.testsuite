@@ -13,10 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -35,9 +32,6 @@ import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
@@ -49,7 +43,6 @@ import org.xml.sax.SAXException;
  * call is not technically required in the OSLC spec, so the created change request may still exist for some service
  * providers.
  */
-@RunWith(Parameterized.class)
 public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
 
     private HashMap<String, String> namespacePrefixMap = new HashMap<String, String>();
@@ -63,7 +56,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
         KNOWN_PREFIXES.put(OSLCConstants.OSLC_CM_V2, "oslc_cm");
     }
 
-    public CreationAndUpdateJsonTests(String url) {
+    public void initCreationAndUpdateJsonTests(String url) {
         super(url);
     }
 
@@ -72,7 +65,6 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
         return OSLCConstants.CT_JSON;
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException, JSONException {
         ArrayList<String> serviceUrls = getServiceProviderURLsUsingJson(null);
@@ -193,7 +185,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
         String name = property.getString("oslc:name");
         String namespace = propertyDefinition.substring(0, propertyDefinition.length() - name.length());
         String prefix = getPrefix(namespace);
-        assertNotNull("No prefix for namespace: " + namespace, prefix);
+        assertNotNull(prefix, "No prefix for namespace: " + namespace);
 
         return prefix + ":" + name;
     }
@@ -304,7 +296,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     private JSONObject getResource(String uri) throws IOException, JSONException {
         Response resp = OSLCUtils.getResponseFromUrl(uri, null, creds, OSLCConstants.CT_JSON, headers);
         try {
-            assertEquals("Failed to get resource at " + uri, 200, resp.getStatus());
+            assertEquals(200, resp.getStatus(), "Failed to get resource at " + uri);
             return (JSONObject) JSON.parse(resp.readEntity(InputStream.class));
         } finally {
             resp.close();
@@ -312,7 +304,7 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     }
 
     private JSONObject getInstanceShape(JSONObject toUpdate) throws JSONException, IOException {
-        assertTrue("No instance shape for resource: " + toUpdate.write(), toUpdate.has("oslc:instanceShape"));
+        assertTrue(toUpdate.has("oslc:instanceShape"), "No instance shape for resource: " + toUpdate.write());
         String instanceShapeUri = toUpdate.getJSONObject("oslc:instanceShape").getString("rdf:resource");
         JSONObject instanceShapeResource = getResource(instanceShapeUri);
 

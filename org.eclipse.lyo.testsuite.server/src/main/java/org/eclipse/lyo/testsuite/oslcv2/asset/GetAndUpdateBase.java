@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.client.ClientProtocolException;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GetAndUpdateBase extends AssetTestBase {
 
@@ -68,11 +68,11 @@ public class GetAndUpdateBase extends AssetTestBase {
                 addHeader(null, h));
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Status.CREATED.getStatusCode());
+                resp.getStatus() == Status.CREATED.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
 
-        assertTrue("No Location header", resp.getHeaderString("Location") != null);
-        assertTrue("No content length header", resp.getHeaderString("Content-Length") != null);
+        assertTrue(resp.getHeaderString("Location") != null, "No Location header");
+        assertTrue(resp.getHeaderString("Content-Length") != null, "No content length header");
         return resp.getHeaderString("Location");
     }
 
@@ -80,7 +80,7 @@ public class GetAndUpdateBase extends AssetTestBase {
         Response resp = OSLCUtils.getDataFromUrl(artifactUrl, creds, acceptType, contentType, headers);
         resp.close();
         assertTrue(
-                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus(),
-                resp.getStatus() == Response.Status.OK.getStatusCode());
+                resp.getStatus() == Response.Status.OK.getStatusCode(),
+                "Expected " + Response.Status.OK.getStatusCode() + ", received " + resp.getStatus());
     }
 }
