@@ -61,7 +61,7 @@ public abstract class TestsBase {
         BASIC,
         FORM,
         OAUTH
-    };
+    }
 
     protected static UserCredentials creds;
 
