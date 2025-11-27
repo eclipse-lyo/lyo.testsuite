@@ -8,8 +8,8 @@ on:
     branches: [master, main]
   pull_request:
     branches: [master, main]
-  # schedule:
-  #   - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
+  schedule:
+    - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
   merge_group:
   workflow_dispatch:
 
@@ -18,29 +18,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: ['21', '24', '25-ea']
+        jdk: ['21', '25']
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           path: testsuite
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: oslc-op/refimpl
           ref: main
           path: refimpl
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.jdk }}
           distribution: 'zulu'
       - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-${{ matrix.jdk }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            ${{ runner.os }}-${{ matrix.jdk }}-maven-
       - name: Build RefImpl
         run: |
           # disable basic auth
@@ -55,3 +55,21 @@ jobs:
           sleep 20
           >&2 echo "Done sleeping"
           testsuite/scripts/run-suite.sh
+      - name: Run Spotless (Maven plugin)
+        run: |
+          mvn -B spotless:apply -P!enforcer --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
+          if [ -z "$(git -C testsuite/ status --porcelain)" ]; then
+            echo "Spotless PASS"
+          else
+            echo "Spotless FAIL; run 'mvn validate -Pspotless --file org.eclipse.lyo.testsuite.build/pom.xml' locally" >&2
+            exit 1
+          fi
+      - name: Run OpenRewrite (Maven plugin)
+        run: |
+          mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests -P'!enforcer' --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
+          if [ -z "$(git -C testsuite/ status --porcelain)" ]; then
+            echo "rewrite PASS"
+          else
+            echo "rewrite FAIL; run 'mvn org.openrewrite.maven:rewrite-maven-plugin:run; locally --file org.eclipse.lyo.testsuite.build/pom.xml" >&2
+            exit 1
+          fi

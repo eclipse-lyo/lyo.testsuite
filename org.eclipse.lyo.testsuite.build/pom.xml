@@ -43,7 +43,7 @@
       <dependency>
         <groupId>org.openrewrite</groupId>
         <artifactId>rewrite-bom</artifactId>
-        <version>8.59.1</version>
+        <version>8.67.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -84,7 +84,7 @@
         <plugin>
           <groupId>org.openrewrite.maven</groupId>
           <artifactId>rewrite-maven-plugin</artifactId>
-          <version>6.15.0</version>
+          <version>6.24.0</version>
           <!-- <configuration>
             <skipMavenParsing>true</skipMavenParsing>
             <activeRecipes>
@@ -115,7 +115,7 @@
             <dependency>
               <groupId>org.openrewrite.recipe</groupId>
               <artifactId>rewrite-migrate-java</artifactId>
-              <version>3.14.1</version>
+              <version>3.22.0</version>
             </dependency>
             <dependency>
               <groupId>org.openrewrite.recipe</groupId>
@@ -136,7 +136,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.46.1</version>
+        <version>3.1.0</version>
       </plugin>
     </plugins>
   </build>
