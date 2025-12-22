@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.asset;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -42,7 +42,7 @@ public class CreateAssetJsonTest extends CreateAssetBase {
         assetUrl = createAsset(readFileFromProperty("createWithCategoryTemplateJsonFile"));
         String resp = getAssetAsString();
         JSONObject asset = new JSONObject(resp);
-        assertTrue("The category was not set", asset.containsKey("oslc_asset:categorization"));
+        assertTrue(asset.containsKey("oslc_asset:categorization"), "The category was not set");
     }
 
     @Test
@@ -55,7 +55,7 @@ public class CreateAssetJsonTest extends CreateAssetBase {
             assetUrl = createAsset(assetString);
             String resp = getAssetAsString();
             JSONObject asset = new JSONObject(resp);
-            assertTrue("The category was not set", asset.get("dcterms:relation") != null);
+            assertTrue(asset.get("dcterms:relation") != null, "The category was not set");
         } finally {
             Response resp = OSLCUtils.deleteFromUrl(otherUrl, creds, acceptType);
             resp.close();

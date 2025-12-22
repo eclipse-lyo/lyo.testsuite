@@ -13,7 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.qm;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,11 +27,12 @@ import org.xml.sax.SAXException;
 
 public class TestScriptRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    public TestScriptRdfXmlTests(String thisUrl)
+    
+    public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
-        super(thisUrl);
+        super.initCoreResourceRdfXmlTests(thisUrl);
     }
 
     @Parameters

@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.apache.log4j.Logger;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
 /**
  * This class provides JUnit tests for the validation of the OSLCv2 creation and updating of change requests. It uses
@@ -31,15 +28,13 @@ import org.junit.runners.Parameterized.Parameters;
  * call is not technically required in the OSLC spec, so the created change request may still exist for some service
  * providers.
  */
-@RunWith(Parameterized.class)
 public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTests {
     private static Logger logger = Logger.getLogger(CreationAndUpdateRdfXmlTests.class);
 
-    public CreationAndUpdateRdfXmlTests(String url) {
+    public void initCreationAndUpdateRdfXmlTests(String url) {
         super(url);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();

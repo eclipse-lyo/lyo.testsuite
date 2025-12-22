@@ -14,7 +14,7 @@
 
 package org.eclipse.lyo.testsuite.oslcv2.pm;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
@@ -34,10 +34,12 @@ import org.xml.sax.SAXException;
  * request to test against, checking the relationship of elements in the XML representation of the PMR request.
  */
 public class PerformanceMonitoringRecordProcessRdfXmlTests extends CoreResourceRdfXmlTests {
-    public PerformanceMonitoringRecordProcessRdfXmlTests(String thisUrl)
+    
+    public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
-        super(thisUrl);
+
+        super.initCoreResourceRdfXmlTests(thisUrl);
         // TODO Auto-generated constructor stub
 
     }
@@ -70,7 +72,7 @@ public class PerformanceMonitoringRecordProcessRdfXmlTests extends CoreResourceR
     public void PerformanceMonitoringRecordHasOneisPartOf() {
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.PM_PMR_ISPARTOF);
         int size = listStatements.toList().size();
-        assertTrue("Can have 1 dcterms:isPartOf, found " + size, size == 1);
+        assertTrue(size == 1, "Can have 1 dcterms:isPartOf, found " + size);
     }
 
     @Test
@@ -78,6 +80,6 @@ public class PerformanceMonitoringRecordProcessRdfXmlTests extends CoreResourceR
     public void PerformanceMonitoringRecordHasObservesOPTIONAL() {
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.PM_PMR_OBSERVES);
         int size = listStatements.toList().size();
-        assertTrue("Can have zero or many  ems:observes, found " + size, size >= 0);
+        assertTrue(size >= 0, "Can have zero or many  ems:observes, found " + size);
     }
 }

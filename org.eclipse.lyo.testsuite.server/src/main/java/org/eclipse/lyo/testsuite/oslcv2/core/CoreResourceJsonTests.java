@@ -13,10 +13,9 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -30,7 +29,7 @@ import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
@@ -50,7 +49,7 @@ public abstract class CoreResourceJsonTests extends TestsBase {
         // If currentUrl is null, it means that the query didn't match any
         // records. This isn't exactly a failure, but there's nothing more we
         // can test.
-        assumeNotNull(currentUrl);
+        assumeTrue(currentUrl != null);
         response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, OSLCConstants.CT_JSON, headers);
         responseBody = response.readEntity(String.class);
         int sc = response.getStatus();

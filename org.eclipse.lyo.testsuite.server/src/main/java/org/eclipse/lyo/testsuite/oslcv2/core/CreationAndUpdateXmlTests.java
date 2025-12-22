@@ -19,9 +19,6 @@ import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
@@ -33,10 +30,9 @@ import org.xml.sax.SAXException;
  * call is not technically required in the OSLC spec, so the created change request may still exist for some service
  * providers.
  */
-@RunWith(Parameterized.class)
 public class CreationAndUpdateXmlTests extends AbstractCreationAndUpdateRdfTests {
 
-    public CreationAndUpdateXmlTests(String url) {
+    public void initCreationAndUpdateXmlTests(String url) {
         super(url);
     }
 
@@ -50,7 +46,6 @@ public class CreationAndUpdateXmlTests extends AbstractCreationAndUpdateRdfTests
         return headers.get(s);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 

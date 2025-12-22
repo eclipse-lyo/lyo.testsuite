@@ -48,7 +48,7 @@ import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.OslcClientFactory;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -455,11 +455,11 @@ public class OSLCUtils {
 
         if (jazzAuthMessage != null && jazzAuthMessage.equalsIgnoreCase(JAZZ_AUTH_FAILED)) {
             resp.readEntity(String.class);
-            Assert.fail(
+            Assertions.fail(
                     "Could not login to Jazz server.  URL: " + url + " user: " + username + "password: " + password);
         } else if (statusCode != 200 && statusCode != 302) {
             resp.readEntity(String.class);
-            Assert.fail("Unknown error logging in to Jazz Server.  Status code: " + statusCode);
+            Assertions.fail("Unknown error logging in to Jazz Server.  Status code: " + statusCode);
         } else // success
         {
             location = getHeader(resp, "Location");
@@ -487,7 +487,7 @@ public class OSLCUtils {
                 location = getHeader(resp, "Location");
                 resp.readEntity(String.class);
             } catch (Exception e) {
-                Assert.fail(e.getMessage());
+                Assertions.fail(e.getMessage());
             }
         }
     }
@@ -505,7 +505,7 @@ public class OSLCUtils {
      * @return the new URL
      */
     public static String addQueryStringToURL(String url, String queryString) {
-        Assert.assertTrue("queryString must begin with a '?'", queryString.startsWith("?"));
+        Assertions.assertTrue(queryString.startsWith("?"), "queryString must begin with a '?'");
         if (url.indexOf('?') == -1) {
             return url + queryString;
         }
@@ -569,7 +569,7 @@ public class OSLCUtils {
     }
 
     public static String getContentType(Response resp) {
-        Assert.assertNotNull(resp);
+        Assertions.assertNotNull(resp);
         String contentType = resp.getHeaderString("Content-Type");
         if (contentType == null) {
             return null;

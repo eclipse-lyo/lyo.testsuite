@@ -108,6 +108,7 @@
           <configuration>
             <activeRecipes>
               <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe>
+              <recipe>org.openrewrite.java.testing.junit5.JUnit4to5Migration</recipe>
             </activeRecipes>
           </configuration>
           <dependencies>
@@ -115,6 +116,11 @@
               <groupId>org.openrewrite.recipe</groupId>
               <artifactId>rewrite-migrate-java</artifactId>
               <version>3.24.0</version>
+            </dependency>
+            <dependency>
+              <groupId>org.openrewrite.recipe</groupId>
+              <artifactId>rewrite-testing-frameworks</artifactId>
+              <version>2.22.0</version>
             </dependency>
           </dependencies>
         </plugin>

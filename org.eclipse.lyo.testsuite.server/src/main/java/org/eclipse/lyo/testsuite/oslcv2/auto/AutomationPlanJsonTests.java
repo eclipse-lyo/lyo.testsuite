@@ -29,9 +29,6 @@ import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceJsonTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
@@ -39,17 +36,15 @@ import org.xml.sax.SAXException;
  * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
  * the relationship of elements in the JSON representation of the auto plan
  */
-@RunWith(Parameterized.class)
 public class AutomationPlanJsonTests extends CoreResourceJsonTests {
 
-    public AutomationPlanJsonTests(String thisUrl)
+    public void initAutomationPlanJsonTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException, JSONException {
 
         super(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, NullPointerException, XPathException, ParserConfigurationException, SAXException,
                     JSONException {

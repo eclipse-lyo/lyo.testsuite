@@ -13,10 +13,7 @@
  */
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
@@ -33,11 +30,9 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -45,7 +40,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /** This class provides JUnit tests for the validation of OSLCv2 ServiceProvider documents */
-@RunWith(Parameterized.class)
 public class ServiceProviderXmlTests extends TestsBase {
 
     private Response response;
@@ -53,7 +47,7 @@ public class ServiceProviderXmlTests extends TestsBase {
     private String responseBody;
     private Document doc;
 
-    public ServiceProviderXmlTests(String url) throws IOException, ParserConfigurationException, SAXException {
+    public void initServiceProviderXmlTests(String url) throws IOException, ParserConfigurationException, SAXException {
         super(url);
 
         response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
@@ -70,7 +64,6 @@ public class ServiceProviderXmlTests extends TestsBase {
         }
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
@@ -91,38 +84,44 @@ public class ServiceProviderXmlTests extends TestsBase {
         return toCollection(serviceURLsUsingXML);
     }
 
-    @Test
-    public void baseUrlIsValid() {
-        assertNotNull("Could not locate a service provider document", setupBaseUrl);
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void baseUrlIsValid(String url) {
+        initServiceProviderXmlTests(url);
+        assertNotNull(setupBaseUrl, "Could not locate a service provider document");
 
         // Get the status, make sure 200 OK
         assertTrue(
-                "Expected 200-Ok but received " + response.getStatusInfo().getStatusCode(),
-                response.getStatus() == 200);
+                response.getStatus() == 200,
+                "Expected 200-Ok but received " + response.getStatusInfo().getStatusCode());
 
         // Verify we got a response
         assertNotNull(responseBody);
     }
 
-    @Test
-    @Ignore("Neither HTTP/1.1 nor OSLC Core 2.0 REQUIRE a 406 Not Acceptable response. "
+    @ParameterizedTest
+    @Disabled("Neither HTTP/1.1 nor OSLC Core 2.0 REQUIRE a 406 Not Acceptable response. "
             + "It doesn't appear to be mentioned in the OSLC 2.0 Core specification. "
             + "This is a SHOULD per HTTP/1.1, but not a MUST. See "
             + "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1")
-    public void invalidContentTypeGivesNotSupportedOPTIONAL() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    public void invalidContentTypeGivesNotSupportedOPTIONAL(String url) throws IOException {
+        initServiceProviderXmlTests(url);
         Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, "invalid/content-type", headers);
         String respType = (resp.getHeaderString("Content-Type") == null) ? "" : resp.getHeaderString("Content-Type");
         resp.close();
         assertTrue(
+                resp.getStatus() == 406 || respType.contains("application/svg+xml"),
                 "Expected 406 but received "
                         + resp.getStatus()
                         + ",Content-type='invalid/content-type' but received "
-                        + respType,
-                resp.getStatus() == 406 || respType.contains("application/svg+xml"));
+                        + respType);
     }
 
-    @Test
-    public void responseContentTypeIsXML() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void responseContentTypeIsXML(String url) throws IOException {
+        initServiceProviderXmlTests(url);
         Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
         // Make sure the response to this URL was of valid type
         resp.close();
@@ -135,8 +134,10 @@ public class ServiceProviderXmlTests extends TestsBase {
                 || contentType.equalsIgnoreCase("text/xml"));
     }
 
-    @Test
-    public void misplacedParametersDoNotEffectResponse() throws IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void misplacedParametersDoNotEffectResponse(String url) throws IOException {
+        initServiceProviderXmlTests(url);
         var baseResp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
 
         Model baseRespModel = ModelFactory.createDefaultModel();
@@ -160,8 +161,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         assertTrue(baseRespModel.isIsomorphicWith(badParmModel));
     }
 
-    @Test
-    public void serviceProviderHasAtMostOneTitle() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceProviderHasAtMostOneTitle(String url) throws XPathException {
+        initServiceProviderXmlTests(url);
         // Verify that the ServiceProvider has at most one dc:title child element
         NodeList providerChildren =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider/*", doc, XPathConstants.NODESET);
@@ -175,11 +178,13 @@ public class ServiceProviderXmlTests extends TestsBase {
                 numTitles++;
             }
         }
-        assertTrue("Expected number of dcterms:titles to be <=1 but was:" + numTitles, numTitles <= 1);
+        assertTrue(numTitles <= 1, "Expected number of dcterms:titles to be <=1 but was:" + numTitles);
     }
 
-    @Test
-    public void serviceProviderHasAtMostOnePublisher() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceProviderHasAtMostOnePublisher(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get the listed ServiceProvider elements
         NodeList providerChildren =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider/*", doc, XPathConstants.NODESET);
@@ -195,8 +200,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         assert (numPublishers <= 1);
     }
 
-    @Test
-    public void publisherElementsAreValid() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void publisherElementsAreValid(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get all Publisher xml blocks
         NodeList publishers = (NodeList) OSLCUtils.getXPath().evaluate("//dc:publisher/*", doc, XPathConstants.NODESET);
 
@@ -236,20 +243,24 @@ public class ServiceProviderXmlTests extends TestsBase {
         }
     }
 
-    @Test
-    public void serviceProviderHasService() throws XPathException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceProviderHasService(String url) throws XPathException {
+        initServiceProviderXmlTests(url);
         // Verify the ServiceProvider has at least one rdf:service child element
         Node service = (Node)
                 OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider/oslc_v2:service", doc, XPathConstants.NODE);
         assertNotNull(service);
     }
 
-    @Test
-    public void serviceProviderHasValidDetails() throws XPathException, DOMException, IOException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceProviderHasValidDetails(String url) throws XPathException, DOMException, IOException {
+        initServiceProviderXmlTests(url);
         // Verify the ServiceProvider has a valid oslc:details attribute
         Node details = (Node)
                 OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider/oslc_v2:details", doc, XPathConstants.NODE);
-        assertNotNull("oslc:details element is required for oslc:ServiceProfile", details);
+        assertNotNull(details, "oslc:details element is required for oslc:ServiceProfile");
         Node node = details.getAttributes().getNamedItemNS(OSLCConstants.RDF, "resource");
         assertNotNull(node.getNodeValue());
         Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, node.getNodeValue(), creds, "");
@@ -260,8 +271,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         assertFalse(resp.getStatus() == 404);
     }
 
-    @Test
-    public void prefixDefinitionsAreValid() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void prefixDefinitionsAreValid(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get all the prefix definitions
         NodeList prefixes =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:PrefixDefinition", doc, XPathConstants.NODESET);
@@ -292,8 +305,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         }
     }
 
-    @Test
-    public void serviceProviderHasAtMostOneOAuthElement() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void serviceProviderHasAtMostOneOAuthElement(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Check root for OAuth block, make sure it only has at most one
         NodeList rootChildren =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:ServiceProvider/*", doc, XPathConstants.NODESET);
@@ -307,8 +322,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         assert (numOAuthElements <= 1);
     }
 
-    @Test
-    public void oAuthElementsAreValid() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void oAuthElementsAreValid(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get all oauthAuthorization xml blocks
         NodeList oAuthElement =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:oauthConfiguration/*", doc, XPathConstants.NODESET);
@@ -343,8 +360,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         }
     }
 
-    @Test
-    public void eachServiceHasOneDomain() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void eachServiceHasOneDomain(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get the services referenced
         NodeList services = (NodeList)
                 OSLCUtils.getXPath().evaluate("//oslc_v2:service/oslc_v2:Service", doc, XPathConstants.NODESET);
@@ -381,11 +400,13 @@ public class ServiceProviderXmlTests extends TestsBase {
                 domainFound = true;
             }
         }
-        assertTrue("Domain " + testVersion + " not found for any Service resource", domainFound);
+        assertTrue(domainFound, "Domain " + testVersion + " not found for any Service resource");
     }
 
-    @Test
-    public void creationFactoriesAreValid() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void creationFactoriesAreValid(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get all creation factories
         NodeList factories =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:CreationFactory", doc, XPathConstants.NODESET);
@@ -420,8 +441,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         }
     }
 
-    @Test
-    public void queryCapabilityBlocksAreValid() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void queryCapabilityBlocksAreValid(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get all query blocks
         NodeList queryBlocks =
                 (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:QueryCapability", doc, XPathConstants.NODESET);
@@ -463,8 +486,10 @@ public class ServiceProviderXmlTests extends TestsBase {
         }
     }
 
-    @Test
-    public void dialogsAreValid() throws XPathExpressionException {
+    @MethodSource("getAllDescriptionUrls")
+    @ParameterizedTest
+    public void dialogsAreValid(String url) throws XPathExpressionException {
+        initServiceProviderXmlTests(url);
         // Get all dialogs
         NodeList dialogs = (NodeList) OSLCUtils.getXPath().evaluate("//oslc_v2:Dialog", doc, XPathConstants.NODESET);
 
