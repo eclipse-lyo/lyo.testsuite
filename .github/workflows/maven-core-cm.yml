@@ -70,6 +70,6 @@ jobs:
           if [ -z "$(git -C testsuite/ status --porcelain)" ]; then
             echo "rewrite PASS"
           else
-            echo "rewrite FAIL; run 'mvn org.openrewrite.maven:rewrite-maven-plugin:run; locally --file org.eclipse.lyo.testsuite.build/pom.xml" >&2
+            echo "rewrite FAIL; run 'mvn org.openrewrite.maven:rewrite-maven-plugin:run --file org.eclipse.lyo.testsuite.build/pom.xml' locally" >&2
             exit 1
           fi
