@@ -21,22 +21,26 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * This class provides JUnit tests for the validation of OSLC Service Provider Catalogs, for the 2.0 version of the OSLC
  * standard, as defined by the OSLC Core Spec.
  */
-@RunWith(Parameterized.class)
 public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
 
     // Base URL of the OSLC Service Provider Catalog to be tested
     // protected Response response = null;
     protected static String fContentType = null;
 
-    public ServiceProviderCatalogBaseTests(String thisUrl) {
-        super(thisUrl);
+    public ServiceProviderCatalogBaseTests() {
+        super(null);
+    }
+
+    protected void setup(String thisUrl) {
+
+        currentUrl = thisUrl;
         currentUrl = thisUrl;
     }
 
@@ -63,8 +67,10 @@ public abstract class ServiceProviderCatalogBaseTests extends TestsBase {
     }
 
     /** Not required directly from the spec, just mentions that it should be application/rdf+xml */
-    @Test
-    public void contentTypeIsSuggestedType() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void contentTypeIsSuggestedType(String thisUrl) throws IOException {
+        setup(thisUrl);
         Response resp = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
         resp.close();
         // Make sure the response to this URL was of valid type

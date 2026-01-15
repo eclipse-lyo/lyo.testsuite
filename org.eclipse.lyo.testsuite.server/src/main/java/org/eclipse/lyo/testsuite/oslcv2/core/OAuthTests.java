@@ -14,17 +14,19 @@
 package org.eclipse.lyo.testsuite.oslcv2.core;
 
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 /**
  * Tests the process by which consumers are able to access resources of an OSLC Provider using OAuth authentication to
  * access the provider's resources.
  */
-@RunWith(Parameterized.class)
 public class OAuthTests extends TestsBase {
-    public OAuthTests(String thisUrl) {
-        super(thisUrl);
+    public OAuthTests() {
+        super(null);
+    }
+
+    protected void setup(String thisUrl) {
+
+        currentUrl = thisUrl;
     }
     //
     //    private OAuthServiceProvider provider;
@@ -60,8 +62,7 @@ public class OAuthTests extends TestsBase {
     //        consumer = new OAuthConsumer("", consumerToken, consumerSecret, provider);
     //    }
     //
-    //    @Parameters
-    //    public static Collection<Object[]> getAllDescriptionUrls()
+    //    //    public static Collection<Object[]> getAllDescriptionUrls()
     //            throws IOException, ParserConfigurationException, SAXException, XPathException {
     //        // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
     //        // to grab all urls

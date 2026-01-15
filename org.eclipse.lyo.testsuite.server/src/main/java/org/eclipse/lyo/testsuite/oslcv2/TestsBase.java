@@ -49,11 +49,13 @@ import org.eclipse.lyo.testsuite.util.RDFUtils;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
 import org.eclipse.lyo.testsuite.util.oauth.OAuthConsumerPrincipal;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+@ExtendWith(org.eclipse.lyo.testsuite.OslcTestExecutionCondition.class)
 public abstract class TestsBase {
     private static Logger logger = Logger.getLogger(TestsBase.class);
 
@@ -143,6 +145,10 @@ public abstract class TestsBase {
     protected static String testVersion = null;
 
     protected static Map<String, String> creationShapeMap = new HashMap<>();
+
+    public TestsBase() {
+        this(null);
+    }
 
     public TestsBase(String thisUrl) {
         currentUrl = thisUrl;

@@ -42,7 +42,7 @@ public class AutomationPlanJsonTests extends CoreResourceJsonTests {
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException, JSONException {
 
-        super(thisUrl);
+        setup(thisUrl);
     }
 
     public static Collection<Object[]> getAllDescriptionUrls()

@@ -22,12 +22,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 public class TestCaseRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    
     public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
@@ -35,7 +33,6 @@ public class TestCaseRdfXmlTests extends CoreResourceRdfXmlTests {
         super.initCoreResourceRdfXmlTests(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();

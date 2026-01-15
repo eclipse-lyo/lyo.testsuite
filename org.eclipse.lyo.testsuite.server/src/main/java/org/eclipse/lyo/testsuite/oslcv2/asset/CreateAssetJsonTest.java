@@ -21,32 +21,43 @@ import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@RunWith(Parameterized.class)
 public class CreateAssetJsonTest extends CreateAssetBase {
 
-    public CreateAssetJsonTest(String url) {
-        super(url, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
+    public CreateAssetJsonTest() {
+        super(null, null, null);
     }
 
-    @Test
-    public void createSimpleAsset() throws IOException {
+    protected void setup(String url) {
+
+        currentUrl = url;
+        acceptType = OSLCConstants.CT_JSON;
+        contentType = OSLCConstants.CT_JSON;
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createSimpleAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         assetUrl = createAsset(jsonCreateTemplate);
     }
 
-    @Test
-    public void createAssetWithCategory() throws IOException, JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createAssetWithCategory(String thisUrl) throws IOException, JSONException {
+        setup(thisUrl);
         assetUrl = createAsset(readFileFromProperty("createWithCategoryTemplateJsonFile"));
         String resp = getAssetAsString();
         JSONObject asset = new JSONObject(resp);
         assertTrue(asset.containsKey("oslc_asset:categorization"), "The category was not set");
     }
 
-    @Test
-    public void createAssetWithRelationship() throws IOException, JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createAssetWithRelationship(String thisUrl) throws IOException, JSONException {
+        setup(thisUrl);
         String otherUrl = null;
         try {
             otherUrl = createAsset(jsonCreateTemplate);
@@ -62,8 +73,10 @@ public class CreateAssetJsonTest extends CreateAssetBase {
         }
     }
 
-    @Test
-    public void deletingAsset() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void deletingAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         deletingAsset(jsonCreateTemplate);
     }
 }

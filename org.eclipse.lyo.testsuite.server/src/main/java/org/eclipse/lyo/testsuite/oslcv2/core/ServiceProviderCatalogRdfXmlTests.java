@@ -35,7 +35,6 @@ import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBaseTests {
@@ -67,7 +66,6 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         assertNotNull(catalog, "Failed to read Catalog resource at URI: " + currentUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllServiceProviderCatalogUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
         // Checks the ServiceProviderCatalog at the specified baseUrl of the REST service in order
@@ -118,7 +116,8 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     public void baseUrlIsValid() throws IOException {
         // Get the status, make sure 200 OK
         assertTrue(
-                response.getStatus() == Response.Status.OK.getStatusCode(), response.getStatusInfo().getReasonPhrase());
+                response.getStatus() == Response.Status.OK.getStatusCode(),
+                response.getStatusInfo().getReasonPhrase());
 
         // Verify we got a response
         assertNotNull(catalog, "Failed to locate Catalog resource at URI: " + setupBaseUrl);
@@ -172,9 +171,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
         if (!listStatements.hasNext()) logger.debug("Catalog does not contain other catalogs");
         while (listStatements.hasNext()) {
             Resource cat = (Resource) listStatements.nextStatement().getObject();
-            assertTrue(
-                    cat.listProperties(dcTitle).toList().size() <= 1,
-                    "ServiceProviders have at most 1 dc:title");
+            assertTrue(cat.listProperties(dcTitle).toList().size() <= 1, "ServiceProviders have at most 1 dc:title");
         }
     }
 
@@ -182,9 +179,7 @@ public class ServiceProviderCatalogRdfXmlTests extends ServiceProviderCatalogBas
     public void serviceProviderCatalogsHaveAtMostOnePublisher() throws XPathExpressionException {
         Property dcPublisher = rdfModel.createProperty(OSLCConstants.DC_PUBLISHER_PROP);
         StmtIterator listStatements = rdfModel.listStatements(catalog, dcPublisher, (RDFNode) null);
-        assertTrue(
-                listStatements.toList().size() <= 1,
-                "ServiceProviderCatalogs have at most 1 oslc:publisher");
+        assertTrue(listStatements.toList().size() <= 1, "ServiceProviderCatalogs have at most 1 oslc:publisher");
     }
 
     @Test

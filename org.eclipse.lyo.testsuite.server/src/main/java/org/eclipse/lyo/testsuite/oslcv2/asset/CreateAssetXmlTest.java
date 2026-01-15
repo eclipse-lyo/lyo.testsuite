@@ -23,30 +23,39 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-@RunWith(Parameterized.class)
 public class CreateAssetXmlTest extends CreateAssetBase {
 
-    public CreateAssetXmlTest(String url) {
-        super(url, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
+    public CreateAssetXmlTest() {
+        super(null, null, null);
     }
 
-    @Test
-    public void createSimpleAsset() throws IOException {
+    protected void setup(String url) {
+
+        currentUrl = url;
+        acceptType = OSLCConstants.CT_XML;
+        contentType = OSLCConstants.CT_XML;
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createSimpleAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         assetUrl = createAsset(xmlCreateTemplate);
     }
 
-    @Test
-    public void createAssetWithCategory()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createAssetWithCategory(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        setup(thisUrl);
         assetUrl = createAsset(readFileFromProperty("createWithCategoryTemplateXmlFile"));
         String resp = getAssetAsString();
         Document document = OSLCUtils.createXMLDocFromResponseBody(resp);
@@ -55,9 +64,11 @@ public class CreateAssetXmlTest extends CreateAssetBase {
         assertTrue(cat != null, "Category was not set");
     }
 
-    @Test
-    public void createAssetWithRelationship()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createAssetWithRelationship(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        setup(thisUrl);
         String otherUrl = null;
         try {
             otherUrl = createAsset(xmlCreateTemplate);
@@ -75,8 +86,10 @@ public class CreateAssetXmlTest extends CreateAssetBase {
         }
     }
 
-    @Test
-    public void deletingAsset() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void deletingAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         deletingAsset(xmlCreateTemplate);
     }
 

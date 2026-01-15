@@ -28,8 +28,8 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -38,17 +38,20 @@ import org.xml.sax.SAXException;
  * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
  * the relationship of elements in the XML representation of the change request.
  */
-// @RunWith(Parameterized.class)
+//
 public class ChangeRequestXmlTests extends CoreResourceXmlTests {
 
-    public ChangeRequestXmlTests(String thisUrl)
+    public ChangeRequestXmlTests() {
+        super(null);
+    }
+
+    protected void setup(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
-        super(thisUrl);
+        currentUrl = thisUrl;
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 
@@ -70,8 +73,10 @@ public class ChangeRequestXmlTests extends CoreResourceXmlTests {
     public static String resource = "ChangeRequest";
     public static String eval = "//rdfs:member/@rdf:resource";
 
-    @Test
-    public void changeRequestHasAtMostOneCloseDate() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostOneCloseDate(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList closeDates = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:closeDate", doc, XPathConstants.NODESET);
         assertTrue(closeDates.getLength() <= 1, getFailureMessage());
@@ -85,50 +90,64 @@ public class ChangeRequestXmlTests extends CoreResourceXmlTests {
         }
     }
 
-    @Test
-    public void changeRequestHasAtMostOneStatus() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostOneStatus(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList statuses = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:status", doc, XPathConstants.NODESET);
         assertTrue(statuses.getLength() <= 1, getFailureMessage());
     }
 
-    @Test
-    public void changeRequestHasAtMostOneClosedElement() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostOneClosedElement(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList closedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:closed", doc, XPathConstants.NODESET);
         assertTrue(closedEles.getLength() <= 1, getFailureMessage());
     }
 
-    @Test
-    public void changeRequestHasAtMostInProgressElement() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostInProgressElement(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList inProgressEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:inprogress", doc, XPathConstants.NODESET);
         assertTrue(inProgressEles.getLength() <= 1, getFailureMessage());
     }
 
-    @Test
-    public void changeRequestHasAtMostOneFixedElement() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostOneFixedElement(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList fixedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:fixed", doc, XPathConstants.NODESET);
         assertTrue(fixedEles.getLength() <= 1, getFailureMessage());
     }
 
-    @Test
-    public void changeRequestHasAtMostOneApprovedElement() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostOneApprovedElement(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList approvedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:approved", doc, XPathConstants.NODESET);
         assertTrue(approvedEles.getLength() <= 1, getFailureMessage());
     }
 
-    @Test
-    public void changeRequestHasAtMostOneReviewedElement() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostOneReviewedElement(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList reviewedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:reviewed", doc, XPathConstants.NODESET);
         assertTrue(reviewedEles.getLength() <= 1, getFailureMessage());
     }
 
-    @Test
-    public void changeRequestHasAtMostOneVerifiedElement() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void changeRequestHasAtMostOneVerifiedElement(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         NodeList verifiedEles = (NodeList) OSLCUtils.getXPath()
                 .evaluate("//oslc_cm_v2:ChangeRequest/" + "oslc_cm_v2:verified", doc, XPathConstants.NODESET);
         assertTrue(verifiedEles.getLength() <= 1, getFailureMessage());

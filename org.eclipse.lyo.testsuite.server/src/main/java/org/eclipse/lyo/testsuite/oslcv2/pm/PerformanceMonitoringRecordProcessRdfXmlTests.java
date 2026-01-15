@@ -25,7 +25,8 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
  * request to test against, checking the relationship of elements in the XML representation of the PMR request.
  */
 public class PerformanceMonitoringRecordProcessRdfXmlTests extends CoreResourceRdfXmlTests {
-    
+
     public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
@@ -46,7 +47,6 @@ public class PerformanceMonitoringRecordProcessRdfXmlTests extends CoreResourceR
 
     public static String eval = OSLCConstants.RDFS_MEMBER;
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();
@@ -68,8 +68,10 @@ public class PerformanceMonitoringRecordProcessRdfXmlTests extends CoreResourceR
         return getAllDescriptionUrls(eval);
     }
 
-    @Test
-    public void PerformanceMonitoringRecordHasOneisPartOf() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void PerformanceMonitoringRecordHasOneisPartOf(String thisUrl) throws Exception {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.PM_PMR_ISPARTOF);
         int size = listStatements.toList().size();
         assertTrue(size == 1, "Can have 1 dcterms:isPartOf, found " + size);

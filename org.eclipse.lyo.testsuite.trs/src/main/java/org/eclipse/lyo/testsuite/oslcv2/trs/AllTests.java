@@ -14,10 +14,9 @@
 
 package org.eclipse.lyo.testsuite.oslcv2.trs;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(Suite.class)
-@SuiteClasses({TRSTest.class, BaseTest.class, ChangeLogTest.class})
+@Suite
+@SelectClasses({TRSTest.class, BaseTest.class, ChangeLogTest.class})
 public class AllTests {}

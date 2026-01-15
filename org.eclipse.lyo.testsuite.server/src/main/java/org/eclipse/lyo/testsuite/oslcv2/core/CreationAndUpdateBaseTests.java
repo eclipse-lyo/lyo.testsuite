@@ -36,8 +36,8 @@ import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.eclipse.lyo.testsuite.util.RDFUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * This class provides JUnit tests for the validation of the OSLCv2 creation and updating of change requests. It uses
@@ -49,7 +49,6 @@ import org.junit.runners.Parameterized;
  * call is not technically required in the OSLC spec, so the created change request may still exist for some service
  * providers.
  */
-@RunWith(Parameterized.class)
 public abstract class CreationAndUpdateBaseTests extends TestsBase {
     private Logger logger = Logger.getLogger(CreationAndUpdateBaseTests.class);
 
@@ -71,8 +70,13 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         return types;
     }
 
-    public CreationAndUpdateBaseTests(String url) {
-        super(url);
+    public CreationAndUpdateBaseTests() {
+        super(null);
+    }
+
+    protected void setup(String url) {
+
+        currentUrl = url;
     }
 
     /**
@@ -101,8 +105,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
      */
     public abstract String getUpdateContent(String resourceUri) throws Exception;
 
-    @Test
-    public void createResourceWithInvalidContentType() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createResourceWithInvalidContentType(String thisUrl) throws Exception {
+        setup(thisUrl);
         // Issue post request using the provided template and an invalid
         // contentType
         Response resp = OSLCUtils.postDataToUrl(currentUrl, creds, "*/*", "weird/type", getCreateContent(), headers);
@@ -129,8 +135,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         return resp;
     }
 
-    @Test
-    public void createValidResourceUsingTemplate() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createValidResourceUsingTemplate(String thisUrl) throws Exception {
+        setup(thisUrl);
         Response resp = doPost(getContentType(), getContentType(), getCreateContent());
 
         // Assert the response gave a 201 Created
@@ -152,8 +160,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         }
     }
 
-    @Test
-    public void createResourceWithInvalidContent() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createResourceWithInvalidContent(String thisUrl) throws IOException {
+        setup(thisUrl);
         // Issue post request using valid content type but invalid content
         Response resp = OSLCUtils.postDataToUrl(
                 currentUrl, creds, getContentType(), getContentType(), "invalid content", headers);
@@ -166,8 +176,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         assertFalse(resp.getStatus() == 500, "Server should not return an internal server error");
     }
 
-    @Test
-    public void createResourceAndUpdateIt() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createResourceAndUpdateIt(String thisUrl) throws Exception {
+        setup(thisUrl);
 
         Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 
@@ -230,8 +242,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         }
     }
 
-    @Test
-    public void updateCreatedResourceWithInvalidContent() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void updateCreatedResourceWithInvalidContent(String thisUrl) throws Exception {
+        setup(thisUrl);
         Response resp = createResource(getContentType(), getContentType(), getCreateContent());
         String location = getRequiredLocationHeader(resp);
         String eTag = resp.getHeaderString("ETag");
@@ -270,8 +284,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         if (resp != null && resp.getEntity() != null) resp.close();
     }
 
-    @Test
-    public void updateCreatedResourceWithBadType() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void updateCreatedResourceWithBadType(String thisUrl) throws Exception {
+        setup(thisUrl);
         Response resp = createResource(getContentType(), getContentType(), getCreateContent());
         String location = getRequiredLocationHeader(resp);
         String eTag = resp.getHeaderString("ETag");
@@ -336,8 +352,10 @@ public abstract class CreationAndUpdateBaseTests extends TestsBase {
         return location;
     }
 
-    @Test
-    public void updateCreatedResourceWithFailedPrecondition() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void updateCreatedResourceWithFailedPrecondition(String thisUrl) throws Exception {
+        setup(thisUrl);
 
         Response resp = createResource(getContentType(), getContentType(), getCreateContent());
 

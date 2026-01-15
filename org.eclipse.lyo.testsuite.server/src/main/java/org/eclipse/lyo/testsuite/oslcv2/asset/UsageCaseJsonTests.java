@@ -33,29 +33,39 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
-@RunWith(Parameterized.class)
 public class UsageCaseJsonTests extends UsageCaseBase {
     private static JSONObject bestAsset = null;
     private String baseUrl;
 
-    public UsageCaseJsonTests(String thisUrl) {
-        super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
+    public UsageCaseJsonTests() {
+        super(null, null, null);
+    }
+
+    protected void setup(String thisUrl) {
+
+        currentUrl = thisUrl;
+        acceptType = OSLCConstants.CT_JSON;
+        contentType = OSLCConstants.CT_JSON;
         baseUrl = setupProps.getProperty("baseUrl");
     }
 
-    @Test
-    public void queryUsageTest() throws IllegalStateException, IOException, JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void queryUsageTest(String thisUrl) throws IllegalStateException, IOException, JSONException {
+        setup(thisUrl);
         JSONObject query = runQuery();
         bestAsset = getBestAsset(query);
         assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
     }
 
-    @Test
-    public void retrieveUsageCase() throws JSONException, IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void retrieveUsageCase(String thisUrl) throws JSONException, IOException {
+        setup(thisUrl);
         assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
 
         assetUrl = bestAsset.getString("rdf:about");

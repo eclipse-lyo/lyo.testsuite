@@ -25,24 +25,33 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@RunWith(Parameterized.class)
 public class CreateAssetRdfXmlTest extends CreateAssetBase {
 
-    public CreateAssetRdfXmlTest(String url) {
-        super(url, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
+    public CreateAssetRdfXmlTest() {
+        super(null, null, null);
     }
 
-    @Test
-    public void createSimpleAsset() throws IOException {
+    protected void setup(String url) {
+
+        currentUrl = url;
+        acceptType = OSLCConstants.CT_RDF;
+        contentType = OSLCConstants.CT_RDF;
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createSimpleAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         assetUrl = createAsset(rdfXmlCreateTemplate);
     }
 
-    @Test
-    public void createAssetWithCategory() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createAssetWithCategory(String thisUrl) throws IOException {
+        setup(thisUrl);
         String file = readFileFromProperty("createWithCategoryTemplateRdfXmlFile");
         if (file == null) // Fall back to the xml if the rdf is not defined
         file = readFileFromProperty("createWithCategoryTemplateXmlFile");
@@ -59,8 +68,10 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
         assertTrue(statements.hasNext(), "The category was not set");
     }
 
-    @Test
-    public void createAssetWithRelationship() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void createAssetWithRelationship(String thisUrl) throws IOException {
+        setup(thisUrl);
         Response resp = null;
         String otherUrl = null;
         try {
@@ -87,8 +98,10 @@ public class CreateAssetRdfXmlTest extends CreateAssetBase {
         }
     }
 
-    @Test
-    public void deletingAsset() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void deletingAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         deletingAsset(rdfXmlCreateTemplate);
     }
 }

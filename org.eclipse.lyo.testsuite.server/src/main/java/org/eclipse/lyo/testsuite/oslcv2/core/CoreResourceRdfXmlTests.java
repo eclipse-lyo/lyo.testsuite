@@ -59,7 +59,7 @@ public abstract class CoreResourceRdfXmlTests extends TestsBase {
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
 
-        super(thisUrl);
+        setup(thisUrl);
 
         // If currentUrl is null, it means that the query didn't match any
         // records. This isn't exactly a failure, but there's nothing more we

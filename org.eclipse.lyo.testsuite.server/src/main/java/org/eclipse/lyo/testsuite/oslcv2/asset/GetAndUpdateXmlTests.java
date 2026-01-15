@@ -29,20 +29,26 @@ import org.apache.http.ParseException;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-@RunWith(Parameterized.class)
 public class GetAndUpdateXmlTests extends GetAndUpdateBase {
     private Document hasDocument;
 
-    public GetAndUpdateXmlTests(String thisUrl) throws IOException, ParserConfigurationException, SAXException {
-        super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
+    public GetAndUpdateXmlTests() {
+        super(null, null, null);
+    }
+
+    protected void setup(String thisUrl) throws IOException, ParserConfigurationException, SAXException {
+
+        currentUrl = thisUrl;
+        acceptType = OSLCConstants.CT_XML;
+        contentType = OSLCConstants.CT_XML;
 
         assetUrl = createAsset(xmlCreateTemplate);
         assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
@@ -51,78 +57,108 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         hasDocument = OSLCUtils.createXMLDocFromResponseBody(resp);
     }
 
-    @Test
-    public void assetHasAtMostOneModel() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneModel(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, "oslc_asset:model"));
     }
 
-    @Test
-    public void assetHasAtMostOneSerialNumber() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneSerialNumber(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, "oslc_asset:serialNumber"));
     }
 
-    @Test
-    public void assetHasArtifactFactory() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasArtifactFactory(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(hasNode(hasDocument, "oslc_asset:artifactFactory"), "Artifact Factory was not found");
     }
 
-    @Test
-    public void assetHasAtMostOneGuid() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneGuid(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, "oslc_asset:guid"), "Multiple guids returned");
     }
 
-    @Test
-    public void assetHasAtMostOneVersion() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneVersion(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, "oslc_asset:version"), "Multiple versions returned");
     }
 
-    @Test
-    public void assetHasAtMostOneAbstract() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneAbstract(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ABSTRACT));
     }
 
-    @Test
-    public void assetHasAtMostOneType() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneType(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_TYPE));
     }
 
-    @Test
-    public void assetHasAtMostOneState() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneState(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, "oslc_asset:state"));
     }
 
-    @Test
-    public void assetHasAtMostOneManufacturer() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneManufacturer(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, "oslc_asset:manufacturer"));
     }
 
-    @Test
-    public void assetHasAtMostOneIdentifier() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneIdentifier(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_ID));
     }
 
-    @Test
-    public void assetHasAtMostOneDescription() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneDescription(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_DESC));
     }
 
-    @Test
-    public void assetHasTitle() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasTitle(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(hasNode(hasDocument, OSLCConstants.DCTERMS_TITLE), "Title was not found");
     }
 
-    @Test
-    public void assetHasAtMostOneCreatedDate() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneCreatedDate(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_CREATED));
     }
 
-    @Test
-    public void assetHasAtMostOneModifiedDate() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneModifiedDate(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, OSLCConstants.DCTERMS_MODIFIED));
     }
 
-    @Test
-    public void assetHasAtMostOneInstanceShape() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneInstanceShape(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasDocument, "oslc:instanceShape"));
     }
 
@@ -156,9 +192,11 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
         assertTrue(name.equals(actualName), "Expected " + name + ", received " + actualName);
     }
 
-    @Test
-    public void addArtifactToAsset()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void addArtifactToAsset(String thisUrl)
             throws IOException, ParseException, ParserConfigurationException, SAXException, XPathExpressionException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
@@ -174,16 +212,20 @@ public class GetAndUpdateXmlTests extends GetAndUpdateBase {
                 "Expected " + Status.CREATED.getStatusCode() + ", received " + response.getStatus());
     }
 
-    @Test
-    public void uploadArtifact()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void uploadArtifactTest(String thisUrl)
             throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         uploadArtifact(artifactFactory);
     }
 
-    @Test
-    public void downloadArtifact()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void downloadArtifactTest(String thisUrl)
             throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         String location = uploadArtifact(artifactFactory);
         downloadArtifact(location);

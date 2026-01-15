@@ -25,14 +25,13 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
 
-    
     public void initCoreResourceXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
@@ -41,7 +40,6 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 
@@ -56,8 +54,10 @@ public class TestExecutionRecordXmlTests extends CoreResourceXmlTests {
         return toCollection(results);
     }
 
-    @Test
-    public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void TestExecutionRecordHasOneRunsTestCase(String thisUrl) throws XPathExpressionException {
+        initCoreResourceXmlTests(thisUrl);
         String eval = "//" + getNode() + "/" + "oslc_qm_v2:runsTestCase";
 
         NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);

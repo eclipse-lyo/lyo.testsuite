@@ -24,13 +24,12 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    
     public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
@@ -38,7 +37,6 @@ public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
         super.initCoreResourceRdfXmlTests(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();
@@ -52,8 +50,10 @@ public class TestExecutionRecordRdfXmlTests extends CoreResourceRdfXmlTests {
         return toCollection(results);
     }
 
-    @Test
-    public void TestExecutionRecordHasOneRunsTestCase() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void TestExecutionRecordHasOneRunsTestCase(String thisUrl) throws XPathExpressionException {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "runsTestCase");
         int size = listStatements.toList().size();
         assertTrue(size == 1, "TestExecutionRecord has one oslc_qm:runsTestCase, found " + size);

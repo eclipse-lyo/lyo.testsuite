@@ -24,7 +24,6 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.runners.Parameterized.Parameters;
 
 public class AssetTestBase extends TestsBase {
     protected static String baseUrl;
@@ -39,7 +38,6 @@ public class AssetTestBase extends TestsBase {
         this.contentType = contentType;
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();

@@ -25,13 +25,12 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceRdfXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
 
-    
     public void initCoreResourceRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
@@ -39,7 +38,6 @@ public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
         super.initCoreResourceRdfXmlTests(thisUrl);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();
@@ -53,15 +51,19 @@ public class TestResultRdfXmlTests extends CoreResourceRdfXmlTests {
         return toCollection(results);
     }
 
-    @Test
-    public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void TestResultHasOneReportsOnTestCase(String thisUrl) throws XPathExpressionException {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "reportsOnTestCase");
         int size = listStatements.toList().size();
         assertEquals(1, size, "TestResult has exactly one oslc_qm:reportsOnTestCase");
     }
 
-    @Test
-    public void TestResultHasAtMostOneStatus() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void TestResultHasAtMostOneStatus(String thisUrl) throws XPathExpressionException {
+        initCoreResourceRdfXmlTests(thisUrl);
         StmtIterator listStatements = getStatementsForProp(OSLCConstants.OSLC_QM_V2 + "status");
         int size = listStatements.toList().size();
         assertTrue(size <= 1, "TestResult has zero or one oslc_qm:status, found " + size);

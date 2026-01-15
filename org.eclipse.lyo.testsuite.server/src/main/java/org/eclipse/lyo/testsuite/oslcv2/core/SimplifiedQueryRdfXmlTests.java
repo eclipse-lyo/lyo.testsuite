@@ -155,7 +155,6 @@ public class SimplifiedQueryRdfXmlTests extends SimplifiedQueryBaseTests {
     @ParameterizedTest
     public void fullTextSearchContainsExpectedResults(String thisUri) throws IOException {
 
-
         if (!getFullTextSearch()) return;
 
         String query = getQueryUrlForFullTextSearchContainsExpectedResults();

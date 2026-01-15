@@ -37,18 +37,23 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
-@RunWith(Parameterized.class)
 public class UsageCaseRdfXmlTests extends UsageCaseBase {
     private String baseUrl;
     private static Resource bestAsset = null;
 
-    public UsageCaseRdfXmlTests(String thisUrl) {
-        super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
+    public UsageCaseRdfXmlTests() {
+        super(null, null, null);
+    }
+
+    protected void setup(String thisUrl) {
+
+        currentUrl = thisUrl;
+        acceptType = OSLCConstants.CT_RDF;
+        contentType = OSLCConstants.CT_RDF;
     }
 
     @BeforeEach
@@ -56,15 +61,19 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         baseUrl = setupProps.getProperty("baseUrl");
     }
 
-    @Test
-    public void queryUsageTest() throws IOException, ParserConfigurationException, SAXException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void queryUsageTest(String thisUrl) throws IOException, ParserConfigurationException, SAXException {
+        setup(thisUrl);
         Model model = runQuery();
         bestAsset = getBestAsset(model);
         assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
     }
 
-    @Test
-    public void retrieveUsageCase() throws IOException, ParserConfigurationException, SAXException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void retrieveUsageCase(String thisUrl) throws IOException, ParserConfigurationException, SAXException {
+        setup(thisUrl);
         assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
 
         // Once the best asset is determined then the full asset is retrieved
@@ -77,8 +86,10 @@ public class UsageCaseRdfXmlTests extends UsageCaseBase {
         retrieveArtifact(resp);
     }
 
-    @Test
-    public void publishUsageCase() throws IllegalStateException, IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void publishUsageCase(String thisUrl) throws IllegalStateException, IOException {
+        setup(thisUrl);
         // Get url
         ArrayList<String> serviceUrls = getServiceProviderURLsUsingRdfXml(setupProps.getProperty("baseUri"), onlyOnce);
         ArrayList<String> capabilityURLsUsingRdfXml = TestsBase.getCapabilityURLsUsingRdfXml(

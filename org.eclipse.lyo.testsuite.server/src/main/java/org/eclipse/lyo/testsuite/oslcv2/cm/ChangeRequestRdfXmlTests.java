@@ -37,7 +37,8 @@ public class ChangeRequestRdfXmlTests extends CoreResourceRdfXmlTests {
     public void initChangeRequestRdfXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
-        super(thisUrl);
+
+        setup(thisUrl);
     }
 
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {

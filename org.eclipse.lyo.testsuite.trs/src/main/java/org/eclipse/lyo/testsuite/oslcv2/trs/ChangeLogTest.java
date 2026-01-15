@@ -36,9 +36,9 @@ import org.eclipse.lyo.testsuite.server.trsutils.ITRSVocabulary;
 import org.eclipse.lyo.testsuite.server.trsutils.InvalidTRSException;
 import org.eclipse.lyo.testsuite.server.trsutils.Messages;
 import org.eclipse.lyo.testsuite.server.trsutils.TestCore;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class ChangeLogTest extends TestCore {
     private static Properties prop = null;
@@ -46,7 +46,7 @@ public class ChangeLogTest extends TestCore {
     private static Resource trsResource = null;
     private static HttpContext httpContext = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupOnce() {
         try {
             prop = getConfigPropertiesInstance();
@@ -88,10 +88,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -119,10 +119,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -162,10 +162,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -216,10 +216,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -273,10 +273,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -320,10 +320,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -371,10 +371,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -422,10 +422,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -469,10 +469,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -520,10 +520,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));
@@ -579,10 +579,10 @@ public class ChangeLogTest extends TestCore {
             }
         } catch (InvalidTRSException e) {
             e.printStackTrace();
-            Assert.fail(e.getLocalizedMessage());
+            Assertions.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
+            Assertions.fail(
                     MessageFormat.format(
                             Messages.getServerString("tests.general.error"),
                             e.getLocalizedMessage()));

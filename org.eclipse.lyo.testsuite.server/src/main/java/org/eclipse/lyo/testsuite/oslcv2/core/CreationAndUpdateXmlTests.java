@@ -33,7 +33,8 @@ import org.xml.sax.SAXException;
 public class CreationAndUpdateXmlTests extends AbstractCreationAndUpdateRdfTests {
 
     public void initCreationAndUpdateXmlTests(String url) {
-        super(url);
+
+        setup(url);
     }
 
     @Override

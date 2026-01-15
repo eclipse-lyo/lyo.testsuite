@@ -32,17 +32,22 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@RunWith(Parameterized.class)
 public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
     private String baseUrl;
     private Model hasModel;
 
-    public GetAndUpdateRdfXmlTests(String thisUrl) throws IOException {
-        super(thisUrl, OSLCConstants.CT_RDF, OSLCConstants.CT_RDF);
+    public GetAndUpdateRdfXmlTests() {
+        super(null, null, null);
+    }
+
+    protected void setup(String thisUrl) throws IOException {
+
+        currentUrl = thisUrl;
+        acceptType = OSLCConstants.CT_RDF;
+        contentType = OSLCConstants.CT_RDF;
 
         assetUrl = createAsset(rdfXmlCreateTemplate);
         assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
@@ -55,85 +60,117 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         resp.close();
     }
 
-    @Test
-    public void assetHasAtMostOneModel() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneModel(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_MODEL_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneSerialNumber() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneSerialNumber(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_SERIAL_NUMBER_PROP));
     }
 
-    @Test
-    public void assetHasArtifactFactory() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasArtifactFactory(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(
                 getPropertyValue(hasModel, OSLCConstants.ASSET_ARTIFACT_FACTORY_PROP) != null,
                 "Artifact Factory was not found");
     }
 
-    @Test
-    public void assetHasAtMostOneGuid() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneGuid(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_GUID_PROP), "Multiple guids returned");
     }
 
-    @Test
-    public void assetHasAtMostOneVersion() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneVersion(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_VERSION_PROP), "Multiple versions returned");
     }
 
-    @Test
-    public void assetHasAtMostOneAbstract() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneAbstract(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_ABSTRACT_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneType() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneType(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_TYPE_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneState() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneState(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_STATE_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneManufacturer() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneManufacturer(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.ASSET_MANUFACTURER_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneIdentifier() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneIdentifier(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_ID_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneDescription() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneDescription(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_DESC_PROP));
     }
 
-    @Test
-    public void assetHasTitle() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasTitle(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(getPropertyValue(hasModel, OSLCConstants.DC_TITLE_PROP) != null, "Title was not found");
     }
 
-    @Test
-    public void assetHasAtMostOneCreatedDate() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneCreatedDate(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_CREATED_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneModifiedDate() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneModifiedDate(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.DC_MODIFIED_PROP));
     }
 
-    @Test
-    public void assetHasAtMostOneInstanceShape() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasAtMostOneInstanceShape(String thisUrl) throws Exception {
+        setup(thisUrl);
         assertTrue(isOneOrNone(hasModel, OSLCConstants.INST_SHAPE_PROP));
     }
 
-    @Test
-    public void updateAnAssetProperty() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void updateAnAssetProperty(String thisUrl) throws IOException {
+        setup(thisUrl);
         Response resp = getAssetResponse();
 
         Model model = ModelFactory.createDefaultModel();
@@ -156,8 +193,10 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
         assertTrue(name.equals(actualName), "Expected " + name + ", received " + actualName);
     }
 
-    @Test
-    public void addArtifactToAsset() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void addArtifactToAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 
@@ -175,21 +214,27 @@ public class GetAndUpdateRdfXmlTests extends GetAndUpdateBase {
                 "Expected: " + Status.CREATED.getStatusCode() + ", received: " + resp.getStatus());
     }
 
-    @Test
-    public void uploadArtifact() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void uploadArtifactTest(String thisUrl) throws IOException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         uploadArtifact(artifactFactory);
     }
 
-    @Test
-    public void downloadArtifact() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void downloadArtifactTest(String thisUrl) throws IOException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         String location = uploadArtifact(artifactFactory);
         downloadArtifact(location);
     }
 
-    @Test
-    public void removeArtifactFromAsset() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void removeArtifactFromAsset(String thisUrl) throws IOException {
+        setup(thisUrl);
         // Gets the artifact factory from the asset
         String artifactFactory = getArtifactFactory();
 

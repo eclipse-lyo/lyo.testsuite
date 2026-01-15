@@ -32,7 +32,8 @@ public class CreationAndUpdateRdfXmlTests extends AbstractCreationAndUpdateRdfTe
     private static Logger logger = Logger.getLogger(CreationAndUpdateRdfXmlTests.class);
 
     public void initCreationAndUpdateRdfXmlTests(String url) {
-        super(url);
+
+        setup(url);
     }
 
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {

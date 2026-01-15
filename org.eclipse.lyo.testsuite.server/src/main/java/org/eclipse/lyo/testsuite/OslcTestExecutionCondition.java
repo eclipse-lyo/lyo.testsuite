@@ -1,20 +1,14 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation.
- *
- * See the NOTICE file(s) distributed with this work for additional
- * information regarding copyright ownership.
- *
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0, or the Eclipse Distribution License 1.0
- * which is available at http://www.eclipse.org/org/documents/edl-v10.php.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  *
  * SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
  */
 package org.eclipse.lyo.testsuite;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 import org.eclipse.lyo.testsuite.oslcv1.core.CreationAndUpdateTests;
 import org.eclipse.lyo.testsuite.oslcv1.core.QueryTests;
 import org.eclipse.lyo.testsuite.oslcv1.core.ServiceDescriptionTests;
@@ -23,57 +17,48 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.oslcv2.core.*;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.SetupProperties;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * This class determines which version of OSLC the provider is using, and builds the correct set of OSLC Provider tests
- * accordingly.
- *
- * <p>Also sets up forms authentication if necessary (for things like RTC).
- */
-@RunWith(OslcTestSuite.class)
-public class DynamicSuiteBuilder {
-    public static Class<?>[] suitesArray() {
-        final Logger log = LoggerFactory.getLogger(DynamicSuiteBuilder.class);
+public class OslcTestExecutionCondition implements ExecutionCondition {
+    private static final Logger log = LoggerFactory.getLogger(OslcTestExecutionCondition.class);
+    private static final Set<Class<?>> ENABLED_CLASSES = initEnabledClasses();
+
+    private static Set<Class<?>> initEnabledClasses() {
         Properties setupProps = SetupProperties.setup(null);
 
-        log.info("Test");
-        log.debug("Test debug");
+        log.info("Initializing Test Suite Configuration");
 
         TestsBase.staticSetup();
 
-        // If we also want to run v1 tests (assuming this is a v2 provider)
         String testVersions = setupProps.getProperty("testVersions");
 
-        // Does the provide support JSON format?
         boolean supportOslcJson = true;
         if (setupProps.getProperty("supportJSON") != null) {
             supportOslcJson = !setupProps.getProperty("supportJSON").equalsIgnoreCase("false");
         }
 
-        // Does the provide support creation factory?
         boolean supportCreationFactory = true;
         if (setupProps.getProperty("supportCreationFactory") != null) {
             supportCreationFactory =
                     !setupProps.getProperty("supportCreationFactory").equalsIgnoreCase("false");
         }
 
-        // Does the provide support JSON format?
         boolean supportQuery = true;
         if (setupProps.getProperty("supportQuery") != null) {
             supportQuery = !setupProps.getProperty("supportQuery").equalsIgnoreCase("false");
         }
 
-        // Does the provider support RDF/XML abbreviated format?
         boolean supportRdfXmlAbbrev = true;
         if (setupProps.getProperty("supportRdfXmlAbbrev") != null) {
             supportRdfXmlAbbrev = Boolean.parseBoolean(setupProps.getProperty("supportRdfXmlAbbrev"));
         }
 
         ArrayList<Class<?>> testsToRun = new ArrayList<>();
-        // Determine if this is a v1 or v2 provider
+
         if (OSLCConstants.OSLC_CM_V2.equals(testVersions)
                 || OSLCConstants.OSLC_V2.equals(testVersions)
                 || OSLCConstants.OSLC_RM_V2.equals(testVersions)
@@ -227,10 +212,21 @@ public class DynamicSuiteBuilder {
             testsToRun.add(ServiceDescriptionTests.class);
             testsToRun.add(CreationAndUpdateTests.class);
             testsToRun.add(QueryTests.class);
-            testsToRun.add(OAuthTests.class);
+            testsToRun.add(org.eclipse.lyo.testsuite.oslcv1.core.OAuthTests.class);
         }
 
-        // Return array of test classes
-        return testsToRun.toArray(new Class<?>[0]);
+        return new HashSet<>(testsToRun);
+    }
+
+    @Override
+    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+        if (context.getTestClass().isPresent()) {
+            Class<?> testClass = context.getTestClass().get();
+            if (ENABLED_CLASSES.contains(testClass)) {
+                return ConditionEvaluationResult.enabled("Enabled by suite configuration");
+            }
+            return ConditionEvaluationResult.disabled("Disabled by suite configuration");
+        }
+        return ConditionEvaluationResult.enabled("Not a test class");
     }
 }

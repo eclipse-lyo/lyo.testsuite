@@ -30,9 +30,8 @@ import org.apache.wink.json4j.compat.JSONArray;
 import org.apache.wink.json4j.compat.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -45,15 +44,21 @@ import org.xml.sax.SAXException;
  *
  * <p>Tests XML responses only TODO: Add RDF/XML and JSON tests
  */
-@RunWith(Parameterized.class)
 public class QueryTests extends SimplifiedQueryBaseTests {
-    public QueryTests(String baseUri) {
-        super(baseUri);
+    public QueryTests() {
+        super(null);
     }
 
-    @Test
-    public void validEqualsQueryContainsExpectedDefect()
+    protected void setup(String baseUri) {
+
+        currentUrl = baseUri;
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void validEqualsQueryContainsExpectedDefect(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        setup(thisUrl);
         // Form the equality query
 
         String query = getQueryBase()
@@ -75,9 +80,11 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         checkEqualityProperty(results, queryProperty, queryPropertyValue, doc);
     }
 
-    @Test
-    public void validNotEqualQueryContainsExpectedDefect()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void validNotEqualQueryContainsExpectedDefect(String thisUrl)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        setup(thisUrl);
         // Form the inequality query
         String query = getQueryBase()
                 + "oslc.where="
@@ -106,9 +113,11 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         return responseBody;
     }
 
-    @Test
-    public void validLessThanQueryContainsExpectedDefects()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void validLessThanQueryContainsExpectedDefects(String thisUrl)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
+        setup(thisUrl);
         // Build the query using the specified comparison property
         String query = getQueryBase()
                 + "oslc.where="
@@ -132,9 +141,11 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         checkLessThanProperty(results, queryComparisonProperty, queryComparisonValue, doc);
     }
 
-    @Test
-    public void validGreaterThanQueryContainsExpectedDefects()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void validGreaterThanQueryContainsExpectedDefects(String thisUrl)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException, ParseException {
+        setup(thisUrl);
         // Build the query using the specified comparison property
         String query = getQueryBase()
                 + "oslc.where="
@@ -175,9 +186,11 @@ public class QueryTests extends SimplifiedQueryBaseTests {
                 + queryComparisonProperty;
     }
 
-    @Test
-    public void validCompoundQueryContainsExpectedDefect()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void validCompoundQueryContainsExpectedDefect(String thisUrl)
             throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        setup(thisUrl);
         String respBody = runQuery(getCompoundQueryContainsExpectedDefectQuery(), OSLCConstants.CT_XML);
         Document doc = OSLCUtils.createXMLDocFromResponseBody(respBody);
 
@@ -188,8 +201,11 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         checkGreaterThanProperty(lst, queryComparisonProperty, queryComparisonValue, doc);
     }
 
-    @Test
-    public void validCompoundQueryContainsExpectedDefectJson() throws IOException, NullPointerException, JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void validCompoundQueryContainsExpectedDefectJson(String thisUrl)
+            throws IOException, NullPointerException, JSONException {
+        setup(thisUrl);
         // Get response
         String respBody = runQuery(getCompoundQueryContainsExpectedDefectQuery(), OSLCConstants.CT_JSON);
         JSONArtifact userData = JSON.parse(respBody);
@@ -205,9 +221,11 @@ public class QueryTests extends SimplifiedQueryBaseTests {
         // TODO: Add JSON logic
     }
 
-    @Test
-    public void fullTextSearchContainsExpectedResults()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void fullTextSearchContainsExpectedResults(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        setup(thisUrl);
         // Build the fulltext query using oslc.searchTerms
         String query = "?"
                 + additionalParameters

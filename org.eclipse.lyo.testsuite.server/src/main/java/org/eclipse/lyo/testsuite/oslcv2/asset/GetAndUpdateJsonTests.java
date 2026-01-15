@@ -27,17 +27,21 @@ import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
-@RunWith(Parameterized.class)
 public class GetAndUpdateJsonTests extends GetAndUpdateBase {
     private JSONObject hasJson;
 
-    public GetAndUpdateJsonTests(String thisUrl) throws IOException, JSONException {
-        super(thisUrl, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
+    public GetAndUpdateJsonTests() {
+        super(null, OSLCConstants.CT_JSON, OSLCConstants.CT_JSON);
+    }
+
+    protected void setup(String thisUrl) throws IOException, JSONException {
+        currentUrl = thisUrl;
+        acceptType = OSLCConstants.CT_JSON;
+        contentType = OSLCConstants.CT_JSON;
 
         assetUrl = createAsset(jsonCreateTemplate);
         assertTrue(assetUrl != null, "The location of the asset after it was create was not returned");
@@ -46,20 +50,26 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         hasJson = new JSONObject(resp);
     }
 
-    @Test
-    public void assetHasArtifactFactory() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasArtifactFactory(String thisUrl) throws IOException, JSONException {
+        setup(thisUrl);
         assertTrue(hasJson.has("oslc_asset:artifactFactory"), "Artifact Factory was not found");
     }
 
-    @Test
-    public void assetHasTitle() {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void assetHasTitle(String thisUrl) throws IOException, JSONException {
+        setup(thisUrl);
         assertTrue(hasJson.has(OSLCConstants.DCTERMS_TITLE), "Title was not found");
     }
 
-    @Test
-    public void updateAnAssetProperty()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void updateAnAssetProperty(String thisUrl)
             throws IOException, ParseException, ParserConfigurationException, SAXException, TransformerException,
                     JSONException {
+        setup(thisUrl);
         // Get the asset
         String resp = getAssetAsString();
         JSONObject asset = new JSONObject(resp);
@@ -81,10 +91,12 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
         assertTrue(name.equals(actualName), "Expected " + name + ", received " + actualName);
     }
 
-    @Test
-    public void addArtifactToAsset()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void addArtifactToAsset(String thisUrl)
             throws IOException, ParseException, ParserConfigurationException, SAXException, IllegalStateException,
                     JSONException {
+        setup(thisUrl);
         // Get the asset to add the artifact too
         String resp = getAssetAsString();
 
@@ -108,23 +120,29 @@ public class GetAndUpdateJsonTests extends GetAndUpdateBase {
                 "Expected " + Response.Status.OK.getStatusCode() + ", received " + response.getStatus());
     }
 
-    @Test
-    public void uploadArtifact() throws IOException, JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void uploadArtifactTest(String thisUrl) throws IOException, JSONException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         uploadArtifact(artifactFactory);
     }
 
-    @Test
-    public void downloadArtifact() throws JSONException, IOException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void downloadArtifactTest(String thisUrl) throws JSONException, IOException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         String location = uploadArtifact(artifactFactory);
         downloadArtifact(location);
     }
 
-    @Test
-    public void removeArtifactFromAsset()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void removeArtifactFromAsset(String thisUrl)
             throws IOException, TransformerException, ParseException, ParserConfigurationException, SAXException,
                     IllegalStateException, JSONException {
+        setup(thisUrl);
         String artifactFactory = getArtifactFactory();
         var header = addHeader(null, Map.entry("oslc_asset.name", "/helpFolder/help"));
 

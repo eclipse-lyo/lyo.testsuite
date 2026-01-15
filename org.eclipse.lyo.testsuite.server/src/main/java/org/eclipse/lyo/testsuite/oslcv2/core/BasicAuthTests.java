@@ -43,7 +43,8 @@ public class BasicAuthTests extends TestsBase {
     private String currentUrl;
 
     public void initBasicAuthTests(String url) {
-        super(url);
+
+        setup(url);
         this.currentUrl = url;
     }
 

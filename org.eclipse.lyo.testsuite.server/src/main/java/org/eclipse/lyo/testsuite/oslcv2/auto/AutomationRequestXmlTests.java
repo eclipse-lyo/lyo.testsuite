@@ -27,8 +27,8 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -37,17 +37,20 @@ import org.xml.sax.SAXException;
  * request URL directly. It runs the equality query from the properties file and grabs the first result to test against,
  * checking the relationship of elements in the XML representation of the automation request.
  */
-// @RunWith(Parameterized.class)
+//
 public class AutomationRequestXmlTests extends CoreResourceXmlTests {
 
-    public AutomationRequestXmlTests(String thisUrl)
+    public AutomationRequestXmlTests() {
+        super(null);
+    }
+
+    protected void setup(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
-        super(thisUrl);
+        currentUrl = thisUrl;
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 
@@ -69,8 +72,10 @@ public class AutomationRequestXmlTests extends CoreResourceXmlTests {
     public static String resource = "AutomationRequest";
     public static String eval = "//rdfs:member/@rdf:resource";
 
-    @Test
-    public void autoRequestHasAtLeastOneState() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void autoRequestHasAtLeastOneState(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         String eval = "//" + getNode() + "/" + "oslc_auto_v2:state";
 
         NodeList states = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
@@ -78,8 +83,10 @@ public class AutomationRequestXmlTests extends CoreResourceXmlTests {
         assertTrue((states.getLength() >= 1), "oslc_auto_v2:state" + getFailureMessage());
     }
 
-    @Test
-    public void autoRequestHasAtMostOneDesiredState() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void autoRequestHasAtMostOneDesiredState(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         String eval = "//" + getNode() + "/" + "oslc_auto_v2:desiredState";
 
         NodeList desiredStates = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
@@ -87,8 +94,10 @@ public class AutomationRequestXmlTests extends CoreResourceXmlTests {
         assertTrue((desiredStates.getLength() <= 1), "oslc_auto_v2:desiredState" + getFailureMessage());
     }
 
-    @Test
-    public void autoRequestHasOneExecutesLink() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void autoRequestHasOneExecutesLink(String thisUrl) throws XPathExpressionException {
+        setup(thisUrl);
         String eval = "//" + getNode() + "/" + "oslc_auto_v2:executesAutomationPlan";
 
         NodeList executes = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);

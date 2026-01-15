@@ -47,7 +47,8 @@ public abstract class CoreResourceXmlTests extends TestsBase {
 
     public void initCoreResourceXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        super(thisUrl);
+
+        setup(thisUrl);
 
         // If currentUrl is null, it means that the query didn't match any
         // records. This isn't exactly a failure, but there's nothing more we

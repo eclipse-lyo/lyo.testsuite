@@ -46,7 +46,8 @@ import org.xml.sax.SAXException;
 public class FetchResourceTests extends TestsBase {
 
     public void initFetchResourceTests(String url) {
-        super(url);
+
+        setup(url);
     }
 
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {

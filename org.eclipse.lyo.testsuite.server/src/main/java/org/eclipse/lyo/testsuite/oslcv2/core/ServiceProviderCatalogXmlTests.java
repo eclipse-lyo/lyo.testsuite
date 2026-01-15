@@ -51,8 +51,10 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
     protected Document doc;
     protected Response response = null;
 
-    public void initServiceProviderCatalogXmlTests(String url) throws IOException, ParserConfigurationException, SAXException {
-        super(url);
+    public void initServiceProviderCatalogXmlTests(String url)
+            throws IOException, ParserConfigurationException, SAXException {
+
+        setup(url);
 
         fContentType = OSLCConstants.CT_XML;
 
@@ -135,7 +137,8 @@ public class ServiceProviderCatalogXmlTests extends ServiceProviderCatalogBaseTe
         initServiceProviderCatalogXmlTests(url);
         // Get the status, make sure 200 OK
         assertTrue(
-                response.getStatus() == Response.Status.OK.getStatusCode(), response.getStatusInfo().getReasonPhrase());
+                response.getStatus() == Response.Status.OK.getStatusCode(),
+                response.getStatusInfo().getReasonPhrase());
 
         // Verify we got a response
         assertNotNull(responseBody);

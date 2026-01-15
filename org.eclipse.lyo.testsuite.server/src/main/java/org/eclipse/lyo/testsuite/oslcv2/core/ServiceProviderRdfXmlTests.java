@@ -49,7 +49,8 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 
     public void initServiceProviderRdfXmlTests(String url)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        super(url);
+
+        setup(url);
 
         response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
         try {
@@ -244,45 +245,53 @@ public class ServiceProviderRdfXmlTests extends TestsBase {
 
     /* TODO: Complete ServiceProvider RDF/XML test validation
 
-    @Test
-    public void serviceProviderHasValidDetails()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void serviceProviderHasValidDetails(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
 
-    @Test
-    public void prefixDefinitionsAreValid()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void prefixDefinitionsAreValid(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
 
 
-    @Test
-    public void publisherElementsAreValid()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void publisherElementsAreValid(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
 
-    @Test
-    public void serviceProviderHasAtMostOneOAuthElement()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void serviceProviderHasAtMostOneOAuthElement(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
 
-    @Test
-    public void oAuthElementsAreValid()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void oAuthElementsAreValid(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
 
-    @Test
-    public void creationFactoriesAreValid()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void creationFactoriesAreValid(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
 
-    @Test
-    public void queryCapabilityBlocksAreValid()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void queryCapabilityBlocksAreValid(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
 
-    @Test
-    public void dialogsAreValid()
-    {
+        @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void dialogsAreValid(String thisUrl) throws Exception {
+        initServiceProviderRdfXmlTests(thisUrl);
     }
     */
 }

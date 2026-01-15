@@ -22,12 +22,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 public class TestCaseXmlTests extends CoreResourceXmlTests {
 
-    
     public void initCoreResourceXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
@@ -36,7 +34,6 @@ public class TestCaseXmlTests extends CoreResourceXmlTests {
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 

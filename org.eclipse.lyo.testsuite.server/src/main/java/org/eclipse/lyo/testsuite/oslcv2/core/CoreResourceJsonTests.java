@@ -30,21 +30,25 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 /** This class provides JUnit tests with JSON format for the validation of an OSLC core resource. */
-@RunWith(Parameterized.class)
 public abstract class CoreResourceJsonTests extends TestsBase {
     private Response response;
     private String responseBody;
     protected JSONObject doc;
 
-    public CoreResourceJsonTests(String thisUrl)
+    public CoreResourceJsonTests() {
+        super(null);
+    }
+
+    protected void setup(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException, JSONException {
-        super(thisUrl);
+
+        currentUrl = thisUrl;
 
         // If currentUrl is null, it means that the query didn't match any
         // records. This isn't exactly a failure, but there's nothing more we
@@ -77,51 +81,65 @@ public abstract class CoreResourceJsonTests extends TestsBase {
         assertTrue(doc.get(OSLCConstants.DCTERMS_TITLE) instanceof String);
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneDescription() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void CoreResourceHasAtMostOneDescription(String thisUrl) throws JSONException {
+        setup(thisUrl);
         if (doc.containsKey(OSLCConstants.DCTERMS_DESC)) {
             assertTrue(doc.get(OSLCConstants.DCTERMS_DESC) instanceof String);
         }
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneIdentifier() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void CoreResourceHasAtMostOneIdentifier(String thisUrl) throws JSONException {
+        setup(thisUrl);
         if (doc.containsKey(OSLCConstants.DCTERMS_ID)) {
             assertTrue((doc.get(OSLCConstants.DCTERMS_ID) instanceof String)
                     || (doc.get(OSLCConstants.DCTERMS_ID) instanceof Integer));
         }
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneName() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void CoreResourceHasAtMostOneName(String thisUrl) throws JSONException {
+        setup(thisUrl);
         if (doc.containsKey(OSLCConstants.DCTERMS_NAME)) {
             assertTrue(doc.get(OSLCConstants.DCTERMS_NAME) instanceof String);
         }
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneCreatedDate() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void CoreResourceHasAtMostOneCreatedDate(String thisUrl) throws JSONException {
+        setup(thisUrl);
         if (doc.containsKey(OSLCConstants.DCTERMS_CREATED)) {
             assertTrue(doc.get(OSLCConstants.DCTERMS_CREATED) instanceof String);
         }
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneModifiedDate() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void CoreResourceHasAtMostOneModifiedDate(String thisUrl) throws JSONException {
+        setup(thisUrl);
         if (doc.containsKey(OSLCConstants.DCTERMS_MODIFIED)) {
             assertTrue(doc.get(OSLCConstants.DCTERMS_MODIFIED) instanceof String);
         }
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneDiscussion() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void CoreResourceHasAtMostOneDiscussion(String thisUrl) throws JSONException {
+        setup(thisUrl);
         if (doc.containsKey("oslc:discussion")) {
             assertTrue(doc.get("oslc:discussion") instanceof JSONObject);
         }
     }
 
-    @Test
-    public void CoreResourceHasAtMostOneInstanceShape() throws JSONException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void CoreResourceHasAtMostOneInstanceShape(String thisUrl) throws JSONException {
+        setup(thisUrl);
         if (doc.containsKey("oslc:instanceShape")) {
             assertTrue(doc.get("oslc:instanceShape") instanceof JSONObject);
         }

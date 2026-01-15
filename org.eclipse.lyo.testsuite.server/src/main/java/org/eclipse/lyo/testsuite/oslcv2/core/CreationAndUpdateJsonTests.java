@@ -57,7 +57,8 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
     }
 
     public void initCreationAndUpdateJsonTests(String url) {
-        super(url);
+
+        setup(url);
     }
 
     @Override

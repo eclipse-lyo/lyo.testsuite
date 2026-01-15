@@ -24,7 +24,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.runners.Parameterized.Parameters;
 
 public class UsageCaseBase extends AssetTestBase {
 
@@ -39,7 +38,6 @@ public class UsageCaseBase extends AssetTestBase {
         super(thisUrl, acceptType, contentType);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls() throws IOException {
 
         staticSetup();

@@ -26,14 +26,13 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class TestResultXmlTests extends CoreResourceXmlTests {
 
-    
     public void initCoreResourceXmlTests(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException,
                     NullPointerException {
@@ -42,7 +41,6 @@ public class TestResultXmlTests extends CoreResourceXmlTests {
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 
@@ -57,8 +55,10 @@ public class TestResultXmlTests extends CoreResourceXmlTests {
         return toCollection(results);
     }
 
-    @Test
-    public void TestResultHasOneStatus() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void TestResultHasOneStatus(String thisUrl) throws XPathExpressionException {
+        initCoreResourceXmlTests(thisUrl);
         String eval = "//" + getNode() + "/" + "oslc_qm_v2:status";
 
         NodeList statuses = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);
@@ -67,8 +67,10 @@ public class TestResultXmlTests extends CoreResourceXmlTests {
         assertTrue(size <= 1, "TestResult has zero or one oslc_qm_v2:status, found " + size);
     }
 
-    @Test
-    public void TestResultHasOneReportsOnTestCase() throws XPathExpressionException {
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void TestResultHasOneReportsOnTestCase(String thisUrl) throws XPathExpressionException {
+        initCoreResourceXmlTests(thisUrl);
         String eval = "//" + getNode() + "/" + "oslc_qm_v2:reportsOnTestCase";
 
         NodeList results = (NodeList) OSLCUtils.getXPath().evaluate(eval, doc, XPathConstants.NODESET);

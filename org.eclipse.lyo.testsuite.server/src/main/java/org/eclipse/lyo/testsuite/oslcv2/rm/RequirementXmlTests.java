@@ -7,7 +7,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
@@ -15,7 +14,7 @@ import org.xml.sax.SAXException;
  * directly. It runs the equality query from the properties file and grabs the first result to test against, checking
  * the relationship of elements in the XML representation of the change request.
  */
-// @RunWith(Parameterized.class)
+//
 public class RequirementXmlTests extends CoreResourceXmlTests {
 
     public static String eval = "//rdfs:member/@rdf:resource";
@@ -29,7 +28,6 @@ public class RequirementXmlTests extends CoreResourceXmlTests {
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, javax.xml.xpath.XPathException {
 

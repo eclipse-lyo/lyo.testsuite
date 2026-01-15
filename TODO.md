@@ -1,3 +1,5 @@
+- add enforcer setup
+- adopt Lyo BOM
 - need to update the script to take the suiteconfig.properties as an input
     - the script shall run the junit
     - copy the surefire reports

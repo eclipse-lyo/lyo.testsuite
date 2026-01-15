@@ -48,7 +48,8 @@ public class ServiceProviderXmlTests extends TestsBase {
     private Document doc;
 
     public void initServiceProviderXmlTests(String url) throws IOException, ParserConfigurationException, SAXException {
-        super(url);
+
+        setup(url);
 
         response = OSLCUtils.getResponseFromUrl(setupBaseUrl, currentUrl, creds, fContentType, headers);
         try {

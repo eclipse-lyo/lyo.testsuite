@@ -33,20 +33,26 @@ import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
 import org.eclipse.lyo.testsuite.util.OSLCUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-@RunWith(Parameterized.class)
 public class UsageCaseXmlTests extends UsageCaseBase {
     private static Node bestAsset = null;
 
-    public UsageCaseXmlTests(String thisUrl) {
-        super(thisUrl, OSLCConstants.CT_XML, OSLCConstants.CT_XML);
+    public UsageCaseXmlTests() {
+        super(null, null, null);
+    }
+
+    protected void setup(String thisUrl) {
+
+        currentUrl = thisUrl;
+        acceptType = OSLCConstants.CT_XML;
+        contentType = OSLCConstants.CT_XML;
     }
 
     @Test
@@ -60,9 +66,11 @@ public class UsageCaseXmlTests extends UsageCaseBase {
         assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
     }
 
-    @Test
-    public void retrieveUsageCase()
+    @ParameterizedTest
+    @MethodSource("getAllDescriptionUrls")
+    public void retrieveUsageCase(String thisUrl)
             throws IOException, ParseException, ParserConfigurationException, SAXException, XPathExpressionException {
+        setup(thisUrl);
         assertTrue(bestAsset != null, "The asset with the highest version couldn't be found");
 
         // Once the best asset is determined then the full asset is retrieved

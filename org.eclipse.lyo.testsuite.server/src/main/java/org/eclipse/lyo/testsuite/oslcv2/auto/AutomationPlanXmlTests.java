@@ -22,7 +22,6 @@ import javax.xml.xpath.XPathExpressionException;
 import org.eclipse.lyo.testsuite.oslcv2.TestsBase;
 import org.eclipse.lyo.testsuite.oslcv2.core.CoreResourceXmlTests;
 import org.eclipse.lyo.testsuite.util.OSLCConstants;
-import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
 /**
@@ -30,17 +29,20 @@ import org.xml.sax.SAXException;
  * URL directly. It runs the equality query from the properties file and grabs the first result to test against,
  * checking the relationship of elements in the XML representation of the automation plan.
  */
-// @RunWith(Parameterized.class)
+//
 public class AutomationPlanXmlTests extends CoreResourceXmlTests {
 
-    public AutomationPlanXmlTests(String thisUrl)
+    public AutomationPlanXmlTests() {
+        super(null);
+    }
+
+    protected void setup(String thisUrl)
             throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
 
-        super(thisUrl);
+        currentUrl = thisUrl;
         setNode(ns, resource);
     }
 
-    @Parameters
     public static Collection<Object[]> getAllDescriptionUrls()
             throws IOException, ParserConfigurationException, SAXException, XPathException {
 
