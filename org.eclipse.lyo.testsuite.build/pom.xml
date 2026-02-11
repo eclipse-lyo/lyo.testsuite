@@ -79,7 +79,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.14.1</version>
+          <version>3.15.0</version>
         </plugin>
         <plugin>
           <groupId>org.openrewrite.maven</groupId>
@@ -109,6 +109,9 @@
             <activeRecipes>
               <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe>
             </activeRecipes>
+            <exclusions>
+              <exclusion>**/assessment/**</exclusion>
+            </exclusions>
           </configuration>
           <dependencies>
             <dependency>
