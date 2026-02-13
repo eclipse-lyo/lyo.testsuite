@@ -217,8 +217,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
                 toCreate.addProperty(requestProp, string);
             } else if (valueTypes.contains(OSLCConstants.XML_LITERAL_TYPE)) {
                 String string = generateStringValue(getMaxSize(propertyResource));
-                Literal literal =
-                        requestModel.createTypedLiteral(string, OSLCConstants.XML_LITERAL_TYPE);
+                Literal literal = requestModel.createTypedLiteral(string, OSLCConstants.XML_LITERAL_TYPE);
                 toCreate.addLiteral(requestProp, literal);
             } else if (valueTypes.contains(OSLCConstants.BOOLEAN_TYPE)) {
                 toCreate.addLiteral(requestProp, true);
