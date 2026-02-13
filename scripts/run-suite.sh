@@ -24,6 +24,7 @@ mvn -B -f org.eclipse.lyo.testsuite.build/pom.xml clean package || error_exit "M
 # Run the tests
 echo "Running tests..."
 mvn -B -f org.eclipse.lyo.testsuite.server/pom.xml clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.DynamicSuiteBuilder -Dprops=config/refimpl2020/cm/suiteconfig.properties -fae || error_exit "Tests failed"
+mvn -B -f org.eclipse.lyo.testsuite.trs/pom.xml clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.oslcv2.trs.AllTests -fae || error_exit "TRS tests failed"
 
 # Return to the original directory
 popd || error_exit "Failed to return to original directory"
