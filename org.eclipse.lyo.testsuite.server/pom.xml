@@ -91,7 +91,7 @@
     <dependency>
       <groupId>org.eclipse.lyo.clients</groupId>
       <artifactId>oslc-client-base</artifactId>
-      <version>7.0.0.Alpha3</version>
+      <version>7.0.0.Alpha9</version>
     </dependency>
 
     <dependency>
