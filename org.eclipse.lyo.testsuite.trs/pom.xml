@@ -33,25 +33,6 @@
     <version-jetty>9.4.6.v20170531</version-jetty>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>lyo-releases</id>
-      <name>Eclipse Lyo Releases</name>
-      <url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>lyo-snapshots</id>
-      <name>Eclipse Lyo Snapshots</name>
-      <url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>

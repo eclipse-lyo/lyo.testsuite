@@ -71,19 +71,19 @@ jobs:
           testsuite/scripts/run-suite.sh
       - name: Run Spotless (Maven plugin)
         run: |
-          mvn -B spotless:apply -P!enforcer --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
+          mvn -B --settings testsuite/.mvn/settings.xml spotless:apply -P!enforcer --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
           if [ -z "$(git -C testsuite/ status --porcelain)" ]; then
             echo "Spotless PASS"
           else
-            echo "Spotless FAIL; run 'mvn validate -Pspotless --file org.eclipse.lyo.testsuite.build/pom.xml' locally" >&2
+            echo "Spotless FAIL; run 'mvn -B --settings .mvn/settings.xml spotless:apply -P!enforcer --file org.eclipse.lyo.testsuite.build/pom.xml' locally" >&2
             exit 1
           fi
       - name: Run OpenRewrite (Maven plugin)
         run: |
-          mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests -P'!enforcer' --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
+          mvn -B --settings testsuite/.mvn/settings.xml org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests -P'!enforcer' --file testsuite/org.eclipse.lyo.testsuite.build/pom.xml
           if [ -z "$(git -C testsuite/ status --porcelain)" ]; then
             echo "rewrite PASS"
           else
-            echo "rewrite FAIL; run 'mvn org.openrewrite.maven:rewrite-maven-plugin:run --file org.eclipse.lyo.testsuite.build/pom.xml' locally" >&2
+            echo "rewrite FAIL; run 'mvn -B --settings .mvn/settings.xml org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests -P!enforcer --file org.eclipse.lyo.testsuite.build/pom.xml' locally" >&2
             exit 1
           fi

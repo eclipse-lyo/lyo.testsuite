@@ -19,12 +19,12 @@ pushd "${PARENT_DIR}" || error_exit "Failed to change directory to ${PARENT_DIR}
 
 # Build the project
 echo "Building the project..."
-mvn -U -B -f org.eclipse.lyo.testsuite.build/pom.xml clean package || error_exit "Maven build failed"
+mvn -U -B --settings .mvn/settings.xml -f org.eclipse.lyo.testsuite.build/pom.xml clean package || error_exit "Maven build failed"
 
 # Run the tests
 echo "Running tests..."
-mvn -U -B -f org.eclipse.lyo.testsuite.server/pom.xml clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.DynamicSuiteBuilder -Dprops=config/refimpl2020/cm/suiteconfig.properties -fae || error_exit "Tests failed"
-mvn -U -B -f org.eclipse.lyo.testsuite.trs/pom.xml clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.oslcv2.trs.AllTests -fae || error_exit "TRS tests failed"
+mvn -U -B --settings .mvn/settings.xml -f org.eclipse.lyo.testsuite.server/pom.xml clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.DynamicSuiteBuilder -Dprops=config/refimpl2020/cm/suiteconfig.properties -fae || error_exit "Tests failed"
+mvn -U -B --settings .mvn/settings.xml -f org.eclipse.lyo.testsuite.trs/pom.xml clean test -DskipTests=false -Dtest=org.eclipse.lyo.testsuite.oslcv2.trs.AllTests -fae || error_exit "TRS tests failed"
 
 # Return to the original directory
 popd || error_exit "Failed to return to original directory"
