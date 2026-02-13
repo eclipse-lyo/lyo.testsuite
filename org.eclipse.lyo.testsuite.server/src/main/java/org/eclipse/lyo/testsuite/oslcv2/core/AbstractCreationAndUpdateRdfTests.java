@@ -22,7 +22,6 @@ import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
-import org.apache.jena.datatypes.xsd.impl.XMLLiteralType;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -218,7 +217,7 @@ public abstract class AbstractCreationAndUpdateRdfTests extends CreationAndUpdat
                 toCreate.addProperty(requestProp, string);
             } else if (valueTypes.contains(OSLCConstants.XML_LITERAL_TYPE)) {
                 String string = generateStringValue(getMaxSize(propertyResource));
-                Literal literal = requestModel.createTypedLiteral(string, XMLLiteralType.theXMLLiteralType);
+                Literal literal = requestModel.createTypedLiteral(string, OSLCConstants.XML_LITERAL_TYPE);
                 toCreate.addLiteral(requestProp, literal);
             } else if (valueTypes.contains(OSLCConstants.BOOLEAN_TYPE)) {
                 toCreate.addLiteral(requestProp, true);

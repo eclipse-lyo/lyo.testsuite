@@ -34,12 +34,34 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <maven.compiler.release>21</maven.compiler.release>
+    <lyo.version>7.0.0-SNAPSHOT</lyo.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>central-portal-snapshots</id>
+      <name>Maven Central Portal Snapshots</name>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.eclipse.lyo</groupId>
+        <artifactId>lyo-bom</artifactId>
+        <version>${lyo.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.openrewrite</groupId>
         <artifactId>rewrite-bom</artifactId>
@@ -70,7 +92,7 @@
     major versions of Jena - will need to stub everything out -->
     <!--    <module>../org.eclipse.lyo.testsuite.recipes</module>-->
     <module>../org.eclipse.lyo.testsuite.server</module>
-<!--    <module>../org.eclipse.lyo.testsuite.trs</module>-->
+    <module>../org.eclipse.lyo.testsuite.trs</module>
   </modules>
 
   <build>
@@ -80,6 +102,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.15.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.6.2</version>
         </plugin>
         <plugin>
           <groupId>org.openrewrite.maven</groupId>
@@ -137,4 +164,43 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>enforcer</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>enforce-defaults</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <phase>validate</phase>
+                <configuration>
+                  <rules>
+                    <requireMavenVersion>
+                      <version>[3.9.0,)</version>
+                    </requireMavenVersion>
+                    <requireJavaVersion>
+                      <version>[21,)</version>
+                    </requireJavaVersion>
+                    <banDuplicatePomDependencyVersions />
+                    <requireUpperBoundDeps />
+                    <dependencyConvergence />
+                  </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

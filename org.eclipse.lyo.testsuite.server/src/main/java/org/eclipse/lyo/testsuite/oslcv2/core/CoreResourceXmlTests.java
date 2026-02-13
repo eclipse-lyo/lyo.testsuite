@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.xml.bind.DatatypeConverter;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
@@ -170,7 +170,8 @@ public abstract class CoreResourceXmlTests extends TestsBase {
         // If there is a created date, verify the format.
         if (createdDates.getLength() > 0) {
             try {
-                DatatypeConverter.parseDateTime(createdDates.item(0).getTextContent());
+                DatatypeFactory.newDefaultInstance()
+                        .newXMLGregorianCalendar(createdDates.item(0).getTextContent());
             } catch (Exception e) {
                 fail("Created date not in valid XSD format");
             }
@@ -188,7 +189,7 @@ public abstract class CoreResourceXmlTests extends TestsBase {
         if (modifiedDates.getLength() > 0) {
             try {
                 final String dateString = modifiedDates.item(0).getTextContent();
-                DatatypeConverter.parseDateTime(dateString);
+                DatatypeFactory.newDefaultInstance().newXMLGregorianCalendar(dateString);
             } catch (Exception e) {
                 fail("Modified date not in valid XSD format");
             }
