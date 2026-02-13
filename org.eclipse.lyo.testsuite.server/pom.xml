@@ -68,13 +68,6 @@
   </repositories>
 
   <dependencies>
-    <!-- https://stackoverflow.com/questions/52502189/java-11-package-javax-xml-bind-does-not-exist -->
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>2.3.3</version>
-    </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -112,25 +105,21 @@
     <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
-      <version>3.1.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-client</artifactId>
-      <version>3.1.7</version>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.inject</groupId>
       <artifactId>jersey-hk2</artifactId>
-      <version>3.1.7</version>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.connectors</groupId>
       <artifactId>jersey-apache-connector</artifactId>
-      <version>3.1.7</version>
     </dependency>
 
     <dependency>
@@ -150,13 +139,6 @@
       <artifactId>xml-apis</artifactId>
       <version>2.0.2</version>
     </dependency>
-    <dependency>
-      <groupId>org.glassfish.jaxb</groupId>
-      <artifactId>jaxb-runtime</artifactId>
-      <version>2.3.9</version>
-      <scope>runtime</scope>
-    </dependency>
-
     <!-- Added undeclared dependencies -->
     <dependency>
       <groupId>org.slf4j</groupId>

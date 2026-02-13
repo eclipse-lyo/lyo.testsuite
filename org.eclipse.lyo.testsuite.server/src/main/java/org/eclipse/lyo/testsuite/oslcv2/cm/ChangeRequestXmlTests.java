@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.xml.bind.DatatypeConverter;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
@@ -78,7 +78,8 @@ public class ChangeRequestXmlTests extends CoreResourceXmlTests {
         // If there is a close date, verify the format.
         if (closeDates.getLength() > 0) {
             try {
-                DatatypeConverter.parseDateTime(closeDates.item(0).getTextContent());
+                DatatypeFactory.newDefaultInstance()
+                        .newXMLGregorianCalendar(closeDates.item(0).getTextContent());
             } catch (Exception e) {
                 fail("Modified date not in valid XSD format");
             }
