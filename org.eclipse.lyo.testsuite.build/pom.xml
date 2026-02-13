@@ -34,12 +34,20 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <maven.compiler.release>21</maven.compiler.release>
+    <lyo.version>7.0.0-SNAPSHOT</lyo.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.eclipse.lyo</groupId>
+        <artifactId>lyo-bom</artifactId>
+        <version>${lyo.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.openrewrite</groupId>
         <artifactId>rewrite-bom</artifactId>
