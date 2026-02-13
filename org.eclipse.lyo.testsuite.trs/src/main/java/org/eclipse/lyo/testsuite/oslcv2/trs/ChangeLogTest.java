@@ -80,9 +80,15 @@ public class ChangeLogTest extends TestCore {
                     trsResource.getPropertyResourceValue(ITRSVocabulary.CHANGELOG_PROPERTY);
 
             if (changeLogResource != null && !changeLogResource.equals(RDF.nil)) {
-                // Empty change logs are valid when no tracked resource changes have occurred yet.
-                if (!changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) return;
+                if (!changeLogResource.hasProperty(ITRSVocabulary.CHANGE_PROPERTY)) {
+                    throw new InvalidTRSException(
+                            Messages.getServerString(
+                                    "validators.missing.trs.change.property")); //$NON-NLS-1$
+                }
             }
+        } catch (InvalidTRSException e) {
+            e.printStackTrace();
+            Assert.fail(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(

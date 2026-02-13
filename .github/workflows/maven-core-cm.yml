@@ -66,6 +66,8 @@ jobs:
             fi
             sleep 5
           done
+          >&2 echo "Seeding refimpl RM data to create TRS change events"
+          java -jar refimpl/src/client-toolchain/target/client-toolchain.jar --init-servers rm
           testsuite/scripts/run-suite.sh
       - name: Run Spotless (Maven plugin)
         run: |
