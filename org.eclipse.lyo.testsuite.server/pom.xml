@@ -97,7 +97,7 @@
     <dependency>
       <groupId>org.eclipse.lyo.server</groupId>
       <artifactId>net.oauth.core-oauth-jakarta</artifactId>
-      <version>7.0.0.Alpha3</version>
+      <version>7.0.0.Alpha9</version>
     </dependency>
 
     <dependency>
