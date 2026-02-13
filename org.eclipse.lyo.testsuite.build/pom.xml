@@ -69,6 +69,17 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- Work around inconsistent versions in some transitive snapshot metadata. -->
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>4.4.16</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
+        <version>6.1.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
