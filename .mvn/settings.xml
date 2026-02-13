@@ -4,12 +4,6 @@
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
   <mirrors>
     <mirror>
-      <id>mirror-lyo-releases-to-central</id>
-      <name>Mirror lyo-releases to Maven Central</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-      <mirrorOf>lyo-releases</mirrorOf>
-    </mirror>
-    <mirror>
       <id>mirror-lyo-snapshots-to-central-portal</id>
       <name>Mirror lyo-snapshots to Maven Central snapshots</name>
       <url>https://central.sonatype.com/repository/maven-snapshots/</url>
