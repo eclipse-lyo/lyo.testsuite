@@ -54,6 +54,18 @@ jobs:
           >&2 echo "Sleeping for 20 seconds"
           sleep 20
           >&2 echo "Done sleeping"
+          >&2 echo "Checking RM TRS endpoint availability"
+          for i in {1..12}; do
+            if curl --silent --show-error -H "Accept: text/turtle" http://127.0.0.1:8800/services/trs > /dev/null; then
+              >&2 echo "RM TRS endpoint is up"
+              break
+            fi
+            if [ "$i" -eq 12 ]; then
+              >&2 echo "RM TRS endpoint did not start in time"
+              exit 1
+            fi
+            sleep 5
+          done
           testsuite/scripts/run-suite.sh
       - name: Run Spotless (Maven plugin)
         run: |

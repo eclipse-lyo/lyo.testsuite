@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.Properties;
-import javax.ws.rs.HttpMethod;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthException;
@@ -34,7 +34,6 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HttpContext;
 import org.apache.jena.rdf.model.Model;
-import org.apache.xerces.impl.dv.util.Base64;
 
 /**
  * A class that provides a utility methods to fetch HTTP resources as well as process fetch
@@ -187,7 +186,9 @@ public class FetchUtil {
         // Construct the authentication header by using Base64 encoding on the
         // supplied username and password
         String authString = username + ":" + password;
-        authString = new String(Base64.encode(authString.getBytes(HttpConstants.DEFAULT_ENCODING)));
+        authString =
+                Base64.getEncoder()
+                        .encodeToString(authString.getBytes(HttpConstants.DEFAULT_ENCODING));
         authString = "Basic " + authString;
 
         get.setHeader("Authorization", authString);
@@ -239,7 +240,7 @@ public class FetchUtil {
         Model model = null;
 
         try {
-            OAuthMessage message = accessor.newRequestMessage(HttpMethod.GET, uri, null);
+            OAuthMessage message = accessor.newRequestMessage(HttpGet.METHOD_NAME, uri, null);
             String authHeader = message.getAuthorizationHeader(oAuthRealm);
 
             get.setHeader("Authorization", authHeader);
