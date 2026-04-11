@@ -279,8 +279,9 @@ public abstract class TestsBase {
                 logger.debug("Using OAuth1.0a");
                 resp = OSLCUtils.getResponseFromUrl(base, base, oauth1UserCredentials, OSLCConstants.CT_XML, headers);
             }
-            default -> throw new IllegalStateException(
-                    "Unknown credentials type: " + creds.getClass().getName());
+            default ->
+                throw new IllegalStateException(
+                        "Unknown credentials type: " + creds.getClass().getName());
         }
 
         Document baseDoc;
