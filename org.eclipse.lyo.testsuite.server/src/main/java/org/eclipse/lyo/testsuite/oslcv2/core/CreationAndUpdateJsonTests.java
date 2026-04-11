@@ -228,16 +228,16 @@ public class CreationAndUpdateJsonTests extends CreationAndUpdateBaseTests {
 
         // Some providers represent value type as an array, some as an object.
         Object valueTypeValue = property.get("oslc:valueType");
-        if (valueTypeValue instanceof JSONObject o) {
-            valueTypes.add(o.getString("rdf:resource"));
-        } else if (valueTypeValue instanceof JSONArray a) {
-            Iterator<?> i = a.iterator();
-            while (i.hasNext()) {
-                JSONObject next = (JSONObject) i.next();
-                valueTypes.add(next.getString("rdf:resource"));
+        switch (valueTypeValue) {
+            case JSONObject o -> valueTypes.add(o.getString("rdf:resource"));
+            case JSONArray a -> {
+                Iterator<?> i = a.iterator();
+                while (i.hasNext()) {
+                    JSONObject next = (JSONObject) i.next();
+                    valueTypes.add(next.getString("rdf:resource"));
+                }
             }
-        } else {
-            fail("Incorrect type for oslc:valueType for property " + property.getString("name"));
+            case null, default -> fail("Incorrect type for oslc:valueType for property " + property.getString("name"));
         }
 
         return valueTypes;

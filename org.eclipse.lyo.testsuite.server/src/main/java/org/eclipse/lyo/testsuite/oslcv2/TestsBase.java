@@ -266,18 +266,22 @@ public abstract class TestsBase {
         if (inBaseURL == null) base = setupBaseUrl;
         else base = inBaseURL;
         Response resp;
-        if (creds instanceof UserPassword userCredentials) {
-            logger.debug("Using login/pw");
-            resp = OSLCUtils.getResponseFromUrl(base, base, userCredentials, OSLCConstants.CT_XML, headers);
-        } else if (creds instanceof Oauth1UserCredentials oauth1UserCredentials) {
-            logger.debug("Using OAuth1.0a");
-            resp = OSLCUtils.getResponseFromUrl(base, base, oauth1UserCredentials, OSLCConstants.CT_XML, headers);
-        } else if (creds == null) {
-            logger.warn("Using no credentials");
-            resp = OSLCUtils.getResponseFromUrl(base, base, NoCredentials.INSTANCE, OSLCConstants.CT_XML, headers);
-        } else {
-            throw new IllegalStateException(
-                    "Unknown credentials type: " + creds.getClass().getName());
+        switch (creds) {
+            case null -> {
+                logger.warn("Using no credentials");
+                resp = OSLCUtils.getResponseFromUrl(base, base, NoCredentials.INSTANCE, OSLCConstants.CT_XML, headers);
+            }
+            case UserPassword userCredentials -> {
+                logger.debug("Using login/pw");
+                resp = OSLCUtils.getResponseFromUrl(base, base, userCredentials, OSLCConstants.CT_XML, headers);
+            }
+            case Oauth1UserCredentials oauth1UserCredentials -> {
+                logger.debug("Using OAuth1.0a");
+                resp = OSLCUtils.getResponseFromUrl(base, base, oauth1UserCredentials, OSLCConstants.CT_XML, headers);
+            }
+            default ->
+                throw new IllegalStateException(
+                        "Unknown credentials type: " + creds.getClass().getName());
         }
 
         Document baseDoc;
