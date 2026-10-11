@@ -111,7 +111,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.10.3</version>
         <configuration>
           <!-- optional: limit format enforcement to just the files changed by this feature branch -->
           <!--                    <ratchetFrom>origin/main</ratchetFrom>-->
@@ -136,7 +136,7 @@
           <java>
             <!-- apply a specific flavor of google-java-format and reflow long strings -->
             <googleJavaFormat>
-              <version>1.28.0</version>
+              <version>1.30.0</version>
               <style>AOSP</style>
               <reflowLongStrings>true</reflowLongStrings>
               <formatJavadoc>true</formatJavadoc>
@@ -159,7 +159,7 @@
           <plugin>
             <groupId>com.diffplug.spotless</groupId>
             <artifactId>spotless-maven-plugin</artifactId>
-            <version>3.8.0</version>
+            <version>3.10.3</version>
             <executions>
               <execution>
                 <id>auto-style</id>
